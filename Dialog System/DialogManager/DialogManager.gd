@@ -22,7 +22,7 @@ func execute_dialog() -> void:
 		return
 		
 	#Needed for the The Conditional Command to work	
-	if indexer > current_block.commands.size():
+	if indexer >= current_block.commands.size():
 		if current_block._next_block != null :
 			var temp_block = current_block
 			current_block = temp_block._next_block
@@ -32,7 +32,7 @@ func execute_dialog() -> void:
 		print("Alert: the block have ended")
 		end_dialog()
 		return
-	print(indexer)
+
 	cbi = current_block.commands[indexer] #for eas of typing
 
 	if cbi == null:
@@ -56,7 +56,7 @@ func execute_dialog() -> void:
 			indexer = indexer+1
 			
 		"cond_say":
-			if calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type) == false:
+			if calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type) == true:
 				if cbi.append_text == true:
 					UI.say_text += cbi.say
 					indexer = indexer+1
@@ -76,7 +76,7 @@ func execute_dialog() -> void:
 			current_choices.clear()
 			for i in cbi.choices.size():
 				if cbi.type == "cond_choice":
-					if calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type) == false:
+					if calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type) == true:
 						current_choices.append(null)
 						continue
 				current_choices.append(cbi.choices[i].next_block)
@@ -89,12 +89,13 @@ func execute_dialog() -> void:
 			UI.next_button.emit_signal("pressed")
 
 		"condition": #TO DEBUG
-			if calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type) == false:
+			if calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type) == true:
 				cbi.condition_block._next_block = current_block
 				cbi.condition_block._next_indexer = indexer + 1
 				indexer = 0
 				current_block = cbi.condition_block
 				UI.next_button.emit_signal("pressed")
+				return
 			indexer = indexer + 1
 			UI.next_button.emit_signal("pressed")
 
@@ -136,29 +137,29 @@ func calc_var(req_node, req_var : String, chek_val : int, type_cond: String) -> 
 	
 	match type_cond:
 		">=":
-			if req_val >= chek_val:
+			if chek_val >= req_val:
 				return true
-			return false
+
 		"<=":
-			if req_val <= chek_val:
+			if chek_val <= req_val:
 				return true
-			return false
+
 		">":
-			if req_val > chek_val:
+			if chek_val > req_val:
 				return true
-			return false
+
 		"<":
-			if req_val < chek_val:
+			if chek_val < req_val:
 				return true
-			return false
+
 		"==":
-			if req_val == chek_val:
+			if chek_val == req_val:
 				return true
-			return false
+
 		"!=":
-			if req_val != chek_val:
+			if chek_val != req_val:
 				return true
-			return false	
+
 	return false
 
 func _on_make_choice(id:int, index) -> void:
