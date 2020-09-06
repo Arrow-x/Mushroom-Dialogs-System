@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://DialogManager/DialogManager.gd" type="Script" id=1]
+[ext_resource path="res://DialogManager/Dialog UI/UI.tscn" type="PackedScene" id=2]
+
+[node name="DialogManagerNode" type="Node"]
+script = ExtResource( 1 )
+UI_pc = ExtResource( 2 )

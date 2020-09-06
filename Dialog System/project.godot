@@ -1,0 +1,129 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Resource",
+"class": "Chararcter",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/Character.gd"
+}, {
+"base": "Resource",
+"class": "Command",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/Command.gd"
+}, {
+"base": "Resource",
+"class": "FlowChart",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/FlowChart.gd"
+}, {
+"base": "Command",
+"class": "animation_command",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/Animation.gd"
+}, {
+"base": "Resource",
+"class": "block",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/Block.gd"
+}, {
+"base": "Command",
+"class": "change_ui",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/ChangeUI.gd"
+}, {
+"base": "Resource",
+"class": "choice",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/Choice.gd"
+}, {
+"base": "Resource",
+"class": "cond_choice",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/CondChoice.gd"
+}, {
+"base": "Command",
+"class": "cond_say",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/CondSay.gd"
+}, {
+"base": "Command",
+"class": "condition_command",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/Condition.gd"
+}, {
+"base": "Command",
+"class": "fork_command",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/Fork.gd"
+}, {
+"base": "Command",
+"class": "jump_command",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/Jump.gd"
+}, {
+"base": "Command",
+"class": "say_command",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/Say.gd"
+}, {
+"base": "Command",
+"class": "set_var_command",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/SetVar.gd"
+} ]
+_global_script_class_icons={
+"Chararcter": "",
+"Command": "",
+"FlowChart": "",
+"animation_command": "",
+"block": "",
+"change_ui": "",
+"choice": "",
+"cond_choice": "",
+"cond_say": "",
+"condition_command": "",
+"fork_command": "",
+"jump_command": "",
+"say_command": "",
+"set_var_command": ""
+}
+
+[application]
+
+config/name="Dialog System"
+run/main_scene="res://Test/Stats.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+DialogManager="*res://DialogManager/DialogManagerNode.tscn"
+
+[debug]
+
+gdscript/warnings/unsafe_property_access=true
+gdscript/warnings/unsafe_method_access=true
+gdscript/warnings/unsafe_cast=true
+gdscript/warnings/unsafe_call_argument=true
+
+[editor_plugins]
+
+enabled=PoolStringArray(  )
+
+[locale]
+
+locale_filter=[ 0, [  ] ]
+
+[rendering]
+
+quality/driver/driver_name="GLES2"
+vram_compression/import_etc=true
+vram_compression/import_etc2=false
+environment/default_environment="res://default_env.tres"
