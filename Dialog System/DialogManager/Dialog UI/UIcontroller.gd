@@ -11,7 +11,7 @@ onready var right_portrait = $RightPortrait
 onready var center_portrait = $CenterPortrait
 onready var left_portrait = $LeftPortrait
 
-#TODO: BBCode Support, 
+#TODO: 
 #Unlimited Portraits,
 #Animations on the SayPanel
 #Animations on the Portraits
@@ -56,9 +56,10 @@ func add_portrait(portrait: StreamTexture, por_pos) -> void:
 	
 func add_text(got_text, got_name, append = false) -> void: 
 	if append == true :
-		say_text.text = say_text.text + got_text
+		var app : String = say_text.get_bbcode() + got_text
+		say_text.set_bbcode(app)
 		return
-	say_text.text = got_text
+	say_text.set_bbcode(got_text)
 	say_name.text = got_name
 
 func add_choice_button(block, id, index) -> void:
