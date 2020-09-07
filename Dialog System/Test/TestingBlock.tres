@@ -11,7 +11,7 @@
 [sub_resource type="Resource" id=1]
 script = ExtResource( 4 )
 name = "0"
-say = "First say command"
+say = "First say command [color=blue]blue[/color]"
 portrait = ExtResource( 2 )
 por_pos = "Right"
 append_text = false
@@ -45,7 +45,7 @@ script = ExtResource( 4 )
 name = "3-0"
 say = "this the conditional block"
 portrait = ExtResource( 6 )
-por_pos = "Center"
+por_pos = "Right"
 append_text = false
 
 [sub_resource type="Resource" id=5]
@@ -71,7 +71,7 @@ append_text = false
 [sub_resource type="Resource" id=8]
 script = ExtResource( 4 )
 name = ""
-say = " and this is an appending text"
+say = " and this is an appending text [color=blue]blue[/color]"
 por_pos = "Right"
 append_text = true
 

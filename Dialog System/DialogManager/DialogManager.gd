@@ -1,8 +1,9 @@
 extends Node
 
-export (PackedScene) var UI_pc #A Default UI sceen Is required
+export (PackedScene) var UI_pc : PackedScene #A Default UI sceen Is required
 
-onready var indexer = 0
+onready var indexer : int = 0
+
 var current_flowchart #The whole flowchart thing is unnessery unitil we make an editor
 var current_block
 var current_choices : Array
@@ -20,7 +21,7 @@ func execute_dialog() -> void:
 		print("Error: No block has been added")
 		end_dialog()
 		return
-		
+
 	#Needed for the The Conditional Command to work	
 	if indexer >= current_block.commands.size():
 		if current_block._next_block != null :
@@ -87,7 +88,7 @@ func execute_dialog() -> void:
 			indexer = cbi.jump_index
 			UI.next_button.emit_signal("pressed")
 
-		"condition": #TO DEBUG
+		"condition":
 			if calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type) == true:
 				cbi.condition_block._next_block = current_block
 				cbi.condition_block._next_indexer = indexer + 1
@@ -115,7 +116,7 @@ func execute_dialog() -> void:
 			get_node(cbi.var_path).set(cbi.var_name, cbi.var_value)
 			indexer = indexer+1
 			UI.next_button.emit_signal("pressed")
-			
+
 		"Change UI": #To Debug
 			if cbi.change_to_default == true:
 				UI.queue_free()
@@ -124,7 +125,7 @@ func execute_dialog() -> void:
 				indexer = indexer+1
 				UI.next_button.emit_signal("pressed")
 				return
-				
+
 			UI.queue_free()
 			UI = cbi.next_UI.instance()
 			add_child(UI)
