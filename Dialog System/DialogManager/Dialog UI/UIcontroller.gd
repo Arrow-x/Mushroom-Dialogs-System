@@ -54,7 +54,10 @@ func add_portrait(portrait: StreamTexture, por_pos) -> void:
 			center_portrait.texture = portrait
 			center_portrait.visible = true
 	
-func add_text(got_text, got_name) -> void: 
+func add_text(got_text, got_name, append = false) -> void: 
+	if append == true :
+		say_text.text = say_text.text + got_text
+		return
 	say_text.text = got_text
 	say_name.text = got_name
 

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=15 format=2]
+[gd_resource type="Resource" load_steps=17 format=2]
 
 [ext_resource path="res://DialogManager/Dialog Commands/Block.gd" type="Script" id=1]
 [ext_resource path="res://Test/Portraits/Dx8jRDzX4AEpFel.png" type="Texture" id=2]
@@ -68,6 +68,20 @@ portrait = ExtResource( 6 )
 por_pos = "Left"
 append_text = false
 
+[sub_resource type="Resource" id=8]
+script = ExtResource( 4 )
+name = ""
+say = " and this is an appending text"
+por_pos = "Right"
+append_text = true
+
+[sub_resource type="Resource" id=9]
+script = ExtResource( 4 )
+name = ""
+say = "and back"
+por_pos = "Right"
+append_text = false
+
 [resource]
 script = ExtResource( 1 )
-commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 6 ), SubResource( 7 ) ]
+commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ) ]
