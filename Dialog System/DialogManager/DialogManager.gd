@@ -43,10 +43,9 @@ func execute_dialog() -> void:
 
 	match cbi.type:
 		#to add: BBCode Support, Better Portraits support
-		#Condition Say command and Conditional choice support
 		"say": #ToDebug
 			if cbi.append_text == true:
-				UI.say_text += cbi.say
+				UI.add_text(cbi.say, cbi.name, cbi.append_text)
 				indexer = indexer+1
 				return
 			UI.hide_say()
