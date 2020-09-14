@@ -5,9 +5,9 @@ export (PackedScene) var UI_pc : PackedScene #A Default UI sceen Is required
 onready var indexer : int = 0
 
 var current_flowchart #The whole flowchart thing is unnessery unitil we make an editor
-var current_block
+var current_block : block
 var current_choices : Array
-var UI
+var UI 
 var is_ON : bool = false
 var cbi 
 

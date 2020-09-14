@@ -2,21 +2,38 @@ extends Node
 
 var portraits : Dictionary
 
-onready var say_pannel = $SayPanel
-onready var say_text = $SayPanel/SayText
-onready var say_name = $SayPanel/NameText
-onready var next_button =$SayPanel/NextButton
-onready var choice_container = $VBoxChoiceContainer
-onready var right_portrait = $RightPortrait
-onready var center_portrait = $CenterPortrait
-onready var left_portrait = $LeftPortrait
+export(NodePath) var _say_pannel
+export(NodePath) var _say_text 
+export(NodePath) var _say_name
+export(NodePath) var _next_button 
+export(NodePath) var _choice_container
+export(NodePath) var _right_portrait 
+export(NodePath) var _center_portrait 
+export(NodePath) var _left_portrait
 
+var say_pannel
+var say_text 
+var say_name
+var next_button 
+var choice_container
+var right_portrait
+var center_portrait
+var left_portrait
 #TODO: 
 #Unlimited Portraits,
 #Animations on the SayPanel
 #Animations on the Portraits
 
 func _ready():
+	say_pannel = get_node(_say_pannel)
+	say_text = get_node(_say_text)
+	say_name = get_node(_say_name)
+	next_button = get_node(_next_button)
+	choice_container = get_node(_choice_container)
+	right_portrait = get_node(_right_portrait)
+	center_portrait  = get_node(_center_portrait )
+	left_portrait = get_node(_left_portrait)
+	
 	next_button.connect("pressed",DialogManager,"execute_dialog")
 	say_text.text = ""
 
