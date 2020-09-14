@@ -11,6 +11,14 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+_say_pannel = NodePath("SayPanel")
+_say_text = NodePath("SayPanel/SayText")
+_say_name = NodePath("SayPanel/NameText")
+_next_button = NodePath("SayPanel/NextButton")
+_choice_container = NodePath("VBoxChoiceContainer")
+_right_portrait = NodePath("RightPortrait")
+_center_portrait = NodePath("CenterPortrait")
+_left_portrait = NodePath("LeftPortrait")
 
 [node name="PortraitContainer" type="Control" parent="."]
 grow_horizontal = 2
