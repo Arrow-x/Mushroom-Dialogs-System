@@ -13,7 +13,7 @@ var cbi
 
 #This is for Debug perpesos but a button to skip the dialog is needed
 func _input(event):
-	if event.is_action_pressed("ui_select"):
+	if event.is_action_pressed("ui_page_down"):
 		UI.next_button.emit_signal("pressed")
 
 func execute_dialog() -> void:
