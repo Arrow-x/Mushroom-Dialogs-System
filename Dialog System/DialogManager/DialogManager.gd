@@ -129,7 +129,6 @@ func execute_dialog() -> void:
 				indexer = indexer+1
 				UI.next_button.emit_signal("pressed")
 				return
-
 			UI.queue_free()
 			UI = cbi.next_UI.instance()
 			add_child(UI)
@@ -178,12 +177,14 @@ func _on_make_choice(id:int, index) -> void:
 	execute_dialog()
 
 func send_dialog(dblock) -> void:
-	current_block = dblock
-	indexer = 0
-	UI = UI_pc.instance()
-	add_child(UI)
-	is_ON = true
-	execute_dialog()
+	if !is_ON :
+		current_block = dblock
+		indexer = 0
+		UI = UI_pc.instance()
+		add_child(UI)
+		is_ON = true
+		execute_dialog()
+	print("The Dialog Mangaer Is running")
 
 func end_dialog() -> void:
 	indexer = 0
