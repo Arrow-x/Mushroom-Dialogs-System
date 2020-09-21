@@ -113,6 +113,10 @@ func execute_dialog() -> void:
 					UI.next_button.emit_signal("pressed")
 
 		"set_var": #TO DEBUG 
+			var req_node_string : String = String(cbi.var_path)
+			if req_node_string.is_rel_path():
+				req_node_string = req_node_string.insert(0,"/root/")
+				cbi.var_path = NodePath(req_node_string)
 			get_node(cbi.var_path).set(cbi.var_name, cbi.var_value)
 			indexer = indexer+1
 			UI.next_button.emit_signal("pressed")
@@ -132,7 +136,12 @@ func execute_dialog() -> void:
 			indexer = indexer+1
 			UI.next_button.emit_signal("pressed")
 
-func calc_var(req_node, req_var : String, chek_val : int, type_cond: String) -> bool:
+func calc_var(req_node: NodePath, req_var : String, chek_val : int, type_cond: String) -> bool:
+	var req_node_string : String = String(req_node)
+	if req_node_string.is_rel_path():
+		req_node_string = req_node_string.insert(0,"/root/")
+		req_node = NodePath(req_node_string)
+
 	var req_val = get_node(req_node).get(req_var)
 	
 	match type_cond:

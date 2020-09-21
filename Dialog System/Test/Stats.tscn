@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Test/Stats.gd" type="Script" id=1]
 [ext_resource path="res://Test/Portraits/Dx8jRDzX4AEpFel.png" type="Texture" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://DialogManager/Dialog Commands/CondSay.gd" type="Script" id=6]
 [ext_resource path="res://DialogManager/Dialog Commands/Say.gd" type="Script" id=7]
 [ext_resource path="res://DialogManager/Dialog Commands/Condition.gd" type="Script" id=8]
+[ext_resource path="res://Test/Set_var.tres" type="Resource" id=9]
 
 [sub_resource type="Resource" id=1]
 script = ExtResource( 7 )
@@ -24,8 +25,8 @@ say = "First Conditional say Command"
 portrait = ExtResource( 3 )
 por_pos = "Left"
 append_text = false
-required_node = "/root/Node"
-required_var = "sthr"
+required_node = "Node"
+required_var = "dex"
 check_val = 14
 condition_type = ">"
 
@@ -36,8 +37,8 @@ say = "Second conditional say"
 portrait = ExtResource( 4 )
 por_pos = "Right"
 append_text = false
-required_node = "/root/Node"
-required_var = "dex"
+required_node = "Node"
+required_var = "con"
 check_val = 16
 condition_type = ">"
 
@@ -86,7 +87,7 @@ append_text = false
 [sub_resource type="Resource" id=10]
 resource_name = "Testing Block"
 script = ExtResource( 5 )
-commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), null ]
+commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), ExtResource( 9 ) ]
 
 [node name="Node" type="Node"]
 script = ExtResource( 1 )
