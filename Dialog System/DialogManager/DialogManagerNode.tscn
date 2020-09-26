@@ -6,3 +6,5 @@
 [node name="DialogManagerNode" type="Node"]
 script = ExtResource( 1 )
 UI_pc = ExtResource( 2 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

@@ -78,6 +78,11 @@ _global_script_classes=[ {
 "class": "set_var_command",
 "language": "GDScript",
 "path": "res://DialogManager/Dialog Commands/SetVar.gd"
+}, {
+"base": "Command",
+"class": "sound_command",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/Sound.gd"
 } ]
 _global_script_class_icons={
 "Chararcter": "",
@@ -93,7 +98,8 @@ _global_script_class_icons={
 "fork_command": "",
 "jump_command": "",
 "say_command": "",
-"set_var_command": ""
+"set_var_command": "",
+"sound_command": ""
 }
 
 [application]

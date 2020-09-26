@@ -131,8 +131,8 @@ script = ExtResource( 2 )
 [node name="GraphNode" type="GraphNode" parent="GraphContainer/GraphEdit"]
 margin_left = 200.0
 margin_top = 36.0
-margin_right = 415.0
-margin_bottom = 142.0
+margin_right = 300.0
+margin_bottom = 96.0
 mouse_filter = 1
 title = "First Block"
 resizable = true

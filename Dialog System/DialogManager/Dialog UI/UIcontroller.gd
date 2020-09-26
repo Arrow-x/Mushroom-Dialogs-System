@@ -19,6 +19,7 @@ var choice_container
 var right_portrait
 var center_portrait
 var left_portrait
+
 #TODO: 
 #Unlimited Portraits,
 #Animations on the SayPanel

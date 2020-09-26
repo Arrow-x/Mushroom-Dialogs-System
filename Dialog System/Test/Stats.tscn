@@ -1,94 +1,25 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Test/Stats.gd" type="Script" id=1]
-[ext_resource path="res://Test/Portraits/Dx8jRDzX4AEpFel.png" type="Texture" id=2]
-[ext_resource path="res://Test/Portraits/boobsgames-1014910234438103042-20180705_183350-img1.jpg" type="Texture" id=3]
-[ext_resource path="res://Test/Portraits/DxclxW9V4AA2-zv.png" type="Texture" id=4]
-[ext_resource path="res://DialogManager/Dialog Commands/Block.gd" type="Script" id=5]
-[ext_resource path="res://DialogManager/Dialog Commands/CondSay.gd" type="Script" id=6]
-[ext_resource path="res://DialogManager/Dialog Commands/Say.gd" type="Script" id=7]
-[ext_resource path="res://DialogManager/Dialog Commands/Condition.gd" type="Script" id=8]
-[ext_resource path="res://Test/Set_var.tres" type="Resource" id=9]
+[ext_resource path="res://Test/TestB.tres" type="Resource" id=1]
 
-[sub_resource type="Resource" id=1]
-script = ExtResource( 7 )
-name = "0"
-say = "First say command [color=blue]blue[/color]"
-portrait = ExtResource( 2 )
-por_pos = "Right"
-append_text = false
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
 
-[sub_resource type="Resource" id=2]
-script = ExtResource( 6 )
-name = "1"
-say = "First Conditional say Command"
-portrait = ExtResource( 3 )
-por_pos = "Left"
-append_text = false
-required_node = "Node"
-required_var = "dex"
-check_val = 14
-condition_type = ">"
+var sthr = 16
+var dex = 15
+var con = 12
 
-[sub_resource type="Resource" id=3]
-script = ExtResource( 6 )
-name = "2"
-say = "Second conditional say"
-portrait = ExtResource( 4 )
-por_pos = "Right"
-append_text = false
-required_node = "Node"
-required_var = "con"
-check_val = 16
-condition_type = ">"
+var setter
 
-[sub_resource type="Resource" id=4]
-script = ExtResource( 7 )
-name = "3-0"
-say = "this the conditional block"
-portrait = ExtResource( 4 )
-por_pos = "Right"
-append_text = false
+export var testblock: Resource
 
-[sub_resource type="Resource" id=5]
-script = ExtResource( 5 )
-commands = [ SubResource( 4 ) ]
-
-[sub_resource type="Resource" id=6]
-script = ExtResource( 8 )
-condition_block = SubResource( 5 )
-required_node = "/root/Node"
-required_var = "con"
-check_val = 5
-condition_type = "<"
-
-[sub_resource type="Resource" id=7]
-script = ExtResource( 7 )
-name = "4"
-say = "Second regular say and the 5th command"
-portrait = ExtResource( 4 )
-por_pos = "Left"
-append_text = false
-
-[sub_resource type="Resource" id=8]
-script = ExtResource( 7 )
-name = ""
-say = " and this is an appending text [color=blue]blue[/color]"
-por_pos = "Right"
-append_text = true
-
-[sub_resource type="Resource" id=9]
-script = ExtResource( 7 )
-name = ""
-say = "and back"
-por_pos = "Right"
-append_text = false
-
-[sub_resource type="Resource" id=10]
-resource_name = "Testing Block"
-script = ExtResource( 5 )
-commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), ExtResource( 9 ) ]
+func _input(event):
+	if event.is_action_pressed(\"ui_accept\"):
+		DialogManager.send_dialog(testblock)
+	if event.is_action_pressed(\"ui_down\"):
+		print(setter)
+"
 
 [node name="Node" type="Node"]
-script = ExtResource( 1 )
-testblock = SubResource( 10 )
+script = SubResource( 1 )
+testblock = ExtResource( 1 )

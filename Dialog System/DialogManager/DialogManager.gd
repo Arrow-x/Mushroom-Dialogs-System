@@ -3,6 +3,7 @@ extends Node
 export (PackedScene) var UI_pc : PackedScene #A Default UI sceen Is required
 
 onready var indexer : int = 0
+onready var audio_player : AudioStreamPlayer = $AudioStreamPlayer
 
 var current_flowchart #The whole flowchart thing is unnessery unitil we make an editor
 var current_block : block
@@ -14,7 +15,8 @@ var cbi
 #This is for Debug perpesos but a button to skip the dialog is needed
 func _input(event):
 	if event.is_action_pressed("ui_page_down"):
-		UI.next_button.emit_signal("pressed")
+		if is_ON:
+			UI.next_button.emit_signal("pressed")
 
 func execute_dialog() -> void:
 	if current_block == null:
@@ -121,7 +123,7 @@ func execute_dialog() -> void:
 			indexer = indexer+1
 			UI.next_button.emit_signal("pressed")
 
-		"Change UI": #To Debug
+		"change_ui": #To Debug
 			if cbi.change_to_default == true:
 				UI.queue_free()
 				UI = UI_pc.instance()
@@ -132,6 +134,25 @@ func execute_dialog() -> void:
 			UI.queue_free()
 			UI = cbi.next_UI.instance()
 			add_child(UI)
+			indexer = indexer+1
+			UI.next_button.emit_signal("pressed")
+			
+		"sound_command":
+			if not cbi.interrupt : 
+				if audio_player.is_playing():
+					yield (audio_player, "finished")
+			audio_player.stop()
+			audio_player.set_stream (cbi.stream)
+			audio_player.set_volume_db (cbi.volume_db)
+			audio_player.set_pitch_scale (cbi.pitch_scale)
+			audio_player.set_mix_target (cbi.mix_target)
+			audio_player.set_bus(cbi.bus)
+			audio_player.play()
+			if cbi.wait :
+				yield (audio_player, "finished")
+				indexer = indexer+1
+				UI.next_button.emit_signal("pressed")
+				return
 			indexer = indexer+1
 			UI.next_button.emit_signal("pressed")
 

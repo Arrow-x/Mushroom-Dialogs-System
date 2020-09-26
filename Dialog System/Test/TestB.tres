@@ -1,0 +1,46 @@
+[gd_resource type="Resource" load_steps=10 format=2]
+
+[ext_resource path="res://DialogManager/Dialog Commands/Block.gd" type="Script" id=1]
+[ext_resource path="res://Test/Portraits/DxclxW9V4AA2-zv.png" type="Texture" id=2]
+[ext_resource path="res://DialogManager/Dialog Commands/Say.gd" type="Script" id=3]
+[ext_resource path="res://DialogManager/Dialog Commands/Sound.gd" type="Script" id=4]
+[ext_resource path="res://Test/audio/1795.ogg" type="AudioStream" id=5]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 3 )
+name = "Blue"
+say = "Hi I am blue and I am going"
+portrait = ExtResource( 2 )
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 4 )
+wait = true
+interrupt = true
+stream = ExtResource( 5 )
+volume_db = 0.0
+pitch_scale = 1.0
+mix_target = 0
+bus = "Master"
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 3 )
+name = "Blue"
+say = "  PUNCH YOU IN THE FACE"
+portrait = ExtResource( 2 )
+por_pos = "Right"
+append_text = true
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 4 )
+wait = false
+interrupt = true
+volume_db = 0.0
+pitch_scale = 1.0
+mix_target = 0
+bus = "Master"
+
+[resource]
+script = ExtResource( 1 )
+commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ) ]
