@@ -147,6 +147,8 @@ func execute_dialog() -> void:
 			audio_player.set_pitch_scale (cbi.pitch_scale)
 			audio_player.set_mix_target (cbi.mix_target)
 			audio_player.set_bus(cbi.bus)
+			if cbi.effect != null:
+				AudioServer.add_bus_effect (AudioServer.get_bus_index(cbi.bus),cbi.effect)
 			audio_player.play()
 			if cbi.wait :
 				yield (audio_player, "finished")

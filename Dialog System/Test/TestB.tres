@@ -1,10 +1,11 @@
-[gd_resource type="Resource" load_steps=10 format=2]
+[gd_resource type="Resource" load_steps=13 format=2]
 
 [ext_resource path="res://DialogManager/Dialog Commands/Block.gd" type="Script" id=1]
 [ext_resource path="res://Test/Portraits/DxclxW9V4AA2-zv.png" type="Texture" id=2]
 [ext_resource path="res://DialogManager/Dialog Commands/Say.gd" type="Script" id=3]
 [ext_resource path="res://DialogManager/Dialog Commands/Sound.gd" type="Script" id=4]
 [ext_resource path="res://Test/audio/1795.ogg" type="AudioStream" id=5]
+[ext_resource path="res://Test/Portraits/Dx8jRDzX4AEpFel.png" type="Texture" id=6]
 
 [sub_resource type="Resource" id=1]
 script = ExtResource( 3 )
@@ -32,15 +33,40 @@ portrait = ExtResource( 2 )
 por_pos = "Right"
 append_text = true
 
+[sub_resource type="AudioEffectChorus" id=5]
+voice_count = 4
+voice/3/delay_ms = 12.0
+voice/3/rate_hz = 1.0
+voice/3/depth_ms = 0.0
+voice/3/level_db = 0.0
+voice/3/cutoff_hz = 16000.0
+voice/3/pan = 0.0
+voice/4/delay_ms = 12.0
+voice/4/rate_hz = 1.0
+voice/4/depth_ms = 0.0
+voice/4/level_db = 0.0
+voice/4/cutoff_hz = 16000.0
+voice/4/pan = 0.0
+
 [sub_resource type="Resource" id=4]
 script = ExtResource( 4 )
-wait = false
+wait = true
 interrupt = true
+stream = ExtResource( 5 )
 volume_db = 0.0
 pitch_scale = 1.0
 mix_target = 0
 bus = "Master"
+effect = SubResource( 5 )
+
+[sub_resource type="Resource" id=6]
+script = ExtResource( 3 )
+name = "Red"
+say = "I guess"
+portrait = ExtResource( 6 )
+por_pos = "Left"
+append_text = false
 
 [resource]
 script = ExtResource( 1 )
-commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ) ]
+commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 6 ) ]

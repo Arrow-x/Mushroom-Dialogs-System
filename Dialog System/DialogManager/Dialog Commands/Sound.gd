@@ -14,4 +14,5 @@ export (float,-80,24) var volume_db : float = 0.0
 export (float,0.01,4) var pitch_scale : float = 1
 export (MixTarget) var mix_target = 0
 export var bus : String = "Master"
+export var effect : AudioEffect
 
