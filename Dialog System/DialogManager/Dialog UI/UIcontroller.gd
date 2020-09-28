@@ -20,11 +20,6 @@ var right_portrait
 var center_portrait
 var left_portrait
 
-#TODO: 
-#Unlimited Portraits,
-#Animations on the SayPanel
-#Animations on the Portraits
-
 func _ready():
 	say_pannel = get_node(_say_pannel)
 	say_text = get_node(_say_text)
@@ -74,8 +69,7 @@ func add_portrait(portrait: StreamTexture, por_pos) -> void:
 	
 func add_text(got_text, got_name, append = false) -> void: 
 	if append == true :
-		var app : String = say_text.get_bbcode() + got_text
-		say_text.set_bbcode(app)
+		say_text.append_bbcode(got_text)
 		return
 	say_text.set_bbcode(got_text)
 	say_name.text = got_name

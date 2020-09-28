@@ -33,7 +33,7 @@ portrait = ExtResource( 2 )
 por_pos = "Right"
 append_text = true
 
-[sub_resource type="AudioEffectChorus" id=5]
+[sub_resource type="AudioEffectChorus" id=4]
 voice_count = 4
 voice/3/delay_ms = 12.0
 voice/3/rate_hz = 1.0
@@ -48,7 +48,7 @@ voice/4/level_db = 0.0
 voice/4/cutoff_hz = 16000.0
 voice/4/pan = 0.0
 
-[sub_resource type="Resource" id=4]
+[sub_resource type="Resource" id=5]
 script = ExtResource( 4 )
 wait = true
 interrupt = true
@@ -57,7 +57,7 @@ volume_db = 0.0
 pitch_scale = 1.0
 mix_target = 0
 bus = "Master"
-effect = SubResource( 5 )
+effect = SubResource( 4 )
 
 [sub_resource type="Resource" id=6]
 script = ExtResource( 3 )
@@ -69,4 +69,4 @@ append_text = false
 
 [resource]
 script = ExtResource( 1 )
-commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 6 ) ]
+commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 5 ), SubResource( 6 ) ]
