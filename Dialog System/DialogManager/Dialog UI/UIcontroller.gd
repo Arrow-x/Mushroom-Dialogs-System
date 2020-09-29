@@ -68,10 +68,12 @@ func add_portrait(portrait: StreamTexture, por_pos) -> void:
 			center_portrait.visible = true
 	
 func add_text(got_text, got_name, append = false) -> void: 
-	if append == true :
-		say_text.append_bbcode(got_text)
-		return
-	say_text.set_bbcode(got_text)
+	#if append == true :
+		#say_text._set_message (got_text, append)
+		#say_text.message.insert(say_text.message.length() + 1, got_text)
+		#return
+	#say_text.set_bbcode(got_text)
+	say_text._set_message(got_text, append)
 	say_name.text = got_name
 
 func add_choice_button(block, id, index) -> void:
