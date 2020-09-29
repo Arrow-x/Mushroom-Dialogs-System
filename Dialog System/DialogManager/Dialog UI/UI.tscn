@@ -93,7 +93,7 @@ anchor_bottom = 0.833
 bbcode_enabled = true
 scroll_active = false
 script = ExtResource( 2 )
-speed = 45.0
+speed = 50.0
 skip_action = "ui_down"
 
 [node name="NameText" type="RichTextLabel" parent="SayPanel"]

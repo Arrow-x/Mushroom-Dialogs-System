@@ -163,7 +163,6 @@ func _set_accel(val: float):
 func _set_message(val: String , append : bool = false):
 	if append : 
 		var _start_value = message.length()
-		#print("the start value is : ", _start_value)
 		append_bbcode (val)
 		message = bbcode_text
 		if _isready:
@@ -210,13 +209,9 @@ func _start_msg (start_tween : int = 0):
 	if speed != 0:
 		_tween.playback_speed = speed
 		_done = false
-		if speed < 0:
-			_tween.interpolate_property(self, "visible_characters", start_tween, text.length() + 1,text.length() + 1 )
-			_tween.seek(text.length() + .9)
-			get_v_scroll().value = get_v_scroll().max_value
-		else:
-			_tween.interpolate_property(self, "percent_visible", start_tween, 1.0, text.length())
-			
+
+		#_tween.interpolate_property(self, "percent_visible", start_tween, 1.0, text.length())
+		_tween.interpolate_property(self, "visible_characters", start_tween, text.length() + 1,text.length() + 1 - start_tween)
 		_tween.start()
 	else:
 		percent_visible = 1.0
