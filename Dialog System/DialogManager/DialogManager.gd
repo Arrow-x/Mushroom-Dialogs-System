@@ -141,7 +141,7 @@ func execute_dialog() -> void:
 			if not cbi.interrupt : 
 				if audio_player.is_playing():
 					yield (audio_player, "finished")
-			audio_player.stop()
+			audio_player.stop() #if cbi.stream not = null : 
 			audio_player.set_stream (cbi.stream)
 			audio_player.set_volume_db (cbi.volume_db)
 			audio_player.set_pitch_scale (cbi.pitch_scale)

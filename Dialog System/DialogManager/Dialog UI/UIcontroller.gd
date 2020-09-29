@@ -20,10 +20,7 @@ var right_portrait
 var center_portrait
 var left_portrait
 
-#TODO: 
-#Unlimited Portraits,
-#Animations on the SayPanel
-#Animations on the Portraits
+var is_tweening = true
 
 func _ready():
 	say_pannel = get_node(_say_pannel)
@@ -73,11 +70,7 @@ func add_portrait(portrait: StreamTexture, por_pos) -> void:
 			center_portrait.visible = true
 	
 func add_text(got_text, got_name, append = false) -> void: 
-	if append == true :
-		var app : String = say_text.get_bbcode() + got_text
-		say_text.set_bbcode(app)
-		return
-	say_text.set_bbcode(got_text)
+	say_text.send_message(got_text, append)
 	say_name.text = got_name
 
 func add_choice_button(block, id, index) -> void:
@@ -85,3 +78,7 @@ func add_choice_button(block, id, index) -> void:
 	s.text = block.text
 	choice_container.add_child(s)
 	s.connect("pressed",DialogManager,"_on_make_choice",[id,index])
+
+func _on_SayText_message_done():
+	print("message sent")
+	is_tweening = false
