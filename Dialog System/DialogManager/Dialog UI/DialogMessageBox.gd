@@ -4,9 +4,9 @@ extends RichTextLabel
 # Credit TO https://github.com/tlitookilakin
 signal message_done
 
-export(float) var speed = 1 setget _set_speed
+export(int, 1000) var speed = 1 setget _set_speed
 export(float) var acceleration = 2 setget _set_accel
-export(String, MULTILINE) var message = "" setget _set_message
+export(String, MULTILINE) var message = "" setget _set_message, _get_message
 export(String) var skip_action = ""
 export(String) var accelerate_action = ""
 export(Array, AudioStream) var voice = []
@@ -124,7 +124,13 @@ func _process(delta):
 		_player.play()
 
 ### Setgets ###
-
+func _set_message(val):
+	bbcode_text = val
+	message = val
+	
+func _get_message():
+	return message
+	
 func _set_player(path: NodePath):
 	player = path
 	
@@ -160,18 +166,6 @@ func _set_accel(val: float):
 		_tween.playback_speed = _speed_mult * speed * acceleration
 
 
-func _set_message(val: String , append : bool = false):
-	if append : 
-		var _start_value = message.length()
-		append_bbcode (val)
-		message = bbcode_text
-		if _isready:
-			_start_msg(_start_value)
-		return
-	bbcode_text = val
-	message = val
-	if _isready:
-		_start_msg()
 
 ### signal callbacks ###
 
@@ -189,6 +183,19 @@ func _resized():
 	_max_lines = int(get_rect().size.y / _line_size) - 1
 
 ### other ###
+func send_message(val: String , append : bool = false):
+	if append : 
+		var _start_value = message.length()
+		append_bbcode (val)
+		message = bbcode_text
+		if _isready:
+			_start_msg(_start_value)
+		return
+		
+	bbcode_text = val
+	message = val
+	if _isready:
+		_start_msg()
 
 func _scroll(v: float):
 	get_v_scroll().value += v
