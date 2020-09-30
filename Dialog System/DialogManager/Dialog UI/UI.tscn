@@ -93,8 +93,11 @@ anchor_bottom = 0.833
 bbcode_enabled = true
 scroll_active = false
 script = ExtResource( 2 )
-speed = 56.0
-skip_action = "ui_down"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+speed = 10.0
+skip_action = "ui_accept"
 
 [node name="NameText" type="RichTextLabel" parent="SayPanel"]
 anchor_left = 0.021
@@ -126,3 +129,4 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="message_done" from="SayPanel/SayText" to="." method="_on_SayText_message_done"]
+[connection signal="message_start" from="SayPanel/SayText" to="." method="_on_SayText_message_start"]

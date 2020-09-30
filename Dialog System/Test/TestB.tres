@@ -1,72 +1,50 @@
-[gd_resource type="Resource" load_steps=13 format=2]
+[gd_resource type="Resource" load_steps=10 format=2]
 
 [ext_resource path="res://DialogManager/Dialog Commands/Block.gd" type="Script" id=1]
 [ext_resource path="res://Test/Portraits/DxclxW9V4AA2-zv.png" type="Texture" id=2]
 [ext_resource path="res://DialogManager/Dialog Commands/Say.gd" type="Script" id=3]
-[ext_resource path="res://DialogManager/Dialog Commands/Sound.gd" type="Script" id=4]
-[ext_resource path="res://Test/audio/1795.ogg" type="AudioStream" id=5]
 [ext_resource path="res://Test/Portraits/Dx8jRDzX4AEpFel.png" type="Texture" id=6]
 
 [sub_resource type="Resource" id=1]
 script = ExtResource( 3 )
-name = "Blue"
-say = "Hi I am blue and I am going"
-portrait = ExtResource( 2 )
+name = "Jess"
+say = "[spd = 60]Well this is a pickle, I find my self in,[/spd] I think that I will just be on my way now please don't wait on me, go on get out of here "
+portrait = ExtResource( 6 )
 por_pos = "Right"
 append_text = false
 
 [sub_resource type="Resource" id=2]
-script = ExtResource( 4 )
-wait = true
-interrupt = true
-stream = ExtResource( 5 )
-volume_db = 0.0
-pitch_scale = 1.0
-mix_target = 0
-bus = "Master"
-
-[sub_resource type="Resource" id=3]
 script = ExtResource( 3 )
-name = "Blue"
-say = "  PUNCH YOU IN THE FACE"
+name = "Grace"
+say = "What are you saying, I dragged here, and I will drag you out even if it will cost my life hang on"
 portrait = ExtResource( 2 )
-por_pos = "Right"
-append_text = true
-
-[sub_resource type="AudioEffectChorus" id=4]
-voice_count = 4
-voice/3/delay_ms = 12.0
-voice/3/rate_hz = 1.0
-voice/3/depth_ms = 0.0
-voice/3/level_db = 0.0
-voice/3/cutoff_hz = 16000.0
-voice/3/pan = 0.0
-voice/4/delay_ms = 12.0
-voice/4/rate_hz = 1.0
-voice/4/depth_ms = 0.0
-voice/4/level_db = 0.0
-voice/4/cutoff_hz = 16000.0
-voice/4/pan = 0.0
-
-[sub_resource type="Resource" id=5]
-script = ExtResource( 4 )
-wait = true
-interrupt = true
-stream = ExtResource( 5 )
-volume_db = 0.0
-pitch_scale = 1.0
-mix_target = 0
-bus = "Master"
-effect = SubResource( 4 )
-
-[sub_resource type="Resource" id=6]
-script = ExtResource( 3 )
-name = "Red"
-say = "I guess"
-portrait = ExtResource( 6 )
 por_pos = "Left"
 append_text = false
 
+[sub_resource type="Resource" id=3]
+script = ExtResource( 3 )
+name = "Jess"
+say = "YOU FOOL, there is no time! get out while you can!"
+portrait = ExtResource( 6 )
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 3 )
+name = "Grace"
+say = "NOO, sniff, I will not let you go"
+portrait = ExtResource( 2 )
+por_pos = "Left"
+append_text = false
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 3 )
+name = "Grace"
+say = "I will help you just grab on"
+portrait = ExtResource( 2 )
+por_pos = "Left"
+append_text = true
+
 [resource]
 script = ExtResource( 1 )
-commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 5 ), SubResource( 6 ) ]
+commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ]

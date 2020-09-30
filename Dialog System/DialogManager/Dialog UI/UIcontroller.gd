@@ -80,5 +80,10 @@ func add_choice_button(block, id, index) -> void:
 	s.connect("pressed",DialogManager,"_on_make_choice",[id,index])
 
 func _on_SayText_message_done():
-	print("message sent")
+	print("message done")
 	is_tweening = false
+
+
+func _on_SayText_message_start():
+	print("message start")
+	is_tweening = true

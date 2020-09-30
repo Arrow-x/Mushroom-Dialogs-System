@@ -14,13 +14,13 @@ var cbi
 
 #This is for Debug perpesos but a button to skip the dialog is needed
 func _input(event):
-	if event.is_action_pressed("ui_page_down"):
-		if is_ON:
+	if event.is_action_pressed("ui_accept"):
+		if is_ON and not UI.is_tweening:
 			UI.next_button.emit_signal("pressed")
 
 func execute_dialog() -> void:
 	if current_block == null:
-		print("Error: No block has been added")
+		#print("Error: No block has been added")
 		end_dialog()
 		return
 
@@ -32,14 +32,14 @@ func execute_dialog() -> void:
 			indexer = temp_block._next_indexer
 			UI.next_button.emit_signal("pressed")
 			return
-		print("Alert: the block have ended")
+		#print("Alert: the block have ended")
 		end_dialog()
 		return
 
 	cbi = current_block.commands[indexer] #for eas of typing
 
 	if cbi == null:
-		print("Error: this command in the block is empty")
+		#print("Error: this command in the block is empty")
 		indexer = indexer + 1
 		UI.next_button.emit_signal("pressed")
 		return
@@ -207,7 +207,7 @@ func send_dialog(dblock) -> void:
 		add_child(UI)
 		is_ON = true
 		execute_dialog()
-	print("The Dialog Mangaer Is running")
+	#print("The Dialog Mangaer Is running")
 
 func end_dialog() -> void:
 	indexer = 0
@@ -217,3 +217,7 @@ func end_dialog() -> void:
 	UI.hide_choice()
 	UI.queue_free()
 	is_ON = false
+
+func advance () -> void : 
+	if is_ON and not UI.is_tweening : 
+		UI.next_button.emit_signal("pressed")
