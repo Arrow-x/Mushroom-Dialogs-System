@@ -2,6 +2,7 @@ tool
 extends RichTextLabel
 # Provides a character-by-character rich text box
 # Credit TO https://github.com/tlitookilakin
+#Needs Clean up ALOT of unneeded functionalty
 signal message_done
 signal message_start
 
@@ -60,9 +61,6 @@ func _ready():
 	_start_msg()
 
 func _unhandled_input(event):
-	if _tween == null or event.echo:
-		return
-	
 	if InputMap.has_action(skip_action) and event.is_action_pressed(skip_action):
 		if !_done and _cool:
 			if speed >= 0:

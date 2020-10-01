@@ -12,11 +12,11 @@ var UI
 var is_ON : bool = false
 var cbi 
 
+
 #This is for Debug perpesos but a button to skip the dialog is needed
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
-		if is_ON and not UI.is_tweening:
-			UI.next_button.emit_signal("pressed")
+		advance()
 
 func execute_dialog() -> void:
 	if current_block == null:
@@ -30,7 +30,7 @@ func execute_dialog() -> void:
 			var temp_block = current_block
 			current_block = temp_block._next_block
 			indexer = temp_block._next_indexer
-			UI.next_button.emit_signal("pressed")
+			advance()
 			return
 		#print("Alert: the block have ended")
 		end_dialog()
@@ -41,36 +41,28 @@ func execute_dialog() -> void:
 	if cbi == null:
 		#print("Error: this command in the block is empty")
 		indexer = indexer + 1
-		UI.next_button.emit_signal("pressed")
+		advance()
 		return
 
 	match cbi.type:
 		#to add: BBCode Support, Better Portraits support
 		"say": #ToDebug
-			if cbi.append_text == true:
-				UI.add_text(cbi.say, cbi.name, cbi.append_text)
-				indexer = indexer+1
-				return
 			UI.hide_say()
-			UI.add_text(cbi.say, cbi.name)
+			UI.add_text(cbi.say, cbi.name, cbi.append_text)
 			UI.add_portrait(cbi.portrait, cbi.por_pos)
 			UI.show_say()
 			indexer = indexer+1
 			
 		"cond_say":
 			if calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type) == true:
-				if cbi.append_text == true:
-					UI.say_text += cbi.say
-					indexer = indexer+1
-					return
 				UI.hide_say()
-				UI.add_text(cbi.say, cbi.name)
+				UI.add_text(cbi.say, cbi.name, cbi.append_text)
 				UI.add_portrait(cbi.portrait, cbi.por_pos)
 				UI.show_say()
 				indexer = indexer+1
 				return
 			indexer = indexer + 1
-			UI.next_button.emit_signal("pressed")	
+			advance()	
 
 		"fork":
 			UI.hide_say()
@@ -88,7 +80,7 @@ func execute_dialog() -> void:
 		"jump":  #TO DEBUG
 			current_block = cbi.jump_block
 			indexer = cbi.jump_index
-			UI.next_button.emit_signal("pressed")
+			advance()
 
 		"condition":
 			if calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type) == true:
@@ -96,10 +88,10 @@ func execute_dialog() -> void:
 				cbi.condition_block._next_indexer = indexer + 1
 				indexer = 0
 				current_block = cbi.condition_block
-				UI.next_button.emit_signal("pressed")
+				advance()
 				return
 			indexer = indexer + 1
-			UI.next_button.emit_signal("pressed")
+			advance()
 
 		"animation":
 			var a = get_node(cbi.animation_path)
@@ -109,10 +101,10 @@ func execute_dialog() -> void:
 					while yield (get_node(cbi.animation_path),"animation_finished") != cbi.animation_name:
 						pass
 					indexer = indexer+1
-					UI.next_button.emit_signal("pressed")
+					advance()
 				"continue":
 					indexer = indexer+1
-					UI.next_button.emit_signal("pressed")
+					advance()
 
 		"set_var": #TO DEBUG 
 			var req_node_string : String = String(cbi.var_path)
@@ -121,7 +113,7 @@ func execute_dialog() -> void:
 				cbi.var_path = NodePath(req_node_string)
 			get_node(cbi.var_path).set(cbi.var_name, cbi.var_value)
 			indexer = indexer+1
-			UI.next_button.emit_signal("pressed")
+			advance()
 
 		"change_ui": #To Debug
 			if cbi.change_to_default == true:
@@ -129,13 +121,13 @@ func execute_dialog() -> void:
 				UI = UI_pc.instance()
 				add_child(UI)
 				indexer = indexer+1
-				UI.next_button.emit_signal("pressed")
+				advance()
 				return
 			UI.queue_free()
 			UI = cbi.next_UI.instance()
 			add_child(UI)
 			indexer = indexer+1
-			UI.next_button.emit_signal("pressed")
+			advance()
 			
 		"sound_command":
 			if not cbi.interrupt : 
@@ -153,10 +145,10 @@ func execute_dialog() -> void:
 			if cbi.wait :
 				yield (audio_player, "finished")
 				indexer = indexer+1
-				UI.next_button.emit_signal("pressed")
+				advance ()
 				return
 			indexer = indexer+1
-			UI.next_button.emit_signal("pressed")
+			advance ()
 
 func calc_var(req_node: NodePath, req_var : String, chek_val : int, type_cond: String) -> bool:
 	var req_node_string : String = String(req_node)
@@ -219,5 +211,6 @@ func end_dialog() -> void:
 	is_ON = false
 
 func advance () -> void : 
-	if is_ON and not UI.is_tweening : 
-		UI.next_button.emit_signal("pressed")
+	if is_ON and not UI.is_tweening and not audio_player.playing:
+		print("calling advance")
+		execute_dialog()

@@ -32,7 +32,7 @@ func _ready():
 	center_portrait  = get_node(_center_portrait )
 	left_portrait = get_node(_left_portrait)
 	
-	next_button.connect("pressed",DialogManager,"execute_dialog")
+	next_button.connect("pressed",DialogManager,"advance")
 	say_text.text = ""
 
 func hide_say() -> void:
