@@ -3,6 +3,7 @@ extends RichTextLabel
 # Provides a character-by-character rich text box
 # Credit TO https://github.com/tlitookilakin
 #Needs Clean up ALOT of unneeded functionalty`
+# It has to : Tween the Shownlines, change speed when encountring BBCode [spd] skip to the end of the tween on a command from UIController
 signal message_done
 signal message_start
 

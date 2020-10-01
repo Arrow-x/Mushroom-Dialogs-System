@@ -20,7 +20,7 @@ var right_portrait
 var center_portrait
 var left_portrait
 
-var is_tweening = true
+var is_tweening = false
 
 func _ready():
 	say_pannel = get_node(_say_pannel)

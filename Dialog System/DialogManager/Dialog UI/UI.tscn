@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://DialogManager/Dialog UI/UIcontroller.gd" type="Script" id=1]
-[ext_resource path="res://DialogManager/Dialog UI/DialogMessageBox.gd" type="Script" id=2]
+[ext_resource path="res://DialogManager/Dialog UI/TypeWriter.gd" type="Script" id=2]
 
 [node name="DialogUI" type="Control"]
 anchor_right = 1.0
@@ -91,13 +91,13 @@ anchor_top = 0.2
 anchor_right = 0.975
 anchor_bottom = 0.833
 bbcode_enabled = true
+visible_characters = 0
+percent_visible = 0.0
 scroll_active = false
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-speed = 10.0
-skip_action = "ui_accept"
 
 [node name="NameText" type="RichTextLabel" parent="SayPanel"]
 anchor_left = 0.021

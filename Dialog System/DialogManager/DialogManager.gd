@@ -12,6 +12,7 @@ var UI
 var is_ON : bool = false
 var cbi 
 
+var _waiting : bool = false
 
 #This is for Debug perpesos but a button to skip the dialog is needed
 func _input(event):
@@ -129,29 +130,30 @@ func execute_dialog() -> void:
 			indexer = indexer+1
 			advance()
 			
-		"sound_command":
+		"sound_command": #Refactor : keep Funtionality while able to skip
 			if not cbi.interrupt : 
 				if audio_player.is_playing():
 					yield (audio_player, "finished")
-			audio_player.stop() #if cbi.stream not = null : 
-			audio_player.set_stream (cbi.stream)
-			audio_player.set_volume_db (cbi.volume_db)
-			audio_player.set_pitch_scale (cbi.pitch_scale)
-			audio_player.set_mix_target (cbi.mix_target)
-			audio_player.set_bus(cbi.bus)
-			if cbi.effect != null:
-				AudioServer.add_bus_effect (AudioServer.get_bus_index(cbi.bus),cbi.effect)
-			audio_player.play()
-			if cbi.wait :
-				yield (audio_player, "finished")
-				indexer = indexer+1
-				advance ()
-				return
+
+			if cbi.stream != null : 
+				audio_player.stop()
+				audio_player.set_stream (cbi.stream)
+				audio_player.set_volume_db (cbi.volume_db)
+				audio_player.set_pitch_scale (cbi.pitch_scale)
+				audio_player.set_mix_target (cbi.mix_target)
+				audio_player.set_bus(cbi.bus)
+				if cbi.effect != null:
+					AudioServer.add_bus_effect (AudioServer.get_bus_index(cbi.bus),cbi.effect)
+				audio_player.play()
+				if cbi.wait :
+					yield (audio_player, "finished")
 			indexer = indexer+1
 			advance ()
 
 func calc_var(req_node: NodePath, req_var : String, chek_val : int, type_cond: String) -> bool:
+	
 	var req_node_string : String = String(req_node)
+	
 	if req_node_string.is_rel_path():
 		req_node_string = req_node_string.insert(0,"/root/")
 		req_node = NodePath(req_node_string)
@@ -210,7 +212,19 @@ func end_dialog() -> void:
 	UI.queue_free()
 	is_ON = false
 
-func advance () -> void : 
+func advance () -> void : #This function is so buggy
+	if UI.is_tweening and is_ON:
+		UI.say_text.skip_tween()
+		UI.is_tweening = false
+		return
+
+	if _waiting:
+		audio_player.stop()
+		indexer = indexer + 1
+		_waiting = false
+		advance()
+		return
+
 	if is_ON and not UI.is_tweening and not audio_player.playing:
 		print("calling advance")
 		execute_dialog()
