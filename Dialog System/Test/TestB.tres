@@ -10,7 +10,7 @@
 [sub_resource type="Resource" id=1]
 script = ExtResource( 3 )
 name = "Jess"
-say = "[spd = 60]Well this is a pickle, I find my self in,[/spd] I think that I will just be on my way now please don't wait on me, go on get out of here "
+say = "[spd = 2]Well this is a pickle, I find my self in,[/spd] I think that I will just be on my way now please don't wait on me, go on get out of here "
 portrait = ExtResource( 6 )
 por_pos = "Right"
 append_text = false

@@ -2,11 +2,11 @@ tool
 extends RichTextLabel
 # Provides a character-by-character rich text box
 # Credit TO https://github.com/tlitookilakin
-#Needs Clean up ALOT of unneeded functionalty
+#Needs Clean up ALOT of unneeded functionalty`
 signal message_done
 signal message_start
 
-export(int, 1000) var speed = 1 setget _set_speed
+export(float) var speed = 1.0 setget _set_speed
 export(float) var acceleration = 2 setget _set_accel
 export(String) var skip_action = ""
 export(String) var accelerate_action = ""
@@ -123,7 +123,7 @@ func _set_accel(val: float):
 
 ### signal callbacks ###
 func _on_start(obj, key):
-	emit_signal("message_start")
+	emit_signal("message_start",[obj,key])
 	
 func _on_done():
 	_done = true
