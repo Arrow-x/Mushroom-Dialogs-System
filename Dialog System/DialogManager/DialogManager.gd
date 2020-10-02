@@ -214,7 +214,6 @@ func end_dialog() -> void:
 
 func advance () -> void : #This function is so buggy
 	if UI.is_tweening:
-		print ("is it tweening: ",UI.is_tweening, " ", is_ON)
 		UI.say_text.skip_tween()
 		UI.is_tweening = false
 		return

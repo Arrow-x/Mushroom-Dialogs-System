@@ -91,8 +91,10 @@ anchor_top = 0.2
 anchor_right = 0.975
 anchor_bottom = 0.833
 bbcode_enabled = true
-visible_characters = 0
-percent_visible = 0.0
+bbcode_text = "Color me [color = aqua] Impressed [/color] for this [b] Great [/b] [i] isn't it[/i]
+"
+text = "Color me [color = aqua] Impressed [/color] for this  Great   isn't it
+"
 scroll_active = false
 script = ExtResource( 2 )
 __meta__ = {
