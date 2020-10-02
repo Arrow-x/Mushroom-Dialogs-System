@@ -16,7 +16,7 @@ var _waiting : bool = false
 
 #This is for Debug perpesos but a button to skip the dialog is needed
 func _input(event):
-	if event.is_action_pressed("ui_accept"):
+	if event.is_action_pressed("ui_accept") and is_ON:
 		advance()
 
 func execute_dialog() -> void:
@@ -199,8 +199,8 @@ func send_dialog(dblock) -> void:
 		indexer = 0
 		UI = UI_pc.instance()
 		add_child(UI)
-		is_ON = true
 		execute_dialog()
+		is_ON = true
 	#print("The Dialog Mangaer Is running")
 
 func end_dialog() -> void:
@@ -213,16 +213,10 @@ func end_dialog() -> void:
 	is_ON = false
 
 func advance () -> void : #This function is so buggy
-	if UI.is_tweening and is_ON:
+	if UI.is_tweening:
+		print ("is it tweening: ",UI.is_tweening, " ", is_ON)
 		UI.say_text.skip_tween()
 		UI.is_tweening = false
-		return
-
-	if _waiting:
-		audio_player.stop()
-		indexer = indexer + 1
-		_waiting = false
-		advance()
 		return
 
 	if is_ON and not UI.is_tweening and not audio_player.playing:
