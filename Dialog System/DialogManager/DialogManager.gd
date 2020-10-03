@@ -12,7 +12,7 @@ var UI
 var is_ON : bool = false
 var cbi 
 
-var _waiting : bool = false
+var _skipped : bool = false
 
 #This is for Debug perpesos but a button to skip the dialog is needed
 func _input(event):
@@ -20,6 +20,7 @@ func _input(event):
 		advance()
 
 func execute_dialog() -> void:
+	
 	if current_block == null:
 		#print("Error: No block has been added")
 		end_dialog()
@@ -130,11 +131,7 @@ func execute_dialog() -> void:
 			indexer = indexer+1
 			advance()
 			
-		"sound_command": #Refactor : keep Funtionality while able to skip
-			if not cbi.interrupt : 
-				if audio_player.is_playing():
-					yield (audio_player, "finished")
-
+		"sound_command": #I think it sould just wait to finish remove the interrupt
 			if cbi.stream != null : 
 				audio_player.stop()
 				audio_player.set_stream (cbi.stream)
@@ -144,11 +141,13 @@ func execute_dialog() -> void:
 				audio_player.set_bus(cbi.bus)
 				if cbi.effect != null:
 					AudioServer.add_bus_effect (AudioServer.get_bus_index(cbi.bus),cbi.effect)
+				_skipped = false
 				audio_player.play()
-				if cbi.wait :
-					yield (audio_player, "finished")
-			indexer = indexer+1
-			advance ()
+				yield (audio_player, "finished")
+
+			if _skipped == false: 
+				indexer = indexer+1
+				advance ()
 
 func calc_var(req_node: NodePath, req_var : String, chek_val : int, type_cond: String) -> bool:
 	
@@ -212,12 +211,18 @@ func end_dialog() -> void:
 	UI.queue_free()
 	is_ON = false
 
-func advance () -> void : #This function is so buggy
+func advance () -> void :
+	if !is_ON : return
+	
 	if UI.is_tweening:
 		UI.say_text.skip_tween()
 		UI.is_tweening = false
 		return
-
-	if is_ON and not UI.is_tweening and not audio_player.playing:
-		print("calling advance")
+	
+	if audio_player.playing and !_skipped and not UI.is_tweening : #To DEBUG
+		audio_player.stop()
+		_skipped = true
+		indexer = indexer+1
+		
+	if not UI.is_tweening and not audio_player.playing:
 		execute_dialog()

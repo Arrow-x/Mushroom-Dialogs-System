@@ -105,7 +105,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Dialog System"
-run/main_scene="res://Test/Stats.tscn"
+run/main_scene="res://Testing/Testing Sceen.tscn"
 run/low_processor_mode=true
 config/icon="res://icon.png"
 
@@ -126,7 +126,10 @@ enabled=PoolStringArray(  )
 
 [locale]
 
-locale_filter=[ 0, [  ] ]
+locale_filter=[ 0, [ "ar", "el" ] ]
+translation_remaps={
+"res://icon.png": PoolStringArray( "res://icon.png:ar" )
+}
 
 [rendering]
 
