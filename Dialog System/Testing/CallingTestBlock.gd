@@ -2,6 +2,12 @@ extends Node
 
 export (Resource) var _block
 onready var debug = $Label
+
+
+func _process(delta):
+	debug.text = String(DialogManager._skipped) 
+
+
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
 		if _block != null:

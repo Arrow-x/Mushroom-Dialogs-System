@@ -131,7 +131,7 @@ func execute_dialog() -> void:
 			indexer = indexer+1
 			advance()
 			
-		"sound_command": #I think it sould just wait to finish remove the interrupt
+		"sound_command": 
 			if cbi.stream != null : 
 				audio_player.stop()
 				audio_player.set_stream (cbi.stream)
@@ -218,7 +218,7 @@ func advance () -> void :
 		UI.say_text.skip_tween()
 		UI.is_tweening = false
 		return
-	
+
 	if audio_player.playing and !_skipped and not UI.is_tweening : #To DEBUG
 		audio_player.stop()
 		_skipped = true
