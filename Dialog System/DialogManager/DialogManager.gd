@@ -143,7 +143,7 @@ func execute_dialog() -> void:
 					AudioServer.add_bus_effect (AudioServer.get_bus_index(cbi.bus),cbi.effect)
 				_skipped = false
 				audio_player.play()
-				yield (audio_player, "finished")
+				yield (audio_player, "finished") 
 
 			if _skipped == false: 
 				indexer = indexer+1

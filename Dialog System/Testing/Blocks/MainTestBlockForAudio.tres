@@ -1,0 +1,57 @@
+[gd_resource type="Resource" load_steps=13 format=2]
+
+[ext_resource path="res://DialogManager/Dialog Commands/Block.gd" type="Script" id=1]
+[ext_resource path="res://DialogManager/Dialog Commands/Sound.gd" type="Script" id=2]
+[ext_resource path="res://DialogManager/Dialog Commands/Say.gd" type="Script" id=3]
+[ext_resource path="res://Testing/Audio/1795.ogg" type="AudioStream" id=4]
+[ext_resource path="res://Testing/Audio/forest.ogg" type="AudioStream" id=5]
+[ext_resource path="res://Testing/Audio/rain.ogg" type="AudioStream" id=6]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 3 )
+name = ""
+say = "We will start with a liitle sound first (leave this to finish)"
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 2 )
+stream = ExtResource( 4 )
+volume_db = 0.0
+pitch_scale = 1.0
+mix_target = 0
+bus = "Master"
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 3 )
+name = ""
+say = "and now some forst sounds (skip this)"
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 2 )
+stream = ExtResource( 5 )
+volume_db = 0.0
+pitch_scale = 1.0
+mix_target = 0
+bus = "Master"
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 3 )
+name = ""
+say = "you skipped how about another sound!"
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=6]
+script = ExtResource( 2 )
+stream = ExtResource( 6 )
+volume_db = 0.0
+pitch_scale = 1.0
+mix_target = 0
+bus = "Master"
+
+[resource]
+script = ExtResource( 1 )
+commands = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ]
