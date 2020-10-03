@@ -22,8 +22,6 @@ func _ready():
 	sbb.caller = self
 	install_effect(sbb)
 	
-	clear()
-	
 func _process(delta):
 	if _speed_mult != _last_speed:
 		_last_speed = _speed_mult
@@ -71,7 +69,7 @@ func skip_tween():
 	_tween.remove_all()
 	visible_characters = -1
 
-func _block_speed(val: float):
+func _block_speed (val: float):
 	if val > 0:
 		_speed_mult = val
 
@@ -79,22 +77,25 @@ class speedbb extends RichTextEffect:
 	var bbcode: String = "spd"
 	var caller: Node = null
 	
-	func _process_custom_fx(char_fx) :
+	func _process_custom_fx(char_fx) -> bool:
+		
 		if Engine.editor_hint:
 			return true
-		
 		# main loop
 		if char_fx.visible and caller != null and char_fx.env.has(""):
+			
 			# first char of speed sequence
-			if char_fx.relative_index == 0 and ((caller.speed >= 0 and caller.percent_visible < 1.0) or caller.speed < 0):
+			if char_fx.relative_index == 0 and (
+					(caller.speed >= 0 and caller.percent_visible < 1.0)
+					 or caller.speed < 0):
+				
 				caller._block_speed(char_fx.env[""])
-				print("Hello")
 				
 			# last char of speed sequence
 			if char_fx.env.get("_ct", -1) == char_fx.relative_index:
 				caller._block_speed(1)
-
+		
 		# character counting, so it knows where to start and stop the speed
 		char_fx.env["_ct"] = max(char_fx.relative_index, char_fx.env.get("_ct", 0))
+		
 		return true
-	
