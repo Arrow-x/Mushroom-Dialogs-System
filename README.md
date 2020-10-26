@@ -8,8 +8,8 @@ Currently it support (through inspector authoring) :
 - Branching with : 
   - Choices.
   - Conditionals (any property in the current scene) 
-  - Jumping to any part of a any Dialog
-- Controlling the sequence of any animation in the scene by the dialog system
+  - Jumping to any part of any Dialog
+- Play animation, continue the dialog or wait for the animation to end
 - Control Properties in the current scene
 - Changing the Dialog system UI in the middle of a dialog
 - Play sounds and Apply effects to them
