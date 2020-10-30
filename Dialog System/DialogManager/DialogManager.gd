@@ -8,7 +8,7 @@ onready var audio_player : AudioStreamPlayer = $AudioStreamPlayer
 var current_flowchart #The whole flowchart thing is unnessery unitil we make an editor
 var current_block : block
 var current_choices : Array
-var UI 
+var UI : dialog_ui_control
 var is_ON : bool = false
 var cbi 
 
@@ -50,10 +50,10 @@ func execute_dialog() -> void:
 		#to add: Better Portraits support
 		"say": #ToDebug
 			UI.hide_say()
-			
 			UI.add_text(cbi.say, cbi.name, cbi.append_text)
 			UI.add_portrait(cbi.portrait, cbi.por_pos)
 			UI.show_say()
+			UI.show_next_button()
 			indexer = indexer+1
 			
 		"cond_say":
@@ -62,6 +62,7 @@ func execute_dialog() -> void:
 				UI.add_text(cbi.say, cbi.name, cbi.append_text)
 				UI.add_portrait(cbi.portrait, cbi.por_pos)
 				UI.show_say()
+				UI.show_next_button()
 				indexer = indexer+1
 				return
 			indexer = indexer + 1
@@ -70,6 +71,7 @@ func execute_dialog() -> void:
 		"fork":
 			#UI.hide_say()
 			UI.hide_choice()
+			UI.hide_next_button()
 			#UI.hide_portriats()
 			current_choices.clear()
 			for i in cbi.choices.size():

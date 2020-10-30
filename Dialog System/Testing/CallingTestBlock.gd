@@ -9,6 +9,6 @@ func _process(delta):
 
 
 func _input(event):
-	if event.is_action_pressed("ui_accept"):
+	if event.is_action_pressed("interact"):
 		if _block != null:
 			DialogManager.send_dialog(_block)

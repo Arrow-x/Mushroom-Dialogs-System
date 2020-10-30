@@ -11,7 +11,7 @@
 [sub_resource type="Resource" id=1]
 script = ExtResource( 3 )
 name = "James"
-say = "[spd=1]Hello My name is james[/spd] "
+say = "[spd = 1]Hello My name is james[/spd] "
 portrait = ExtResource( 6 )
 por_pos = "Left"
 append_text = false

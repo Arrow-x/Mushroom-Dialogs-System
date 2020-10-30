@@ -1,4 +1,4 @@
-extends Node
+extends dialog_ui_control
 
 var portraits : Dictionary
 
@@ -78,8 +78,14 @@ func hide_portriats ()-> void :
 	var port : Array = [right_portrait, center_portrait, left_portrait]
 	for i in port:
 		i.visible  = false
+
+func hide_next_button() -> void:
+	next_button.visible = false
+
+func show_next_button()-> void:
+	next_button.visible = true
 	
-func add_text(got_text, got_name, append = false) -> void: 
+func add_text(got_text, got_name = "", append = false) -> void: 
 	say_text.send_message(got_text, append)
 	say_name.text = got_name
 
