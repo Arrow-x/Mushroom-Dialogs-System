@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://DialogManager/Dialog UI/UIcontroller.gd" type="Script" id=1]
 [ext_resource path="res://DialogManager/Dialog UI/TypeWriter.gd" type="Script" id=2]
+
+[sub_resource type="ShaderMaterial" id=1]
+
+[sub_resource type="ShaderMaterial" id=2]
+
+[sub_resource type="ShaderMaterial" id=3]
 
 [node name="DialogUI" type="Control"]
 anchor_right = 1.0
@@ -29,14 +35,11 @@ __meta__ = {
 }
 
 [node name="RightPortrait" type="TextureRect" parent="."]
+material = SubResource( 1 )
 anchor_left = 0.64
 anchor_top = 0.045
 anchor_right = 0.884
 anchor_bottom = 0.5
-margin_left = -1.85059
-margin_top = 78.5751
-margin_right = -1.85059
-margin_bottom = 78.5751
 rect_pivot_offset = Vector2( 40.394, -98.7395 )
 expand = true
 stretch_mode = 5
@@ -45,14 +48,11 @@ __meta__ = {
 }
 
 [node name="CenterPortrait" type="TextureRect" parent="."]
+material = SubResource( 2 )
 anchor_left = 0.406
 anchor_top = 0.045
 anchor_right = 0.61
 anchor_bottom = 0.5
-margin_left = -1.85062
-margin_top = 78.5751
-margin_right = -1.85059
-margin_bottom = 78.5751
 rect_pivot_offset = Vector2( 280.01, -98.7395 )
 expand = true
 stretch_mode = 5
@@ -61,14 +61,11 @@ __meta__ = {
 }
 
 [node name="LeftPortrait" type="TextureRect" parent="."]
+material = SubResource( 3 )
 anchor_left = 0.111
 anchor_top = 0.045
 anchor_right = 0.329
 anchor_bottom = 0.5
-margin_left = -2.91008
-margin_top = 78.5751
-margin_right = -2.91016
-margin_bottom = 78.5751
 rect_pivot_offset = Vector2( 582.09, -98.7395 )
 expand = true
 stretch_mode = 5
@@ -91,9 +88,9 @@ anchor_top = 0.2
 anchor_right = 0.975
 anchor_bottom = 0.833
 bbcode_enabled = true
-bbcode_text = "Color me [color = aqua] Impressed [/color] for this [b] Great [/b] [i] isn't it[/i]
+bbcode_text = "Color me [color=aqua] Impressed [/color] for this [b] Great [/b] [i] isn't it[/i]
 "
-text = "Color me [color = aqua] Impressed [/color] for this  Great   isn't it
+text = "Color me  Impressed  for this  Great   isn't it
 "
 scroll_active = false
 script = ExtResource( 2 )

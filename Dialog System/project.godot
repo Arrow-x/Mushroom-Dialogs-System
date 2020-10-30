@@ -83,6 +83,11 @@ _global_script_classes=[ {
 "class": "sound_command",
 "language": "GDScript",
 "path": "res://DialogManager/Dialog Commands/Sound.gd"
+}, {
+"base": "Command",
+"class": "tween_command",
+"language": "GDScript",
+"path": "res://DialogManager/Dialog Commands/TweenCommand.gd"
 } ]
 _global_script_class_icons={
 "Chararcter": "",
@@ -99,7 +104,8 @@ _global_script_class_icons={
 "jump_command": "",
 "say_command": "",
 "set_var_command": "",
-"sound_command": ""
+"sound_command": "",
+"tween_command": ""
 }
 
 [application]

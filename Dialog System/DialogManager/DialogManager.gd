@@ -47,9 +47,10 @@ func execute_dialog() -> void:
 		return
 
 	match cbi.type:
-		#to add: BBCode Support, Better Portraits support
+		#to add: Better Portraits support
 		"say": #ToDebug
 			UI.hide_say()
+			
 			UI.add_text(cbi.say, cbi.name, cbi.append_text)
 			UI.add_portrait(cbi.portrait, cbi.por_pos)
 			UI.show_say()
@@ -67,8 +68,9 @@ func execute_dialog() -> void:
 			advance()	
 
 		"fork":
-			UI.hide_say()
+			#UI.hide_say()
 			UI.hide_choice()
+			#UI.hide_portriats()
 			current_choices.clear()
 			for i in cbi.choices.size():
 				if cbi.type == "cond_choice":
