@@ -43,10 +43,6 @@ func _ready():
 func hide_say() -> void:
 	if say_pannel.visible:
 		say_pannel.visible = false
-		var port: Array = [right_portrait, center_portrait, left_portrait]
-		for i in port:
-			i.visible = false
-
 
 func show_say() -> void:
 	if !say_pannel.visible:
@@ -65,21 +61,32 @@ func show_choice() -> void:
 	if !choice_container.visible:
 		choice_container.visible = true
 
+func add_portrait(portrait: StreamTexture, por_pos) -> void: 
+	var port : Array = [right_portrait, center_portrait, left_portrait]
+	var tint_shader = load("res://Testing/Blocks/BlueTintShader.tres")
+	for i in port:
+		i.material.shader = tint_shader
 
-func add_portrait(portrait: StreamTexture, por_pos) -> void:
 	match por_pos:
 		"Right":
+			right_portrait.material.shader = null
 			right_portrait.texture = portrait
 			right_portrait.visible = true
 		"Left":
+			left_portrait.material.shader = null
 			left_portrait.texture = portrait
 			left_portrait.visible = true
 		"Center":
+			center_portrait.material.shader = null
 			center_portrait.texture = portrait
 			center_portrait.visible = true
-
-
-func add_text(got_text, got_name, append = false) -> void:
+			
+func hide_portriats ()-> void :
+	var port : Array = [right_portrait, center_portrait, left_portrait]
+	for i in port:
+		i.visible  = false
+	
+func add_text(got_text, got_name, append = false) -> void: 
 	say_text.send_message(got_text, append)
 	say_name.text = got_name
 

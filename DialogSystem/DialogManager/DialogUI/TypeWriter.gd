@@ -22,8 +22,7 @@ func _ready():
 	var sbb = speedbb.new()
 	sbb.caller = self
 	install_effect(sbb)
-
-
+	
 func _process(_delta):
 	if _speed_mult != _last_speed:
 		_last_speed = _speed_mult
