@@ -83,12 +83,8 @@ class speedbb extends RichTextEffect:
 		# main loop
 		if char_fx.visible and caller != null and char_fx.env.has(""):
 			# first char of speed sequence
-			if char_fx.relative_index == 0 and (
-					(caller.speed >= 0 and caller.percent_visible < 1.0)
-					 or caller.speed < 0):
-				
+			if char_fx.relative_index == 0 and ((caller.speed >= 0 and caller.percent_visible < 1.0) or caller.speed < 0):
 				caller._block_speed(char_fx.env[""])
-				
 			# last char of speed sequence
 			if char_fx.env.get("_ct", -1) == char_fx.relative_index:
 				caller._block_speed(1)
