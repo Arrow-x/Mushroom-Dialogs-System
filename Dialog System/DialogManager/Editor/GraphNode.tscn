@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://DialogManager/Editor/GraphNodeScript.gd" type="Script" id=1]
+
+[node name="GraphNode" type="GraphNode"]
+margin_left = 202.52
+margin_top = 36.0
+margin_right = 302.52
+margin_bottom = 96.0
+mouse_filter = 1
+title = "First Block"
+resizable = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

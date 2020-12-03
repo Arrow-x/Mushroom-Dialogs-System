@@ -1,4 +1,4 @@
-extends dialog_ui_control
+extends Node
 
 var portraits : Dictionary
 
@@ -56,21 +56,20 @@ func show_choice() -> void:
 
 func add_portrait(portrait: StreamTexture, por_pos) -> void: 
 	var port : Array = [right_portrait, center_portrait, left_portrait]
-	var tint_shader = load("res://Testing/Blocks/BlueTintShader.tres")
 	for i in port:
-		i.material.shader = tint_shader
+		i.self_modulate = "3e3e3e"
 
 	match por_pos:
 		"Right":
-			right_portrait.material.shader = null
+			right_portrait.self_modulate = "ffffff"
 			right_portrait.texture = portrait
 			right_portrait.visible = true
 		"Left":
-			left_portrait.material.shader = null
+			left_portrait.self_modulate = "ffffff"
 			left_portrait.texture = portrait
 			left_portrait.visible = true
 		"Center":
-			center_portrait.material.shader = null
+			center_portrait.self_modulate = "ffffff"
 			center_portrait.texture = portrait
 			center_portrait.visible = true
 			
@@ -96,10 +95,7 @@ func add_choice_button(block, id, index) -> void:
 	s.connect("pressed",DialogManager,"_on_make_choice",[id,index])
 
 func _on_SayText_message_done():
-	print("message done")
 	is_tweening = false
 
-
 func _on_SayText_message_start():
-	print("message start")
 	is_tweening = true

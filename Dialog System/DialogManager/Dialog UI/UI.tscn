@@ -1,13 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://DialogManager/Dialog UI/UIcontroller.gd" type="Script" id=1]
 [ext_resource path="res://DialogManager/Dialog UI/TypeWriter.gd" type="Script" id=2]
-
-[sub_resource type="ShaderMaterial" id=1]
-
-[sub_resource type="ShaderMaterial" id=2]
-
-[sub_resource type="ShaderMaterial" id=3]
 
 [node name="DialogUI" type="Control"]
 anchor_right = 1.0
@@ -35,7 +29,6 @@ __meta__ = {
 }
 
 [node name="RightPortrait" type="TextureRect" parent="."]
-material = SubResource( 1 )
 anchor_left = 0.64
 anchor_top = 0.045
 anchor_right = 0.884
@@ -48,11 +41,11 @@ __meta__ = {
 }
 
 [node name="CenterPortrait" type="TextureRect" parent="."]
-material = SubResource( 2 )
 anchor_left = 0.406
 anchor_top = 0.045
 anchor_right = 0.61
 anchor_bottom = 0.5
+margin_right = -6.10352e-05
 rect_pivot_offset = Vector2( 280.01, -98.7395 )
 expand = true
 stretch_mode = 5
@@ -61,7 +54,6 @@ __meta__ = {
 }
 
 [node name="LeftPortrait" type="TextureRect" parent="."]
-material = SubResource( 3 )
 anchor_left = 0.111
 anchor_top = 0.045
 anchor_right = 0.329

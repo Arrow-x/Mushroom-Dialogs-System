@@ -9,4 +9,3 @@ export var portrait : Texture
 export (String, "Left", "Right", "Center") var por_pos : String = "Right"
 
 export var append_text : bool = false
-
