@@ -35,7 +35,7 @@ _global_script_classes=[ {
 "path": "res://DialogManager/Dialog Commands/Block.gd"
 }, {
 "base": "Command",
-"class": "change_ui",
+"class": "change_ui_command",
 "language": "GDScript",
 "path": "res://DialogManager/Dialog Commands/ChangeUI.gd"
 }, {
@@ -95,7 +95,7 @@ _global_script_class_icons={
 "FlowChart": "",
 "animation_command": "",
 "block": "",
-"change_ui": "",
+"change_ui_command": "",
 "choice": "",
 "cond_choice": "",
 "cond_say": "",
@@ -111,7 +111,6 @@ _global_script_class_icons={
 [application]
 
 config/name="Dialog System"
-run/main_scene="res://Testing/Testing Sceen.tscn"
 run/low_processor_mode=true
 config/icon="res://icon.png"
 

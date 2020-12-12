@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://DialogManager/Editor/CommandsTree.gd" type="Script" id=1]
 [ext_resource path="res://DialogManager/Editor/GraphEdit.gd" type="Script" id=2]
 [ext_resource path="res://DialogManager/Editor/FlowChartTab.gd" type="Script" id=3]
+[ext_resource path="res://DialogManager/Editor/AddCommand.gd" type="Script" id=4]
 
 [node name="FlowChartTab" type="HSplitContainer"]
 anchor_right = 1.0
@@ -54,13 +55,21 @@ __meta__ = {
 margin_right = 106.0
 margin_bottom = 29.0
 text = "Add Command"
-items = [ "Say", null, 0, false, false, 0, 0, null, "", false, "Say Conditional", null, 0, false, false, 1, 0, null, "", false, "Flow", null, 0, false, false, 2, 0, null, "", false, "Conditional", null, 0, false, false, 3, 0, null, "", false, "Set Animation", null, 0, false, false, 4, 0, null, "", false, "Set variable", null, 0, false, false, 5, 0, null, "", false, "Change UI", null, 0, false, false, 6, 0, null, "", false, "Jump", null, 0, false, false, 7, 0, null, "", false ]
+script = ExtResource( 4 )
 
 [node name="Sort" type="MenuButton" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
 margin_left = 110.0
 margin_right = 147.0
 margin_bottom = 29.0
 text = "Sort"
+
+[node name="CurrentBlock" type="Label" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
+margin_left = 151.0
+margin_top = 7.0
+margin_right = 349.0
+margin_bottom = 21.0
+size_flags_horizontal = 3
+align = 2
 
 [node name="CommandsTree" type="Tree" parent="InspectorTabContainer/Block Settings/InspectorVContainer"]
 margin_top = 34.0

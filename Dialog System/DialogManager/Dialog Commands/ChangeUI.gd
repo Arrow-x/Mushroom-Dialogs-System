@@ -1,5 +1,5 @@
 extends Command
-class_name change_ui
+class_name change_ui_command
 
 var type : String = "change_ui"
 export (PackedScene) var next_UI
