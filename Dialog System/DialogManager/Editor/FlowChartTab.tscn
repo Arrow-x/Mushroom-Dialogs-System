@@ -137,4 +137,5 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_offset = Vector2( -200, -36 )
 script = ExtResource( 2 )
+[connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_CommandsTree_item_activated"]
 [connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton" to="GraphContainer/GraphEdit" method="_on_AddBlockButton_pressed"]
