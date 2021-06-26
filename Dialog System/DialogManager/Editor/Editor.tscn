@@ -28,4 +28,5 @@ margin_left = 4.0
 margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
+
 [connection signal="tab_selected" from="FlowChartTabs" to="." method="_on_FlowChartTabs_tab_selected"]

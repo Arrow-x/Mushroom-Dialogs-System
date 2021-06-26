@@ -1,36 +1,41 @@
 extends Tree
 
 onready var tree = self
-onready var root = tree.create_item()
+onready var root 
 onready var current_block_label : Label = $"../inspectorHeader/inspectorHeaderHBoxContainer/CurrentBlock"
 onready var commands_settings : Panel = $"../../CommandsSettings"
 
 
 var current_block : block
+var current_command: Command
+
 #Set up drag and droping, multiselect...
-func _ready():
-	tree.set_hide_root(true)
+#func _ready():
+	#tree.set_hide_root(true)
 
 func _on_GraphNode_graph_node_meta(meta, title) -> void:
 	commands_settings._currnet_title = title
 	current_block = meta
 	current_block_label.text = "current block: " + title
 	tree.clear()
+	root = null
 	for i in meta.commands :
 		_add_command(i)
 
 func _on_add_command (id: int, pop_up : Popup) -> void:
+	print ("Item Pressed")
 	var _command : Command
 	if current_block == null:
 		return
 		
-	var _getter : Command = pop_up.get_item_metadata(id)
-	_command = _getter.duplicate() #Carful with the Conditional Command
+	_command = pop_up.get_item_metadata(id)
+	#_command = _getter.duplicate() #Carful with the Conditional Command
 	_add_command(_command)
 	current_block.commands.append(_command)
 
 func _add_command(command : Command) -> void:
 	if root == null :
+		print("root == null")
 		root = tree.create_item()
 		tree.set_hide_root(true)
 		
@@ -47,7 +52,10 @@ func _on_CommandsTree_item_activated() -> void:
 					
 			match get_selected().get_meta("0").type : 
 				"say" :
+					current_block = null
 					var say_control = load("res://DialogManager/Editor/Commands/SayControl.tscn").instance()
 					commands_settings.add_child(say_control, true)
-				
+					current_command = get_selected().get_meta("0")
+					var line = commands_settings.get_child(0)
+					line.connect("text_changed",self,"_on_SayLineEdit_text_changed")
 
