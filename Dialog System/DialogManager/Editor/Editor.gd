@@ -18,6 +18,7 @@ func add_tab():
 	$Misc.add_child(file_dialog)
 	file_dialog.margin_right = 500
 	file_dialog.margin_bottom =  300
+	file_dialog.current_file = "new_flowchart"
 	file_dialog.popup_centered()
 	$Panel.visible = true
 	file_dialog.get_cancel().connect("pressed",self,"_on_FileDialog_Closed")
@@ -33,35 +34,61 @@ func _on_FileDialog_Closed ():
 
 func _on_FileDialog_file_selected(path: String):
 	if path == "res://" :
-		var _warning = AcceptDialog.new()
-		$Misc.add_child(_warning)
-		_warning.dialog_text = "Please Enter a name!"
-		_warning.connect("confirmed", self, "_on_warning_confirmed")
-		_warning.popup_centered()
+		throw_warning("Please Enter a name!")
 		return
 
 	if path.is_valid_filename() == true:
-		var _warning = AcceptDialog.new()
-		$Misc.add_child(_warning)
-		_warning.dialog_text = "Please Enter a valid name!\nwithout : / \u005c ? * \u0022 | % < >"
-		_warning.connect("confirmed", self, "_on_warning_confirmed")
-		_warning.popup_centered()
+		throw_warning("Please Enter a valid name!\nwithout : / \u005c ? * \u0022 | % < >")
 		return
 		
 	if clicked_tab.get_child_count() == 0 : 
 		var flowchart = FlowChart.new()
 		var _editor := editor.instance()
 		_editor.flowchart = flowchart
-	#   somehow pass the entered name of the file to
-	#	SAVE THE FLOWCHART INTO DISK!!!!!
+		if !path.ends_with(".tres"):
+			match ResourceSaver.save(path.insert(path.length(),".tres"),flowchart):
+				8: 
+					throw_warning("Bad drive error.")
+					return
+				9:
+					throw_warning("Bad path error.")
+					return
+				10:
+					throw_warning("No permission error")
+					return
+				11:
+					throw_warning("Already in use error.")
+					return
+				13:
+					throw_warning("Can't write error.")
+					return
+				15:
+					throw_warning("Unrecognized error.")
+					return
+				17:	
+					throw_warning("missing dependencies error.")
+					return
+				18: 
+					throw_warning("File: End of file (EOF) error.")
+					return
+		else:
+			ResourceSaver.save(path, flowchart)
+
 		clicked_tab.add_child(_editor, true)
-		
+		clicked_tab.name = path.get_file() #.insert(path.length(),".tres")
 		var _plus := Tabs.new()
-		_plus.name = "FlowChart*"
+		_plus.name = "+"
 		editorUI.add_child(_plus, true)
 		$Panel.visible = false
 		for c in $Misc.get_children():
 			c.queue_free()
+
+func throw_warning(warning : String):
+	var _warning = AcceptDialog.new()
+	$Misc.add_child(_warning)
+	_warning.dialog_text = warning
+	_warning.connect("confirmed", self, "_on_warning_confirmed")
+	_warning.popup_centered()
 
 func _on_warning_confirmed():
 	for c in $Misc.get_children():
