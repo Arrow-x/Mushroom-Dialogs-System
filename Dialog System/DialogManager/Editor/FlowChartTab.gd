@@ -1,6 +1,6 @@
 extends HSplitContainer
 
-onready var flowchart = FlowChart.new()
+var flowchart 
 
 func _ready():
 	pass
