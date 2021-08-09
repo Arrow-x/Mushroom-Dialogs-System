@@ -10,9 +10,9 @@ func _on_FlowChartTabs_tab_selected(tab):
 	clicked_tab = _tab
 	if _tab.get_child_count() != 0 : 
 		return
-	add_tab()
+	file_dialog_save()
 	
-func add_tab():
+func file_dialog_save():
 	var file_dialog := FileDialog.new()
 	file_dialog.resizable = true
 	$Misc.add_child(file_dialog)
@@ -75,7 +75,7 @@ func _on_FileDialog_file_selected(path: String):
 			ResourceSaver.save(path, flowchart)
 
 		clicked_tab.add_child(_editor, true)
-		clicked_tab.name = path.get_file() #.insert(path.length(),".tres")
+		clicked_tab.name = path.get_file().trim_suffix(".tres") 
 		var _plus := Tabs.new()
 		_plus.name = "+"
 		editorUI.add_child(_plus, true)
@@ -93,4 +93,4 @@ func throw_warning(warning : String):
 func _on_warning_confirmed():
 	for c in $Misc.get_children():
 		c.queue_free()
-	add_tab()
+	file_dialog_save()
