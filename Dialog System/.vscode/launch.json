@@ -9,7 +9,7 @@
             "type": "godot",
             "request": "launch",
             "project": "${workspaceFolder}",
-            "port": 6007,
+            "port": 6969,
             "address": "127.0.0.1",
             "launch_game_instance": true,
             "launch_scene": false

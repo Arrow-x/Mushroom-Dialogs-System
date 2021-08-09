@@ -3,8 +3,9 @@ extends Control
 var editor : PackedScene = load("res://DialogManager/Editor/FlowChartTab.tscn")
 onready var editorUI : TabContainer = $FlowChartTabs
 var clicked_tab : Control
+var file_dialog : FileDialog
 
-func _on_FlowChartTabs_tab_selected(tab):
+func _on_FlowChartTabs_tab_selected(tab) -> void:
 	#Create a new FlowChart Resource and assosiate the meta data
 	var _tab := editorUI.get_tab_control(tab)
 	clicked_tab = _tab
@@ -12,27 +13,28 @@ func _on_FlowChartTabs_tab_selected(tab):
 		return
 	file_dialog_save()
 	
-func file_dialog_save():
-	var file_dialog := FileDialog.new()
+func file_dialog_save() -> void:
+	file_dialog = FileDialog.new()
 	file_dialog.resizable = true
 	$Misc.add_child(file_dialog)
 	file_dialog.margin_right = 500
 	file_dialog.margin_bottom =  300
 	file_dialog.current_file = "new_flowchart"
+	file_dialog.popup_exclusive = true
 	file_dialog.popup_centered()
 	$Panel.visible = true
 	file_dialog.get_cancel().connect("pressed",self,"_on_FileDialog_Closed")
 	file_dialog.get_close_button().connect("pressed",self,"_on_FileDialog_Closed")
 	file_dialog.connect("file_selected",self,"_on_FileDialog_file_selected")
-
-func _on_FileDialog_Closed ():
+	
+func _on_FileDialog_Closed () -> void:
 	$Panel.visible = false
 	if editorUI.current_tab != 0: 
 		editorUI.current_tab = editorUI.get_previous_tab()
 	for c in $Misc.get_children():
 		c.queue_free()
 
-func _on_FileDialog_file_selected(path: String):
+func _on_FileDialog_file_selected(path: String) -> void:
 	if path == "res://" :
 		throw_warning("Please Enter a name!")
 		return
@@ -83,14 +85,14 @@ func _on_FileDialog_file_selected(path: String):
 		for c in $Misc.get_children():
 			c.queue_free()
 
-func throw_warning(warning : String):
+func throw_warning(warning : String) -> void:
 	var _warning = AcceptDialog.new()
 	$Misc.add_child(_warning)
 	_warning.dialog_text = warning
 	_warning.connect("confirmed", self, "_on_warning_confirmed")
 	_warning.popup_centered()
 
-func _on_warning_confirmed():
+func _on_warning_confirmed() -> void:
 	for c in $Misc.get_children():
 		c.queue_free()
 	file_dialog_save()
