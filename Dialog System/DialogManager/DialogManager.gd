@@ -225,7 +225,7 @@ func advance () -> void :
 	if !is_ON : 
 		return
 	
-	if UI.is_tweening:
+	if UI.is_tweening: #UI.say_text.is_active()
 		UI.say_text.skip_tween()
 		UI.is_tweening = false
 		return
