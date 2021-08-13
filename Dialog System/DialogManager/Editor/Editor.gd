@@ -6,7 +6,6 @@ var clicked_tab : Control
 var file_dialog : FileDialog
 
 func _on_FlowChartTabs_tab_selected(tab) -> void:
-	#Create a new FlowChart Resource and assosiate the meta data
 	var _tab := editorUI.get_tab_control(tab)
 	clicked_tab = _tab
 	if _tab.get_child_count() != 0 : 
@@ -46,37 +45,18 @@ func _on_FileDialog_file_selected(path: String) -> void:
 	if clicked_tab.get_child_count() == 0 : 
 		var flowchart = FlowChart.new()
 		var _editor := editor.instance()
-		_editor.flowchart = flowchart
+		
 		if !path.ends_with(".tres"):
-			match ResourceSaver.save(path.insert(path.length(),".tres"),flowchart):
-				8: 
-					throw_warning("Bad drive error.")
-					return
-				9:
-					throw_warning("Bad path error.")
-					return
-				10:
-					throw_warning("No permission error")
-					return
-				11:
-					throw_warning("Already in use error.")
-					return
-				13:
-					throw_warning("Can't write error.")
-					return
-				15:
-					throw_warning("Unrecognized error.")
-					return
-				17:	
-					throw_warning("missing dependencies error.")
-					return
-				18: 
-					throw_warning("File: End of file (EOF) error.")
-					return
+			var mod_path : String = path.insert(path.length(),".tres")
+			ResourceSaver.save(mod_path,flowchart)
+			_editor.flowchart_path = mod_path
 		else:
 			ResourceSaver.save(path, flowchart)
+			_editor.flowchart_path = path
 
 		clicked_tab.add_child(_editor, true)
+		_editor.flowchart = flowchart
+		
 		clicked_tab.name = path.get_file().trim_suffix(".tres") 
 		var _plus := Tabs.new()
 		_plus.name = "+"

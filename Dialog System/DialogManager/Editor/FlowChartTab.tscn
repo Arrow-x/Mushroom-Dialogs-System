@@ -19,6 +19,7 @@ script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+_graph_edit = NodePath("GraphContainer/GraphEdit")
 
 [node name="InspectorTabContainer" type="TabContainer" parent="."]
 margin_right = 358.0

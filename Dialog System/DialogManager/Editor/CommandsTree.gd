@@ -52,15 +52,18 @@ func _on_CommandsTree_item_activated() -> void:
 					current_command = get_selected().get_meta("0")
 					
 					say_control.say_text_edit.text = current_command.say
-					say_control.say_text_edit.connect("text_changed", self,"_on_say_LineEdit_text_changed",[say_control.say_text_edit])
+					say_control.say_text_edit.connect("text_changed", self,"_change_command",[say_control.say_text_edit, "say", "text"])
 					say_control.set_say_box_hight()
 					
 					say_control.name_line_edit.text = current_command.name
 					say_control.name_line_edit.connect("text_changed", self,"_on_name_LineEdit_text_changed")
 					#Pass in the characters list instead!
 
-func _on_say_LineEdit_text_changed (new_string :TextEdit ) -> void :
-	current_command.say = new_string.text
-
 func _on_name_LineEdit_text_changed (new_string : String) -> void :
 	current_command.name = new_string
+
+func _change_command(obj: Object, current_property: String, new_property : String):
+	current_command.set(current_property, obj.get(new_property))
+	
+
+

@@ -1,7 +1,43 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" load_steps=10 format=2]
 
 [ext_resource path="res://DialogManager/Dialog Commands/FlowChart.gd" type="Script" id=1]
+[ext_resource path="res://DialogManager/Dialog Commands/Block.gd" type="Script" id=2]
+[ext_resource path="res://DialogManager/Dialog Commands/Say.gd" type="Script" id=3]
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 3 )
+name = "fsdafds"
+say = "fdsfasdfad"
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 3 )
+name = "fdsa"
+say = "fsda"
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 2 )
+commands = [ SubResource( 2 ), SubResource( 3 ) ]
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 3 )
+name = "sdfas"
+say = "fsdfad"
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 2 )
+commands = [ SubResource( 5 ) ]
+
+[sub_resource type="Resource" id=6]
+script = ExtResource( 2 )
+commands = [  ]
 
 [resource]
 script = ExtResource( 1 )
+blocks = [ [ SubResource( 1 ) ], [ SubResource( 4 ) ], [ SubResource( 6 ) ] ]
 characters = [  ]
