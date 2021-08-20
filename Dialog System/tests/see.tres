@@ -1,0 +1,44 @@
+[gd_resource type="Resource" load_steps=11 format=2]
+
+[ext_resource path="res://DialogManager/Dialog Commands/FlowChart.gd" type="Script" id=1]
+[ext_resource path="res://DialogManager/Dialog Commands/Block.gd" type="Script" id=2]
+[ext_resource path="res://DialogManager/Dialog Commands/Say.gd" type="Script" id=3]
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 3 )
+name = "second name"
+say = "cool line"
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 3 )
+name = "first name"
+say = "something good"
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 2 )
+commands = [ SubResource( 1 ), SubResource( 2 ) ]
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 2 )
+commands = [  ]
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 2 )
+commands = [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ) ]
+
+[sub_resource type="Resource" id=6]
+script = ExtResource( 2 )
+commands = [  ]
+
+[sub_resource type="Resource" id=7]
+script = ExtResource( 2 )
+commands = [  ]
+
+[resource]
+script = ExtResource( 1 )
+blocks = [ [ SubResource( 5 ) ], [ SubResource( 6 ) ], [ SubResource( 7 ) ] ]
+characters = [  ]

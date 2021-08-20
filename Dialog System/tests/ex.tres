@@ -1,0 +1,71 @@
+[gd_resource type="Resource" load_steps=9 format=2]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Command
+class_name say_command
+
+var type : String = \"say\"
+
+export var name : String
+export (String, MULTILINE) var say : String
+export var portrait : Texture
+export (String, \"Left\", \"Right\", \"Center\") var por_pos : String = \"Right\"
+
+export var append_text : bool = false
+"
+
+[sub_resource type="Resource" id=4]
+script = SubResource( 3 )
+name = "1"
+say = "1"
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Resource
+class_name block
+
+#each block should now what flowchart it is parented to
+export (Array,Resource) var commands : Array
+
+#these are used when a block is used as condtional block
+var _next_block : Resource
+var _next_indexer : int = 0
+"
+
+[sub_resource type="Resource" id=2]
+script = SubResource( 1 )
+commands = [ SubResource( 4 ) ]
+
+[sub_resource type="Resource" id=6]
+script = SubResource( 3 )
+name = "2"
+say = "2"
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=5]
+script = SubResource( 1 )
+commands = [ SubResource( 6 ) ]
+
+[sub_resource type="Resource" id=7]
+script = SubResource( 1 )
+commands = [  ]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Resource
+class_name FlowChart
+
+#TODO each flowChart hold info about the blocks it contain, list of characters to be used, loacl variables
+#maybe even a custom UI to be used by it
+
+export (Array, Resource) var blocks : Array #this should be a dictionary with a defaul key \"first_block\" for easy deleting and naming of blocks
+export (Array, Resource) var characters 
+
+var local_vars : Array
+"
+
+[resource]
+script = SubResource( 3 )
+blocks = [ [ SubResource( 2 ) ], [ SubResource( 5 ) ], [ SubResource( 7 ) ] ]
+characters = [  ]

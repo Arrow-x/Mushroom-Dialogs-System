@@ -86,6 +86,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+_flowchart_tab = NodePath("../../../..")
 
 [node name="CommandsSettings" type="Panel" parent="InspectorTabContainer/Block Settings"]
 margin_top = 146.0
@@ -127,10 +128,28 @@ __meta__ = {
 }
 
 [node name="AddBlockButton" type="Button" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
-margin_left = 569.0
-margin_right = 645.0
+margin_left = 417.0
+margin_right = 493.0
 margin_bottom = 29.0
 text = "Add Block"
+
+[node name="Export" type="Button" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
+margin_left = 497.0
+margin_right = 549.0
+margin_bottom = 29.0
+text = "Export"
+
+[node name="Save" type="Button" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
+margin_left = 553.0
+margin_right = 594.0
+margin_bottom = 29.0
+text = "Save"
+
+[node name="Open" type="Button" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
+margin_left = 598.0
+margin_right = 645.0
+margin_bottom = 29.0
+text = "Open"
 
 [node name="GraphEdit" type="GraphEdit" parent="GraphContainer"]
 margin_top = 34.0
@@ -143,3 +162,6 @@ script = ExtResource( 2 )
 
 [connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_CommandsTree_item_activated"]
 [connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton" to="GraphContainer/GraphEdit" method="_on_AddBlockButton_pressed"]
+[connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/Export" to="." method="update_flowchar"]
+[connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/Save" to="." method="_on_Save_scene"]
+[connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/Open" to="." method="_on_Open_pressed"]

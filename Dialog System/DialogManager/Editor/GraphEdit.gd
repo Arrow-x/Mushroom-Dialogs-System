@@ -4,7 +4,7 @@ onready var graph_node : PackedScene = load("res://DialogManager/Editor/GraphNod
 
 var node_offset : int = 0
 
-signal add_save_flow 
+signal add_block_to_flow 
 
 	
 func _on_AddBlockButton_pressed(title : String = "new block"):
@@ -17,6 +17,6 @@ func _on_AddBlockButton_pressed(title : String = "new block"):
 		node_offset = 0
 	var _new_block = block.new()
 	node.set_meta("block",_new_block)
-	emit_signal("add_save_flow",[_new_block])
+	emit_signal("add_block_to_flow",[_new_block])
 	node.connect("graph_node_meta",get_node("../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),"_on_GraphNode_graph_node_meta")
 	add_child(node)

@@ -1,9 +1,10 @@
 extends Tree
 
+export  var _flowchart_tab : NodePath
 onready var root : TreeItem
 onready var current_block_label : Label = $"../inspectorHeader/inspectorHeaderHBoxContainer/CurrentBlock"
 onready var commands_settings : Panel = $"../../CommandsSettings"
-
+onready var FlowChartTab : Control = get_node(_flowchart_tab)
 var current_block : block
 var current_command : Command
 
@@ -27,6 +28,7 @@ func _on_add_command (id: int, pop_up : Popup) -> void:
 	_command = _getter.duplicate() #Carful with the Conditional Command
 	_add_command(_command)
 	current_block.commands.append(_command)
+	
 
 func _add_command(command : Command) -> void:
 	if get_root() == null :
@@ -36,7 +38,7 @@ func _add_command(command : Command) -> void:
 	var _item : TreeItem = self.create_item(root)
 	_item.set_text(0, command.type)
 	_item.set_meta("0", command)
-
+	
 func _on_CommandsTree_item_activated() -> void: 
 	if get_selected():
 		if get_selected().get_meta("0") != null:
@@ -64,6 +66,4 @@ func _on_name_LineEdit_text_changed (new_string : String) -> void :
 
 func _change_command(obj: Object, current_property: String, new_property : String):
 	current_command.set(current_property, obj.get(new_property))
-	
-
 

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=5 format=2]
+
+[ext_resource path="res://DialogManager/Dialog Commands/FlowChart.gd" type="Script" id=1]
+[ext_resource path="res://DialogManager/Dialog Commands/Block.gd" type="Script" id=2]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 2 )
+commands = [  ]
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 2 )
+commands = [  ]
+
+[resource]
+script = ExtResource( 1 )
+blocks = [ [ SubResource( 1 ) ], [ SubResource( 2 ) ] ]
+characters = [  ]
