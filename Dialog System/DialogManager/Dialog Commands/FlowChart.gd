@@ -7,4 +7,4 @@ class_name FlowChart
 export (Array, Resource) var blocks : Array #this should be a dictionary with a defaul key "first_block" for easy deleting and naming of blocks
 export (Array, Resource) var characters 
 
-var local_vars : Array
+var nodes : Dictionary
