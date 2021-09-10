@@ -8,7 +8,7 @@ var node_offset : int = 0
 signal add_block_to_flow 
 
 	
-func _on_AddBlockButton_pressed(title : String = "new block"):
+func _on_AddBlockButton_pressed():
 	var enter_name : WindowDialog = enter_name_scene.instance()
 	add_child(enter_name, true)
 	enter_name.popup_centered()

@@ -8,4 +8,4 @@ func _gui_input(event: InputEvent):
 		emit_signal("graph_node_meta",self.get_meta("block"),title)
 	
 func _on_GraphNode_dragged(_from, to):
-	emit_signal("graph_node_dragged",to, self.to_string())
+	emit_signal("graph_node_dragged",to, self.title) 

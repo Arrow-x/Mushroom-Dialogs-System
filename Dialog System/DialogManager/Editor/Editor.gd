@@ -1,13 +1,14 @@
 extends Control
 #This Need a refactor
-var editor : PackedScene = load("res://DialogManager/Editor/FlowChartTab.tscn")
+var editor : PackedScene = preload("res://DialogManager/Editor/FlowChartTab.tscn")
 onready var editorUI : TabContainer = $FlowChartTabs
 var clicked_tab : Control
 var file_dialog : FileDialog
 
 func _on_FlowChartTabs_tab_selected(tab) -> void:
 	var _tab := editorUI.get_tab_control(tab)
-	#this checks if the tab have any childern if they do nothing will happend if the don't (only the + tab should not have any childern at any given time)
+	#this checks if the tab have any childern if they do nothing will happend 
+	#if the don't (only the + tab should not have any childern at any given time)
 	clicked_tab = _tab
 	if _tab.get_child_count() != 0 : 
 		return
@@ -47,7 +48,7 @@ func _on_FileDialog_Closed () -> void:
 func _on_FileDialog_flowchart_selected(path: String) -> void:
 
 	if path.is_valid_filename() == true:
-		throw_warning("Please Enter a valid name!\nwithout : / \u005c ? * \u0022 | % < >")
+		throw_warning( "Please Enter a valid name!\nwithout : / \u005c ? * \u0022 | % < >")
 		return
 		
 	if clicked_tab.get_child_count() == 0 : 
