@@ -12,77 +12,77 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "Chararcter",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/Character.gd"
+"path": "res://DialogManager/DialogCommands/Character.gd"
 }, {
 "base": "Resource",
 "class": "Command",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/Command.gd"
+"path": "res://DialogManager/DialogCommands/Command.gd"
 }, {
 "base": "Resource",
 "class": "FlowChart",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/FlowChart.gd"
+"path": "res://DialogManager/DialogCommands/FlowChart.gd"
 }, {
 "base": "Command",
 "class": "animation_command",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/Animation.gd"
+"path": "res://DialogManager/DialogCommands/Animation.gd"
 }, {
 "base": "Resource",
 "class": "block",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/Block.gd"
+"path": "res://DialogManager/DialogCommands/Block.gd"
 }, {
 "base": "Command",
 "class": "change_ui_command",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/ChangeUI.gd"
+"path": "res://DialogManager/DialogCommands/ChangeUI.gd"
 }, {
 "base": "Resource",
 "class": "choice",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/Choice.gd"
+"path": "res://DialogManager/DialogCommands/Choice.gd"
 }, {
 "base": "Command",
 "class": "cond_choice",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/CondChoice.gd"
+"path": "res://DialogManager/DialogCommands/CondChoice.gd"
 }, {
 "base": "Command",
 "class": "cond_say",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/CondSay.gd"
+"path": "res://DialogManager/DialogCommands/CondSay.gd"
 }, {
 "base": "Command",
 "class": "condition_command",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/Condition.gd"
+"path": "res://DialogManager/DialogCommands/Condition.gd"
 }, {
 "base": "Command",
 "class": "fork_command",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/Fork.gd"
+"path": "res://DialogManager/DialogCommands/Fork.gd"
 }, {
 "base": "Command",
 "class": "jump_command",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/Jump.gd"
+"path": "res://DialogManager/DialogCommands/Jump.gd"
 }, {
 "base": "Command",
 "class": "say_command",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/Say.gd"
+"path": "res://DialogManager/DialogCommands/Say.gd"
 }, {
 "base": "Command",
 "class": "set_var_command",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/SetVar.gd"
+"path": "res://DialogManager/DialogCommands/SetVar.gd"
 }, {
 "base": "Command",
 "class": "sound_command",
 "language": "GDScript",
-"path": "res://DialogManager/Dialog Commands/Sound.gd"
+"path": "res://DialogManager/DialogCommands/Sound.gd"
 } ]
 _global_script_class_icons={
 "Chararcter": "",
@@ -104,8 +104,12 @@ _global_script_class_icons={
 
 [application]
 
+<<<<<<< HEAD:Dialog System/project.godot
 config/name="Dialog System"
 run/main_scene="res://DialogManager/Editor/Editor.tscn"
+=======
+config/name="MushroomDialogSystem"
+>>>>>>> a25daa2c7fa33bad2b71fba6c8d89bdda5fca6f2:DialogSystem/project.godot
 run/low_processor_mode=true
 config/icon="res://icon.png"
 
