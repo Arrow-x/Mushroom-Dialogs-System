@@ -1,0 +1,14 @@
+Godot Engine v3.3.4.stable.arch_linux - https://godotengine.org
+Found discrete GPU, setting DRI_PRIME=1 to use it.
+Note: Set DRI_PRIME=0 in the environment to disable Godot from using the discrete GPU.
+OpenGL ES 3.0 Renderer: AMD CAICOS (DRM 2.50.0 / 5.14.10-1-MANJARO, LLVM 12.0.1)
+OpenGL ES Batching: ON
+ 
+**ERROR**: Cannot open file 'res://DialogManager/Editor/Helper Scenes/Enter Name Scnes/Scenes/EnterNameScene.tscn'.
+   At: scene/resources/resource_format_text.cpp:1232:load_interactive() - Condition "err != OK" is true. Returned: Ref<ResourceInteractiveLoader>()
+**ERROR**: Failed loading resource: res://DialogManager/Editor/Helper Scenes/Enter Name Scnes/Scenes/EnterNameScene.tscn. Make sure resources have been imported by opening the project in the editor at least once.
+   At: core/io/resource_loader.cpp:282:_load() - Condition "found" is true. Returned: RES()
+**SCRIPT ERROR**: Parse Error: Can't preload resource at path: res://DialogManager/Editor/Helper Scenes/Enter Name Scnes/Scenes/EnterNameScene.tscn
+   At: res://DialogManager/Editor/GraphEdit.gd:4:GDScript::reload() - Parse Error: Can't preload resource at path: res://DialogManager/Editor/Helper Scenes/Enter Name Scnes/Scenes/EnterNameScene.tscn
+**ERROR**: Method failed. Returning: ERR_PARSE_ERROR
+   At: modules/gdscript/gdscript.cpp:585:reload() - Method failed. Returning: ERR_PARSE_ERROR

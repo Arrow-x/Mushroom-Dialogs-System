@@ -35,7 +35,7 @@ _global_script_classes=[ {
 "path": "res://DialogManager/DialogCommands/Block.gd"
 }, {
 "base": "Command",
-"class": "change_ui_command",
+"class": "change_ui",
 "language": "GDScript",
 "path": "res://DialogManager/DialogCommands/ChangeUI.gd"
 }, {
@@ -90,7 +90,7 @@ _global_script_class_icons={
 "FlowChart": "",
 "animation_command": "",
 "block": "",
-"change_ui_command": "",
+"change_ui": "",
 "choice": "",
 "cond_choice": "",
 "cond_say": "",
@@ -104,12 +104,7 @@ _global_script_class_icons={
 
 [application]
 
-<<<<<<< HEAD:Dialog System/project.godot
-config/name="Dialog System"
-run/main_scene="res://DialogManager/Editor/Editor.tscn"
-=======
 config/name="MushroomDialogSystem"
->>>>>>> a25daa2c7fa33bad2b71fba6c8d89bdda5fca6f2:DialogSystem/project.godot
 run/low_processor_mode=true
 config/icon="res://icon.png"
 
