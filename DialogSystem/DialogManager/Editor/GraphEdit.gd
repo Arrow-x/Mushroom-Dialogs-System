@@ -1,13 +1,12 @@
 extends GraphEdit
 
 onready var graph_node : PackedScene = preload("res://DialogManager/Editor/GraphNode.tscn")
-onready var enter_name_scene : PackedScene = preload("res://DialogManager/Editor/Helper Scenes/Enter Name Scnes/Scenes/EnterNameScene.tscn")
+onready var enter_name_scene : PackedScene = preload("res://DialogManager/Editor/HelperScenes/EnterNameScene/Scenes/EnterNameScene.tscn")
 
 var node_offset : int = 0
 
 signal add_block_to_flow 
 
-	
 func _on_AddBlockButton_pressed():
 	var enter_name : WindowDialog = enter_name_scene.instance()
 	add_child(enter_name, true)

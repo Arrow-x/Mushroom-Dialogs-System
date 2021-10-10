@@ -9,3 +9,4 @@ export var first_block : Resource
 var blocks : Array
 var local_vars : Array
 export (Array, Resource) var characters 
+var nodes : Dictionary

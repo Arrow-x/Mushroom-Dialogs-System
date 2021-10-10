@@ -30,6 +30,6 @@ func _ready():
 	pop_up.set_item_metadata(7, sound_command.new())
 	
 	pop_up.add_item("Change UI Conmmand",8)
-	pop_up.set_item_metadata(8, change_ui_command.new())
+	pop_up.set_item_metadata(8, change_ui.new()) 
 	
 	pop_up.connect("id_pressed",get_node("../../../CommandsTree"),"_on_add_command", [pop_up])

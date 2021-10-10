@@ -5,6 +5,7 @@ var flowchart_path : String
 
 export var _graph_edit : NodePath
 onready var graph_edit : GraphEdit = get_node(_graph_edit)
+
 func _ready():
 	graph_edit.connect("add_block_to_flow", self, "_on_add_block_to_flow")
 
