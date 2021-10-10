@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://DialogManager/Dialog UI/UIcontroller.gd" type="Script" id=1]
-[ext_resource path="res://DialogManager/Dialog UI/TypeWriter.gd" type="Script" id=2]
+[ext_resource path="res://DialogManager/DialogUI/UIcontroller.gd" type="Script" id=1]
+[ext_resource path="res://DialogManager/DialogUI/TypeWriter.gd" type="Script" id=2]
 
 [node name="DialogUI" type="Control"]
 anchor_right = 1.0
@@ -130,5 +130,3 @@ alignment = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="message_done" from="SayPanel/SayText" to="." method="_on_SayText_message_done"]
-[connection signal="message_start" from="SayPanel/SayText" to="." method="_on_SayText_message_start"]

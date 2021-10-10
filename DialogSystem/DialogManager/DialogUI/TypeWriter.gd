@@ -22,7 +22,7 @@ func _ready():
 	sbb.caller = self
 	install_effect(sbb)
 	
-func _process(delta):
+func _process(_delta):
 	if _speed_mult != _last_speed:
 		_last_speed = _speed_mult
 		_tween.playback_speed = _speed_mult * speed

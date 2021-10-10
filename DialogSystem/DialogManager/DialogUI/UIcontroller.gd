@@ -35,6 +35,9 @@ func _ready():
 	next_button.connect("pressed",DialogManager,"advance")
 	say_text.text = ""
 
+	say_text.connect("message_done",self,"_on_SayText_message_done")
+	say_text.connect("message_start",self,"_on_SayText_message_start")
+
 func hide_say() -> void:
 	if say_pannel.visible:
 		say_pannel.visible = false
@@ -68,7 +71,7 @@ func add_portrait(portrait: StreamTexture, por_pos) -> void:
 		"Center":
 			center_portrait.texture = portrait
 			center_portrait.visible = true
-	
+
 func add_text(got_text, got_name, append = false) -> void: 
 	say_text.send_message(got_text, append)
 	say_name.text = got_name
@@ -82,7 +85,6 @@ func add_choice_button(block, id, index) -> void:
 func _on_SayText_message_done():
 	print("message done")
 	is_tweening = false
-
 
 func _on_SayText_message_start():
 	print("message start")
