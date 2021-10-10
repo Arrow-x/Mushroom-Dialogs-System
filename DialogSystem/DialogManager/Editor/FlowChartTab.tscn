@@ -1,0 +1,146 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://DialogManager/Editor/CommandsTree.gd" type="Script" id=1]
+[ext_resource path="res://DialogManager/Editor/GraphEdit.gd" type="Script" id=2]
+[ext_resource path="res://DialogManager/Editor/FlowChartTab.gd" type="Script" id=3]
+[ext_resource path="res://DialogManager/Editor/AddCommand.gd" type="Script" id=4]
+[ext_resource path="res://DialogManager/Editor/CommandsSettings.gd" type="Script" id=5]
+
+[node name="FlowChartTab" type="HSplitContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_graph_edit = NodePath("GraphContainer/GraphEdit")
+
+[node name="InspectorTabContainer" type="TabContainer" parent="."]
+margin_right = 358.0
+margin_bottom = 564.0
+tab_align = 0
+
+[node name="Block Settings" type="VSplitContainer" parent="InspectorTabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+rect_min_size = Vector2( 350, 0 )
+
+[node name="InspectorVContainer" type="VBoxContainer" parent="InspectorTabContainer/Block Settings"]
+margin_right = 350.0
+margin_bottom = 134.0
+
+[node name="inspectorHeader" type="Panel" parent="InspectorTabContainer/Block Settings/InspectorVContainer"]
+margin_right = 350.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 0, 30 )
+
+[node name="inspectorHeaderHBoxContainer" type="HBoxContainer" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1.0
+margin_bottom = -1.90735e-06
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AddCommand" type="MenuButton" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
+margin_right = 106.0
+margin_bottom = 29.0
+text = "Add Command"
+script = ExtResource( 4 )
+
+[node name="Sort" type="MenuButton" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
+margin_left = 110.0
+margin_right = 147.0
+margin_bottom = 29.0
+text = "Sort"
+
+[node name="CurrentBlock" type="Label" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
+margin_left = 151.0
+margin_top = 7.0
+margin_right = 349.0
+margin_bottom = 21.0
+size_flags_horizontal = 3
+align = 2
+
+[node name="CommandsTree" type="Tree" parent="InspectorTabContainer/Block Settings/InspectorVContainer"]
+margin_top = 34.0
+margin_right = 350.0
+margin_bottom = 134.0
+rect_min_size = Vector2( 200, 100 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+hide_root = true
+select_mode = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_flowchart_tab = NodePath("../../../..")
+
+[node name="CommandsSettings" type="Panel" parent="InspectorTabContainer/Block Settings"]
+margin_top = 146.0
+margin_right = 350.0
+margin_bottom = 528.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 5 )
+
+[node name="FlowChartSettings" type="PanelContainer" parent="InspectorTabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+rect_min_size = Vector2( 350, 0 )
+size_flags_horizontal = 3
+
+[node name="GraphContainer" type="VBoxContainer" parent="."]
+margin_left = 370.0
+margin_right = 1016.0
+margin_bottom = 564.0
+
+[node name="GraphHeader" type="Panel" parent="GraphContainer"]
+margin_right = 646.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 0, 30 )
+
+[node name="GraphHeaderContainer" type="HBoxContainer" parent="GraphContainer/GraphHeader"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1.0
+margin_bottom = -1.90735e-06
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AddBlockButton" type="Button" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
+margin_left = 569.0
+margin_right = 645.0
+margin_bottom = 29.0
+text = "Add Block"
+
+[node name="GraphEdit" type="GraphEdit" parent="GraphContainer"]
+margin_top = 34.0
+margin_right = 646.0
+margin_bottom = 564.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_offset = Vector2( -200, -36 )
+script = ExtResource( 2 )
+
+[connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_CommandsTree_item_activated"]
+[connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton" to="GraphContainer/GraphEdit" method="_on_AddBlockButton_pressed"]
