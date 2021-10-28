@@ -84,7 +84,7 @@ func add_text(got_text, got_name, append = false) -> void:
 	say_name.text = got_name
 
 
-func add_choice_button(block, id, index) -> void:
+func add_choice(block, id, index) -> void:
 	var s = Button.new()
 	s.text = block.text
 	choice_container.add_child(s)

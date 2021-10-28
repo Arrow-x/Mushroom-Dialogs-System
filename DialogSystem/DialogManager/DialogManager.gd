@@ -85,7 +85,7 @@ func execute_dialog() -> void:
 						current_choices.append(null)
 						continue
 				current_choices.append(cbi.choices[i].next_block)
-				UI.add_choice_button(cbi.choices[i], i, cbi.choices[i].next_index)
+				UI.add_choice(cbi.choices[i], i, cbi.choices[i].next_index)
 			UI.show_choice()
 
 		"jump":  #TO DEBUG
