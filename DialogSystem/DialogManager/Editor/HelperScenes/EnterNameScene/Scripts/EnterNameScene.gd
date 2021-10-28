@@ -7,11 +7,16 @@ onready var cancel: Button = $VBoxContainer/HBoxContainer/Cancel
 
 var node_text: String
 
-
+func _input(event):
+	if event.is_action_pressed("interact"):
+		print(get_focus_owner().get_path())
 func _ready():
-	pass  # Replace with function body.
-
-
+	var get_butt = get_close_button()
+	get_butt.connect("pressed",self,"_on_Cancel_pressed")
+	get_child(0).focus_mode=Control.FOCUS_CLICK
+	$VBoxContainer/LineEdit.grab_focus()
+	
+	
 func _on_LineEdit_text_changed(new_text):
 	node_text = new_text
 
@@ -24,3 +29,11 @@ func _on_OK_pressed():
 
 func _on_Cancel_pressed():
 	self.queue_free()
+
+
+func _on_LineEdit_text_entered(new_text):
+	if node_text != null:
+		node_text = new_text
+		emit_signal("new_text_confirm", node_text)
+		self.queue_free()
+

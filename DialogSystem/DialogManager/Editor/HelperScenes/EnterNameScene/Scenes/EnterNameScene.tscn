@@ -7,6 +7,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -806.0
 margin_bottom = -459.0
+popup_exclusive = true
 window_title = "Enter a Name for the block"
 resizable = true
 script = ExtResource( 1 )
@@ -57,6 +58,8 @@ margin_bottom = 141.0
 [node name="Cancel" type="Button" parent="VBoxContainer/HBoxContainer"]
 margin_right = 54.0
 margin_bottom = 20.0
+focus_neighbour_top = NodePath("../../LineEdit")
+focus_neighbour_right = NodePath("../OK")
 text = "Cancel"
 
 [node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
@@ -69,11 +72,14 @@ size_flags_horizontal = 3
 margin_left = 187.0
 margin_right = 218.0
 margin_bottom = 20.0
+focus_neighbour_left = NodePath("../Cancel")
+focus_neighbour_top = NodePath("../../LineEdit")
 text = "OK"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [connection signal="text_changed" from="VBoxContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
+[connection signal="text_entered" from="VBoxContainer/LineEdit" to="." method="_on_LineEdit_text_entered"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Cancel" to="." method="_on_Cancel_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/OK" to="." method="_on_OK_pressed"]
