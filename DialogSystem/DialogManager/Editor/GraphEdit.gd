@@ -27,6 +27,7 @@ func add_block(title):
 		node_offset = 0
 
 	var _new_block = block.new()
+	_new_block.name = title
 	node.set_meta("block", _new_block)
 	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect(
