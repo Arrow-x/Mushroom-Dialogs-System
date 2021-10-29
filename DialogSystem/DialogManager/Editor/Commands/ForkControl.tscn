@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://DialogManager/Editor/Commands/ForkControl.gd" type="Script" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ChoicesContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InfoBar" type="HBoxContainer" parent="ChoicesContainer"]
+margin_right = 1024.0
+margin_bottom = 20.0
+
+[node name="Control" type="Control" parent="ChoicesContainer/InfoBar"]
+margin_right = 937.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="AddChoiceButton" type="Button" parent="ChoicesContainer/InfoBar"]
+margin_left = 941.0
+margin_right = 1024.0
+margin_bottom = 20.0
+text = "Add choice"

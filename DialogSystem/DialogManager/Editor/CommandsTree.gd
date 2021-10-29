@@ -7,6 +7,7 @@ onready var commands_settings: Panel = $"../../CommandsSettings"
 onready var FlowChartTab: Control = get_node(_flowchart_tab)
 var current_block: block
 var current_command: Command
+var current_command_control: Control
 
 #Set up drag and droping, multiselect...
 
@@ -49,14 +50,18 @@ func _on_CommandsTree_item_activated() -> void:
 				if commands_settings.get_child(0) != null:
 					commands_settings.get_child(0).free()
 
+			current_command = null
+			current_command_control = null
 			match get_selected().get_meta("0").type:
 				"say":
-					current_command = null
 					var say_control: Control = load("res://DialogManager/Editor/Commands/SayControl.tscn").instance()
 					commands_settings.add_child(say_control, true)
 					current_command = get_selected().get_meta("0")
 
 					say_control.say_text_edit.text = current_command.say
+					say_control.name_line_edit.text = current_command.name
+					#TODO Set the Chararcter and the Current Portrait
+
 					say_control.say_text_edit.connect(
 						"text_changed",
 						self,
@@ -65,11 +70,62 @@ func _on_CommandsTree_item_activated() -> void:
 					)
 					say_control.set_say_box_hight()
 
-					say_control.name_line_edit.text = current_command.name
 					say_control.name_line_edit.connect(
 						"text_changed", self, "_on_name_LineEdit_text_changed"
 					)
 					#Pass in the characters list instead!
+
+				"fork":
+					var fork_control: Control = load("res://DialogManager/Editor/Commands/ForkControl.tscn").instance()
+					current_command_control = fork_control
+					commands_settings.add_child(fork_control, true)
+					current_command = get_selected().get_meta("0")
+
+					fork_control.add_choice_button.connect("pressed", self, "_add_choice", [0])
+
+					_add_choice(current_command.choices)
+
+
+func _add_choice(_new_choice) -> void:
+	if _new_choice is int and _new_choice == 0:
+		_new_choice = []
+		var c_c: choice = choice.new()
+		_new_choice.append(c_c)
+		current_command.choices.append(c_c)
+
+	if _new_choice.size() == 0:
+		return
+
+	for i in _new_choice.size():
+		var _new_choice_control: Control = load("res://DialogManager/Editor/Commands/ChoiceControl.tscn").instance()
+		_new_choice_control.set_meta("command", _new_choice[i])
+
+		current_command_control.choices_container.add_child(_new_choice_control)
+
+		_new_choice_control.next_block_menu.connect(
+			"about_to_show", self, "_fill_menu", [_new_choice_control.next_block_menu.get_popup()]
+		)
+
+		_new_choice_control.choice_text.connect(
+			"text_changed", self, "_change_choice_text", [_new_choice_control.get_meta("command")]
+		)
+		_new_choice_control.next_index_text.connect(
+			"value_changed", self, "_change_index", [_new_choice_control.get_meta("command")]
+		)
+		_new_choice_control.next_block_menu.get_popup().connect(
+			"index_pressed",
+			self,
+			"_change_next_block",
+			[
+				_new_choice_control.get_meta("command"),
+				_new_choice_control.next_block_menu.get_popup(),
+				_new_choice_control
+			]
+		)
+		if _new_choice[i].next_block != null:
+			_new_choice_control.next_block_menu.text = _new_choice[i].next_block.name
+		_new_choice_control.choice_text.text = _new_choice[i].text
+		_new_choice_control.next_index_text.value = _new_choice[i].next_index
 
 
 func _on_name_LineEdit_text_changed(new_string: String) -> void:
@@ -78,3 +134,28 @@ func _on_name_LineEdit_text_changed(new_string: String) -> void:
 
 func _change_command(obj: Object, current_property: String, new_property: String):
 	current_command.set(current_property, obj.get(new_property))
+
+
+func _change_choice_text(new_string: String, command: choice) -> void:
+	command.text = new_string
+
+
+func _change_index(value: float, cmd: choice) -> void:
+	cmd.next_index = value
+
+
+func _change_next_block(index, cmd: choice, pop: PopupMenu, c_control: Control) -> void:
+	cmd.next_block = pop.get_item_metadata(index)
+	c_control.next_block_menu.text = pop.get_item_text(index)
+	#Create and Update the connection in the GraphNodes here
+
+
+func _fill_menu(menu: PopupMenu):
+	var _c: int
+	menu.clear()
+	for i in FlowChartTab.flowchart.nodes:
+		if _c == null:
+			_c = 0
+		menu.add_item(i, _c)
+		menu.set_item_metadata(_c, FlowChartTab.flowchart.nodes[i][1])
+		_c = _c + 1

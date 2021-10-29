@@ -1,0 +1,84 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://DialogManager/Editor/Commands/ChoiceControl.gd" type="Script" id=1]
+
+[node name="Control" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel2" type="Panel" parent="."]
+margin_right = 1024.0
+margin_bottom = 5.0
+rect_min_size = Vector2( 0, 5 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_top = 9.0
+margin_right = 1024.0
+margin_bottom = 33.0
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+margin_top = 5.0
+margin_right = 74.0
+margin_bottom = 19.0
+text = "Choice Text"
+
+[node name="ChoiceText" type="LineEdit" parent="HBoxContainer"]
+margin_left = 78.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+margin_top = 37.0
+margin_right = 1024.0
+margin_bottom = 57.0
+
+[node name="Label" type="Label" parent="HBoxContainer2"]
+margin_top = 3.0
+margin_right = 69.0
+margin_bottom = 17.0
+text = "Next Block"
+
+[node name="NextBlockList" type="MenuButton" parent="HBoxContainer2"]
+margin_left = 73.0
+margin_right = 1024.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="."]
+margin_top = 61.0
+margin_right = 1024.0
+margin_bottom = 85.0
+
+[node name="Label" type="Label" parent="HBoxContainer3"]
+margin_top = 5.0
+margin_right = 69.0
+margin_bottom = 19.0
+text = "Next Block"
+
+[node name="NextIndex" type="SpinBox" parent="HBoxContainer3"]
+margin_left = 73.0
+margin_right = 147.0
+margin_bottom = 24.0
+
+[node name="Control" type="Control" parent="HBoxContainer3"]
+margin_left = 151.0
+margin_right = 1000.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="DeleteChoice" type="Button" parent="HBoxContainer3"]
+margin_left = 1004.0
+margin_right = 1024.0
+margin_bottom = 24.0
+text = "X"
+
+[node name="Panel" type="Panel" parent="."]
+margin_top = 89.0
+margin_right = 1024.0
+margin_bottom = 94.0
+rect_min_size = Vector2( 0, 5 )
