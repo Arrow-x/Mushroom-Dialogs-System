@@ -65,13 +65,13 @@ func _on_CommandsTree_item_activated() -> void:
 					say_control.say_text_edit.connect(
 						"text_changed",
 						self,
-						"_change_command",
-						[say_control.say_text_edit, "say", "text"]
+						"_change_command_property",
+						["text", current_command, "say", say_control.say_text_edit]
 					)
 					say_control.set_say_box_hight()
 
 					say_control.name_line_edit.connect(
-						"text_changed", self, "_on_name_LineEdit_text_changed"
+						"text_changed", self, "_change_command_property", [current_command, "name"]
 					)
 					#Pass in the characters list instead!
 
@@ -105,12 +105,17 @@ func _add_choice(_new_choice) -> void:
 		_new_choice_control.next_block_menu.connect(
 			"about_to_show", self, "_fill_menu", [_new_choice_control.next_block_menu.get_popup()]
 		)
-
 		_new_choice_control.choice_text.connect(
-			"text_changed", self, "_change_choice_text", [_new_choice_control.get_meta("command")]
+			"text_changed",
+			self,
+			"_change_command_property",
+			[_new_choice_control.get_meta("command"), "text"]
 		)
 		_new_choice_control.next_index_text.connect(
-			"value_changed", self, "_change_index", [_new_choice_control.get_meta("command")]
+			"value_changed",
+			self,
+			"_change_command_property",
+			[_new_choice_control.get_meta("command"), "next_index"]
 		)
 		_new_choice_control.next_block_menu.get_popup().connect(
 			"index_pressed",
@@ -128,20 +133,13 @@ func _add_choice(_new_choice) -> void:
 		_new_choice_control.next_index_text.value = _new_choice[i].next_index
 
 
-func _on_name_LineEdit_text_changed(new_string: String) -> void:
-	current_command.name = new_string
+func _change_command_property(new_property, cmd, current_property, obj = null):
+	#This is for the say command text edit, it won't send the text so I send the whole object and get it myself
+	if obj != null:
+		cmd.set(current_property, obj.get(new_property))
+		return
 
-
-func _change_command(obj: Object, current_property: String, new_property: String):
-	current_command.set(current_property, obj.get(new_property))
-
-
-func _change_choice_text(new_string: String, command: choice) -> void:
-	command.text = new_string
-
-
-func _change_index(value: float, cmd: choice) -> void:
-	cmd.next_index = value
+	cmd.set(current_property, new_property)
 
 
 func _change_next_block(index, cmd: choice, pop: PopupMenu, c_control: Control) -> void:
