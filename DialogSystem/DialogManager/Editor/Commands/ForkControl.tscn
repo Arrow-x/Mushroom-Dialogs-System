@@ -10,23 +10,31 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ChoicesContainer" type="VBoxContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InfoBar" type="HBoxContainer" parent="ChoicesContainer"]
+[node name="ChoicesContainer" type="VBoxContainer" parent="ScrollContainer"]
+margin_right = 1024.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InfoBar" type="HBoxContainer" parent="ScrollContainer/ChoicesContainer"]
 margin_right = 1024.0
 margin_bottom = 20.0
 
-[node name="Control" type="Control" parent="ChoicesContainer/InfoBar"]
+[node name="Control" type="Control" parent="ScrollContainer/ChoicesContainer/InfoBar"]
 margin_right = 937.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 
-[node name="AddChoiceButton" type="Button" parent="ChoicesContainer/InfoBar"]
+[node name="AddChoiceButton" type="Button" parent="ScrollContainer/ChoicesContainer/InfoBar"]
 margin_left = 941.0
 margin_right = 1024.0
 margin_bottom = 20.0
