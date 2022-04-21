@@ -13,7 +13,7 @@ func _ready():
 
 func _on_add_block_to_flow(new_block, node):
 	flowchart.blocks.append(new_block)
-	flowchart.nodes[node.title] = [node.offset, new_block]
+	flowchart.nodes[node.title] = [node.offset, new_block, node]
 	node.connect("graph_node_dragged", self, "_update_graph_node_offset")
 
 
