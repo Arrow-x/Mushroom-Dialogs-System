@@ -56,24 +56,7 @@ func _on_CommandsTree_item_activated() -> void:
 				"say":
 					var say_control: Control = load("res://DialogManager/Editor/Commands/SayControl.tscn").instance()
 					commands_settings.add_child(say_control, true)
-					current_command = get_selected().get_meta("0")
-
-					say_control.say_text_edit.text = current_command.say
-					say_control.name_line_edit.text = current_command.name
-					#TODO Set the Chararcter and the Current Portrait
-
-					say_control.say_text_edit.connect(
-						"text_changed",
-						self,
-						"_change_command_property",
-						["text", current_command, "say", say_control.say_text_edit]
-					)
-					say_control.set_say_box_hight()
-
-					say_control.name_line_edit.connect(
-						"text_changed", self, "_change_command_property", [current_command, "name"]
-					)
-					#Pass in the characters list instead!
+					say_control.set_up(get_selected().get_meta("0"))
 
 				"fork":
 					var fork_control: Control = load("res://DialogManager/Editor/Commands/ForkControl.tscn").instance()
