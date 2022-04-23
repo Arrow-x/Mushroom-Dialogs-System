@@ -1,38 +1,37 @@
 extends VBoxContainer
-onready var choice_text : LineEdit = $HBoxContainer/ChoiceText
-onready var next_block_menu : MenuButton = $HBoxContainer2/NextBlockList
-onready var next_index_text : SpinBox = $HBoxContainer3/NextIndex
-onready var delete_choice : Button = $HBoxContainer3/DeleteChoice
+onready var choice_text: LineEdit = $HBoxContainer/ChoiceText
+onready var next_block_menu: MenuButton = $HBoxContainer2/NextBlockList
+onready var next_index_text: SpinBox = $HBoxContainer3/NextIndex
+onready var delete_choice: Button = $HBoxContainer3/DeleteChoice
 
-var current_choice : choice
-var flowchart : FlowChart
+var current_choice: choice
+var flowchart: FlowChart
 
-func set_up(c: choice,fc:FlowChart):
+
+func set_up(c: choice, fc: FlowChart):
 	flowchart = fc
 	current_choice = c
 	choice_text.text = c.text
 	if c.next_block != null:
 		next_block_menu.text = c.next_block.name
-	print("no null: ",c.next_index)
+	print("no null: ", c.next_index)
 	next_index_text.value = c.next_index
 
 
-
 func _on_DeleteChoice_pressed():
-	pass # Replace with function body.
+	pass  # Replace with function body.
 
 
-
-func _on_NextIndex_value_changed(value:float):
-	print("next_index ",value)
+func _on_NextIndex_value_changed(value: float):
+	print("next_index ", value)
 	print(current_choice)
 	current_choice.next_index = int(value)
 
 
 func _on_NextBlockList_about_to_show():
-	var menu : PopupMenu = next_block_menu.get_popup()
-	menu.connect("index_pressed",self,"change_next_bloc",[menu])
-	var _c : int  
+	var menu: PopupMenu = next_block_menu.get_popup()
+	menu.connect("index_pressed", self, "change_next_bloc", [menu])
+	var _c: int
 	menu.clear()
 	for i in flowchart.nodes:
 		if _c == null:
@@ -41,11 +40,14 @@ func _on_NextBlockList_about_to_show():
 		menu.set_item_metadata(_c, flowchart.nodes[i][1])
 		_c = _c + 1
 
-func change_next_bloc(index,m:PopupMenu):
+
+func change_next_bloc(index, m: PopupMenu):
 	current_choice.next_block = m.get_item_metadata(index)
 	next_block_menu.text = m.get_item_text(index)
+
+
 # Get Noding from here
 
 
-func _on_ChoiceText_text_changed(new_text:String):
+func _on_ChoiceText_text_changed(new_text: String):
 	current_choice.text = new_text

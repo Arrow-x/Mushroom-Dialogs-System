@@ -19,7 +19,7 @@ func _ready():
 	get_butt.connect("pressed", self, "_on_Cancel_pressed")
 	get_child(0).focus_mode = Control.FOCUS_CLICK
 	$VBoxContainer/LineEdit.grab_focus()
-	set_size(Vector2(218,141))
+	set_size(Vector2(218, 141))
 
 
 func _on_LineEdit_text_changed(new_text):
