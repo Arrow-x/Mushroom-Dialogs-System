@@ -33,6 +33,7 @@ func add_block(title):
 		get_node("../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),
 		"_on_GraphNode_graph_node_meta"
 	)
+	node.set_name(title)
 	add_child(node)
 
 
