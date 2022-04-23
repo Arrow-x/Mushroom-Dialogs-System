@@ -9,8 +9,9 @@ var node_text: String
 
 
 func _input(event):
-	if event.is_action_pressed("interact"):
-		print(get_focus_owner().get_path())
+	if event.is_action_pressed("ui_cancel"):
+		self.queue_free()
+		#print(get_focus_owner().get_path())
 
 
 func _ready():
@@ -18,6 +19,7 @@ func _ready():
 	get_butt.connect("pressed", self, "_on_Cancel_pressed")
 	get_child(0).focus_mode = Control.FOCUS_CLICK
 	$VBoxContainer/LineEdit.grab_focus()
+	set_size(Vector2(218,141))
 
 
 func _on_LineEdit_text_changed(new_text):
