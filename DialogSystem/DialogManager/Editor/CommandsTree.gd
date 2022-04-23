@@ -39,6 +39,7 @@ func _add_command(command: Command) -> void:
 	var _item: TreeItem = self.create_item(root)
 	_item.set_text(0, command.type)
 	_item.set_meta("0", command)
+	#set the new item as the selected one
 
 
 func _on_CommandsTree_item_activated() -> void:

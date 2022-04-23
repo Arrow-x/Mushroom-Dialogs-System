@@ -17,8 +17,6 @@ func _on_AddBlockButton_pressed():
 
 func add_block(title):
 	var node: GraphNode = graph_node.instance()
-	#create a user text input for naming the block
-	#makesure that the name is unique?
 	node.title = title
 	node.offset = Vector2(node_offset, 0)
 	if node_offset < 240:
