@@ -6,9 +6,6 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Panel2" type="Panel" parent="."]
 modulate = Color( 0, 0.6, 1, 1 )
@@ -77,3 +74,8 @@ margin_left = 1004.0
 margin_right = 1024.0
 margin_bottom = 24.0
 text = "X"
+
+[connection signal="text_changed" from="HBoxContainer/ChoiceText" to="." method="_on_ChoiceText_text_changed"]
+[connection signal="about_to_show" from="HBoxContainer2/NextBlockList" to="." method="_on_NextBlockList_about_to_show"]
+[connection signal="value_changed" from="HBoxContainer3/NextIndex" to="." method="_on_NextIndex_value_changed"]
+[connection signal="pressed" from="HBoxContainer3/DeleteChoice" to="." method="_on_DeleteChoice_pressed"]

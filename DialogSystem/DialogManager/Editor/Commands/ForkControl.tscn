@@ -6,9 +6,6 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 anchor_right = 1.0
@@ -39,3 +36,5 @@ margin_left = 941.0
 margin_right = 1024.0
 margin_bottom = 20.0
 text = "Add choice"
+
+[connection signal="pressed" from="ScrollContainer/ChoicesContainer/InfoBar/AddChoiceButton" to="." method="_on_AddChoiceButton_pressed"]
