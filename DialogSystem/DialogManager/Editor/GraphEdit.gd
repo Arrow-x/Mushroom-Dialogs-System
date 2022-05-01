@@ -9,14 +9,14 @@ var types: Array
 signal add_block_to_flow
 
 
-func _on_AddBlockButton_pressed():
+func _on_AddBlockButton_pressed() -> void:
 	var enter_name: WindowDialog = enter_name_scene.instance()
 	add_child(enter_name, true)
 	enter_name.popup_centered()
 	enter_name.connect("new_text_confirm", self, "on_new_text_confirm")
 
 
-func add_block(title):
+func add_block(title) -> void:
 	var node: GraphNode = graph_node.instance()
 	node.title = title
 	node.offset = Vector2(node_offset, 0)
@@ -47,7 +47,7 @@ func on_new_text_confirm(new_title: String) -> void:
 	add_block(new_title)
 
 
-func connect_blocks(recivier: block, sender: block, fork: fork_command):
+func connect_blocks(recivier: block, sender: block, fork: fork_command) -> void:
 	if !types.has(fork):
 		types.append(fork)
 

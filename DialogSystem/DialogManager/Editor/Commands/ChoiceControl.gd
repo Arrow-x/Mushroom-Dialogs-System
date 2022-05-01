@@ -9,7 +9,8 @@ var flowchart: FlowChart
 
 signal conncting(reciver)
 
-func set_up(c: choice, fc: FlowChart):
+
+func set_up(c: choice, fc: FlowChart) -> void:
 	print("setting up just fine")
 	flowchart = fc
 	current_choice = c
@@ -23,13 +24,13 @@ func _on_DeleteChoice_pressed():
 	pass  # Replace with function body.
 
 
-func _on_NextIndex_value_changed(value: float):
+func _on_NextIndex_value_changed(value: float) -> void:
 	print("next_index ", value)
 	print(current_choice)
 	current_choice.next_index = int(value)
 
 
-func _on_NextBlockList_about_to_show():
+func _on_NextBlockList_about_to_show() -> void:
 	var menu: PopupMenu = next_block_menu.get_popup()
 	if !menu.is_connected("index_pressed", self, "change_next_bloc"):
 		menu.connect("index_pressed", self, "change_next_bloc", [menu])
@@ -43,11 +44,11 @@ func _on_NextBlockList_about_to_show():
 		_c = _c + 1
 
 
-func change_next_bloc(index, m: PopupMenu):
+func change_next_bloc(index, m: PopupMenu) -> void:
 	current_choice.next_block = m.get_item_metadata(index)
 	next_block_menu.text = m.get_item_text(index)
 	emit_signal("conncting", m.get_item_metadata(index))
-	
 
-func _on_ChoiceText_text_changed(new_text: String):
+
+func _on_ChoiceText_text_changed(new_text: String) -> void:
 	current_choice.text = new_text

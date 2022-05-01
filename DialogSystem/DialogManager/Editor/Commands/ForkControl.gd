@@ -8,7 +8,7 @@ var current_block: block
 var fc: FlowChart
 
 
-func _on_AddChoiceButton_pressed():
+func _on_AddChoiceButton_pressed() -> void:
 	var choice_control: Control = load("res://DialogManager/Editor/Commands/ChoiceControl.tscn").instance()
 	choices_container.add_child(choice_control)
 	choice_control.flowchart = fc
@@ -17,7 +17,8 @@ func _on_AddChoiceButton_pressed():
 	choice_control.current_choice = n_c
 	choice_control.connect("conncting", self, "_on_connecting", [current_block])
 
-func set_up(f: fork_command, flowchart: FlowChart, cb : block):
+
+func set_up(f: fork_command, flowchart: FlowChart, cb: block) -> void:
 	current_fork = f
 	fc = flowchart
 	current_block = cb
@@ -28,8 +29,7 @@ func set_up(f: fork_command, flowchart: FlowChart, cb : block):
 			choices_container.add_child(choice_control)
 			choice_control.set_up(i, flowchart)
 			choice_control.connect("conncting", self, "_on_connecting", [current_block])
-			
 
 
-func _on_connecting(rec, sender):
-	graph.connect_blocks(rec, sender, current_fork )
+func _on_connecting(rec, sender) -> void:
+	graph.connect_blocks(rec, sender, current_fork)
