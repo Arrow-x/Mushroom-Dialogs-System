@@ -7,14 +7,15 @@ onready var delete_choice: Button = $HBoxContainer3/DeleteChoice
 var current_choice: choice
 var flowchart: FlowChart
 
+signal conncting(reciver)
 
 func set_up(c: choice, fc: FlowChart):
+	print("setting up just fine")
 	flowchart = fc
 	current_choice = c
 	choice_text.text = c.text
 	if c.next_block != null:
 		next_block_menu.text = c.next_block.name
-	print("no null: ", c.next_index)
 	next_index_text.value = c.next_index
 
 
@@ -30,7 +31,8 @@ func _on_NextIndex_value_changed(value: float):
 
 func _on_NextBlockList_about_to_show():
 	var menu: PopupMenu = next_block_menu.get_popup()
-	menu.connect("index_pressed", self, "change_next_bloc", [menu])
+	if !menu.is_connected("index_pressed", self, "change_next_bloc"):
+		menu.connect("index_pressed", self, "change_next_bloc", [menu])
 	var _c: int
 	menu.clear()
 	for i in flowchart.nodes:
@@ -44,10 +46,8 @@ func _on_NextBlockList_about_to_show():
 func change_next_bloc(index, m: PopupMenu):
 	current_choice.next_block = m.get_item_metadata(index)
 	next_block_menu.text = m.get_item_text(index)
-
-
-# Get Noding from here
-
+	emit_signal("conncting", m.get_item_metadata(index))
+	
 
 func _on_ChoiceText_text_changed(new_text: String):
 	current_choice.text = new_text

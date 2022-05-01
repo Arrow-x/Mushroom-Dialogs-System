@@ -4,6 +4,7 @@ onready var graph_node: PackedScene = preload("res://DialogManager/Editor/GraphN
 onready var enter_name_scene: PackedScene = preload("res://DialogManager/Editor/HelperScenes/EnterNameScene/Scenes/EnterNameScene.tscn")
 
 var node_offset: int = 0
+var types : Array
 
 signal add_block_to_flow
 
@@ -44,3 +45,37 @@ func on_new_text_confirm(new_title: String) -> void:
 		#add a popup window here to give info on the error
 		return
 	add_block(new_title)
+
+
+func connect_blocks(recivier: block, sender: block, fork : fork_command):
+	if !types.has(fork):
+		types.append(fork)
+
+	var i_sender
+	var i_recivier
+	for i in get_children():
+		if i is GraphNode:
+			#TODO use block comparision instead of names
+			if i.title == sender.name:
+				if !i.outputs.has(fork):
+					var cc :Control = Control.new()
+					cc.rect_min_size = Vector2(10,10)
+					i.add_child(cc)
+					i.outputs.append(fork)
+
+				i_sender = i.outputs.find(fork)
+				i.set_slot_enabled_right(i_sender, true)
+				i.set_slot_type_right(i_sender, types.find(fork))
+
+			if i.title == recivier.name:
+				if !i.inputs.has(fork):
+					var cc : Control = Control.new()
+					cc.rect_min_size = Vector2(10,10)
+					i.add_child(cc)
+					i.inputs.append(fork)
+
+				i_recivier = i.inputs.find(fork)
+				i.set_slot_enabled_left(i_recivier, true)
+				i.set_slot_type_left(i_recivier, types.find(fork))
+	# find the name of the Graphnode by checking all of thier meta data and if it matches get the name of the node graph
+	connect_node(sender.name, i_sender, recivier.name, i_recivier)

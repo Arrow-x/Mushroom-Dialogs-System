@@ -3,6 +3,9 @@ extends GraphNode
 signal graph_node_meta
 signal graph_node_dragged
 
+var inputs : Array 
+var outputs : Array
+
 
 func _gui_input(event: InputEvent):
 	if event.is_action_pressed("left_mouse"):
