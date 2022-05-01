@@ -69,6 +69,7 @@ func connect_blocks(recivier: block, sender: block, fork: fork_command):
 				sender_name = i.name
 				i.set_slot_enabled_right(i_sender, true)
 				i.set_slot_type_right(i_sender, types.find(fork))
+				i.set_slot_color_right(i_sender, fork.f_color)
 
 			if i_meta == recivier:
 				if !i.inputs.has(fork):
@@ -81,5 +82,6 @@ func connect_blocks(recivier: block, sender: block, fork: fork_command):
 				recivier_name = i.name
 				i.set_slot_enabled_left(i_recivier, true)
 				i.set_slot_type_left(i_recivier, types.find(fork))
+				i.set_slot_color_left(i_recivier, fork.f_color)
 
 	connect_node(sender_name, i_sender, recivier_name, i_recivier)
