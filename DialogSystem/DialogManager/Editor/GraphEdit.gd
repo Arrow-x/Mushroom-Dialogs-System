@@ -47,6 +47,31 @@ func on_new_text_confirm(new_title: String) -> void:
 	add_block(new_title)
 
 
+func update_block_flow(sender, fork) -> void:
+	#get the sender node name, the fork's port, an array of aall the reciverss, the fork's prot on them and pass them to disconnect_node
+	var sed: String
+	var sed_i: int
+
+	for i_gnode in get_children():
+		if i_gnode is GraphNode:
+			var i_gnode_block: block = i_gnode.get_meta("block")
+			if i_gnode_block == sender:
+				sed = i_gnode.title
+				sed_i = i_gnode.outputs.find(fork)
+				break
+
+	for i_gnode in get_children():
+		if i_gnode is GraphNode:
+			if i_gnode.inputs.find(fork) != -1:
+				disconnect_node(sed, sed_i, i_gnode.title, i_gnode.inputs.find(fork))
+				i_gnode.delete_inputs(fork)
+			if i_gnode.outputs.find(fork) != -1:
+				i_gnode.delete_outputs(fork)
+
+	for c in fork.choices:
+		connect_blocks(c.next_block, sender, fork)
+
+
 func connect_blocks(recivier: block, sender: block, fork: fork_command) -> void:
 	if !types.has(fork):
 		types.append(fork)
@@ -64,6 +89,7 @@ func connect_blocks(recivier: block, sender: block, fork: fork_command) -> void:
 					cc.rect_min_size = Vector2(10, 10)
 					i.add_child(cc)
 					i.outputs.append(fork)
+					i.c_outputs.append(cc)
 
 				i_sender = i.outputs.find(fork)
 				sender_name = i.name
@@ -77,6 +103,7 @@ func connect_blocks(recivier: block, sender: block, fork: fork_command) -> void:
 					cc.rect_min_size = Vector2(10, 10)
 					i.add_child(cc)
 					i.inputs.append(fork)
+					i.c_inputs.append(cc)
 
 				i_recivier = i.inputs.find(fork)
 				recivier_name = i.name

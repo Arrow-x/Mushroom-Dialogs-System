@@ -32,4 +32,5 @@ func set_up(f: fork_command, flowchart: FlowChart, cb: block) -> void:
 
 
 func _on_connecting(rec, sender) -> void:
-	graph.connect_blocks(rec, sender, current_fork)
+	# graph.connect_blocks(rec, sender, current_fork)
+	graph.update_block_flow(sender, current_fork)
