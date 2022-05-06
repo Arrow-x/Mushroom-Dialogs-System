@@ -14,6 +14,11 @@ func _on_GraphNode_graph_node_meta(meta, title) -> void:
 	commands_settings._currnet_title = title
 	current_block = meta
 	current_block_label.text = "current block: " + title
+
+	if commands_settings.get_child_count() != 0:
+		if commands_settings.get_child(0) != null:
+			commands_settings.get_child(0).free()
+
 	self.clear()
 	for i in meta.commands:
 		_add_command(i)
