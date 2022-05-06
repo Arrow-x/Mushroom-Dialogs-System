@@ -31,6 +31,5 @@ func set_up(f: fork_command, flowchart: FlowChart, cb: block) -> void:
 			choice_control.connect("conncting", self, "_on_connecting", [current_block])
 
 
-func _on_connecting(rec, sender) -> void:
-	# graph.connect_blocks(rec, sender, current_fork)
+func _on_connecting(sender) -> void:
 	graph.update_block_flow(sender, current_fork)

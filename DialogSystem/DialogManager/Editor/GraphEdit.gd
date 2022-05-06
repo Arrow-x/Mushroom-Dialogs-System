@@ -34,7 +34,7 @@ func add_block(title) -> void:
 		get_node("../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),
 		"_on_GraphNode_graph_node_meta"
 	)
-	node.set_name(title)
+	# node.set_name(title)
 	add_child(node)
 
 
@@ -48,24 +48,25 @@ func on_new_text_confirm(new_title: String) -> void:
 
 
 func update_block_flow(sender, fork) -> void:
-	#get the sender node name, the fork's port, an array of aall the reciverss, the fork's prot on them and pass them to disconnect_node
 	var sed: String
 	var sed_i: int
 
 	for i_gnode in get_children():
 		if i_gnode is GraphNode:
-			var i_gnode_block: block = i_gnode.get_meta("block")
-			if i_gnode_block == sender:
-				sed = i_gnode.title
+			if i_gnode.outputs.has(fork):
+				sed = i_gnode.get_name()
 				sed_i = i_gnode.outputs.find(fork)
 				break
 
 	for i_gnode in get_children():
 		if i_gnode is GraphNode:
-			if i_gnode.inputs.find(fork) != -1:
-				disconnect_node(sed, sed_i, i_gnode.title, i_gnode.inputs.find(fork))
+			if i_gnode.inputs.has(fork):
+				disconnect_node(sed, sed_i, i_gnode.get_name(), i_gnode.inputs.find(fork))
 				i_gnode.delete_inputs(fork)
-			if i_gnode.outputs.find(fork) != -1:
+
+	for i_gnode in get_children():
+		if i_gnode is GraphNode:
+			if i_gnode.outputs.has(fork):
 				i_gnode.delete_outputs(fork)
 
 	for c in fork.choices:
@@ -92,7 +93,7 @@ func connect_blocks(recivier: block, sender: block, fork: fork_command) -> void:
 					i.c_outputs.append(cc)
 
 				i_sender = i.outputs.find(fork)
-				sender_name = i.name
+				sender_name = i.get_name()
 				i.set_slot_enabled_right(i_sender, true)
 				i.set_slot_type_right(i_sender, types.find(fork))
 				i.set_slot_color_right(i_sender, fork.f_color)
@@ -106,7 +107,7 @@ func connect_blocks(recivier: block, sender: block, fork: fork_command) -> void:
 					i.c_inputs.append(cc)
 
 				i_recivier = i.inputs.find(fork)
-				recivier_name = i.name
+				recivier_name = i.get_name()
 				i.set_slot_enabled_left(i_recivier, true)
 				i.set_slot_type_left(i_recivier, types.find(fork))
 				i.set_slot_color_left(i_recivier, fork.f_color)

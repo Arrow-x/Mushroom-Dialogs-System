@@ -63,4 +63,6 @@ func _on_CommandsTree_item_activated() -> void:
 				"fork":
 					var fork_control: Control = load("res://DialogManager/Editor/Commands/ForkControl.tscn").instance()
 					commands_settings.add_child(fork_control, true)
-					fork_control.set_up(get_selected().get_meta("0"), FlowChartTab.flowchart, current_block)
+					fork_control.set_up(
+						get_selected().get_meta("0"), FlowChartTab.flowchart, current_block
+					)

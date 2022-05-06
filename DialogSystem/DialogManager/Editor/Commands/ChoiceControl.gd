@@ -7,7 +7,7 @@ onready var delete_choice: Button = $HBoxContainer3/DeleteChoice
 var current_choice: choice
 var flowchart: FlowChart
 
-signal conncting(reciver)
+signal conncting
 
 
 func set_up(c: choice, fc: FlowChart) -> void:
@@ -47,7 +47,7 @@ func _on_NextBlockList_about_to_show() -> void:
 func change_next_bloc(index, m: PopupMenu) -> void:
 	current_choice.next_block = m.get_item_metadata(index)
 	next_block_menu.text = m.get_item_text(index)
-	emit_signal("conncting", m.get_item_metadata(index))
+	emit_signal("conncting")
 
 
 func _on_ChoiceText_text_changed(new_text: String) -> void:
