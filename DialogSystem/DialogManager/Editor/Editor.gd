@@ -1,3 +1,4 @@
+tool
 extends Control
 #This Need a refactor
 var editor: PackedScene = preload("res://DialogManager/Editor/FlowChartTab.tscn")

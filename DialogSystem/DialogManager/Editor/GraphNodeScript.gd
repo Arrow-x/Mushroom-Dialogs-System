@@ -1,3 +1,4 @@
+tool
 extends GraphNode
 
 signal graph_node_meta
@@ -11,7 +12,7 @@ var c_outputs: Array
 
 
 func _gui_input(event: InputEvent):
-	if event.is_action_pressed("left_mouse"):
+	if event.is_action_pressed("ui_left"):
 		emit_signal("graph_node_meta", self.get_meta("block"), title)
 
 

@@ -1,3 +1,4 @@
+tool
 extends WindowDialog
 
 signal new_text_confirm

@@ -1,3 +1,4 @@
+tool
 extends GraphEdit
 
 onready var graph_node: PackedScene = preload("res://DialogManager/Editor/GraphNode.tscn")

@@ -14,11 +14,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 1.0
 margin_bottom = 1.0
+size_flags_vertical = 3
 tab_align = 0
 drag_to_rearrange_enabled = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="FlowChart*" type="Control" parent="FlowChartTabs"]
 anchor_right = 1.0
@@ -27,6 +25,8 @@ margin_left = 4.0
 margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Misc" type="Control" parent="."]
 margin_right = 40.0

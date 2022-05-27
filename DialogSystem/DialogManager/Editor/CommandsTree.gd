@@ -1,3 +1,4 @@
+tool
 extends Tree
 
 export var _flowchart_tab: NodePath

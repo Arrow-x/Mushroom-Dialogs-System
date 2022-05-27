@@ -1,3 +1,4 @@
+tool
 extends VBoxContainer
 onready var choice_text: LineEdit = $HBoxContainer/ChoiceText
 onready var next_block_menu: MenuButton = $HBoxContainer2/NextBlockList

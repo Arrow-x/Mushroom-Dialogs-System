@@ -1,3 +1,4 @@
+tool
 extends Panel
 
 var _currnet_title: String setget change_title

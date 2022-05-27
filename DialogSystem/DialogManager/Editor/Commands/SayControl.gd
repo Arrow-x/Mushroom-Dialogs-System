@@ -1,3 +1,4 @@
+tool
 extends Control
 
 onready var name_line_edit: LineEdit = $VBoxContainer/NameHBoxContainer/NameLineEdit

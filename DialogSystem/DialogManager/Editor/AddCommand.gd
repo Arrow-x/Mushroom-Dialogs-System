@@ -1,3 +1,4 @@
+tool
 extends MenuButton
 
 var pop_up: Popup
