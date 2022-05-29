@@ -11,9 +11,9 @@ var flowchart: FlowChart
 signal conncting
 
 
-func set_up(c: choice, fc: FlowChart) -> void:
+func set_up(c: choice, fct: Control) -> void:
 	print("setting up just fine")
-	flowchart = fc
+	flowchart = fct.flowchart
 	current_choice = c
 	choice_text.text = c.text
 	if c.next_block != null:

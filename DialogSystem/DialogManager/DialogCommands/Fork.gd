@@ -1,8 +1,9 @@
+tool
 extends Command
 class_name fork_command
 
 var type: String = "fork"
-var f_color : Color
+export var f_color: Color
 export(Array, Resource) var choices
 
 
