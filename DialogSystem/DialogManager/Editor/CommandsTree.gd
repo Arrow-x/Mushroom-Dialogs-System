@@ -8,7 +8,8 @@ onready var commands_settings: Panel = $"../../CommandsSettings"
 onready var FlowChartTab: Control = get_node(_flowchart_tab)
 var current_block: block
 
-#Set up drag and droping, multiselect...
+# TODO Set up drag and droping, multiselect...
+# TODO update the command list when the command is editing
 
 
 func on_GraphNode_clicked(meta, title) -> void:
@@ -43,27 +44,25 @@ func _add_command(command: Command) -> void:
 		self.set_hide_root(true)
 
 	var _item: TreeItem = self.create_item(root)
-	_item.set_text(0, command.type)
+	# TODO A custom preview for each command in the list
+	_item.set_text(0, command.preview())
 	_item.set_meta("0", command)
 	#set the new item as the selected one
 
 
 func _on_CommandsTree_item_activated() -> void:
-	if get_selected():
-		if get_selected().get_meta("0") != null:
-			if commands_settings.get_child_count() != 0:
-				if commands_settings.get_child(0) != null:
-					commands_settings.get_child(0).free()
+	var current_item = get_selected().get_meta("0")
+	if current_item != null:
+		if commands_settings.get_child_count() != 0:
+			if commands_settings.get_child(0) != null:
+				commands_settings.get_child(0).free()
 
-			match get_selected().get_meta("0").type:
-				"say":
-					var say_control: Control = load("res://DialogManager/Editor/Commands/SayControl.tscn").instance()
-					commands_settings.add_child(say_control, true)
-					say_control.set_up(get_selected().get_meta("0"))
+		if current_item is say_command:
+			var say_control: Control = load("res://DialogManager/Editor/Commands/SayControl.tscn").instance()
+			commands_settings.add_child(say_control, true)
+			say_control.set_up(get_selected().get_meta("0"))
 
-				"fork":
-					var fork_control: Control = load("res://DialogManager/Editor/Commands/ForkControl.tscn").instance()
-					commands_settings.add_child(fork_control, true)
-					fork_control.set_up(
-						get_selected().get_meta("0"), FlowChartTab.flowchart, current_block
-					)
+		elif current_item is fork_command:
+			var fork_control: Control = load("res://DialogManager/Editor/Commands/ForkControl.tscn").instance()
+			commands_settings.add_child(fork_control, true)
+			fork_control.set_up(get_selected().get_meta("0"), FlowChartTab, current_block)

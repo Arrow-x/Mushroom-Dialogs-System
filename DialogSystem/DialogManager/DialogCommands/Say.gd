@@ -1,3 +1,4 @@
+tool
 extends Command
 class_name say_command
 
@@ -9,3 +10,7 @@ export var portrait: Texture
 export(String, "Left", "Right", "Center") var por_pos: String = "Right"
 
 export var append_text: bool = false
+
+
+func preview():
+	return String("Say: " + name + ":" + say)
