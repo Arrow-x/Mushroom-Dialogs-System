@@ -33,7 +33,7 @@ func add_block(title) -> void:
 	node.connect(
 		"graph_node_meta",
 		get_node("../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),
-		"_on_GraphNode_graph_node_meta"
+		"on_GraphNode_clicked"
 	)
 	# node.set_name(title)
 	add_child(node)
@@ -43,7 +43,7 @@ func on_new_text_confirm(new_title: String) -> void:
 	if $"../../".check_for_duplicates(new_title) == true or new_title == "":
 		_on_AddBlockButton_pressed()
 		print("The Title is a duplicate!")
-		#add a popup window here to give info on the error
+		# TODO add a popup window here to give info on the error
 		return
 	add_block(new_title)
 

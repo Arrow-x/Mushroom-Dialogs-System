@@ -11,7 +11,7 @@ var current_block: block
 #Set up drag and droping, multiselect...
 
 
-func _on_GraphNode_graph_node_meta(meta, title) -> void:
+func on_GraphNode_clicked(meta, title) -> void:
 	commands_settings._currnet_title = title
 	current_block = meta
 	current_block_label.text = "current block: " + title

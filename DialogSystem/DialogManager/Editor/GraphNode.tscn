@@ -10,9 +10,23 @@ margin_right = 113.0
 margin_bottom = 70.0
 mouse_filter = 1
 title = "First Block"
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Control" type="TextEdit" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 89.0
+margin_bottom = 57.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [connection signal="dragged" from="." to="." method="_on_GraphNode_dragged"]

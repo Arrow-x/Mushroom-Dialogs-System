@@ -30,7 +30,7 @@ func check_for_duplicates(name) -> bool:
 		if key == name:
 			return true
 	return false
-	
-	
-func set_flowchart(chart:FlowChart) -> void:
+
+
+func set_flowchart(chart: FlowChart) -> void:
 	flowchart = chart
