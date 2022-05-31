@@ -1,6 +1,6 @@
 tool
 extends Control
-var editor_scn: PackedScene = preload("res://DialogManager/Editor/FlowChartTab.tscn")
+var editor_scn: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
 onready var flowchart_tabs: TabContainer = $FlowChartTabs
 
 

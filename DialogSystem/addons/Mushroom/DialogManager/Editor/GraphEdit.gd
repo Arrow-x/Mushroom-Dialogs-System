@@ -1,8 +1,8 @@
 tool
 extends GraphEdit
 
-onready var graph_node: PackedScene = preload("res://DialogManager/Editor/GraphNode.tscn")
-onready var enter_name_scene: PackedScene = preload("res://DialogManager/Editor/HelperScenes/EnterNameScene/Scenes/EnterNameScene.tscn")
+onready var graph_node: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn")
+onready var enter_name_scene: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/HelperScenes/EnterNameScene/Scenes/EnterNameScene.tscn")
 
 var node_offset: int = 0
 var types: Array

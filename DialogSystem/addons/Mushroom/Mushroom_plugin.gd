@@ -1,7 +1,7 @@
 tool
 extends EditorPlugin
 
-const editor := preload("res://DialogManager/Editor/Editor.tscn")
+const editor := preload("res://addons/Mushroom/DialogManager/Editor/Editor.tscn")
 var editor_instance
 
 

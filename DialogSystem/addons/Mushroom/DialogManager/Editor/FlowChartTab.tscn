@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://DialogManager/Editor/CommandsTree.gd" type="Script" id=1]
-[ext_resource path="res://DialogManager/Editor/GraphEdit.gd" type="Script" id=2]
-[ext_resource path="res://DialogManager/Editor/FlowChartTab.gd" type="Script" id=3]
-[ext_resource path="res://DialogManager/Editor/AddCommand.gd" type="Script" id=4]
-[ext_resource path="res://DialogManager/Editor/CommandsSettings.gd" type="Script" id=5]
+[ext_resource path="res://addons/Mushroom/DialogManager/Editor/GraphEdit.gd" type="Script" id=1]
+[ext_resource path="res://addons/Mushroom/DialogManager/Editor/CommandsTree.gd" type="Script" id=2]
+[ext_resource path="res://addons/Mushroom/DialogManager/Editor/FlowChartTab.gd" type="Script" id=3]
+[ext_resource path="res://addons/Mushroom/DialogManager/Editor/AddCommand.gd" type="Script" id=4]
+[ext_resource path="res://addons/Mushroom/DialogManager/Editor/CommandsSettings.gd" type="Script" id=5]
 
 [node name="FlowChartTab" type="HSplitContainer"]
 anchor_right = 1.0
@@ -71,7 +71,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 hide_root = true
 select_mode = 2
-script = ExtResource( 1 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -128,7 +128,7 @@ margin_bottom = 564.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_offset = Vector2( -200, -4 )
-script = ExtResource( 2 )
+script = ExtResource( 1 )
 
 [connection signal="about_to_show" from="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommand" to="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommand" method="_on_AddCommand_about_to_show"]
 [connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_CommandsTree_item_activated"]

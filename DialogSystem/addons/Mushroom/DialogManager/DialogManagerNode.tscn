@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://DialogManager/DialogManager.gd" type="Script" id=1]
-[ext_resource path="res://DialogManager/DialogUI/UI.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogManager.gd" type="Script" id=1]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogUI/UI.tscn" type="PackedScene" id=2]
 
 [node name="DialogManagerNode" type="CanvasLayer"]
 script = ExtResource( 1 )

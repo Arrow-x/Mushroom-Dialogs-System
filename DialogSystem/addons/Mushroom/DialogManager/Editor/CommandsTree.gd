@@ -58,11 +58,11 @@ func _on_CommandsTree_item_activated() -> void:
 				commands_settings.get_child(0).free()
 
 		if current_item is say_command:
-			var say_control: Control = load("res://DialogManager/Editor/Commands/SayControl.tscn").instance()
+			var say_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn").instance()
 			commands_settings.add_child(say_control, true)
 			say_control.set_up(get_selected().get_meta("0"))
 
 		elif current_item is fork_command:
-			var fork_control: Control = load("res://DialogManager/Editor/Commands/ForkControl.tscn").instance()
+			var fork_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
 			commands_settings.add_child(fork_control, true)
 			fork_control.set_up(get_selected().get_meta("0"), FlowChartTab, current_block)

@@ -12,77 +12,77 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "Chararcter",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/Character.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Character.gd"
 }, {
 "base": "Resource",
 "class": "Command",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/Command.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Command.gd"
 }, {
 "base": "Resource",
 "class": "FlowChart",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/FlowChart.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/FlowChart.gd"
 }, {
 "base": "Command",
 "class": "animation_command",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/Animation.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Animation.gd"
 }, {
 "base": "Resource",
 "class": "block",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/Block.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Block.gd"
 }, {
 "base": "Command",
 "class": "change_ui",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/ChangeUI.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/ChangeUI.gd"
 }, {
 "base": "Resource",
 "class": "choice",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/Choice.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Choice.gd"
 }, {
 "base": "Command",
 "class": "cond_choice",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/CondChoice.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/CondChoice.gd"
 }, {
 "base": "Command",
 "class": "cond_say",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/CondSay.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/CondSay.gd"
 }, {
 "base": "Command",
 "class": "condition_command",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/Condition.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Condition.gd"
 }, {
 "base": "Command",
 "class": "fork_command",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/Fork.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Fork.gd"
 }, {
 "base": "Command",
 "class": "jump_command",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/Jump.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Jump.gd"
 }, {
 "base": "Command",
 "class": "say_command",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/Say.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Say.gd"
 }, {
 "base": "Command",
 "class": "set_var_command",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/SetVar.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/SetVar.gd"
 }, {
 "base": "Command",
 "class": "sound_command",
 "language": "GDScript",
-"path": "res://DialogManager/DialogCommands/Sound.gd"
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Sound.gd"
 } ]
 _global_script_class_icons={
 "Chararcter": "",
@@ -105,13 +105,13 @@ _global_script_class_icons={
 [application]
 
 config/name="MushroomDialogSystem"
-run/main_scene="res://DialogManager/Editor/Editor.tscn"
+run/main_scene="res://addons/Mushroom/DialogManager/Editor/Editor.tscn"
 run/low_processor_mode=true
 config/icon="res://icon.png"
 
 [autoload]
 
-DialogManager="*res://DialogManager/DialogManagerNode.tscn"
+DialogManager="*res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
 
 [debug]
 
