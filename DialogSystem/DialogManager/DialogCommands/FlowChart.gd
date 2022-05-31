@@ -1,3 +1,4 @@
+tool
 extends Resource
 class_name FlowChart
 
@@ -10,3 +11,7 @@ export var blocks: Array
 export var local_vars: Array
 export(Array, Resource) var characters
 export var nodes: Dictionary
+
+
+func get_name():
+	return self.resource_path.get_file().trim_suffix(".tres")
