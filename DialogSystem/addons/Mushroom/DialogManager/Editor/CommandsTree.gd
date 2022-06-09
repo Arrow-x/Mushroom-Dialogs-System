@@ -5,7 +5,7 @@ export var _flowchart_tab: NodePath
 onready var root: TreeItem
 onready var current_block_label: Label = $"../inspectorHeader/inspectorHeaderHBoxContainer/CurrentBlock"
 onready var commands_settings: Panel = $"../../CommandsSettings"
-onready var FlowChartTab: Control = get_node(_flowchart_tab)
+onready var flowchart_tab: Control = get_node(_flowchart_tab)
 var current_block: block
 
 # TODO Set up drag and droping, multiselect...
@@ -65,4 +65,4 @@ func _on_CommandsTree_item_activated() -> void:
 		elif current_item is fork_command:
 			var fork_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
 			commands_settings.add_child(fork_control, true)
-			fork_control.set_up(get_selected().get_meta("0"), FlowChartTab, current_block)
+			fork_control.set_up(get_selected().get_meta("0"), flowchart_tab, current_block)

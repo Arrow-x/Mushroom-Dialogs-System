@@ -2,7 +2,6 @@ tool
 extends HSplitContainer
 
 var flowchart: FlowChart
-var flowchart_path: String
 
 export var _graph_edit: NodePath
 onready var graph_edit: GraphEdit = get_node(_graph_edit)
@@ -32,5 +31,7 @@ func check_for_duplicates(name) -> bool:
 	return false
 
 
-func set_flowchart(chart: FlowChart) -> void:
+func set_flowchart(chart) -> void:
+	if chart is not FlowChart:
+		return
 	flowchart = chart

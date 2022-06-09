@@ -5,7 +5,7 @@ onready var graph_node: PackedScene = preload("res://addons/Mushroom/DialogManag
 onready var enter_name_scene: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/HelperScenes/EnterNameScene/Scenes/EnterNameScene.tscn")
 
 var node_offset: int = 0
-var types: Array
+var g_node_connection_types: Array
 
 signal add_block_to_flow
 
@@ -48,69 +48,71 @@ func on_new_text_confirm(new_title: String) -> void:
 	add_block(new_title)
 
 
-func update_block_flow(sender, fork) -> void:
-	var sed: String
-	var sed_i: int
+func update_block_flow(sender: block, fork: fork_command) -> void:
+	var g_node_name: String
+	var g_node_output_idx: int
 
-	for i_gnode in get_children():
-		if i_gnode is GraphNode:
-			if i_gnode.outputs.has(fork):
-				sed = i_gnode.get_name()
-				sed_i = i_gnode.outputs.find(fork)
+	for g_node in get_children():
+		if g_node is GraphNode:
+			if g_node.outputs.has(fork):
+				g_node_name = g_node.get_name()
+				g_node_output_idx = g_node.outputs.find(fork)
 				break
 
-	for i_gnode in get_children():
-		if i_gnode is GraphNode:
-			if i_gnode.inputs.has(fork):
-				disconnect_node(sed, sed_i, i_gnode.get_name(), i_gnode.inputs.find(fork))
-				i_gnode.delete_inputs(fork)
+	for g_node in get_children():
+		if g_node is GraphNode:
+			if g_node.inputs.has(fork):
+				disconnect_node(
+					g_node_name, g_node_output_idx, g_node.get_name(), g_node.inputs.find(fork)
+				)
+				g_node.delete_inputs(fork)
 
-	for i_gnode in get_children():
-		if i_gnode is GraphNode:
-			if i_gnode.outputs.has(fork):
-				i_gnode.delete_outputs(fork)
+	for g_node in get_children():
+		if g_node is GraphNode:
+			if g_node.outputs.has(fork):
+				g_node.delete_outputs(fork)
 
 	for c in fork.choices:
 		connect_blocks(c.next_block, sender, fork)
 
 
-func connect_blocks(recivier: block, sender: block, fork: fork_command) -> void:
-	if !types.has(fork):
-		types.append(fork)
+func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
+	if !g_node_connection_types.has(fork):
+		g_node_connection_types.append(fork)
 
-	var i_sender
-	var i_recivier
+	var sender_idx
+	var receiver_idx
 	var sender_name: String
-	var recivier_name: String
-	for i in get_children():
-		if i is GraphNode:
-			var i_meta: block = i.get_meta("block")
-			if i_meta == sender:
-				if !i.outputs.has(fork):
+	var receiver_name: String
+	for g_node in get_children():
+		if g_node is GraphNode:
+			var g_node_meta: block = g_node.get_meta("block")
+			if g_node_meta == sender:
+				if !g_node.outputs.has(fork):
 					var cc: Control = Control.new()
 					cc.rect_min_size = Vector2(10, 10)
-					i.add_child(cc)
-					i.outputs.append(fork)
-					i.c_outputs.append(cc)
+					g_node.add_child(cc)
+					g_node.outputs.append(fork)
+					g_node.c_outputs.append(cc)
 
-				i_sender = i.outputs.find(fork)
-				sender_name = i.get_name()
-				i.set_slot_enabled_right(i_sender, true)
-				i.set_slot_type_right(i_sender, types.find(fork))
-				i.set_slot_color_right(i_sender, fork.f_color)
+				sender_idx = g_node.outputs.find(fork)
+				sender_name = g_node.get_name()
+				g_node.set_slot_enabled_right(sender_idx, true)
+				g_node.set_slot_type_right(sender_idx, g_node_connection_types.find(fork))
+				g_node.set_slot_color_right(sender_idx, fork.f_color)
 
-			if i_meta == recivier:
-				if !i.inputs.has(fork):
+			if g_node_meta == receiver:
+				if !g_node.inputs.has(fork):
 					var cc: Control = Control.new()
 					cc.rect_min_size = Vector2(10, 10)
-					i.add_child(cc)
-					i.inputs.append(fork)
-					i.c_inputs.append(cc)
+					g_node.add_child(cc)
+					g_node.inputs.append(fork)
+					g_node.c_inputs.append(cc)
 
-				i_recivier = i.inputs.find(fork)
-				recivier_name = i.get_name()
-				i.set_slot_enabled_left(i_recivier, true)
-				i.set_slot_type_left(i_recivier, types.find(fork))
-				i.set_slot_color_left(i_recivier, fork.f_color)
+				receiver_idx = g_node.inputs.find(fork)
+				receiver_name = g_node.get_name()
+				g_node.set_slot_enabled_left(receiver_idx, true)
+				g_node.set_slot_type_left(receiver_idx, g_node_connection_types.find(fork))
+				g_node.set_slot_color_left(receiver_idx, fork.f_color)
 
-	connect_node(sender_name, i_sender, recivier_name, i_recivier)
+	connect_node(sender_name, sender_idx, receiver_name, receiver_idx)

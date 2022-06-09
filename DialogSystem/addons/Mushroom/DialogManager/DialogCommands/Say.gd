@@ -13,4 +13,4 @@ export var append_text: bool = false
 
 
 func preview():
-	return String("Say: " + name + ":" + say)
+	return String("Say: " + name + ": " + say)
