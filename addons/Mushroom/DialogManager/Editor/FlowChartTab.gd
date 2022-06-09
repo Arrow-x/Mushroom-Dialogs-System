@@ -32,6 +32,5 @@ func check_for_duplicates(name) -> bool:
 
 
 func set_flowchart(chart) -> void:
-	if chart is not FlowChart:
-		return
-	flowchart = chart
+	if chart is FlowChart:
+		flowchart = chart

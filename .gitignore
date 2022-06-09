@@ -1,3 +1,6 @@
-DialogSystem/.import
-DialogSystem/Tests
-DialogSystem/icon.png.import
+.import
+Tests
+icon.png.import
+
+addons/godot-plugin-refresher
+logs

@@ -1,10 +1,79 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://addons/Mushroom/DialogManager/Editor/GraphEdit.gd" type="Script" id=1]
 [ext_resource path="res://addons/Mushroom/DialogManager/Editor/CommandsTree.gd" type="Script" id=2]
 [ext_resource path="res://addons/Mushroom/DialogManager/Editor/FlowChartTab.gd" type="Script" id=3]
 [ext_resource path="res://addons/Mushroom/DialogManager/Editor/AddCommand.gd" type="Script" id=4]
 [ext_resource path="res://addons/Mushroom/DialogManager/Editor/CommandsSettings.gd" type="Script" id=5]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogCommands/Fork.gd" type="Script" id=6]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogCommands/Say.gd" type="Script" id=7]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogCommands/Sound.gd" type="Script" id=8]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogCommands/ChangeUI.gd" type="Script" id=9]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogCommands/SetVar.gd" type="Script" id=10]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogCommands/Condition.gd" type="Script" id=11]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogCommands/Jump.gd" type="Script" id=12]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogCommands/Animation.gd" type="Script" id=13]
+[ext_resource path="res://addons/Mushroom/DialogManager/DialogCommands/CondSay.gd" type="Script" id=14]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 7 )
+name = ""
+say = ""
+por_pos = "Right"
+append_text = false
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 14 )
+name = ""
+say = ""
+por_pos = "Right"
+append_text = false
+required_node = ""
+required_var = ""
+check_val = 0
+condition_type = ""
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 13 )
+animation_path = ""
+animation_name = ""
+custom_blend = -1.0
+custom_speed = 1.0
+from_end = false
+anim_type = ""
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 6 )
+f_color = Color( 0.978975, 0.256011, 0.734578, 1 )
+choices = [  ]
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 11 )
+required_node = ""
+required_var = ""
+check_val = 0
+condition_type = ""
+
+[sub_resource type="Resource" id=6]
+script = ExtResource( 12 )
+jump_index = 0
+
+[sub_resource type="Resource" id=7]
+script = ExtResource( 10 )
+var_path = ""
+var_name = ""
+var_value = 0
+
+[sub_resource type="Resource" id=8]
+script = ExtResource( 8 )
+volume_db = 0.0
+pitch_scale = 1.0
+mix_target = 0
+bus = "Master"
+
+[sub_resource type="Resource" id=9]
+script = ExtResource( 9 )
+change_to_default = false
 
 [node name="FlowChartTab" type="HSplitContainer"]
 anchor_right = 1.0
@@ -52,6 +121,7 @@ margin_bottom = -1.90735e-06
 margin_right = 106.0
 margin_bottom = 29.0
 text = "Add Command"
+items = [ "Say Conmmand", null, 0, false, false, 0, 0, SubResource( 1 ), "", false, "Conditional Say Conmmand", null, 0, false, false, 1, 0, SubResource( 2 ), "", false, "Animation Command", null, 0, false, false, 2, 0, SubResource( 3 ), "", false, "Fork Command", null, 0, false, false, 3, 0, SubResource( 4 ), "", false, "Conditional Conmmand", null, 0, false, false, 4, 0, SubResource( 5 ), "", false, "Jump Conmmand", null, 0, false, false, 5, 0, SubResource( 6 ), "", false, "Set Variable Conmmand", null, 0, false, false, 6, 0, SubResource( 7 ), "", false, "Sound Conmmand", null, 0, false, false, 7, 0, SubResource( 8 ), "", false, "Change UI Conmmand", null, 0, false, false, 8, 0, SubResource( 9 ), "", false ]
 script = ExtResource( 4 )
 
 [node name="CurrentBlock" type="Label" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
@@ -130,6 +200,5 @@ size_flags_vertical = 3
 scroll_offset = Vector2( -200, -4 )
 script = ExtResource( 1 )
 
-[connection signal="about_to_show" from="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommand" to="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommand" method="_on_AddCommand_about_to_show"]
 [connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_CommandsTree_item_activated"]
 [connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton" to="GraphContainer/GraphEdit" method="_on_AddBlockButton_pressed"]
