@@ -13,3 +13,4 @@ func open_flowchart_scene(flowchart_scene: FlowChart):
 	ed.set_flowchart(flowchart_scene)
 	flowchart_tabs.add_child(ed)
 	ed.name = flowchart_scene.get_name()
+	flowchart_tabs.set_current_tab(flowchart_tabs.get_children().find(ed))
