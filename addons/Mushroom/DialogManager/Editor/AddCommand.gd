@@ -13,29 +13,29 @@ func _ready():
 func ready_commands():
 	pop_up.clear()
 
-	pop_up.add_item("Say Conmmand", 0)
+	pop_up.add_item("Say", 0)
 	pop_up.set_item_metadata(0, say_command.new())
 
-	pop_up.add_item("Conditional Say Conmmand", 1)
+	pop_up.add_item("Conditional Say ", 1)
 	pop_up.set_item_metadata(1, cond_say.new())
 
-	pop_up.add_item("Animation Command", 2)
+	pop_up.add_item("Animation", 2)
 	pop_up.set_item_metadata(2, animation_command.new())
 
-	pop_up.add_item("Fork Command", 3)
+	pop_up.add_item("Fork", 3)
 	pop_up.set_item_metadata(3, fork_command.new())
 
-	pop_up.add_item("Conditional Conmmand", 4)
+	pop_up.add_item("Conditional", 4)
 	pop_up.set_item_metadata(4, condition_command.new())
 
-	pop_up.add_item("Jump Conmmand", 5)
+	pop_up.add_item("Jump", 5)
 	pop_up.set_item_metadata(5, jump_command.new())
 
-	pop_up.add_item("Set Variable Conmmand", 6)
+	pop_up.add_item("Set Variable", 6)
 	pop_up.set_item_metadata(6, set_var_command.new())
 
-	pop_up.add_item("Sound Conmmand", 7)
+	pop_up.add_item("Play Sound", 7)
 	pop_up.set_item_metadata(7, sound_command.new())
 
-	pop_up.add_item("Change UI Conmmand", 8)
+	pop_up.add_item("Change UI", 8)
 	pop_up.set_item_metadata(8, change_ui.new())
