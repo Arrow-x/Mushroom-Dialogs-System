@@ -41,3 +41,10 @@ func set_flowchart(chart) -> void:
 			"on_GraphNode_clicked"
 		)
 		graph_edit.sync_flowchart_graph()
+
+
+func _on_Button_pressed() -> void:
+	var packed_scene = PackedScene.new()
+	packed_scene.pack(graph_edit)
+	flowchart.graph_edit = packed_scene
+	ResourceSaver.save(flowchart.resource_path, flowchart)

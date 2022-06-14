@@ -12,7 +12,6 @@ signal conncting
 
 
 func set_up(c: choice, fct: Control) -> void:
-	print("setting up just fine")
 	flowchart = fct.flowchart
 	current_choice = c
 	choice_text.text = c.text
@@ -26,8 +25,6 @@ func _on_DeleteChoice_pressed():
 
 
 func _on_NextIndex_value_changed(value: float) -> void:
-	print("next_index ", value)
-	print(current_choice)
 	current_choice.next_index = int(value)
 
 

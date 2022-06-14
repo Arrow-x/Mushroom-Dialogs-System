@@ -10,17 +10,12 @@ var outputs: Array
 var c_inputs: Array
 var c_outputs: Array
 
-# func _ready():
-# 	set_process_input(true)
-
 
 func _gui_input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT:
 			if event.pressed:
-				print(self.title)
 				emit_signal("graph_node_meta", self.get_meta("block"), self.title)
-				# accept_event()
 
 
 func _on_GraphNode_dragged(_from, to):

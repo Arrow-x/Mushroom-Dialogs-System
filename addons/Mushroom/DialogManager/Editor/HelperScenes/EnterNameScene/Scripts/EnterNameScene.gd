@@ -12,7 +12,6 @@ var node_text: String
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
 		self.queue_free()
-		#print(get_focus_owner().get_path())
 
 
 func _ready():

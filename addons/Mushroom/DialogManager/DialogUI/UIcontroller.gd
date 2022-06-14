@@ -92,10 +92,8 @@ func add_choice(block, id, index) -> void:
 
 
 func _on_SayText_message_done():
-	print("message done")
 	is_tweening = false
 
 
 func _on_SayText_message_start():
-	print("message start")
 	is_tweening = true

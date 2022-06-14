@@ -40,13 +40,11 @@ func add_block(title) -> void:
 	node.set_meta("block", _new_block)
 	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
-	# node.set_name(title)
 	add_child(node)
 	node.set_owner(self)
 
 
 func on_GraphNode_clicked(meta, title):
-	print("Hello")
 	emit_signal("g_node_clicked", meta, title)
 
 

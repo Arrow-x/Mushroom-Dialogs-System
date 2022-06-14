@@ -183,6 +183,17 @@ margin_right = -1.0
 margin_bottom = -1.90735e-06
 alignment = 2
 
+[node name="SaveButton" type="Button" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
+margin_right = 41.0
+margin_bottom = 29.0
+text = "Save"
+
+[node name="Divider" type="Control" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
+margin_left = 45.0
+margin_right = 565.0
+margin_bottom = 29.0
+size_flags_horizontal = 3
+
 [node name="AddBlockButton" type="Button" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
 margin_left = 569.0
 margin_right = 645.0
@@ -190,3 +201,4 @@ margin_bottom = 29.0
 text = "Add Block"
 
 [connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_CommandsTree_item_activated"]
+[connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/SaveButton" to="." method="_on_Button_pressed"]
