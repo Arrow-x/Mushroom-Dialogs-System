@@ -5,8 +5,12 @@ var pop_up: Popup
 
 
 func _ready():
+	connect("about_to_show", self, "ready_commands")
 	pop_up = get_popup()
+	pop_up.connect("id_pressed", get_node("../../../CommandsTree"), "_on_add_command", [pop_up])
 
+
+func ready_commands():
 	pop_up.clear()
 
 	pop_up.add_item("Say Conmmand", 0)
@@ -35,5 +39,3 @@ func _ready():
 
 	pop_up.add_item("Change UI Conmmand", 8)
 	pop_up.set_item_metadata(8, change_ui.new())
-
-	pop_up.connect("id_pressed", get_node("../../../CommandsTree"), "_on_add_command", [pop_up])
