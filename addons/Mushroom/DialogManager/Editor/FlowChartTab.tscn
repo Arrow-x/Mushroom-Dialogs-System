@@ -1,6 +1,5 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=23 format=2]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/GraphEdit.gd" type="Script" id=1]
 [ext_resource path="res://addons/Mushroom/DialogManager/Editor/CommandsTree.gd" type="Script" id=2]
 [ext_resource path="res://addons/Mushroom/DialogManager/Editor/FlowChartTab.gd" type="Script" id=3]
 [ext_resource path="res://addons/Mushroom/DialogManager/Editor/AddCommand.gd" type="Script" id=4]
@@ -85,7 +84,6 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 3 )
-_graph_edit = NodePath("GraphContainer/GraphEdit")
 
 [node name="InspectorTabContainer" type="TabContainer" parent="."]
 margin_right = 358.0
@@ -191,14 +189,4 @@ margin_right = 645.0
 margin_bottom = 29.0
 text = "Add Block"
 
-[node name="GraphEdit" type="GraphEdit" parent="GraphContainer"]
-margin_top = 34.0
-margin_right = 646.0
-margin_bottom = 564.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-scroll_offset = Vector2( -200, -4 )
-script = ExtResource( 1 )
-
 [connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_CommandsTree_item_activated"]
-[connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton" to="GraphContainer/GraphEdit" method="_on_AddBlockButton_pressed"]

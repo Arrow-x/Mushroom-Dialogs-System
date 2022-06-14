@@ -3,12 +3,7 @@ extends HSplitContainer
 
 var flowchart: FlowChart
 
-export var _graph_edit: NodePath
-onready var graph_edit: GraphEdit = get_node(_graph_edit)
-
-
-func _ready():
-	graph_edit.connect("add_block_to_flow", self, "_on_add_block_to_flow")
+onready var graph_edit: GraphEdit
 
 
 func _on_add_block_to_flow(new_block, node):
@@ -34,3 +29,15 @@ func check_for_duplicates(name) -> bool:
 func set_flowchart(chart) -> void:
 	if chart is FlowChart:
 		flowchart = chart
+		graph_edit = chart.graph_edit.instance()
+		$GraphContainer.add_child(graph_edit)
+		graph_edit.connect("add_block_to_flow", self, "_on_add_block_to_flow")
+		$GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton.connect(
+			"button_down", graph_edit, "_on_AddBlockButton_pressed"
+		)
+		graph_edit.connect(
+			"g_node_clicked",
+			get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),
+			"on_GraphNode_clicked"
+		)
+		graph_edit.sync_flowchart_graph()

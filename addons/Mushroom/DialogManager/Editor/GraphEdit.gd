@@ -8,6 +8,15 @@ var node_offset: int = 0
 export var g_node_connection_types: Array
 
 signal add_block_to_flow
+signal g_node_clicked
+
+
+func sync_flowchart_graph() -> void:
+	for g_node in get_children():
+		if g_node is GraphNode:
+			for command in g_node.get_meta("block").commands:
+				if command is fork_command:
+					update_block_flow(g_node.get_meta("block"), command)
 
 
 func _on_AddBlockButton_pressed() -> void:
@@ -30,13 +39,15 @@ func add_block(title) -> void:
 	_new_block.name = title
 	node.set_meta("block", _new_block)
 	emit_signal("add_block_to_flow", _new_block, node)
-	node.connect(
-		"graph_node_meta",
-		get_node("../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),
-		"on_GraphNode_clicked"
-	)
+	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
 	# node.set_name(title)
 	add_child(node)
+	node.set_owner(self)
+
+
+func on_GraphNode_clicked(meta, title):
+	print("Hello")
+	emit_signal("g_node_clicked", meta, title)
 
 
 func on_new_text_confirm(new_title: String) -> void:
@@ -92,6 +103,7 @@ func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
 					var cc: Control = Control.new()
 					cc.rect_min_size = Vector2(10, 10)
 					g_node.add_child(cc)
+					cc.set_owner(self)
 					g_node.outputs.append(fork)
 					g_node.c_outputs.append(cc)
 
@@ -106,6 +118,7 @@ func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
 					var cc: Control = Control.new()
 					cc.rect_min_size = Vector2(10, 10)
 					g_node.add_child(cc)
+					cc.set_owner(self)
 					g_node.inputs.append(fork)
 					g_node.c_inputs.append(cc)
 
