@@ -5,7 +5,7 @@ onready var graph_node: PackedScene = preload("res://addons/Mushroom/DialogManag
 onready var enter_name_scene: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/HelperScenes/EnterNameScene/Scenes/EnterNameScene.tscn")
 
 var node_offset: int = 0
-var g_node_connection_types: Array
+export var g_node_connection_types: Array
 
 signal add_block_to_flow
 
