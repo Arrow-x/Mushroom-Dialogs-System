@@ -4,7 +4,7 @@ extends GraphEdit
 onready var graph_node: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn")
 onready var enter_name_scene: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/HelperScenes/EnterNameScene/Scenes/EnterNameScene.tscn")
 
-var node_offset: int = 0
+var g_node_posititon := Vector2(40, 40)
 export var g_node_connection_types: Array
 
 signal add_block_to_flow
@@ -29,11 +29,7 @@ func _on_AddBlockButton_pressed() -> void:
 func add_block(title) -> void:
 	var node: GraphNode = graph_node.instance()
 	node.title = title
-	node.offset = Vector2(node_offset, 0)
-	if node_offset < 240:
-		node_offset = node_offset + 120
-	else:
-		node_offset = 0
+	node.offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
 
 	var _new_block = block.new()
 	_new_block.name = title
