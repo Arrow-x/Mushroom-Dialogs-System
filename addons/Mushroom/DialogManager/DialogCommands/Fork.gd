@@ -17,5 +17,8 @@ func preview():
 	else:
 		var choices_str: Array
 		for c in choices:
+			if c.next_block == null:
+				choices_str.append("Empty")
+				continue
 			choices_str.append(c.next_block.name)
 		return String("Fork to: " + String(choices_str))

@@ -18,10 +18,6 @@ func _gui_input(event):
 				emit_signal("graph_node_meta", self.get_meta("block"), self.title)
 
 
-func _on_GraphNode_dragged(_from, to):
-	emit_signal("graph_node_dragged", to, self.title)
-
-
 func delete_inputs(fork: fork_command):
 	var idx = inputs.find(fork)
 	set_slot_enabled_left(idx, false)

@@ -32,14 +32,13 @@ func _on_NextBlockList_about_to_show() -> void:
 	var menu: PopupMenu = next_block_menu.get_popup()
 	if !menu.is_connected("index_pressed", self, "change_next_bloc"):
 		menu.connect("index_pressed", self, "change_next_bloc", [menu])
-	var _c: int
 	menu.clear()
-	for i in flowchart.nodes:
-		if _c == null:
-			_c = 0
-		menu.add_item(i, _c)
-		menu.set_item_metadata(_c, flowchart.nodes[i][1])
-		_c = _c + 1
+	var _c := 0
+	for b in flowchart.graph_edit_node.get_children():
+		if b is GraphNode:
+			menu.add_item(b.get_meta("block").name, _c)
+			menu.set_item_metadata(_c, b.get_meta("block"))
+			_c += 1
 
 
 func change_next_bloc(index, m: PopupMenu) -> void:
