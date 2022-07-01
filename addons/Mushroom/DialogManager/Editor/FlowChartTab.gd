@@ -28,6 +28,7 @@ func set_flowchart(chart) -> void:
 			get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),
 			"on_GraphNode_clicked"
 		)
+		graph_edit.connect("flow_changed", self, "changed_flowchart")
 		graph_edit.sync_flowchart_graph()
 
 
