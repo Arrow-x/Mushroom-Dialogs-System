@@ -36,3 +36,10 @@ func _on_Button_pressed() -> void:
 	packed_scene.pack(graph_edit)
 	flowchart.graph_edit = packed_scene
 	ResourceSaver.save(flowchart.resource_path, flowchart)
+	if name.findn("(*)") != -1:
+		name = name.rstrip("(*)")
+
+
+func changed_flowchart():
+	if name.findn("(*)") == -1:
+		name = String(name + "(*)")
