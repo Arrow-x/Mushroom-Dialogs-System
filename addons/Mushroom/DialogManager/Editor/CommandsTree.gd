@@ -50,9 +50,17 @@ func _add_command(command: Command) -> void:
 	#set the new item as the selected one
 
 
+func update_commad_tree(block: block) -> void:
+	self.clear()
+	for i in block.commands:
+		_add_command(i)
+
+
 func _on_CommandsTree_item_activated() -> void:
 	var current_item = get_selected().get_meta("0")
 	if current_item != null:
+		if !current_item.is_connected("changed", self, "update_commad_tree"):
+			current_item.connect("changed", self, "update_commad_tree", [current_block])
 		if commands_settings.get_child_count() != 0:
 			if commands_settings.get_child(0) != null:
 				commands_settings.get_child(0).free()
