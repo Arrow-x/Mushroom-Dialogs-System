@@ -36,6 +36,7 @@ func _on_add_command(id: int, pop_up: Popup) -> void:
 	_command = _getter.duplicate()  #Carful with the Conditional Command
 	_add_command(_command)
 	current_block.commands.append(_command)
+	flowchart_tab.changed_flowchart()
 
 
 func _add_command(command: Command) -> void:
@@ -51,6 +52,7 @@ func _add_command(command: Command) -> void:
 
 
 func update_commad_tree(block: block) -> void:
+	flowchart_tab.changed_flowchart()
 	self.clear()
 	for i in block.commands:
 		_add_command(i)
