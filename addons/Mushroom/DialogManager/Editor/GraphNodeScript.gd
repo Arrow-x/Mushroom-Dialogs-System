@@ -2,7 +2,6 @@ tool
 extends GraphNode
 
 signal graph_node_meta
-signal graph_node_dragged
 
 var inputs: Array
 var outputs: Array
