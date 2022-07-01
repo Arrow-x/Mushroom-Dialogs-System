@@ -5,9 +5,9 @@ onready var flowchart_tabs: TabContainer = $FlowChartTabs
 
 
 func open_flowchart_scene(flowchart_scene: FlowChart):
+	# TODO Switch to Tabs Node to get a close button
+	##### TODO incease of file being deleted while it is still in memory prompt of saving using the old systme
 	# TODO have the tab show if the flowchart is modified
-	# TODO add close button
-	# TODO incease of file being deleted while it is still in memory prompt of saving using the old systme
 	if flowchart_scene.get_name() == "":
 		return
 	for tab in flowchart_tabs.get_children():

@@ -52,7 +52,7 @@ func on_new_text_confirm(new_title: String) -> void:
 		return
 	add_block(new_title)
 
-
+# TODO So many Loops, should optimize this
 func update_block_flow(sender: block, fork: fork_command) -> void:
 	var g_node_name: String
 	var g_node_output_idx: int

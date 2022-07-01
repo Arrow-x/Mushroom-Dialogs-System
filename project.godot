@@ -121,6 +121,10 @@ gdscript/warnings/return_value_discarded=false
 
 enabled=PoolStringArray( "res://addons/Mushroom/plugin.cfg", "res://addons/godot-plugin-refresher/plugin.cfg" )
 
+[gdnative]
+
+singletons=[  ]
+
 [global]
 
 script=false
