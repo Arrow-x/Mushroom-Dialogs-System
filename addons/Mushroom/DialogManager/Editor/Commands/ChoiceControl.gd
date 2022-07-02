@@ -45,7 +45,9 @@ func change_next_bloc(index, m: PopupMenu) -> void:
 	current_choice.next_block = m.get_item_metadata(index)
 	next_block_menu.text = m.get_item_text(index)
 	emit_signal("conncting")
+	current_choice.emit_signal("changed")
 
 
 func _on_ChoiceText_text_changed(new_text: String) -> void:
 	current_choice.text = new_text
+	current_choice.emit_signal("changed")

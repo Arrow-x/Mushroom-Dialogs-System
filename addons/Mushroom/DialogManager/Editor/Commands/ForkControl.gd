@@ -16,7 +16,9 @@ func _on_AddChoiceButton_pressed() -> void:
 	var n_c: choice = choice.new()
 	current_fork.choices.append(n_c)
 	choice_control.current_choice = n_c
+	choice_control.current_choice.connect("changed", self, "is_changed")
 	choice_control.connect("conncting", self, "_on_connecting", [current_block])
+	is_changed()
 
 
 func set_up(f: fork_command, flowcharttab: Control, cb: block) -> void:
@@ -29,9 +31,14 @@ func set_up(f: fork_command, flowcharttab: Control, cb: block) -> void:
 		for i in f.choices:
 			var choice_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn").instance()
 			choices_container.add_child(choice_control)
+			i.connect("changed", self, "is_changed")
 			choice_control.set_up(i, flowcharttab)
 			choice_control.connect("conncting", self, "_on_connecting", [current_block])
 
 
 func _on_connecting(sender) -> void:
 	graph.update_block_flow(sender, current_fork)
+
+
+func is_changed() -> void:
+	current_fork.emit_signal("changed")
