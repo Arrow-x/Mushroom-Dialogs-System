@@ -2,6 +2,7 @@ tool
 extends HSplitContainer
 
 var flowchart: FlowChart
+var flow_tabs: Tabs
 
 onready var graph_edit: GraphEdit
 
@@ -32,6 +33,7 @@ func set_flowchart(chart) -> void:
 		graph_edit.sync_flowchart_graph()
 
 
+# BUG Godot Crashes when saving a graph_edit that has a node connected to itself
 func _on_Button_pressed() -> void:
 	var packed_scene = PackedScene.new()
 	packed_scene.pack(graph_edit)
@@ -39,8 +41,10 @@ func _on_Button_pressed() -> void:
 	ResourceSaver.save(flowchart.resource_path, flowchart)
 	if name.findn("(*)") != -1:
 		name = name.rstrip("(*)")
+		flow_tabs.set_tab_title(get_position_in_parent(), name)
 
 
 func changed_flowchart():
 	if name.findn("(*)") == -1:
 		name = String(name + "(*)")
+		flow_tabs.set_tab_title(get_position_in_parent(), name)
