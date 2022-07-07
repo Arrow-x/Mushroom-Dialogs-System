@@ -42,12 +42,26 @@ func _on_NewFlowChartTabs_tab_clicked(tab: int) -> void:
 
 func _on_NewFlowChartTabs_tab_close(tab: int) -> void:
 	var tab_c := flowchart_tabs.get_children()
-	f_tabs.remove_tab(tab)
-	tab_c[tab].queue_free()
-	if tab_c.size() != 0:
-		tab_c[tab - 1].visible = true
+	if tab_c[tab].modified == true:
+		var _c := ConfirmationDialog.new()
+		_c.set_text("You are going to discart the changes that you made")
+		add_child(_c)
+		_c.connect("confirmed", self, "_free_tab_and_select_another", [tab_c, tab, _c])
+		_c.set_size(Vector2(0, 0))
+		_c.popup_centered()
+		return
+	_free_tab_and_select_another(tab_c, tab)
 
 
 func _on_Tabs_reposition_active_tab_request(idx_to: int) -> void:
 	var tab_c: Control = flowchart_tabs.get_children()[f_tabs.get_current_tab()]
 	flowchart_tabs.move_child(tab_c, idx_to)
+
+
+func _free_tab_and_select_another(tab_c, tab, _c = null):
+	f_tabs.remove_tab(tab)
+	if _c != null:
+		_c.queue_free()
+	tab_c[tab].queue_free()
+	if tab_c.size() != 0:
+		tab_c[tab - 1].visible = true

@@ -4,6 +4,8 @@ extends HSplitContainer
 var flowchart: FlowChart
 var flow_tabs: Tabs
 
+var modified := false
+
 onready var graph_edit: GraphEdit
 
 
@@ -42,9 +44,11 @@ func _on_Button_pressed() -> void:
 	if name.findn("(*)") != -1:
 		name = name.rstrip("(*)")
 		flow_tabs.set_tab_title(get_position_in_parent(), name)
+		modified = false
 
 
 func changed_flowchart():
 	if name.findn("(*)") == -1:
 		name = String(name + "(*)")
 		flow_tabs.set_tab_title(get_position_in_parent(), name)
+		modified = true
