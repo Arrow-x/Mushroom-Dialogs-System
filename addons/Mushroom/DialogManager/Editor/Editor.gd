@@ -1,9 +1,8 @@
 tool
 extends Control
-var editor_scn: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
-# onready var flowchart_tabs: TabContainer = $FlowChartTabs
-onready var flowchart_tabs: Control = $VBoxContainer/FlowCharTabs
-onready var f_tabs: Tabs = $VBoxContainer/Tabs
+var editor_scn := preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
+onready var flowchart_tabs := $VBoxContainer/FlowCharTabs
+onready var f_tabs := $VBoxContainer/Tabs
 
 
 func open_flowchart_scene(flowchart_scene: FlowChart):
