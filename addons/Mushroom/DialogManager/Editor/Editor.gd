@@ -1,13 +1,12 @@
 tool
 extends Control
 var editor_scn := preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
-onready var flowchart_tabs := $VBoxContainer/FlowCharTabs
+onready var flowcharts_container := $VBoxContainer/FlowCharTabs
 onready var f_tabs := $VBoxContainer/Tabs
 
 
 func open_flowchart_scene(flowchart_scene: FlowChart):
 	##### TODO if the file currently being editied is deleted form disk, ask user where they want to safe a new file
-	# TODO have the tab show if the flowchart is modified
 	##### TODO For the Say Command
 	##### TODO For The Fork Command
 
@@ -15,53 +14,74 @@ func open_flowchart_scene(flowchart_scene: FlowChart):
 	if flowchart_scene.get_name() == "":
 		return
 
-	for tab in flowchart_tabs.get_children():
+	for tab in flowcharts_container.get_children():
 		if tab.flowchart == flowchart_scene:
-			var c_tab_idx = flowchart_tabs.get_children().find(tab)
+			var c_tab_idx = flowcharts_container.get_children().find(tab)
 			f_tabs.set_current_tab(c_tab_idx)
 			_on_NewFlowChartTabs_tab_clicked(c_tab_idx)
 			tab.name = flowchart_scene.get_name()
 			return
 	var ed := editor_scn.instance()
 	ed.set_flowchart(flowchart_scene)
-	flowchart_tabs.add_child(ed)
+	flowcharts_container.add_child(ed)
 
 	ed.name = flowchart_scene.get_name()
 	ed.flow_tabs = f_tabs
 
 	f_tabs.add_tab(flowchart_scene.get_name())
-	f_tabs.set_current_tab(flowchart_tabs.get_children().find(ed))
+	f_tabs.set_current_tab(flowcharts_container.get_children().find(ed))
 
 
 func _on_NewFlowChartTabs_tab_clicked(tab: int) -> void:
-	var tab_c := flowchart_tabs.get_children()
-	for c in tab_c:
+	var flowchart_editors := flowcharts_container.get_children()
+	for c in flowchart_editors:
 		c.visible = false
-	tab_c[tab].visible = true
+	flowchart_editors[tab].visible = true
 
 
 func _on_NewFlowChartTabs_tab_close(tab: int) -> void:
-	var tab_c := flowchart_tabs.get_children()
-	if tab_c[tab].modified == true:
-		var _c := ConfirmationDialog.new()
-		_c.set_text("You are going to discart the changes that you made")
-		add_child(_c)
-		_c.connect("confirmed", self, "_free_tab_and_select_another", [tab_c, tab, _c])
+	var flowchart_editors := flowcharts_container.get_children()
+	if flowchart_editors[tab].modified == true:
+		var _c := AcceptDialog.new()
+		_c.set_text("Save changes in flowchart before closing?")
+		_c.set_title("Please Confirm...")
+		_c.add_button("Cancel", OS.is_ok_left_and_cancel_right(), "cancel")
+		_c.add_button("Don't Save", OS.is_ok_left_and_cancel_right(), "discard")
+		_c.get_ok().set_text("Save & Close")
+		_c.connect("confirmed", self, "_close_confirm_choice", ["", flowchart_editors, tab, _c])
+		_c.connect("custom_action", self, "_close_confirm_choice", [flowchart_editors, tab, _c])
 		_c.set_size(Vector2(0, 0))
+		add_child(_c)
 		_c.popup_centered()
 		return
-	_free_tab_and_select_another(tab_c, tab)
+	_free_tab_and_select_another(flowchart_editors, tab)
+
+
+func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window):
+	if custom_action == "cancel":
+		confirm_window.queue_free()
+		return
+	if custom_action != "discard":
+		flowchart_editors[tab]._on_Button_pressed()
+	_free_tab_and_select_another(flowchart_editors, tab, confirm_window)
 
 
 func _on_Tabs_reposition_active_tab_request(idx_to: int) -> void:
-	var tab_c: Control = flowchart_tabs.get_children()[f_tabs.get_current_tab()]
-	flowchart_tabs.move_child(tab_c, idx_to)
+	var flowchart_editor: Control = flowcharts_container.get_children()[f_tabs.get_current_tab()]
+	flowcharts_container.move_child(flowchart_editor, idx_to)
 
 
-func _free_tab_and_select_another(tab_c, tab, _c = null):
+func _free_tab_and_select_another(flowchart_editors, tab, confirm_window = null):
+	if confirm_window != null:
+		confirm_window.queue_free()
+	if tab == f_tabs.get_current_tab():
+		for c in flowchart_editors:
+			c.visible = false
+		if tab > 0:
+			flowchart_editors[tab - 1].visible = true
+		elif tab == 0:
+			if tab + 1 < flowchart_editors.size():
+				flowchart_editors[tab + 1].visible = true
+
+	flowchart_editors[tab].queue_free()
 	f_tabs.remove_tab(tab)
-	if _c != null:
-		_c.queue_free()
-	tab_c[tab].queue_free()
-	if tab_c.size() != 0:
-		tab_c[tab - 1].visible = true
