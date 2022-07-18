@@ -6,6 +6,7 @@ var flow_tabs: Tabs
 
 var modified := false
 
+signal done_saving
 onready var graph_edit: GraphEdit
 
 
@@ -37,14 +38,36 @@ func set_flowchart(chart) -> void:
 
 # BUG Godot Crashes when saving a graph_edit that has a node connected to itself
 func _on_Button_pressed() -> void:
+	if flowchart.resource_path == "":
+		var _i: FileDialog = FileDialog.new()
+		_i.resizable = true
+		_i.set_size(Vector2(800, 500))
+		_i.get_line_edit().set_text("new_resource.tres")
+		_i.get_line_edit().select(0, 12)
+		_i.connect("file_selected", self, "save_to_disc", [true])
+
+		add_child(_i)
+		_i.popup_centered()
+		return
+
+	save_to_disc(flowchart.resource_path)
+
+
+func save_to_disc(path: String, overwrite := false) -> void:
 	var packed_scene = PackedScene.new()
 	packed_scene.pack(graph_edit)
 	flowchart.graph_edit = packed_scene
-	ResourceSaver.save(flowchart.resource_path, flowchart)
+	ResourceSaver.save(path, flowchart)
+
+	if overwrite == true:
+		flowchart.set_path(path)
+		name = flowchart.get_name()
 	if name.findn("(*)") != -1:
 		name = name.rstrip("(*)")
-		flow_tabs.set_tab_title(get_position_in_parent(), name)
-		modified = false
+
+	flow_tabs.set_tab_title(get_position_in_parent(), name)
+	modified = false
+	emit_signal("done_saving")
 
 
 func changed_flowchart():

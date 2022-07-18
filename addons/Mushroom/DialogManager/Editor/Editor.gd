@@ -6,7 +6,6 @@ onready var f_tabs := $VBoxContainer/Tabs
 
 
 func open_flowchart_scene(flowchart_scene: FlowChart):
-	##### TODO if the file currently being editied is deleted form disk, ask user where they want to safe a new file
 	##### TODO For the Say Command
 	##### TODO For The Fork Command
 
@@ -50,7 +49,7 @@ func _on_NewFlowChartTabs_tab_close(tab: int) -> void:
 		_c.add_button("Cancel", OS.is_ok_left_and_cancel_right(), "cancel")
 		_c.add_button("Don't Save", OS.is_ok_left_and_cancel_right(), "discard")
 		_c.get_ok().set_text("Save & Close")
-		_c.connect("confirmed", self, "_close_confirm_choice", ["", flowchart_editors, tab, _c])
+		_c.connect("confirmed", self, "_close_confirm_choice", ["save", flowchart_editors, tab, _c])
 		_c.connect("custom_action", self, "_close_confirm_choice", [flowchart_editors, tab, _c])
 		_c.set_size(Vector2(0, 0))
 		add_child(_c)
@@ -63,8 +62,16 @@ func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window
 	if custom_action == "cancel":
 		confirm_window.queue_free()
 		return
-	if custom_action != "discard":
+	if custom_action == "save":
 		flowchart_editors[tab]._on_Button_pressed()
+		flowchart_editors[tab].connect(
+			"done_saving",
+			self,
+			"_free_tab_and_select_another",
+			[flowchart_editors, tab, confirm_window]
+		)
+		return
+
 	_free_tab_and_select_another(flowchart_editors, tab, confirm_window)
 
 
