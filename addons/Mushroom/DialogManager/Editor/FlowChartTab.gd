@@ -70,7 +70,7 @@ func save_to_disc(path: String, overwrite := false) -> void:
 	emit_signal("done_saving")
 
 
-func changed_flowchart():
+func changed_flowchart() -> void:
 	if name.findn("(*)") == -1:
 		name = String(name + "(*)")
 		flow_tabs.set_tab_title(get_position_in_parent(), name)

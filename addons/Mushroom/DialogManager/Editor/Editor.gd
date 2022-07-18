@@ -5,7 +5,7 @@ onready var flowcharts_container := $VBoxContainer/FlowCharTabs
 onready var f_tabs := $VBoxContainer/Tabs
 
 
-func open_flowchart_scene(flowchart_scene: FlowChart):
+func open_flowchart_scene(flowchart_scene: FlowChart) -> void:
 	##### TODO For the Say Command
 	##### TODO For The Fork Command
 
@@ -58,7 +58,7 @@ func _on_NewFlowChartTabs_tab_close(tab: int) -> void:
 	_free_tab_and_select_another(flowchart_editors, tab)
 
 
-func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window):
+func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window) -> void:
 	if custom_action == "cancel":
 		confirm_window.queue_free()
 		return
@@ -80,7 +80,7 @@ func _on_Tabs_reposition_active_tab_request(idx_to: int) -> void:
 	flowcharts_container.move_child(flowchart_editor, idx_to)
 
 
-func _free_tab_and_select_another(flowchart_editors, tab, confirm_window = null):
+func _free_tab_and_select_another(flowchart_editors, tab, confirm_window = null) -> void:
 	if confirm_window != null:
 		confirm_window.queue_free()
 	if tab == f_tabs.get_current_tab():
