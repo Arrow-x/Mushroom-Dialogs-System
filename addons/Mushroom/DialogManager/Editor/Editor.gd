@@ -9,10 +9,6 @@ func open_flowchart_scene(flowchart_scene: FlowChart) -> void:
 	##### TODO For the Say Command
 	##### TODO For The Fork Command
 
-	# BUG when creating a flowchart an empty editor appear
-	if flowchart_scene.get_name() == "":
-		return
-
 	for tab in flowcharts_container.get_children():
 		if tab.flowchart == flowchart_scene:
 			var c_tab_idx = flowcharts_container.get_children().find(tab)

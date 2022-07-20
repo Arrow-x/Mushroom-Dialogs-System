@@ -17,7 +17,8 @@ func _exit_tree():
 
 func handles(object):
 	if object is FlowChart:
-		return true
+		if object.get_name() != "":
+			return true
 
 
 func edit(object):
