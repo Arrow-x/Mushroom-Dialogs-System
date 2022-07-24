@@ -9,7 +9,6 @@ onready var flowchart_tab: Control = get_node(_flowchart_tab)
 var current_block: block
 
 # TODO Set up drag and droping, multiselect...
-# TODO update the command list when the command is editing
 
 
 func on_GraphNode_clicked(meta, title) -> void:
@@ -17,6 +16,7 @@ func on_GraphNode_clicked(meta, title) -> void:
 	current_block = meta
 	current_block_label.text = "current block: " + title
 
+	# TODO don't update when it is the current block is selected ageain
 	if commands_settings.get_child_count() != 0:
 		if commands_settings.get_child(0) != null:
 			commands_settings.get_child(0).free()
@@ -29,6 +29,7 @@ func on_GraphNode_clicked(meta, title) -> void:
 func _on_add_command(id: int, pop_up: Popup) -> void:
 	var _command: Command
 	if current_block == null:
+		# TODO a warnin here
 		return
 
 	_command = pop_up.get_item_metadata(id)
@@ -45,7 +46,6 @@ func _add_command(command: Command) -> void:
 		self.set_hide_root(true)
 
 	var _item: TreeItem = self.create_item(root)
-	# TODO A custom preview for each command in the list
 	_item.set_text(0, command.preview())
 	_item.set_meta("0", command)
 	#set the new item as the selected one
