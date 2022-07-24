@@ -22,7 +22,7 @@ func handles(object):
 
 
 func edit(object):
-	editor_instance.open_flowchart_scene(object)
+	editor_instance.open_flowchart_scene(object, get_undo_redo())
 	make_visible(true)
 
 

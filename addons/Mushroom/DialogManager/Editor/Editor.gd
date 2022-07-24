@@ -5,7 +5,7 @@ onready var flowcharts_container := $VBoxContainer/FlowCharTabs
 onready var f_tabs := $VBoxContainer/Tabs
 
 
-func open_flowchart_scene(flowchart_scene: FlowChart) -> void:
+func open_flowchart_scene(flowchart_scene: FlowChart, undo_redo: UndoRedo) -> void:
 	##### TODO For the Say Command
 	##### TODO For The Fork Command
 
@@ -19,7 +19,8 @@ func open_flowchart_scene(flowchart_scene: FlowChart) -> void:
 
 			return
 	var ed := editor_scn.instance()
-	ed.set_flowchart(flowchart_scene)
+	print("about to pass: ", undo_redo)
+	ed.set_flowchart(flowchart_scene, undo_redo)
 	flowcharts_container.add_child(ed)
 
 	ed.name = flowchart_scene.get_name()

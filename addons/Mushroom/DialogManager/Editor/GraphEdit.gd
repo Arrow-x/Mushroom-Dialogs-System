@@ -40,7 +40,7 @@ func add_block(title) -> void:
 	node.connect("dragged", self, "emit_changed", [], CONNECT_PERSIST)
 	add_child(node)
 	node.set_owner(self)
-	emit_changed()
+	# emit_changed()
 
 
 func on_GraphNode_clicked(meta, title):
@@ -55,9 +55,10 @@ func on_new_text_confirm(new_title: String) -> void:
 	if $"../../".check_for_duplicates(new_title) == true or new_title == "":
 		_on_AddBlockButton_pressed()
 		print("The Title is a duplicate!")
-		# TODO add a popup window here to give info on the error
 		return
-	add_block(new_title)
+	# add_block(new_title)
+	var do_undo_flags := {type = "block", obj = self, do_method = "add_block", inputs = new_title}
+	emit_signal("flow_changed", do_undo_flags)
 
 
 # TODO So many Loops, should optimize this

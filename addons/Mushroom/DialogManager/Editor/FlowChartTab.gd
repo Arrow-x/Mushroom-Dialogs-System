@@ -5,6 +5,7 @@ var flowchart: FlowChart
 var flow_tabs: Tabs
 
 var modified := false
+var undo_redo: UndoRedo
 
 signal done_saving
 onready var graph_edit: GraphEdit
@@ -18,10 +19,18 @@ func check_for_duplicates(name) -> bool:
 	return false
 
 
-func set_flowchart(chart) -> void:
+func set_flowchart(chart, sent_undo_redo: UndoRedo, graph_edit = null) -> void:
 	if chart is FlowChart:
 		flowchart = chart
-		graph_edit = chart.graph_edit.instance()
+		undo_redo = sent_undo_redo
+
+		if graph_edit == null:
+			graph_edit = chart.graph_edit.instance()
+
+		for g in $GraphContainer.get_children():
+			if g is GraphEdit:
+				g.queue_free()
+
 		$GraphContainer.add_child(graph_edit)
 		flowchart.graph_edit_node = graph_edit
 		$GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton.connect(
@@ -70,8 +79,17 @@ func save_to_disc(path: String, overwrite := false) -> void:
 	emit_signal("done_saving")
 
 
-func changed_flowchart() -> void:
+func changed_flowchart(undo_flags: Dictionary) -> void:
 	if name.findn("(*)") == -1:
 		name = String(name + "(*)")
 		flow_tabs.set_tab_title(get_position_in_parent(), name)
 		modified = true
+	match undo_flags.type:
+		"block":
+			undo_redo.create_action("Add Block to flowchart")
+			# undo_redo.add_undo_property(flowchart, "graph_edit", flowchart.graph_edit)
+			undo_redo.add_undo_method(
+				self, "set_flowchart", flowchart, undo_redo, undo_flags.obj.duplicate()
+			)
+			undo_redo.add_do_method(undo_flags.obj, undo_flags.do_method, undo_flags.inputs)
+			undo_redo.commit_action()
