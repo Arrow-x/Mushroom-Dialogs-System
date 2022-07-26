@@ -19,7 +19,7 @@ func check_for_duplicates(name) -> bool:
 	return false
 
 
-func set_flowchart(chart, sent_undo_redo: UndoRedo, graph_edit = null) -> void:
+func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
 	if chart is FlowChart:
 		flowchart = chart
 		undo_redo = sent_undo_redo
@@ -43,6 +43,7 @@ func set_flowchart(chart, sent_undo_redo: UndoRedo, graph_edit = null) -> void:
 		)
 		graph_edit.connect("flow_changed", self, "changed_flowchart")
 		graph_edit.sync_flowchart_graph()
+		graph_edit.undo_redo = sent_undo_redo
 
 
 # BUG Godot Crashes when saving a graph_edit that has a node connected to itself
@@ -79,17 +80,8 @@ func save_to_disc(path: String, overwrite := false) -> void:
 	emit_signal("done_saving")
 
 
-func changed_flowchart(undo_flags: Dictionary) -> void:
+func changed_flowchart() -> void:
 	if name.findn("(*)") == -1:
 		name = String(name + "(*)")
 		flow_tabs.set_tab_title(get_position_in_parent(), name)
 		modified = true
-	match undo_flags.type:
-		"block":
-			undo_redo.create_action("Add Block to flowchart")
-			# undo_redo.add_undo_property(flowchart, "graph_edit", flowchart.graph_edit)
-			undo_redo.add_undo_method(
-				self, "set_flowchart", flowchart, undo_redo, undo_flags.obj.duplicate()
-			)
-			undo_redo.add_do_method(undo_flags.obj, undo_flags.do_method, undo_flags.inputs)
-			undo_redo.commit_action()

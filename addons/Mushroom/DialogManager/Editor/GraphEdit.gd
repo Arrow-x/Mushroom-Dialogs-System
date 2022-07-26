@@ -5,6 +5,8 @@ onready var graph_node: PackedScene = preload("res://addons/Mushroom/DialogManag
 onready var enter_name_scene: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/HelperScenes/EnterNameScene/Scenes/EnterNameScene.tscn")
 
 var g_node_posititon := Vector2(40, 40)
+var undo_redo: UndoRedo
+
 export var g_node_connection_types: Array
 
 signal add_block_to_flow
@@ -40,7 +42,13 @@ func add_block(title) -> void:
 	node.connect("dragged", self, "emit_changed", [], CONNECT_PERSIST)
 	add_child(node)
 	node.set_owner(self)
-	# emit_changed()
+
+
+func delete_block(title) -> void:
+	for b in get_children():
+		if b is GraphNode:
+			if b.title == title:
+				b.queue_free()
 
 
 func on_GraphNode_clicked(meta, title):
@@ -56,9 +64,12 @@ func on_new_text_confirm(new_title: String) -> void:
 		_on_AddBlockButton_pressed()
 		print("The Title is a duplicate!")
 		return
-	# add_block(new_title)
-	var do_undo_flags := {type = "block", obj = self, do_method = "add_block", inputs = new_title}
-	emit_signal("flow_changed", do_undo_flags)
+	# var do_undo_flags := {type = "block", obj = self, do_method = "add_block", inputs = new_title}
+	# emit_signal("flow_changed", do_undo_flags)
+	undo_redo.create_action("Creating a block")
+	undo_redo.add_do_method(self, "add_block", new_title)
+	undo_redo.add_undo_method(self, "delete_block", new_title)
+	undo_redo.commit_action()
 
 
 # TODO So many Loops, should optimize this

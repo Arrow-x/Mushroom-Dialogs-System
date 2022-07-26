@@ -19,7 +19,6 @@ func open_flowchart_scene(flowchart_scene: FlowChart, undo_redo: UndoRedo) -> vo
 
 			return
 	var ed := editor_scn.instance()
-	print("about to pass: ", undo_redo)
 	ed.set_flowchart(flowchart_scene, undo_redo)
 	flowcharts_container.add_child(ed)
 
