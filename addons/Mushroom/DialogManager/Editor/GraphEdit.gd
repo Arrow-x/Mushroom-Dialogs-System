@@ -40,6 +40,7 @@ func add_block(title) -> void:
 	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
 	node.connect("dragged", self, "emit_changed", [], CONNECT_PERSIST)
+	node.connect("close_request", self, "on_node_close", [node.title], CONNECT_PERSIST)
 	add_child(node)
 	node.set_owner(self)
 
@@ -49,6 +50,13 @@ func delete_block(title) -> void:
 		if b is GraphNode:
 			if b.title == title:
 				b.queue_free()
+
+
+func on_node_close(title) -> void:
+	undo_redo.create_action("Delete Block")
+	undo_redo.add_do_method(self, "delete_block", title)
+	undo_redo.add_undo_method(self, "add_block", title)
+	undo_redo.commit_action()
 
 
 func on_GraphNode_clicked(meta, title):
@@ -64,8 +72,7 @@ func on_new_text_confirm(new_title: String) -> void:
 		_on_AddBlockButton_pressed()
 		print("The Title is a duplicate!")
 		return
-	# var do_undo_flags := {type = "block", obj = self, do_method = "add_block", inputs = new_title}
-	# emit_signal("flow_changed", do_undo_flags)
+
 	undo_redo.create_action("Creating a block")
 	undo_redo.add_do_method(self, "add_block", new_title)
 	undo_redo.add_undo_method(self, "delete_block", new_title)

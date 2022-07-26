@@ -10,7 +10,10 @@ margin_right = 113.0
 margin_bottom = 70.0
 mouse_filter = 1
 title = "First Block"
+show_close = true
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[connection signal="raise_request" from="." to="." method="_on_GraphNode_raise_request"]
