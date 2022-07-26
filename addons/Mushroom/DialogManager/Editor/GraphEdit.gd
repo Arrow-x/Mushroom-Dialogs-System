@@ -39,7 +39,7 @@ func add_block(title) -> void:
 	node.set_meta("block", _new_block)
 	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
-	node.connect("dragged", self, "emit_changed", [], CONNECT_PERSIST)
+	node.connect("dragged", self, "on_node_dragged", [node], CONNECT_PERSIST)
 	node.connect("close_request", self, "on_node_close", [node.title], CONNECT_PERSIST)
 	add_child(node)
 	node.set_owner(self)
@@ -63,7 +63,11 @@ func on_GraphNode_clicked(meta, title):
 	emit_signal("g_node_clicked", meta, title)
 
 
-func emit_changed(_x = 0, _y = 0):
+func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node: GraphNode) -> void:
+	undo_redo.create_action("Moving Block")
+	undo_redo.add_do_method(node, "set_offset", finished_offset)
+	undo_redo.add_undo_method(node, "set_offset", start_offset)
+	undo_redo.commit_action()
 	emit_signal("flow_changed")
 
 
