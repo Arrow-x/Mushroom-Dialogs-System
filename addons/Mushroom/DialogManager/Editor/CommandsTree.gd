@@ -7,6 +7,7 @@ onready var current_block_label: Label = $"../inspectorHeader/inspectorHeaderHBo
 onready var commands_settings: Panel = $"../../CommandsSettings"
 onready var flowchart_tab: Control = get_node(_flowchart_tab)
 var current_block: block
+onready var undo_redo: UndoRedo = flowchart_tab.undo_redo
 
 # TODO Set up drag and droping, multiselect...
 
@@ -23,7 +24,7 @@ func on_GraphNode_clicked(meta, title) -> void:
 
 	self.clear()
 	for i in meta.commands:
-		_add_command(i)
+		add_command(i)
 
 
 func _on_add_command(id: int, pop_up: Popup) -> void:
@@ -35,12 +36,15 @@ func _on_add_command(id: int, pop_up: Popup) -> void:
 	_command = pop_up.get_item_metadata(id)
 	var _getter: Command = pop_up.get_item_metadata(id)
 	_command = _getter.duplicate()  #Carful with the Conditional Command
-	_add_command(_command)
+	undo_redo.create_action("Added Command")
+	undo_redo.add_do_method(self, "add_command", _command)
+	undo_redo.add_undo_method(self, "delete_command", _command)
+	undo_redo.commit_action()
 	current_block.commands.append(_command)
 	flowchart_tab.changed_flowchart()
 
 
-func _add_command(command: Command) -> void:
+func add_command(command: Command) -> void:
 	if get_root() == null:
 		root = self.create_item()
 		self.set_hide_root(true)
@@ -51,11 +55,24 @@ func _add_command(command: Command) -> void:
 	#set the new item as the selected one
 
 
+func delete_command(command: Command) -> void:
+	var item = get_root().get_children()
+	var children = []
+	while item:
+		children.append(item)
+		item = item.get_next()
+	for c in children:
+		if c.get_meta("0") == command:
+			c.free()
+	current_block.commands.erase(command)
+	update_commad_tree(current_block)
+
+
 func update_commad_tree(block: block) -> void:
 	flowchart_tab.changed_flowchart()
 	self.clear()
 	for i in block.commands:
-		_add_command(i)
+		add_command(i)
 
 
 func _on_CommandsTree_item_activated() -> void:
