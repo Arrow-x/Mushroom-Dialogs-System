@@ -2,12 +2,21 @@ tool
 extends GraphNode
 
 signal graph_node_meta
+signal dragging
 
 var inputs: Array
 var outputs: Array
 
 var c_inputs: Array
 var c_outputs: Array
+
+
+func _ready() -> void:
+	if !is_connected("raise_request", self, "_on_GraphNode_raise_request"):
+		connect("raise_request", self, "_on_GraphNode_raise_request")
+
+	if !is_connected("dragged", self, "_on_GraphNode_dragged"):
+		connect("dragged", self, "_on_GraphNode_dragged")
 
 
 func delete_inputs(fork: fork_command):
@@ -28,3 +37,7 @@ func delete_outputs(fork: fork_command):
 
 func _on_GraphNode_raise_request() -> void:
 	emit_signal("graph_node_meta", self.get_meta("block"), self.title)
+
+
+func _on_GraphNode_dragged(from, too) -> void:
+	emit_signal("dragging", from, too, self)

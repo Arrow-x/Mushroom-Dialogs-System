@@ -19,7 +19,8 @@ func sync_flowchart_graph() -> void:
 		if g_node is GraphNode:
 			for command in g_node.get_meta("block").commands:
 				if command is fork_command:
-					update_block_flow(g_node.get_meta("block"), command)
+					for c in command.choices:
+						connect_blocks(c.next_block, g_node.get_meta("block"), command)
 
 
 func _on_AddBlockButton_pressed() -> void:
@@ -39,7 +40,7 @@ func add_block(title) -> void:
 	node.set_meta("block", _new_block)
 	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
-	node.connect("dragged", self, "on_node_dragged", [node], CONNECT_PERSIST)
+	node.connect("dragging", self, "on_node_dragged", [], CONNECT_PERSIST)
 	node.connect("close_request", self, "on_node_close", [node.title], CONNECT_PERSIST)
 	add_child(node)
 	node.set_owner(self)
@@ -83,7 +84,6 @@ func on_new_text_confirm(new_title: String) -> void:
 	undo_redo.commit_action()
 
 
-# TODO So many Loops, should optimize this
 func update_block_flow(sender: block, fork: fork_command) -> void:
 	var g_node_name: String
 	var g_node_output_idx: int
