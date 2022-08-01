@@ -12,6 +12,7 @@ export var g_node_connection_types: Array
 signal add_block_to_flow
 signal g_node_clicked
 signal flow_changed
+signal graph_node_close
 
 
 func sync_flowchart_graph() -> void:
@@ -19,8 +20,7 @@ func sync_flowchart_graph() -> void:
 		if g_node is GraphNode:
 			for command in g_node.get_meta("block").commands:
 				if command is fork_command:
-					for c in command.choices:
-						connect_blocks(c.next_block, g_node.get_meta("block"), command)
+					update_block_flow(g_node.get_meta("block"), command)
 
 
 func _on_AddBlockButton_pressed() -> void:
@@ -41,7 +41,7 @@ func add_block(title) -> void:
 	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
 	node.connect("dragging", self, "on_node_dragged", [], CONNECT_PERSIST)
-	node.connect("close_request", self, "on_node_close", [node.title], CONNECT_PERSIST)
+	node.connect("node_closed", self, "on_node_close", [], CONNECT_PERSIST)
 	add_child(node)
 	node.set_owner(self)
 
@@ -53,11 +53,32 @@ func delete_block(title) -> void:
 				b.queue_free()
 
 
-func on_node_close(title) -> void:
-	undo_redo.create_action("Delete Block")
-	undo_redo.add_do_method(self, "delete_block", title)
-	undo_redo.add_undo_method(self, "add_block", title)
-	undo_redo.commit_action()
+func close_node(deletable_node: GraphNode) -> void:
+	# TODO remove the outputs too
+	# TODO disconnect the nodes as well
+	for graph_nodes in get_children():
+		if graph_nodes is GraphNode:
+			for input in graph_nodes.inputs:
+				for o in deletable_node.outputs:
+					if input == o:
+						# BUG Doesn't do anything
+						disconnect_node(
+							graph_nodes.get_name(),
+							graph_nodes.outputs.find(o),
+							deletable_node.get_name(),
+							deletable_node.inputs.find(o)
+						)
+						graph_nodes.delete_inputs(o)
+			for output in graph_nodes.outputs:
+				for o in deletable_node.outputs:
+					if output == o:
+						graph_nodes.delete_outputs(o)
+
+	deletable_node.queue_free()
+
+
+func on_node_close(node) -> void:
+	emit_signal("graph_node_close", self, node, "close_node")
 
 
 func on_GraphNode_clicked(meta, title):
@@ -124,6 +145,7 @@ func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
 		if g_node is GraphNode:
 			var g_node_meta: block = g_node.get_meta("block")
 			if g_node_meta == sender:
+				# TODO Refactor this code to be in the g_node it self and is just called by add_g_node_input()
 				if !g_node.outputs.has(fork):
 					var cc: Control = Control.new()
 					cc.rect_min_size = Vector2(10, 10)

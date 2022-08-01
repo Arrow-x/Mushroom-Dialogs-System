@@ -6,9 +6,35 @@ var flow_tabs: Tabs
 
 var modified := false
 var undo_redo: UndoRedo
+var graph_edit: GraphEdit setget set_graph_edit, get_graph_edit
 
 signal done_saving
-onready var graph_edit: GraphEdit
+
+
+func set_graph_edit(in_graph_edit: GraphEdit):
+	for g in $GraphContainer.get_children():
+		if g is GraphEdit:
+			g.queue_free()
+
+	$GraphContainer.add_child(in_graph_edit)
+	flowchart.graph_edit_node = in_graph_edit
+	$GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton.connect(
+		"button_down", in_graph_edit, "_on_AddBlockButton_pressed"
+	)
+	in_graph_edit.connect(
+		"g_node_clicked",
+		get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),
+		"on_GraphNode_clicked"
+	)
+	in_graph_edit.connect("flow_changed", self, "changed_flowchart")
+	in_graph_edit.connect("graph_node_close", self, "undo_redo_graph_edit")
+	in_graph_edit.sync_flowchart_graph()
+	in_graph_edit.undo_redo = undo_redo
+	graph_edit = in_graph_edit
+
+
+func get_graph_edit() -> GraphEdit:
+	return graph_edit
 
 
 func check_for_duplicates(name) -> bool:
@@ -23,27 +49,7 @@ func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
 	if chart is FlowChart:
 		flowchart = chart
 		undo_redo = sent_undo_redo
-
-		if graph_edit == null:
-			graph_edit = chart.graph_edit.instance()
-
-		for g in $GraphContainer.get_children():
-			if g is GraphEdit:
-				g.queue_free()
-
-		$GraphContainer.add_child(graph_edit)
-		flowchart.graph_edit_node = graph_edit
-		$GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton.connect(
-			"button_down", graph_edit, "_on_AddBlockButton_pressed"
-		)
-		graph_edit.connect(
-			"g_node_clicked",
-			get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),
-			"on_GraphNode_clicked"
-		)
-		graph_edit.connect("flow_changed", self, "changed_flowchart")
-		graph_edit.sync_flowchart_graph()
-		graph_edit.undo_redo = sent_undo_redo
+		set_graph_edit(chart.graph_edit.instance())
 
 
 # BUG Godot Crashes when saving a graph_edit that has a node connected to itself
@@ -85,3 +91,10 @@ func changed_flowchart() -> void:
 		name = String(name + "(*)")
 		flow_tabs.set_tab_title(get_position_in_parent(), name)
 		modified = true
+
+
+func undo_redo_graph_edit(obj, input, method_string):
+	undo_redo.create_action("Remove Block")
+	undo_redo.add_do_method(get_graph_edit(), method_string, input)
+	undo_redo.add_undo_method(self, "set_graph_edit", get_graph_edit().duplicate())
+	undo_redo.commit_action()

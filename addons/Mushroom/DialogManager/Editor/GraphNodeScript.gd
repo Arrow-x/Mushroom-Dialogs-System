@@ -3,6 +3,7 @@ extends GraphNode
 
 signal graph_node_meta
 signal dragging
+signal node_closed
 
 var inputs: Array
 var outputs: Array
@@ -17,6 +18,9 @@ func _ready() -> void:
 
 	if !is_connected("dragged", self, "_on_GraphNode_dragged"):
 		connect("dragged", self, "_on_GraphNode_dragged")
+
+	if !is_connected("close_request", self, "_on_GraphNode_closed"):
+		connect("close_request", self, "_on_GraphNode_closed")
 
 
 func delete_inputs(fork: fork_command):
@@ -41,3 +45,8 @@ func _on_GraphNode_raise_request() -> void:
 
 func _on_GraphNode_dragged(from, too) -> void:
 	emit_signal("dragging", from, too, self)
+
+
+func _on_GraphNode_closed() -> void:
+	print("closing")
+	emit_signal("node_closed", self)
