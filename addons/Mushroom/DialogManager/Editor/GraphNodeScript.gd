@@ -39,6 +39,32 @@ func delete_outputs(fork: fork_command):
 	outputs.erase(fork)
 
 
+func add_g_node_output(fork: fork_command) -> void:
+	if !outputs.has(fork):
+		var cc: Control = Control.new()
+		cc.rect_min_size = Vector2(10, 10)
+		add_child(cc)
+		cc.set_owner(self)
+		outputs.append(fork)
+		c_outputs.append(cc)
+	set_slot_enabled_right(outputs.find(fork), true)
+	set_slot_type_right(outputs.find(fork), 1)
+	set_slot_color_right(outputs.find(fork), fork.f_color)
+
+
+func add_g_node_input(fork: fork_command):
+	if !inputs.has(fork):
+		var cc: Control = Control.new()
+		cc.rect_min_size = Vector2(10, 10)
+		add_child(cc)
+		cc.set_owner(self)
+		inputs.append(fork)
+		c_inputs.append(cc)
+	set_slot_enabled_left(inputs.find(fork), true)
+	set_slot_type_left(inputs.find(fork), 1)
+	set_slot_color_left(inputs.find(fork), fork.f_color)
+
+
 func _on_GraphNode_raise_request() -> void:
 	emit_signal("graph_node_meta", self.get_meta("block"), self.title)
 

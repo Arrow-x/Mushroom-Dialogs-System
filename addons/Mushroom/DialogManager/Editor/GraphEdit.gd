@@ -7,8 +7,6 @@ onready var enter_name_scene: PackedScene = preload("res://addons/Mushroom/Dialo
 var g_node_posititon := Vector2(40, 40)
 var undo_redo: UndoRedo
 
-export var g_node_connection_types: Array
-
 signal add_block_to_flow
 signal g_node_clicked
 signal flow_changed
@@ -134,9 +132,6 @@ func update_block_flow(sender: block, fork: fork_command) -> void:
 
 
 func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
-	if !g_node_connection_types.has(fork):
-		g_node_connection_types.append(fork)
-
 	var sender_idx
 	var receiver_idx
 	var sender_name: String
@@ -145,34 +140,13 @@ func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
 		if g_node is GraphNode:
 			var g_node_meta: block = g_node.get_meta("block")
 			if g_node_meta == sender:
-				# TODO Refactor this code to be in the g_node it self and is just called by add_g_node_input()
-				if !g_node.outputs.has(fork):
-					var cc: Control = Control.new()
-					cc.rect_min_size = Vector2(10, 10)
-					g_node.add_child(cc)
-					cc.set_owner(self)
-					g_node.outputs.append(fork)
-					g_node.c_outputs.append(cc)
-
+				g_node.add_g_node_output(fork)
 				sender_idx = g_node.outputs.find(fork)
 				sender_name = g_node.get_name()
-				g_node.set_slot_enabled_right(sender_idx, true)
-				g_node.set_slot_type_right(sender_idx, g_node_connection_types.find(fork))
-				g_node.set_slot_color_right(sender_idx, fork.f_color)
 
 			if g_node_meta == receiver:
-				if !g_node.inputs.has(fork):
-					var cc: Control = Control.new()
-					cc.rect_min_size = Vector2(10, 10)
-					g_node.add_child(cc)
-					cc.set_owner(self)
-					g_node.inputs.append(fork)
-					g_node.c_inputs.append(cc)
-
+				g_node.add_g_node_input(fork)
 				receiver_idx = g_node.inputs.find(fork)
 				receiver_name = g_node.get_name()
-				g_node.set_slot_enabled_left(receiver_idx, true)
-				g_node.set_slot_type_left(receiver_idx, g_node_connection_types.find(fork))
-				g_node.set_slot_color_left(receiver_idx, fork.f_color)
 
 	connect_node(sender_name, sender_idx, receiver_name, receiver_idx)
