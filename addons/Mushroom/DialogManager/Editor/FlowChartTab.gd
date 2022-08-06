@@ -12,6 +12,8 @@ signal done_saving
 
 
 func set_graph_edit(in_graph_edit: GraphEdit):
+	if in_graph_edit == null:
+		return
 	for g in $GraphContainer.get_children():
 		if g is GraphEdit:
 			g.queue_free()
