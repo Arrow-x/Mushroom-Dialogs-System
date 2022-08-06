@@ -51,32 +51,22 @@ func delete_block(title) -> void:
 				b.queue_free()
 
 
-func close_node(deletable_node: GraphNode) -> void:
-	# TODO remove the outputs too
-	# TODO disconnect the nodes as well
-	for graph_nodes in get_children():
-		if graph_nodes is GraphNode:
-			for input in graph_nodes.inputs:
-				for o in deletable_node.outputs:
-					if input == o:
-						# BUG Doesn't do anything
-						disconnect_node(
-							graph_nodes.get_name(),
-							graph_nodes.outputs.find(o),
-							deletable_node.get_name(),
-							deletable_node.inputs.find(o)
-						)
-						graph_nodes.delete_inputs(o)
-			for output in graph_nodes.outputs:
-				for o in deletable_node.outputs:
-					if output == o:
-						graph_nodes.delete_outputs(o)
+func close_node(node_name: String) -> void:
+	var deletable_node: GraphNode
+	for n in get_children():
+		if n is GraphNode:
+			if n.get_title() == node_name:
+				deletable_node = n
+
+	for f in deletable_node.get_meta("block").commands:
+		if f is fork_command:
+			remove_fork_connections(f)
 
 	deletable_node.queue_free()
 
 
 func on_node_close(node) -> void:
-	emit_signal("graph_node_close", self, node, "close_node")
+	emit_signal("graph_node_close", self, node.title, "close_node")
 
 
 func on_GraphNode_clicked(meta, title):
@@ -84,6 +74,7 @@ func on_GraphNode_clicked(meta, title):
 
 
 func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node: GraphNode) -> void:
+	# BUG this gets messed up when replacing the Graphedit on an Undo
 	undo_redo.create_action("Moving Block")
 	undo_redo.add_do_method(node, "set_offset", finished_offset)
 	undo_redo.add_undo_method(node, "set_offset", start_offset)
@@ -104,6 +95,12 @@ func on_new_text_confirm(new_title: String) -> void:
 
 
 func update_block_flow(sender: block, fork: fork_command) -> void:
+	remove_fork_connections(fork)
+	for c in fork.choices:
+		connect_blocks(c.next_block, sender, fork)
+
+
+func remove_fork_connections(fork: fork_command) -> void:
 	var g_node_name: String
 	var g_node_output_idx: int
 
@@ -126,9 +123,6 @@ func update_block_flow(sender: block, fork: fork_command) -> void:
 		if g_node is GraphNode:
 			if g_node.outputs.has(fork):
 				g_node.delete_outputs(fork)
-
-	for c in fork.choices:
-		connect_blocks(c.next_block, sender, fork)
 
 
 func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
