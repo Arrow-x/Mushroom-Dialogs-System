@@ -6,19 +6,19 @@ var flow_tabs: Tabs
 
 var modified := false
 var undo_redo: UndoRedo
-var graph_edit: GraphEdit setget set_graph_edit, get_graph_edit
+var graph_edit: GraphEdit
 
 signal done_saving
 
 
 func set_graph_edit(in_graph_edit: GraphEdit):
-	if in_graph_edit == null:
-		return
+	if in_graph_edit.get_parent():
+		in_graph_edit.get_parent().remove_child(in_graph_edit)
+
 	for g in $GraphContainer.get_children():
 		if g is GraphEdit:
 			g.queue_free()
 
-	$GraphContainer.add_child(in_graph_edit)
 	flowchart.graph_edit_node = in_graph_edit
 	$GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton.connect(
 		"button_down", in_graph_edit, "_on_AddBlockButton_pressed"
@@ -30,13 +30,11 @@ func set_graph_edit(in_graph_edit: GraphEdit):
 	)
 	in_graph_edit.connect("flow_changed", self, "changed_flowchart")
 	in_graph_edit.connect("graph_node_close", self, "undo_redo_graph_edit")
-	in_graph_edit.sync_flowchart_graph()
 	in_graph_edit.undo_redo = undo_redo
+	$GraphContainer.add_child(in_graph_edit)
+
 	graph_edit = in_graph_edit
-
-
-func get_graph_edit() -> GraphEdit:
-	return graph_edit
+	graph_edit.sync_flowchart_graph()
 
 
 func check_for_duplicates(name) -> bool:
@@ -95,8 +93,15 @@ func changed_flowchart() -> void:
 		modified = true
 
 
-func undo_redo_graph_edit(obj, input, method_string):
+func reset_graph_edit(input) -> void:
+	for f in graph_edit.get_children():
+		if f is GraphNode:
+			if f.title == input:
+				graph_edit.close_node(f)
+
+
+func undo_redo_graph_edit(obj, input, method_string) -> void:
 	undo_redo.create_action("Remove Block")
-	undo_redo.add_do_method(get_graph_edit(), method_string, input)
-	undo_redo.add_undo_method(self, "set_graph_edit", get_graph_edit().duplicate())
+	undo_redo.add_do_method(self, "reset_graph_edit", input)
+	undo_redo.add_undo_method(self, "set_graph_edit", graph_edit.duplicate())
 	undo_redo.commit_action()

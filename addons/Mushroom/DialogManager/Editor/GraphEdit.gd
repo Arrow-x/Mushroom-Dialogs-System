@@ -51,13 +51,7 @@ func delete_block(title) -> void:
 				b.queue_free()
 
 
-func close_node(node_name: String) -> void:
-	var deletable_node: GraphNode
-	for n in get_children():
-		if n is GraphNode:
-			if n.get_title() == node_name:
-				deletable_node = n
-
+func close_node(deletable_node: GraphNode) -> void:
 	for f in deletable_node.get_meta("block").commands:
 		if f is fork_command:
 			remove_fork_connections(f)
