@@ -52,7 +52,6 @@ func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
 		set_graph_edit(chart.graph_edit.instance())
 
 
-# BUG Godot Crashes when saving a graph_edit that has a node connected to itself
 func _on_Button_pressed() -> void:
 	if flowchart.resource_path == "":
 		var _i: FileDialog = FileDialog.new()
@@ -69,6 +68,7 @@ func _on_Button_pressed() -> void:
 	save_to_disc(flowchart.resource_path)
 
 
+# BUG Godot Crashes when saving a graph_edit that has a node connected to itself
 func save_to_disc(path: String, overwrite := false) -> void:
 	var packed_scene = PackedScene.new()
 	packed_scene.pack(graph_edit)
@@ -101,6 +101,7 @@ func reset_graph_edit(input) -> void:
 
 
 func undo_redo_graph_edit(obj, input, method_string) -> void:
+	# BUG the undo method doens't trigger on a redo
 	undo_redo.create_action("Remove Block")
 	undo_redo.add_do_method(self, "reset_graph_edit", input)
 	undo_redo.add_undo_method(self, "set_graph_edit", graph_edit.duplicate())
