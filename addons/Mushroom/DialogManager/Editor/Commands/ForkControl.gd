@@ -7,9 +7,17 @@ onready var graph: GraphEdit
 var current_fork: fork_command
 var current_block: block
 var fc: FlowChart
+var undo_redo: UndoRedo
 
 
 func _on_AddChoiceButton_pressed() -> void:
+	undo_redo.create_action("add choice editor")
+	undo_redo.add_do_method(self, "add_choice_contole")
+	undo_redo.add_undo_method(self, "free_choice_controle")
+	undo_redo.commit_action()
+
+
+func add_choice_contole() -> void:
 	var choice_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn").instance()
 	choices_container.add_child(choice_control)
 	choice_control.flowchart = fc
@@ -21,11 +29,18 @@ func _on_AddChoiceButton_pressed() -> void:
 	is_changed()
 
 
-func set_up(f: fork_command, flowcharttab: Control, cb: block) -> void:
+func free_choice_controle() -> void:
+	current_fork.choices.resize(current_fork.choices.size() - 1)
+	choices_container.get_children()[-1].queue_free()
+	is_changed()
+
+
+func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo) -> void:
 	current_fork = f
 	fc = flowcharttab.flowchart
 	graph = flowcharttab.graph_edit
 	current_block = cb
+	undo_redo = ur
 
 	if f.choices != null:
 		for i in f.choices:

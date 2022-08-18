@@ -92,4 +92,6 @@ func _on_CommandsTree_item_activated() -> void:
 		elif current_item is fork_command:
 			var fork_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
 			commands_settings.add_child(fork_control, true)
-			fork_control.set_up(get_selected().get_meta("0"), flowchart_tab, current_block)
+			fork_control.set_up(
+				get_selected().get_meta("0"), flowchart_tab, current_block, undo_redo
+			)
