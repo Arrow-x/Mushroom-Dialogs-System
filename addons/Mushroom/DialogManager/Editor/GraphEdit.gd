@@ -63,8 +63,8 @@ func on_node_close(node) -> void:
 	emit_signal("graph_node_close", self, node.title, "close_node")
 
 
-func on_GraphNode_clicked(meta, title):
-	emit_signal("g_node_clicked", meta, title)
+func on_GraphNode_clicked(node):
+	emit_signal("g_node_clicked", node)
 
 
 func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node: GraphNode) -> void:

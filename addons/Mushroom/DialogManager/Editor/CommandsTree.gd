@@ -8,14 +8,27 @@ onready var commands_settings: Panel = $"../../CommandsSettings"
 onready var flowchart_tab: Control = get_node(_flowchart_tab)
 var current_block: block
 onready var undo_redo: UndoRedo = flowchart_tab.undo_redo
+var current_node_block: GraphNode
 
 # TODO Set up drag and droping, multiselect...
 
 
-func on_GraphNode_clicked(meta, title) -> void:
-	commands_settings._currnet_title = title
+func on_GraphNode_clicked(node) -> void:
+	undo_redo.create_action("seletect block")
+	undo_redo.add_do_method(self, "create_commands", node)
+	undo_redo.add_undo_method(self, "create_commands", current_node_block)
+	undo_redo.commit_action()
+
+
+func create_commands(node = null) -> void:
+	if node == null:
+		return
+	var meta = node.get_meta("block")
+	flowchart_tab.graph_edit.set_selected(node)
+	commands_settings._currnet_title = meta.name
 	current_block = meta
-	current_block_label.text = "current block: " + title
+	current_node_block = node
+	current_block_label.text = "current block: " + meta.name
 
 	# TODO don't update when it is the current block is selected ageain
 	if commands_settings.get_child_count() != 0:

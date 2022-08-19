@@ -66,7 +66,7 @@ func add_g_node_input(fork: fork_command):
 
 
 func _on_GraphNode_raise_request() -> void:
-	emit_signal("graph_node_meta", self.get_meta("block"), self.title)
+	emit_signal("graph_node_meta", self)
 
 
 func _on_GraphNode_dragged(from, too) -> void:
@@ -74,5 +74,4 @@ func _on_GraphNode_dragged(from, too) -> void:
 
 
 func _on_GraphNode_closed() -> void:
-	print("closing")
 	emit_signal("node_closed", self)
