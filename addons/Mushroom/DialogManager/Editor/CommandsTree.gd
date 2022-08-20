@@ -21,6 +21,7 @@ func on_GraphNode_clicked(node) -> void:
 
 
 func create_commands(node = null) -> void:
+	self.clear()
 	if node == null:
 		return
 	var meta = node.get_meta("block")
@@ -35,9 +36,18 @@ func create_commands(node = null) -> void:
 		if commands_settings.get_child(0) != null:
 			commands_settings.get_child(0).free()
 
-	self.clear()
 	for i in meta.commands:
 		add_command(i)
+
+
+func full_clear() -> void:
+	self.clear()
+	if commands_settings:
+		commands_settings._currnet_title = ""
+	current_block = null
+	current_node_block = null
+	if current_block_label:
+		current_block_label.text = ""
 
 
 func _on_add_command(id: int, pop_up: Popup) -> void:

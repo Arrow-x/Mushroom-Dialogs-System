@@ -31,6 +31,7 @@ func set_graph_edit(in_graph_edit: GraphEdit):
 	in_graph_edit.connect("flow_changed", self, "changed_flowchart")
 	in_graph_edit.connect("graph_node_close", self, "undo_redo_graph_edit")
 	in_graph_edit.undo_redo = undo_redo
+	get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree").full_clear()
 	$GraphContainer.add_child(in_graph_edit)
 
 	graph_edit = in_graph_edit
@@ -98,6 +99,7 @@ func reset_graph_edit(input) -> void:
 		if f is GraphNode:
 			if f.title == input:
 				graph_edit.close_node(f)
+				get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree").full_clear()
 
 
 func undo_redo_graph_edit(obj, input, method_string) -> void:
