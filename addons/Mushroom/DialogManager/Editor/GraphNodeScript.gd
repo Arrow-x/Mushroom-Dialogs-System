@@ -70,7 +70,7 @@ func _on_GraphNode_raise_request() -> void:
 
 
 func _on_GraphNode_dragged(from, too) -> void:
-	emit_signal("dragging", from, too, self)
+	emit_signal("dragging", from, too, self.title)
 
 
 func _on_GraphNode_closed() -> void:

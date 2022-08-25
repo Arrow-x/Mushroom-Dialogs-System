@@ -75,13 +75,20 @@ func on_GraphNode_clicked(node):
 	emit_signal("g_node_clicked", node)
 
 
-func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node: GraphNode) -> void:
+func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title: String) -> void:
 	# BUG this gets messed up when replacing the Graphedit on an Undo
 	undo_redo.create_action("Moving Block")
-	undo_redo.add_do_method(node, "set_offset", finished_offset)
-	undo_redo.add_undo_method(node, "set_offset", start_offset)
+	undo_redo.add_do_method(self, "set_node_offset", node_title, finished_offset)
+	undo_redo.add_undo_method(self, "set_node_offset", node_title, start_offset)
 	undo_redo.commit_action()
 	emit_signal("flow_changed")
+
+
+func set_node_offset(title: String, offset: Vector2) -> void:
+	for b in get_children():
+		if b is GraphNode:
+			if b.title == title:
+				b.set_offset(offset)
 
 
 func on_new_text_confirm(new_title: String) -> void:
