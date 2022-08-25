@@ -12,9 +12,6 @@ signal done_saving
 
 
 func set_graph_edit(in_graph_edit: GraphEdit):
-	if in_graph_edit.get_parent():
-		in_graph_edit.get_parent().remove_child(in_graph_edit)
-
 	for g in $GraphContainer.get_children():
 		if g is GraphEdit:
 			g.queue_free()
@@ -92,19 +89,3 @@ func changed_flowchart() -> void:
 		name = String(name + "(*)")
 		flow_tabs.set_tab_title(get_position_in_parent(), name)
 		modified = true
-
-
-func reset_graph_edit(input) -> void:
-	for f in graph_edit.get_children():
-		if f is GraphNode:
-			if f.title == input:
-				graph_edit.close_node(f)
-				get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree").full_clear()
-
-
-func undo_redo_graph_edit(obj, input, method_string) -> void:
-	# BUG the undo method doens't trigger on a redo
-	undo_redo.create_action("Remove Block")
-	undo_redo.add_do_method(self, "reset_graph_edit", input)
-	undo_redo.add_undo_method(self, "set_graph_edit", graph_edit.duplicate())
-	undo_redo.commit_action()

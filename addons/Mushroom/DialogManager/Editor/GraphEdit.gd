@@ -28,13 +28,21 @@ func _on_AddBlockButton_pressed() -> void:
 	enter_name.connect("new_text_confirm", self, "on_new_text_confirm")
 
 
-func add_block(title) -> void:
+func add_block(title, offset = null, in_block = null) -> void:
 	var node: GraphNode = graph_node.instance()
 	node.title = title
-	node.offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
+	if offset == null:
+		node.offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
+	else:
+		node.offset = offset
 
-	var _new_block = block.new()
-	_new_block.name = title
+	var _new_block
+	if in_block == null:
+		_new_block = block.new()
+		_new_block.name = title
+	else:
+		_new_block = in_block
+
 	node.set_meta("block", _new_block)
 	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
@@ -44,23 +52,23 @@ func add_block(title) -> void:
 	node.set_owner(self)
 
 
-func delete_block(title) -> void:
+func close_node(d_node: String) -> void:
 	for b in get_children():
 		if b is GraphNode:
-			if b.title == title:
+			if b.title == d_node:
+				for f in b.get_meta("block").commands:
+					if f is fork_command:
+						remove_fork_connections(f)
 				b.queue_free()
 
 
-func close_node(deletable_node: GraphNode) -> void:
-	for f in deletable_node.get_meta("block").commands:
-		if f is fork_command:
-			remove_fork_connections(f)
-
-	deletable_node.queue_free()
-
-
-func on_node_close(node) -> void:
-	emit_signal("graph_node_close", self, node.title, "close_node")
+func on_node_close(node: GraphNode) -> void:
+	undo_redo.create_action("Block Closed")
+	undo_redo.add_do_method(self, "close_node", node.get_title())
+	undo_redo.add_undo_method(
+		self, "add_block", node.get_title(), node.offset, node.get_meta("block")
+	)
+	undo_redo.commit_action()
 
 
 func on_GraphNode_clicked(node):
@@ -84,7 +92,7 @@ func on_new_text_confirm(new_title: String) -> void:
 
 	undo_redo.create_action("Creating a block")
 	undo_redo.add_do_method(self, "add_block", new_title)
-	undo_redo.add_undo_method(self, "delete_block", new_title)
+	undo_redo.add_undo_method(self, "close_node", new_title)
 	undo_redo.commit_action()
 
 
