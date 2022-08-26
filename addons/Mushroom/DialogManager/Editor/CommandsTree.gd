@@ -8,27 +8,36 @@ onready var commands_settings: Panel = $"../../CommandsSettings"
 onready var flowchart_tab: Control = get_node(_flowchart_tab)
 var current_block: block
 onready var undo_redo: UndoRedo = flowchart_tab.undo_redo
-var current_node_block: GraphNode
+var current_node_block: String = ""
 
 # TODO Set up drag and droping, multiselect...
 
 
-func on_GraphNode_clicked(node) -> void:
+func on_GraphNode_clicked(graph_edit, node_name) -> void:
 	undo_redo.create_action("seletect block")
-	undo_redo.add_do_method(self, "create_commands", node)
-	undo_redo.add_undo_method(self, "create_commands", current_node_block)
+	undo_redo.add_do_method(self, "create_commands", graph_edit, node_name)
+	undo_redo.add_undo_method(self, "create_commands", graph_edit, current_node_block)
 	undo_redo.commit_action()
 
 
-func create_commands(node = null) -> void:
+func create_commands(graph_edit = null, node_name = null) -> void:
 	self.clear()
+	var node
+	if graph_edit and node_name:
+		for g in graph_edit.get_children():
+			if g is GraphNode:
+				if g.get_title() == node_name:
+					node = g
+	else:
+		return
 	if node == null:
 		return
+
 	var meta = node.get_meta("block")
 	flowchart_tab.graph_edit.set_selected(node)
 	commands_settings._currnet_title = meta.name
 	current_block = meta
-	current_node_block = node
+	current_node_block = node.title
 	current_block_label.text = "current block: " + meta.name
 
 	# TODO don't update when it is the current block is selected ageain
@@ -45,7 +54,7 @@ func full_clear() -> void:
 	if commands_settings:
 		commands_settings._currnet_title = ""
 	current_block = null
-	current_node_block = null
+	current_node_block = ""
 	if current_block_label:
 		current_block_label.text = ""
 
