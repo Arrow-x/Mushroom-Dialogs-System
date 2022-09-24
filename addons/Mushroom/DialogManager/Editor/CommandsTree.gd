@@ -10,6 +10,9 @@ var current_block: block
 onready var undo_redo: UndoRedo = flowchart_tab.undo_redo
 var current_node_block: String = ""
 
+var current_command_item = 999
+var current_command_column
+
 # TODO Set up drag and droping, multiselect...
 
 
@@ -88,16 +91,34 @@ func add_command(command: Command) -> void:
 
 
 func delete_command(command: Command) -> void:
-	var item = get_root().get_children()
-	var children = []
-	while item:
-		children.append(item)
-		item = item.get_next()
-	for c in children:
+	for c in get_tree_items(get_root()):
 		if c.get_meta("0") == command:
 			c.free()
 	current_block.commands.erase(command)
 	update_commad_tree(current_block)
+
+
+func get_tree_items(root: TreeItem) -> Array:
+	var item = root.get_children()
+	var children = []
+	while item:
+		children.append(item)
+		item = item.get_next()
+	return children
+
+
+func get_tree_item_index(item: TreeItem) -> int:
+	for i in get_tree_items(get_root()).size():
+		if get_tree_items(get_root())[i] == item:
+			return i
+	return 999
+
+
+func get_tree_item_from_index(idx: int) -> void:
+	if idx == 999:
+		print("can't find treeitem")
+		return
+	create_command_editor(get_tree_items(get_root())[idx])
 
 
 func update_commad_tree(block: block) -> void:
@@ -108,7 +129,28 @@ func update_commad_tree(block: block) -> void:
 
 
 func _on_CommandsTree_item_activated() -> void:
-	var current_item = get_selected().get_meta("0")
+	var current_index: int = get_tree_item_index(get_selected())
+	undo_redo.create_action("selecting a command")
+	undo_redo.add_do_method(self, "get_tree_item_from_index", current_index)
+	undo_redo.add_undo_method(self, "get_tree_item_from_index", current_command_item)
+	undo_redo.commit_action()
+
+	current_command_item = current_index
+
+
+func create_command_editor(item: TreeItem = null) -> void:
+	if item == null:
+		for c in commands_settings.get_children():
+			c.queue_free()
+		return
+
+	var current_item = item.get_meta("0")
+
+	for c in get_tree_items(get_root()):
+		c.deselect(0)
+
+	item.select(0)
+
 	if current_item != null:
 		if !current_item.is_connected("changed", self, "update_commad_tree"):
 			current_item.connect("changed", self, "update_commad_tree", [current_block])
