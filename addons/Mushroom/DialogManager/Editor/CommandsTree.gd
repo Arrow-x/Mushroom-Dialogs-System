@@ -24,7 +24,7 @@ func on_GraphNode_clicked(graph_edit, node_name) -> void:
 
 
 func create_commands(graph_edit = null, node_name = null) -> void:
-	self.clear()
+	full_clear()
 	var node
 	if graph_edit and node_name:
 		for g in graph_edit.get_children():
@@ -63,20 +63,21 @@ func full_clear() -> void:
 
 
 func _on_add_command(id: int, pop_up: Popup) -> void:
-	var _command: Command
 	if current_block == null:
 		# TODO a warnin here
 		return
 
-	_command = pop_up.get_item_metadata(id)
-	var _getter: Command = pop_up.get_item_metadata(id)
-	_command = _getter.duplicate()  #Carful with the Conditional Command
+	#Carful with the Conditional Command
+	var _command: Command = pop_up.get_item_metadata(id).duplicate()
 	undo_redo.create_action("Added Command")
-	undo_redo.add_do_method(self, "add_command", _command)
+	undo_redo.add_do_method(self, "create_command", _command)
 	undo_redo.add_undo_method(self, "delete_command", _command)
 	undo_redo.commit_action()
-	current_block.commands.append(_command)
-	flowchart_tab.changed_flowchart()
+
+
+func create_command(command: Command) -> void:
+	current_block.commands.append(command)
+	add_command(command)
 
 
 func add_command(command: Command) -> void:
@@ -87,8 +88,7 @@ func add_command(command: Command) -> void:
 	var _item: TreeItem = self.create_item(root)
 	_item.set_text(0, command.preview())
 	_item.set_meta("0", command)
-	# BUG this crashes the Editor for some reason
-	# BUG adding commands through Undo Redo doesn't change the block on the Node Graph
+	flowchart_tab.changed_flowchart()
 	#set the new item as the selected one
 
 
@@ -96,8 +96,9 @@ func delete_command(command: Command) -> void:
 	for c in get_tree_items(get_root()):
 		if c.get_meta("0") == command:
 			c.free()
-	current_block.commands.erase(command)
-	update_commad_tree(current_block)
+			current_block.commands.erase(command)
+			update_commad_tree(current_block)
+			return
 
 
 func get_tree_items(root: TreeItem) -> Array:
@@ -163,11 +164,9 @@ func create_command_editor(item: TreeItem = null) -> void:
 		if current_item is say_command:
 			var say_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn").instance()
 			commands_settings.add_child(say_control, true)
-			say_control.set_up(get_selected().get_meta("0"))
+			say_control.set_up(current_item)
 
 		elif current_item is fork_command:
 			var fork_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
 			commands_settings.add_child(fork_control, true)
-			fork_control.set_up(
-				get_selected().get_meta("0"), flowchart_tab, current_block, undo_redo
-			)
+			fork_control.set_up(current_item, flowchart_tab, current_block, undo_redo)
