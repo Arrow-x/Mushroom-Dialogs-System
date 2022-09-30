@@ -87,6 +87,8 @@ func add_command(command: Command) -> void:
 	var _item: TreeItem = self.create_item(root)
 	_item.set_text(0, command.preview())
 	_item.set_meta("0", command)
+	# BUG this crashes the Editor for some reason
+	# BUG adding commands through Undo Redo doesn't change the block on the Node Graph
 	#set the new item as the selected one
 
 

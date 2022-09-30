@@ -11,6 +11,7 @@ var undo_redo: UndoRedo
 
 
 func _on_AddChoiceButton_pressed() -> void:
+	# BUG adding or removing choice contorls doesn't work if another command was selected
 	undo_redo.create_action("add choice editor")
 	undo_redo.add_do_method(self, "add_choice_contole")
 	undo_redo.add_undo_method(self, "free_choice_controle")
