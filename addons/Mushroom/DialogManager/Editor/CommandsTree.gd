@@ -10,7 +10,7 @@ var current_block: block
 onready var undo_redo: UndoRedo = flowchart_tab.undo_redo
 var current_node_block: String = ""
 
-var current_command_item = 999
+var current_command_item = 9999
 var current_command_column
 
 # TODO Set up drag and droping, multiselect...
@@ -114,11 +114,11 @@ func get_tree_item_index(item: TreeItem) -> int:
 	for i in get_tree_items(get_root()).size():
 		if get_tree_items(get_root())[i] == item:
 			return i
-	return 999
+	return 9999
 
 
 func get_tree_item_from_index(idx: int) -> void:
-	if idx == 999:
+	if idx == 9999:
 		print("can't find treeitem")
 		return
 	create_command_editor(get_tree_items(get_root())[idx])
