@@ -8,17 +8,15 @@ var current_fork: fork_command
 var current_block: block
 var fc: FlowChart
 var undo_redo: UndoRedo
+signal adding_choice
 
 
 func _on_AddChoiceButton_pressed() -> void:
 	# BUG adding or removing choice contorls doesn't work if another command was selected
-	undo_redo.create_action("add choice editor")
-	undo_redo.add_do_method(self, "add_choice_contole")
-	undo_redo.add_undo_method(self, "free_choice_controle")
-	undo_redo.commit_action()
+	emit_signal("adding_choice")
 
 
-func add_choice_contole() -> void:
+func add_choice_contol() -> void:
 	var choice_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn").instance()
 	choices_container.add_child(choice_control)
 	choice_control.flowchart = fc
@@ -30,13 +28,14 @@ func add_choice_contole() -> void:
 	is_changed()
 
 
-func free_choice_controle() -> void:
+func free_choice_control() -> void:
 	current_fork.choices.resize(current_fork.choices.size() - 1)
 	choices_container.get_children()[-1].queue_free()
 	is_changed()
 
 
 func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo) -> void:
+	print("fork setUp")
 	current_fork = f
 	fc = flowcharttab.flowchart
 	graph = flowcharttab.graph_edit

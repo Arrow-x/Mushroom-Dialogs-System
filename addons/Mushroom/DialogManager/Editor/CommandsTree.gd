@@ -144,6 +144,21 @@ func _on_CommandsTree_item_activated() -> void:
 	current_command_item = current_index
 
 
+func adding_choice_action() -> void:
+	undo_redo.create_action("add choice editor")
+	undo_redo.add_do_method(self, "add_choice_c")
+	undo_redo.add_undo_method(self, "free_choice_c")
+	undo_redo.commit_action()
+
+
+func add_choice_c() -> void:
+	commands_settings.get_child(0).add_choice_contol()
+
+
+func free_choice_c() -> void:
+	commands_settings.get_child(0).free_choice_control()
+
+
 func create_command_editor(item: TreeItem = null) -> void:
 	if item == null:
 		for c in commands_settings.get_children():
@@ -173,3 +188,4 @@ func create_command_editor(item: TreeItem = null) -> void:
 			var fork_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
 			commands_settings.add_child(fork_control, true)
 			fork_control.set_up(current_item, flowchart_tab, current_block, undo_redo)
+			fork_control.connect("adding_choice", self, "adding_choice_action")
