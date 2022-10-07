@@ -3,8 +3,11 @@ extends Tree
 
 export var _flowchart_tab: NodePath
 onready var root: TreeItem
-onready var current_block_label: Label = $"../inspectorHeader/inspectorHeaderHBoxContainer/CurrentBlock"
-onready var commands_settings: Panel = $"../../CommandsSettings"
+onready var current_block_label: Label = get_node(
+	"../inspectorHeader/inspectorHeaderHBoxContainer/CurrentBlock"
+)
+onready var commands_settings: Panel = get_node("../../CommandsSettings")
+
 onready var flowchart_tab: Control = get_node(_flowchart_tab)
 var current_block: block
 onready var undo_redo: UndoRedo = flowchart_tab.undo_redo
