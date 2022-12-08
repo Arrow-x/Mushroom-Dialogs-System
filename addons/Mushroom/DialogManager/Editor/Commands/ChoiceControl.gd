@@ -7,14 +7,17 @@ onready var delete_choice: Button = $HBoxContainer3/DeleteChoice
 
 var current_choice: choice
 var flowchart: FlowChart
+var undo_redo: UndoRedo
 
 signal conncting
 
 
-func set_up(c: choice, fct: Control) -> void:
+func set_up(c: choice, fct: Control, u: UndoRedo) -> void:
+	# TODO Check if the next block exist in the flowchart, otherwise show a warning
 	flowchart = fct.flowchart
 	current_choice = c
 	choice_text.text = c.text
+	undo_redo = u
 	if c.next_block != null:
 		next_block_menu.text = c.next_block.name
 	next_index_text.value = c.next_index
@@ -42,8 +45,21 @@ func _on_NextBlockList_about_to_show() -> void:
 
 
 func change_next_bloc(index, m: PopupMenu) -> void:
-	current_choice.next_block = m.get_item_metadata(index)
-	next_block_menu.text = m.get_item_text(index)
+	var n_block = m.get_item_metadata(index)
+	var n_text = m.get_item_text(index)
+	var p_block = current_choice.next_block
+	var p_text = next_block_menu.text
+	print("next block: ", n_block)
+	print("previeous block", p_block)
+	undo_redo.create_action("change next block")
+	undo_redo.add_do_method(self, "do_change_next_block", n_block, n_text)
+	undo_redo.add_undo_method(self, "do_change_next_block", p_block, p_text)
+	undo_redo.commit_action()
+
+
+func do_change_next_block(block: block = null, text: String = "") -> void:
+	current_choice.next_block = block
+	next_block_menu.text = text
 	emit_signal("conncting")
 	current_choice.emit_signal("changed")
 

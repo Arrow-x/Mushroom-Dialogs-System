@@ -24,6 +24,7 @@ func add_choice_contol() -> void:
 	current_fork.choices.append(n_c)
 	choice_control.current_choice = n_c
 	choice_control.current_choice.connect("changed", self, "is_changed")
+	choice_control.undo_redo = undo_redo
 	choice_control.connect("conncting", self, "_on_connecting", [current_block])
 	is_changed()
 
@@ -47,7 +48,7 @@ func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo) -> 
 			var choice_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn").instance()
 			choices_container.add_child(choice_control)
 			i.connect("changed", self, "is_changed")
-			choice_control.set_up(i, flowcharttab)
+			choice_control.set_up(i, flowcharttab, undo_redo)
 			choice_control.connect("conncting", self, "_on_connecting", [current_block])
 
 

@@ -53,6 +53,7 @@ func add_block(title, offset = null, in_block = null) -> void:
 
 
 func close_node(d_node: String) -> void:
+	# TODO Prevent Nodes from being deleted if it has a connection first?
 	for b in get_children():
 		if b is GraphNode:
 			if b.title == d_node:
@@ -72,7 +73,6 @@ func on_node_close(node: GraphNode) -> void:
 
 
 func on_GraphNode_clicked(node):
-
 	emit_signal("g_node_clicked", self, node.get_title())
 
 
@@ -106,8 +106,19 @@ func on_new_text_confirm(new_title: String) -> void:
 
 func update_block_flow(sender: block, fork: fork_command) -> void:
 	remove_fork_connections(fork)
+	var _send: block
+	for s in get_children():
+		if s is GraphNode:
+			if s.title == sender.name:
+				_send = s.get_meta("block")
+
+	if _send == null:
+		# _send = sender
+		print("can't find block")
+		return
+
 	for c in fork.choices:
-		connect_blocks(c.next_block, sender, fork)
+		connect_blocks(c.next_block, _send, fork)
 
 
 func remove_fork_connections(fork: fork_command) -> void:
@@ -136,6 +147,8 @@ func remove_fork_connections(fork: fork_command) -> void:
 
 
 func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
+	if receiver == null:
+		return
 	var sender_idx
 	var receiver_idx
 	var sender_name: String
