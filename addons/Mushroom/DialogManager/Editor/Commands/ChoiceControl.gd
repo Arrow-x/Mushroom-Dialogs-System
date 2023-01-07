@@ -49,8 +49,6 @@ func change_next_bloc(index, m: PopupMenu) -> void:
 	var n_text = m.get_item_text(index)
 	var p_block = current_choice.next_block
 	var p_text = next_block_menu.text
-	print("next block: ", n_block)
-	print("previeous block", p_block)
 	undo_redo.create_action("change next block")
 	undo_redo.add_do_method(self, "do_change_next_block", n_block, n_text)
 	undo_redo.add_undo_method(self, "do_change_next_block", p_block, p_text)

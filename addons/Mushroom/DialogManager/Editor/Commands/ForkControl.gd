@@ -36,7 +36,6 @@ func free_choice_control() -> void:
 
 
 func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo) -> void:
-	print("fork setUp")
 	current_fork = f
 	fc = flowcharttab.flowchart
 	graph = flowcharttab.graph_edit
