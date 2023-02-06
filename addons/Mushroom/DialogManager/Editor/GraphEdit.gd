@@ -54,60 +54,61 @@ func add_block(title, offset = null, in_block = null) -> void:
 
 	for i in _new_block.inputs:
 		for gnode in get_children():
-			if gnode is GraphNode:
-				var gnode_meta = gnode.get_meta("block")
-				if gnode_meta.outputs.has(i):
-					node.add_g_node_input(i, true)
-					connect_node(
-						gnode.get_name(),
-						gnode_meta.outputs.find(i),
-						node.get_name(),
-						_new_block.inputs.find(i)
-					)
+			if not gnode is GraphNode:
+				continue
+			var gnode_meta = gnode.get_meta("block")
+			if not gnode_meta.outputs.has(i):
+				continue
+			node.add_g_node_input(i, true)
+			connect_node(
+				gnode.get_name(),
+				gnode_meta.outputs.find(i),
+				node.get_name(),
+				_new_block.inputs.find(i)
+			)
 
 	for o in _new_block.outputs:
-		prints(o, _new_block.name)
 		update_block_flow(_new_block, o)
 
 
 func close_node(d_node: String) -> void:
 	for closed_node in get_children():
-		if closed_node is GraphNode:
-			if closed_node.title == d_node:
-				for closed_node_output in closed_node.get_meta("block").outputs:
-					for deconecting_node in get_children():
-						if deconecting_node is GraphNode:
-							if deconecting_node.get_meta("block").inputs.has(closed_node_output):
-								# disconnect all the nodes that are connected first
-								for d_input in deconecting_node.get_meta("block").inputs:
-									for refresh_node in get_children():
-										if refresh_node is GraphNode:
-											if refresh_node.get_meta("block").outputs.has(d_input):
-												disconnect_node(
-													refresh_node.get_name(),
-													refresh_node.get_meta("block").outputs.find(
-														d_input
-													),
-													deconecting_node.get_name(),
-													deconecting_node.get_meta("block").inputs.find(
-														d_input
-													)
-												)
-								# delete the deleted fork
-								deconecting_node.delete_inputs(closed_node_output)
-								# reconect all the inputs
-								var d_i: Array = deconecting_node.get_meta("block").inputs
-								for i in d_i:
-									for g in get_children():
-										if g is GraphNode:
-											if g.get_meta("block").outputs.has(i):
-												connect_blocks(
-													deconecting_node.get_meta("block"),
-													g.get_meta("block"),
-													i
-												)
-				# and then delete the node
-				closed_node.queue_free()
+		if not closed_node is GraphNode:
+			continue
+		if closed_node.title != d_node:
+			continue
+		for closed_node_output in closed_node.get_meta("block").outputs:
+			for deconecting_node in get_children():
+				if not deconecting_node is GraphNode:
+					continue
+				if not deconecting_node.get_meta("block").inputs.has(closed_node_output):
+					continue
+				# disconnect all the nodes that are connected first
+				for d_input in deconecting_node.get_meta("block").inputs:
+					for refresh_node in get_children():
+						if not refresh_node is GraphNode:
+							continue
+						if not refresh_node.get_meta("block").outputs.has(d_input):
+							continue
+						disconnect_node(
+							refresh_node.get_name(),
+							refresh_node.get_meta("block").outputs.find(d_input),
+							deconecting_node.get_name(),
+							deconecting_node.get_meta("block").inputs.find(d_input)
+						)
+				# delete the deleted fork
+				deconecting_node.delete_inputs(closed_node_output)
+				# reconect all the inputs
+				var d_i: Array = deconecting_node.get_meta("block").inputs
+				for i in d_i:
+					for g in get_children():
+						if not g is GraphNode:
+							continue
+						if not g.get_meta("block").outputs.has(i):
+							continue
+						connect_blocks(deconecting_node.get_meta("block"), g.get_meta("block"), i)
+		# and then delete the node
+		closed_node.queue_free()
 
 
 func on_node_close(node: GraphNode) -> void:
@@ -124,7 +125,6 @@ func on_GraphNode_clicked(node):
 
 
 func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title: String) -> void:
-	# BUG this gets messed up when replacing the Graphedit on an Undo
 	undo_redo.create_action("Moving Block")
 	undo_redo.add_do_method(self, "set_node_offset", node_title, finished_offset)
 	undo_redo.add_undo_method(self, "set_node_offset", node_title, start_offset)
@@ -207,13 +207,11 @@ func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
 		if g_node is GraphNode:
 			var g_node_meta: block = g_node.get_meta("block")
 			if g_node_meta == sender:
-				# if !g_node_meta.outputs.has(fork):
 				g_node.add_g_node_output(fork)
 				sender_idx = g_node.block.outputs.find(fork)
 				sender_name = g_node.get_name()
 
 			if g_node_meta == receiver:
-				# if !g_node_meta.inputs.has(fork):
 				g_node.add_g_node_input(fork)
 				receiver_idx = g_node.block.inputs.find(fork)
 				receiver_name = g_node.get_name()
