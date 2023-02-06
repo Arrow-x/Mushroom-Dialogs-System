@@ -43,6 +43,7 @@ func add_block(title, offset = null, in_block = null) -> void:
 	else:
 		_new_block = in_block
 
+	node.block = _new_block
 	node.set_meta("block", _new_block)
 	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
@@ -51,16 +52,62 @@ func add_block(title, offset = null, in_block = null) -> void:
 	add_child(node)
 	node.set_owner(self)
 
+	for i in _new_block.inputs:
+		for gnode in get_children():
+			if gnode is GraphNode:
+				var gnode_meta = gnode.get_meta("block")
+				if gnode_meta.outputs.has(i):
+					node.add_g_node_input(i, true)
+					connect_node(
+						gnode.get_name(),
+						gnode_meta.outputs.find(i),
+						node.get_name(),
+						_new_block.inputs.find(i)
+					)
+
+	for o in _new_block.outputs:
+		prints(o, _new_block.name)
+		update_block_flow(_new_block, o)
+
 
 func close_node(d_node: String) -> void:
-	# TODO Prevent Nodes from being deleted if it has a connection first?
-	for b in get_children():
-		if b is GraphNode:
-			if b.title == d_node:
-				for f in b.get_meta("block").commands:
-					if f is fork_command:
-						remove_fork_connections(f)
-				b.queue_free()
+	for closed_node in get_children():
+		if closed_node is GraphNode:
+			if closed_node.title == d_node:
+				for closed_node_output in closed_node.get_meta("block").outputs:
+					for deconecting_node in get_children():
+						if deconecting_node is GraphNode:
+							if deconecting_node.get_meta("block").inputs.has(closed_node_output):
+								# disconnect all the nodes that are connected first
+								for d_input in deconecting_node.get_meta("block").inputs:
+									for refresh_node in get_children():
+										if refresh_node is GraphNode:
+											if refresh_node.get_meta("block").outputs.has(d_input):
+												disconnect_node(
+													refresh_node.get_name(),
+													refresh_node.get_meta("block").outputs.find(
+														d_input
+													),
+													deconecting_node.get_name(),
+													deconecting_node.get_meta("block").inputs.find(
+														d_input
+													)
+												)
+								# delete the deleted fork
+								deconecting_node.delete_inputs(closed_node_output)
+								# reconect all the inputs
+								var d_i: Array = deconecting_node.get_meta("block").inputs
+								for i in d_i:
+									for g in get_children():
+										if g is GraphNode:
+											if g.get_meta("block").outputs.has(i):
+												connect_blocks(
+													deconecting_node.get_meta("block"),
+													g.get_meta("block"),
+													i
+												)
+				# and then delete the node
+				closed_node.queue_free()
 
 
 func on_node_close(node: GraphNode) -> void:
@@ -127,22 +174,25 @@ func remove_fork_connections(fork: fork_command) -> void:
 
 	for g_node in get_children():
 		if g_node is GraphNode:
-			if g_node.outputs.has(fork):
+			if g_node.block.outputs.has(fork):
 				g_node_name = g_node.get_name()
-				g_node_output_idx = g_node.outputs.find(fork)
+				g_node_output_idx = g_node.block.outputs.find(fork)
 				break
 
 	for g_node in get_children():
 		if g_node is GraphNode:
-			if g_node.inputs.has(fork):
+			if g_node.block.inputs.has(fork):
 				disconnect_node(
-					g_node_name, g_node_output_idx, g_node.get_name(), g_node.inputs.find(fork)
+					g_node_name,
+					g_node_output_idx,
+					g_node.get_name(),
+					g_node.block.inputs.find(fork)
 				)
 				g_node.delete_inputs(fork)
 
 	for g_node in get_children():
 		if g_node is GraphNode:
-			if g_node.outputs.has(fork):
+			if g_node.block.outputs.has(fork):
 				g_node.delete_outputs(fork)
 
 
@@ -157,13 +207,15 @@ func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
 		if g_node is GraphNode:
 			var g_node_meta: block = g_node.get_meta("block")
 			if g_node_meta == sender:
+				# if !g_node_meta.outputs.has(fork):
 				g_node.add_g_node_output(fork)
-				sender_idx = g_node.outputs.find(fork)
+				sender_idx = g_node.block.outputs.find(fork)
 				sender_name = g_node.get_name()
 
 			if g_node_meta == receiver:
+				# if !g_node_meta.inputs.has(fork):
 				g_node.add_g_node_input(fork)
-				receiver_idx = g_node.inputs.find(fork)
+				receiver_idx = g_node.block.inputs.find(fork)
 				receiver_name = g_node.get_name()
 
 	connect_node(sender_name, sender_idx, receiver_name, receiver_idx)
