@@ -96,6 +96,7 @@ func close_node(d_node: String) -> void:
 							deconecting_node.get_name(),
 							deconecting_node.get_meta("block").inputs.find(d_input)
 						)
+						break
 				# delete the deleted fork
 				deconecting_node.delete_inputs(closed_node_output)
 				# reconect all the inputs
@@ -107,6 +108,7 @@ func close_node(d_node: String) -> void:
 						if not g.get_meta("block").outputs.has(i):
 							continue
 						connect_blocks(deconecting_node.get_meta("block"), g.get_meta("block"), i)
+						break
 		# and then delete the node
 		closed_node.queue_free()
 
