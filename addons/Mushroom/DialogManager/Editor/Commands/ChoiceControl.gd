@@ -10,11 +10,11 @@ var flowchart: FlowChart
 var undo_redo: UndoRedo
 
 signal conncting
+signal removing_choice
 
 
-func set_up(c: choice, fct: Control, u: UndoRedo) -> void:
-	# TODO Check if the next block exist in the flowchart, otherwise show a warning
-	flowchart = fct.flowchart
+func set_up(c: choice, fct: FlowChart, u: UndoRedo) -> void:
+	flowchart = fct
 	current_choice = c
 	choice_text.text = c.text
 	undo_redo = u
@@ -24,7 +24,7 @@ func set_up(c: choice, fct: Control, u: UndoRedo) -> void:
 
 
 func _on_DeleteChoice_pressed():
-	pass  # Replace with function body.
+	emit_signal("removing_choice", self)
 
 
 func _on_NextIndex_value_changed(value: float) -> void:
