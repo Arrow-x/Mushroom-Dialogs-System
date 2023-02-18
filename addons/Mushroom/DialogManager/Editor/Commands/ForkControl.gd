@@ -12,6 +12,10 @@ var undo_redo: UndoRedo
 signal adding_choice
 
 
+func get_command() -> Command:
+	return current_fork
+
+
 func _on_AddChoiceButton_pressed() -> void:
 	adding_choice_action()
 

@@ -26,3 +26,7 @@ func _on_TextEdit_text_changed():
 
 func _on_NameLineEdit_text_changed(new_text: String):
 	current_say.name = new_text
+
+
+func get_command() -> Command:
+	return current_say

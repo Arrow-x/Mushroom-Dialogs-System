@@ -13,10 +13,22 @@ var current_block: block
 onready var undo_redo: UndoRedo = flowchart_tab.undo_redo
 var current_node_block: String = ""
 
-var current_command_item = 9999
+var current_command_item = -2
 var current_command_column
 
 # TODO Set up drag and droping, multiselect...
+
+
+func _ready():
+	connect("button_pressed", self, "_on_Tree_button_pressed")
+
+
+func _on_Tree_button_pressed(item: TreeItem, collumn: int, id: int):
+	var cmd: Command = item.get_meta("0")
+	undo_redo.create_action("delete_command")
+	undo_redo.add_do_method(self, "delete_command", cmd)
+	undo_redo.add_undo_method(self, "create_command", cmd, find_TreeItem(item))
+	undo_redo.commit_action()
 
 
 func on_GraphNode_clicked(graph_edit, node_name) -> void:
@@ -78,33 +90,42 @@ func _on_add_command(id: int, pop_up: Popup) -> void:
 	undo_redo.commit_action()
 
 
-func create_command(command: Command) -> void:
-	current_block.commands.append(command)
-	add_command(command)
+func create_command(command: Command, idx: int = -1) -> void:
+	if idx != -1:
+		current_block.commands.insert(idx, command)
+	else:
+		current_block.commands.append(command)
+	add_command(command, idx)
 
 
-func add_command(command: Command) -> void:
+func add_command(command: Command, idx: int = -1) -> void:
 	if get_root() == null:
 		root = self.create_item()
 		self.set_hide_root(true)
 
-	var _item: TreeItem = self.create_item(root)
+	var _item: TreeItem = self.create_item(root, idx)
 	_item.set_text(0, command.preview())
 	_item.set_meta("0", command)
+	_item.add_button(
+		0, load("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png")
+	)
 	flowchart_tab.changed_flowchart()
 	#set the new item as the selected one
 
 
 func delete_command(command: Command) -> void:
-	for c in get_tree_items(get_root()):
+	for c in get_TreeItems(get_root()):
 		if c.get_meta("0") == command:
 			c.free()
 			current_block.commands.erase(command)
 			update_commad_tree(current_block)
+			for c_s in commands_settings.get_children():
+				if c_s.get_command() == command:
+					c_s.queue_free()
 			return
 
 
-func get_tree_items(root: TreeItem) -> Array:
+func get_TreeItems(root: TreeItem) -> Array:
 	var item = root.get_children()
 	var children = []
 	while item:
@@ -113,18 +134,19 @@ func get_tree_items(root: TreeItem) -> Array:
 	return children
 
 
-func get_tree_item_index(item: TreeItem) -> int:
-	for i in get_tree_items(get_root()).size():
-		if get_tree_items(get_root())[i] == item:
+func find_TreeItem(item: TreeItem) -> int:
+	var treeitems: Array = get_TreeItems(get_root())
+	for i in treeitems.size():
+		if treeitems[i] == item:
 			return i
-	return 9999
+	return -2
 
 
-func get_tree_item_from_index(idx: int) -> void:
-	if idx == 9999:
+func get_TreeItem_from_index(idx: int) -> void:
+	if idx == -2:
 		print("can't find treeitem")
 		return
-	create_command_editor(get_tree_items(get_root())[idx])
+	create_command_editor(get_TreeItems(get_root())[idx])
 
 
 func update_commad_tree(block: block) -> void:
@@ -135,10 +157,10 @@ func update_commad_tree(block: block) -> void:
 
 
 func _on_CommandsTree_item_activated() -> void:
-	var current_index: int = get_tree_item_index(get_selected())
+	var current_index: int = find_TreeItem(get_selected())
 	undo_redo.create_action("selecting a command")
-	undo_redo.add_do_method(self, "get_tree_item_from_index", current_index)
-	undo_redo.add_undo_method(self, "get_tree_item_from_index", current_command_item)
+	undo_redo.add_do_method(self, "get_TreeItem_from_index", current_index)
+	undo_redo.add_undo_method(self, "get_TreeItem_from_index", current_command_item)
 	undo_redo.commit_action()
 
 	current_command_item = current_index
@@ -152,7 +174,7 @@ func create_command_editor(item: TreeItem = null) -> void:
 
 	var current_item = item.get_meta("0")
 
-	for c in get_tree_items(get_root()):
+	for c in get_TreeItems(get_root()):
 		c.deselect(0)
 
 	item.select(0)
