@@ -109,6 +109,14 @@ func close_node(d_node: String) -> void:
 							continue
 						connect_blocks(deconecting_node.get_meta("block"), g.get_meta("block"), i)
 						break
+		# Removie the blook commands and the it's editor
+		var command_tree: Tree = get_node(
+			"../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"
+		)
+		if command_tree.current_block == closed_node.get_meta("block"):
+			command_tree.full_clear()
+			for s in command_tree.commands_settings.get_children():
+				s.queue_free()
 		# and then delete the node
 		closed_node.queue_free()
 
