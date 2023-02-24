@@ -43,6 +43,7 @@ func add_choice_contol(c: choice = null, idx: int = -1) -> void:
 		current_fork.choices.append(n_c)
 	else:
 		n_c = c
+		current_fork.choices.append(n_c)
 	create_choice_controle(n_c, idx)
 	is_changed()
 
