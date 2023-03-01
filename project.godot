@@ -111,7 +111,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-DialogManager="*res://addons/Mushroom/DialogManager/DialogManager.gd"
+DialogManagerNode="*res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
 
 [debug]
 

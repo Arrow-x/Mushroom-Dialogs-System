@@ -33,7 +33,7 @@ func _ready():
 	center_portrait = get_node(_center_portrait)
 	left_portrait = get_node(_left_portrait)
 
-	next_button.connect("pressed", DialogManager, "advance")
+	next_button.connect("pressed", DialogManagerNode, "advance")
 	say_text.text = ""
 
 	say_text.connect("message_done", self, "_on_SayText_message_done")
@@ -88,7 +88,7 @@ func add_choice(block, id, index) -> void:
 	var s = Button.new()
 	s.text = block.text
 	choice_container.add_child(s)
-	s.connect("pressed", DialogManager, "_on_make_choice", [id, index])
+	s.connect("pressed", DialogManagerNode, "_on_make_choice", [id, index])
 
 
 func _on_SayText_message_done():
