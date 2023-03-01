@@ -105,6 +105,7 @@ func add_command(command: Command, idx: int = -1) -> void:
 
 	var _item: TreeItem = self.create_item(root, idx)
 	_item.set_text(0, command.preview())
+	_item.set_icon(0, command.get_icon())
 	_item.set_meta("0", command)
 	_item.add_button(
 		0, load("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png")
