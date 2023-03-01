@@ -22,3 +22,7 @@ func preview():
 				continue
 			choices_str.append(c.next_block.name)
 		return String("Fork to: " + String(choices_str))
+
+
+func get_icon() -> Resource:
+	return load("res://addons/Mushroom/DialogManager/Editor/icons/fork_icon.png")
