@@ -20,13 +20,18 @@ func set_say_box_hight():
 
 
 func _on_TextEdit_text_changed():
-	v_slit.split_offset = say_text_edit.get_line_count() * 18
+	set_say_box_hight()
 	current_say.say = say_text_edit.text
+	is_changed()
 
 
 func _on_NameLineEdit_text_changed(new_text: String):
 	current_say.name = new_text
+	is_changed()
 
 
 func get_command() -> Command:
 	return current_say
+
+func is_changed() -> void:
+	current_say.emit_signal("changed")
