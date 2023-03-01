@@ -6,9 +6,6 @@ onready var f_tabs := $VBoxContainer/Tabs
 
 
 func open_flowchart_scene(flowchart_scene: FlowChart, undo_redo: UndoRedo) -> void:
-	##### TODO For the Say Command
-	##### TODO For The Fork Command
-
 	for tab in flowcharts_container.get_children():
 		if tab.flowchart == flowchart_scene:
 			var c_tab_idx = flowcharts_container.get_children().find(tab)

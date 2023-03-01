@@ -110,7 +110,6 @@ func add_command(command: Command, idx: int = -1) -> void:
 		0, load("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png")
 	)
 	flowchart_tab.changed_flowchart()
-	#set the new item as the selected one
 
 
 func delete_command(command: Command) -> void:

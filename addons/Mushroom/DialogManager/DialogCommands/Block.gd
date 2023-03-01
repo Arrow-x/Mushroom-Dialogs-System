@@ -12,5 +12,3 @@ export var _next_indexer: int = 0
 
 export var inputs: Array
 export var outputs: Array
-
-
