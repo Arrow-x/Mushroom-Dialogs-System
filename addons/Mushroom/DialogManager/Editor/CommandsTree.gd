@@ -195,3 +195,8 @@ func create_command_editor(item: TreeItem = null) -> void:
 			var fork_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
 			commands_settings.add_child(fork_control, true)
 			fork_control.set_up(current_item, flowchart_tab, current_block, undo_redo)
+
+		elif current_item is condition_command:
+			var condition_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn").instance()
+			commands_settings.add_child(condition_control, true)
+			condition_control.set_up(current_item)
