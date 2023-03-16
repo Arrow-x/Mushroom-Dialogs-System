@@ -16,7 +16,7 @@ var current_node_block: String = ""
 var current_command_item = -2
 var current_command_column
 
-# TODO Set up drag and droping, multiselect...
+# TODO: Set up drag and droping, multiselect...
 
 
 func _ready():
@@ -58,7 +58,7 @@ func create_commands(graph_edit = null, node_name = null) -> void:
 	current_node_block = node.title
 	current_block_label.text = "current block: " + meta.name
 
-	# TODO don't update when it is the current block is selected ageain
+	# TODO: don't update when it is the current block is selected ageain
 	if commands_settings.get_child_count() != 0:
 		if commands_settings.get_child(0) != null:
 			commands_settings.get_child(0).free()
@@ -79,7 +79,7 @@ func full_clear() -> void:
 
 func _on_add_command(id: int, pop_up: Popup) -> void:
 	if current_block == null:
-		# TODO a warnin here
+		# TODO: a warnin here
 		return
 
 	#Carful with the Conditional Command
