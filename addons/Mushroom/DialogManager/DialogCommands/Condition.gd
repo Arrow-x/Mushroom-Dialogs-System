@@ -12,6 +12,10 @@ export(String) var check_val
 export(String) var condition_type
 
 
+func _init():
+	condition_block = block.new()
+
+
 func preview() -> String:
 	return String("if " + required_var + " " + condition_type + " " + check_val)
 

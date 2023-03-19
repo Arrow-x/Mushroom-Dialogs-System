@@ -10,8 +10,6 @@ func set_up(cc: condition_command) -> void:
 	var check_type_popup: PopupMenu = get_node("ReqVar/CheckType").get_popup()
 	check_type_popup.connect("id_pressed", self, "_on_CheckTypePopup", [check_type_popup])
 
-	current_condition.condition_block = block.new()
-
 	get_node("ReqNode/ReqNodeInput").text = current_condition.required_node
 	get_node("ReqVar/ReqVarInput").text = current_condition.required_var
 	get_node("HBoxContainer/CheckValInput").text = current_condition.check_val
