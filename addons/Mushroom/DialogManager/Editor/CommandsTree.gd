@@ -13,7 +13,7 @@ var current_block: block
 onready var undo_redo: UndoRedo = flowchart_tab.undo_redo
 var current_node_block: String = ""
 
-var current_command_item = -2
+var current_command_item: Command
 var current_command_column
 
 # TODO: Set up drag and droping, multiselect...
@@ -25,11 +25,22 @@ func _ready():
 	rmb_pop.connect("index_pressed", self, "_on_add_command", [rmb_pop, true])
 
 
-func _on_Tree_button_pressed(item: TreeItem, collumn: int, id: int):
+func _on_Tree_button_pressed(item: TreeItem, _collumn: int, _id: int):
 	var cmd: Command = item.get_meta("0")
+	var parent_command: Command = null
+	var idx: int = find_TreeItem(item)
+	var parent: TreeItem = null
+
+	if item.get_parent().has_meta("0"):
+		var parent_meta = item.get_parent().get_meta("0")
+		if parent_meta is condition_command:
+			parent_command = parent_meta
+			idx = parent_meta.condition_block.commands.find(cmd)
+			parent = item.get_parent()
+
 	undo_redo.create_action("delete_command")
-	undo_redo.add_do_method(self, "delete_command", cmd)
-	undo_redo.add_undo_method(self, "create_command", cmd, find_TreeItem(item))
+	undo_redo.add_do_method(self, "delete_command", cmd, parent)
+	undo_redo.add_undo_method(self, "create_command", cmd, idx, parent_command)
 	undo_redo.commit_action()
 
 
@@ -41,7 +52,7 @@ func on_GraphNode_clicked(graph_edit, node_name) -> void:
 
 
 func create_commands(graph_edit = null, node_name = null) -> void:
-	full_clear()
+	# TODO:  why is this so complicated? the graph node should just send it's block
 	var node
 	if graph_edit and node_name:
 		for g in graph_edit.get_children():
@@ -54,19 +65,22 @@ func create_commands(graph_edit = null, node_name = null) -> void:
 		return
 
 	var meta = node.get_meta("block")
+	# Don't update if the clicked g_node is already selected
+	if meta == current_block:
+		return
+
+	full_clear()
 	flowchart_tab.graph_edit.set_selected(node)
 	commands_settings._currnet_title = meta.name
 	current_block = meta
 	current_node_block = node.title
 	current_block_label.text = "current block: " + meta.name
 
-	# TODO: don't update when it is the current block is selected ageain
 	if commands_settings.get_child_count() != 0:
 		if commands_settings.get_child(0) != null:
 			commands_settings.get_child(0).free()
 
-	for i in meta.commands:
-		add_command(i)
+	update_commad_tree(meta)
 
 
 func full_clear() -> void:
@@ -79,33 +93,63 @@ func full_clear() -> void:
 		current_block_label.text = ""
 
 
-func _on_add_command(id: int, pop_up: Popup) -> void:
+func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 	if current_block == null:
-		# TODO: a warnin here
+		print("there is no block selected")
 		return
 
-	#Carful with the Conditional Command
 	var _command: Command = pop_up.get_item_metadata(id).duplicate()
+
+	var idx: int = -1
+	var p: Command = null
+
+	if is_rmb:
+		var selec_m: Command = get_selected().get_meta("0")
+		if selec_m is condition_command:
+			p = selec_m
+		else:
+			var selec_p := get_selected().get_parent()
+			if selec_p == get_root():
+				idx = find_TreeItem(get_selected()) + 1
+			else:
+				idx = selec_p.get_meta("0").condition_block.commands.find(selec_m) + 1
+				p = selec_p.get_meta("0")
+
 	undo_redo.create_action("Added Command")
-	undo_redo.add_do_method(self, "create_command", _command)
+	undo_redo.add_do_method(self, "create_command", _command, idx, p)
 	undo_redo.add_undo_method(self, "delete_command", _command)
 	undo_redo.commit_action()
 
 
-func create_command(command: Command, idx: int = -1) -> void:
-	if idx != -1:
-		current_block.commands.insert(idx, command)
+func create_command(command: Command, idx: int = -1, parent = null) -> void:
+	if parent == null or parent == get_root():
+		var cbc: Array = current_block.commands
+		if idx == -1:
+			cbc.append(command)
+		else:
+			cbc.insert(idx, command)
+
 	else:
-		current_block.commands.append(command)
-	add_command(command, idx)
+		if parent is condition_command:
+			var prc: Array = parent.condition_block.commands
+			if idx == -1:
+				prc.append(command)
+			else:
+				prc.insert(idx, command)
+
+	update_commad_tree(current_block)
 
 
-func add_command(command: Command, idx: int = -1) -> void:
+func add_command(command: Command, idx: int = -1, parent = null) -> TreeItem:
 	if get_root() == null:
-		root = self.create_item()
+		parent = self.create_item()
 		self.set_hide_root(true)
 
-	var _item: TreeItem = self.create_item(root, idx)
+	var p = parent
+	if parent != null:
+		p = parent
+
+	var _item: TreeItem = self.create_item(p, idx)
 	_item.set_text(0, command.preview())
 	_item.set_icon(0, command.get_icon())
 	_item.set_meta("0", command)
@@ -113,22 +157,39 @@ func add_command(command: Command, idx: int = -1) -> void:
 		0, load("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png")
 	)
 	flowchart_tab.changed_flowchart()
+	return _item
 
 
-func delete_command(command: Command) -> void:
-	for c in get_TreeItems(get_root()):
+func delete_command(command: Command, tree: TreeItem = null) -> void:
+	var d_tree: Array
+	var d_block: block
+
+	if tree:
+		d_tree = get_TreeItems(tree)
+		d_block = tree.get_meta("0").condition_block
+	else:
+		d_tree = get_TreeItems(get_root())
+		d_block = current_block
+
+	for c in d_tree:
 		if c.get_meta("0") == command:
 			c.free()
-			current_block.commands.erase(command)
-			update_commad_tree(current_block)
-			for c_s in commands_settings.get_children():
-				if c_s.get_command() == command:
-					c_s.queue_free()
-			return
+			d_block.commands.erase(command)
+		elif c.get_meta("0") is condition_command:
+			delete_command(command, c)
+			continue
+		else:
+			continue
+
+		update_commad_tree(current_block)
+		for c_s in commands_settings.get_children():
+			if c_s.get_command() == command:
+				c_s.queue_free()
+		return
 
 
-func get_TreeItems(root: TreeItem) -> Array:
-	var item = root.get_children()
+func get_TreeItems(parent: TreeItem) -> Array:
+	var item = parent.get_children()
 	var children = []
 	while item:
 		children.append(item)
@@ -144,28 +205,47 @@ func find_TreeItem(item: TreeItem) -> int:
 	return -2
 
 
-func get_TreeItem_from_index(idx: int) -> void:
-	if idx == -2:
+func prepare_command_editor(cmd: Command) -> void:
+	if cmd == null:
 		print("can't find treeitem")
 		return
-	create_command_editor(get_TreeItems(get_root())[idx])
+	create_command_editor(get_TreeItems_from_Command(cmd))
 
 
-func update_commad_tree(block: block) -> void:
-	flowchart_tab.changed_flowchart()
-	self.clear()
+func get_TreeItems_from_Command(command: Command, parent: TreeItem = null) -> TreeItem:
+	var tree: Array
+	if parent == null:
+		tree = get_TreeItems(get_root())
+	else:
+		tree = get_TreeItems(parent)
+	for t in tree:
+		var t_cmd: Command = t.get_meta("0")
+		if t_cmd == command:
+			return t
+		elif t_cmd is condition_command:
+			var s := get_TreeItems_from_Command(command, t)
+			if s != null:
+				return s
+	return null
+
+
+func update_commad_tree(block: block, parent: TreeItem = null) -> void:
+	if parent == null:
+		self.clear()
 	for i in block.commands:
-		add_command(i)
+		var created_item: TreeItem = add_command(i, -1, parent)
+		if i is condition_command:
+			update_commad_tree(i.condition_block, created_item)
 
 
 func _on_CommandsTree_item_activated() -> void:
-	var current_index: int = find_TreeItem(get_selected())
+	var sel_c: Command = get_selected().get_meta("0")
 	undo_redo.create_action("selecting a command")
-	undo_redo.add_do_method(self, "get_TreeItem_from_index", current_index)
-	undo_redo.add_undo_method(self, "get_TreeItem_from_index", current_command_item)
+	undo_redo.add_do_method(self, "prepare_command_editor", sel_c)
+	undo_redo.add_undo_method(self, "prepare_command_editor", current_command_item)
 	undo_redo.commit_action()
 
-	current_command_item = current_index
+	current_command_item = sel_c
 
 
 func create_command_editor(item: TreeItem = null) -> void:
