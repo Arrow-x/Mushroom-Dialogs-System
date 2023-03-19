@@ -105,7 +105,6 @@ _global_script_class_icons={
 [application]
 
 config/name="MushroomDialogSystem"
-run/main_scene="res://addons/Mushroom/DialogManager/Editor/Editor.tscn"
 run/low_processor_mode=true
 config/icon="res://icon.png"
 
