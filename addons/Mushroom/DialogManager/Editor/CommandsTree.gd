@@ -21,6 +21,8 @@ var current_command_column
 
 func _ready():
 	connect("button_pressed", self, "_on_Tree_button_pressed")
+	var rmb_pop = get_node("CommandRmbPopup/AddCommandRmbPopupMenu")
+	rmb_pop.connect("index_pressed", self, "_on_add_command", [rmb_pop, true])
 
 
 func _on_Tree_button_pressed(item: TreeItem, collumn: int, id: int):
@@ -200,3 +202,10 @@ func create_command_editor(item: TreeItem = null) -> void:
 			var condition_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn").instance()
 			commands_settings.add_child(condition_control, true)
 			condition_control.set_up(current_item)
+
+
+func _on_CommandsTree_item_rmb_selected(position: Vector2) -> void:
+	var pop: PopupMenu = get_node("CommandRmbPopup")
+	pop.set_up()
+	var gmp := get_global_mouse_position()
+	pop.popup(Rect2(gmp.x, gmp.y, pop.rect_size.x, pop.rect_size.y))
