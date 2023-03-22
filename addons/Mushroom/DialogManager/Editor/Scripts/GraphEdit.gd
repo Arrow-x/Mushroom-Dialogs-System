@@ -2,7 +2,7 @@ tool
 extends GraphEdit
 
 onready var graph_node: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn")
-onready var enter_name_scene: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/HelperScenes/EnterNameScene/Scenes/EnterNameScene.tscn")
+onready var enter_name_scene: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn")
 
 var g_node_posititon := Vector2(40, 40)
 var undo_redo: UndoRedo
