@@ -43,6 +43,7 @@ func add_block(title, offset = null, in_block = null) -> void:
 	else:
 		_new_block = in_block
 
+	get_node("../../").flowchart.blocks[_new_block.name] = _new_block
 	node.set_meta("block", _new_block)
 	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
@@ -116,6 +117,7 @@ func close_node(d_node: String) -> void:
 			command_tree.full_clear()
 			for s in command_tree.commands_settings.get_children():
 				s.queue_free()
+		get_node("../../").flowchart.blocks.erase(closed_node.get_meta("block").name)
 		# and then delete the node
 		closed_node.queue_free()
 

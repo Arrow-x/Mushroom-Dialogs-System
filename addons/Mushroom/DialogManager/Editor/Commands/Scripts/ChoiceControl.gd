@@ -19,7 +19,7 @@ func set_up(c: choice, fct: FlowChart, u: UndoRedo) -> void:
 	choice_text.text = c.text
 	undo_redo = u
 	if c.next_block != null:
-		next_block_menu.text = c.next_block.name
+		next_block_menu.text = c.next_block
 	next_index_text.value = c.next_index
 
 
@@ -36,32 +36,24 @@ func _on_NextBlockList_about_to_show() -> void:
 	if !menu.is_connected("index_pressed", self, "change_next_bloc"):
 		menu.connect("index_pressed", self, "change_next_bloc", [menu])
 	menu.clear()
-	var _c := 0
-	for b in flowchart.graph_edit_node.get_children():
-		if b is GraphNode:
-			menu.add_item(b.get_meta("block").name, _c)
-			menu.set_item_metadata(_c, b.get_meta("block"))
-			_c += 1
+	for b in flowchart.blocks:
+		menu.add_item(b)
 
 
 func change_next_bloc(index, m: PopupMenu) -> void:
-	var n_block = m.get_item_metadata(index)
-	var n_text = m.get_item_text(index)
-	var p_block = current_choice.next_block
-	var p_text = next_block_menu.text
+	var n_block_name := m.get_item_text(index)
+	var p_block_name := current_choice.next_block
 	undo_redo.create_action("change next block")
-	undo_redo.add_do_method(self, "do_change_next_block", n_block, n_text)
-	undo_redo.add_undo_method(self, "do_change_next_block", p_block, p_text)
+	undo_redo.add_do_method(self, "do_change_next_block", n_block_name)
+	undo_redo.add_undo_method(self, "do_change_next_block", p_block_name)
 	undo_redo.commit_action()
 
 
-func do_change_next_block(block: block = null, text: String = "") -> void:
-	current_choice.next_block = block
-	next_block_menu.text = text
+func do_change_next_block(next_block_name: String = "") -> void:
+	current_choice.next_block = next_block_name
+	next_block_menu.text = next_block_name
 	emit_signal("conncting")
-	current_choice.emit_signal("changed")
 
 
 func _on_ChoiceText_text_changed(new_text: String) -> void:
 	current_choice.text = new_text
-	current_choice.emit_signal("changed")
