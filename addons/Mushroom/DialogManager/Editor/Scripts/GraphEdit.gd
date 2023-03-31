@@ -39,7 +39,7 @@ func add_block(title, offset = null, in_block = null) -> void:
 	else:
 		node.offset = offset
 
-	var _new_block
+	var _new_block: block
 	if in_block == null:
 		_new_block = block.new()
 		_new_block.name = title
