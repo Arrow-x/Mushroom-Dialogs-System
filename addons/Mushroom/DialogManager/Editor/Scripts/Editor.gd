@@ -33,7 +33,10 @@ func _on_NewFlowChartTabs_tab_clicked(tab: int) -> void:
 
 func _on_NewFlowChartTabs_tab_close(tab: int) -> void:
 	var flowchart_editors := flowcharts_container.get_children()
-	if flowchart_editors[tab].modified == true:
+	if (
+		flowchart_editors[tab].modified == true
+		or flowchart_editors[tab].flowchart.resource_path == ""
+	):
 		var _c := AcceptDialog.new()
 		_c.set_text("Save changes in flowchart before closing?")
 		_c.set_title("Please Confirm...")
