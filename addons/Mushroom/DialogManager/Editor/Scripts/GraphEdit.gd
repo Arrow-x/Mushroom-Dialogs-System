@@ -11,7 +11,6 @@ onready var enter_name_scene: PackedScene = preload(
 var g_node_posititon := Vector2(40, 40)
 var undo_redo: UndoRedo
 
-signal add_block_to_flow
 signal g_node_clicked
 signal flow_changed
 signal graph_node_close
@@ -49,7 +48,6 @@ func add_block(title, offset = null, in_block = null) -> void:
 
 	get_node("../../").flowchart.blocks[_new_block.name] = _new_block
 	node.set_meta("block", _new_block)
-	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
 	node.connect("dragging", self, "on_node_dragged", [], CONNECT_PERSIST)
 	node.connect("node_closed", self, "on_node_close", [], CONNECT_PERSIST)
