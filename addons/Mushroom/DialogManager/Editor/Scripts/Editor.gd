@@ -11,10 +11,8 @@ func open_flowchart_scene(flowchart_scene: FlowChart, undo_redo: UndoRedo) -> vo
 			var c_tab_idx = flowcharts_container.get_children().find(tab)
 			f_tabs.set_current_tab(c_tab_idx)
 			_on_NewFlowChartTabs_tab_clicked(c_tab_idx)
-			tab.name = flowchart_scene.get_name()
-			f_tabs.set_tab_title(c_tab_idx, flowchart_scene.get_name())
-
 			return
+
 	var ed := editor_scn.instance()
 	ed.set_flowchart(flowchart_scene, undo_redo)
 	flowcharts_container.add_child(ed)
