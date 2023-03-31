@@ -25,7 +25,6 @@ func delete_inputs(fork: fork_command):
 	var idx = block.inputs.find(fork)
 	set_slot_enabled_left(idx, false)
 	if idx < c_inputs.size():
-		# if c_inputs.size() != 0:
 		c_inputs[idx].queue_free()
 		c_inputs.remove(idx)
 	block.inputs.erase(fork)
@@ -35,9 +34,7 @@ func delete_outputs(fork: fork_command):
 	var block: block = get_meta("block")
 	var idx = block.outputs.find(fork)
 	set_slot_enabled_right(idx, false)
-	if idx < c_inputs.size():
-		# if c_outputs.size() != 0:
-		print("outputs:", c_outputs)
+	if idx < c_outputs.size():
 		c_outputs[idx].queue_free()
 		c_outputs.remove(idx)
 	block.outputs.erase(fork)
@@ -67,11 +64,11 @@ func add_g_node_input(fork: fork_command, delete_undo: bool = false) -> void:
 		c_inputs.append(cc)
 
 	if !block.inputs.has(fork):
-		block.inputs.append(fork)
 		var cc: Control = Control.new()
 		cc.rect_min_size = Vector2(10, 10)
 		add_child(cc)
 		cc.set_owner(self)
+		block.inputs.append(fork)
 		c_inputs.append(cc)
 	set_slot_enabled_left(block.inputs.find(fork), true)
 	set_slot_type_left(block.inputs.find(fork), 1)

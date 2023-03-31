@@ -1,8 +1,12 @@
 tool
 extends GraphEdit
 
-onready var graph_node: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn")
-onready var enter_name_scene: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn")
+onready var graph_node: PackedScene = preload(
+	"res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn"
+)
+onready var enter_name_scene: PackedScene = preload(
+	"res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn"
+)
 
 var g_node_posititon := Vector2(40, 40)
 var undo_redo: UndoRedo
@@ -171,7 +175,6 @@ func update_block_flow(sender: block, fork: fork_command) -> void:
 				_send = s.get_meta("block")
 
 	if _send == null:
-		# _send = sender
 		print("can't find block")
 		return
 
