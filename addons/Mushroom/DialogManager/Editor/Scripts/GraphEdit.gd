@@ -43,7 +43,6 @@ func add_block(title, offset = null, in_block = null) -> void:
 	else:
 		_new_block = in_block
 
-	node.block = _new_block
 	node.set_meta("block", _new_block)
 	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
@@ -181,28 +180,27 @@ func update_block_flow(sender: block, fork: fork_command) -> void:
 func remove_fork_connections(fork: fork_command) -> void:
 	var g_node_name: String
 	var g_node_output_idx: int
-
 	for g_node in get_children():
 		if g_node is GraphNode:
-			if g_node.block.outputs.has(fork):
+			if g_node.get_meta("block").outputs.has(fork):
 				g_node_name = g_node.get_name()
-				g_node_output_idx = g_node.block.outputs.find(fork)
+				g_node_output_idx = g_node.get_meta("block").outputs.find(fork)
 				break
 
 	for g_node in get_children():
 		if g_node is GraphNode:
-			if g_node.block.inputs.has(fork):
+			if g_node.get_meta("block").inputs.has(fork):
 				disconnect_node(
 					g_node_name,
 					g_node_output_idx,
 					g_node.get_name(),
-					g_node.block.inputs.find(fork)
+					g_node.get_meta("block").inputs.find(fork)
 				)
 				g_node.delete_inputs(fork)
 
 	for g_node in get_children():
 		if g_node is GraphNode:
-			if g_node.block.outputs.has(fork):
+			if g_node.get_meta("block").outputs.has(fork):
 				g_node.delete_outputs(fork)
 
 
@@ -218,12 +216,12 @@ func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
 			var g_node_meta: block = g_node.get_meta("block")
 			if g_node_meta == sender:
 				g_node.add_g_node_output(fork)
-				sender_idx = g_node.block.outputs.find(fork)
+				sender_idx = g_node_meta.outputs.find(fork)
 				sender_name = g_node.get_name()
 
 			if g_node_meta == receiver:
 				g_node.add_g_node_input(fork)
-				receiver_idx = g_node.block.inputs.find(fork)
+				receiver_idx = g_node_meta.inputs.find(fork)
 				receiver_name = g_node.get_name()
 
 	connect_node(sender_name, sender_idx, receiver_name, receiver_idx)
