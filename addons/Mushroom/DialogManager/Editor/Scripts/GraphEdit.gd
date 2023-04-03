@@ -166,18 +166,15 @@ func on_new_text_confirm(new_title: String) -> void:
 
 func update_block_flow(sender: block, fork: fork_command) -> void:
 	remove_fork_connections(fork)
-	var _send: block
-	for s in get_children():
-		if s is GraphNode:
-			if s.title == sender.name:
-				_send = s.get_meta("block")
-
-	if _send == null:
-		print("can't find block")
-		return
-
 	for c in fork.choices:
-		connect_blocks(c.next_block, _send, fork)
+		var next_block: block
+		for b in get_node("../../").flowchart.blocks.keys():
+			if c.next_block == b:
+				next_block = get_node("../../").flowchart.blocks[b]
+		if next_block == null:
+			print("can't find the block that this choice: ", c.text, " poitn to")
+			continue
+		connect_blocks(next_block, sender, fork)
 
 
 func remove_fork_connections(fork: fork_command) -> void:
