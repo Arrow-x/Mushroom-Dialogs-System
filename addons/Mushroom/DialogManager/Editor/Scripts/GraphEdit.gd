@@ -1,13 +1,16 @@
 tool
 extends GraphEdit
 
-onready var graph_node: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn")
-onready var enter_name_scene: PackedScene = preload("res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn")
+onready var graph_node: PackedScene = preload(
+	"res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn"
+)
+onready var enter_name_scene: PackedScene = preload(
+	"res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn"
+)
 
 var g_node_posititon := Vector2(40, 40)
 var undo_redo: UndoRedo
 
-signal add_block_to_flow
 signal g_node_clicked
 signal flow_changed
 signal graph_node_close
@@ -36,16 +39,15 @@ func add_block(title, offset = null, in_block = null) -> void:
 	else:
 		node.offset = offset
 
-	var _new_block
+	var _new_block: block
 	if in_block == null:
 		_new_block = block.new()
 		_new_block.name = title
 	else:
 		_new_block = in_block
 
-	node.block = _new_block
+	get_node("../../").flowchart.blocks[_new_block.name] = _new_block
 	node.set_meta("block", _new_block)
-	emit_signal("add_block_to_flow", _new_block, node)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
 	node.connect("dragging", self, "on_node_dragged", [], CONNECT_PERSIST)
 	node.connect("node_closed", self, "on_node_close", [], CONNECT_PERSIST)
@@ -117,6 +119,7 @@ func close_node(d_node: String) -> void:
 			command_tree.full_clear()
 			for s in command_tree.commands_settings.get_children():
 				s.queue_free()
+		get_node("../../").flowchart.blocks.erase(closed_node.get_meta("block").name)
 		# and then delete the node
 		closed_node.queue_free()
 
@@ -163,46 +166,41 @@ func on_new_text_confirm(new_title: String) -> void:
 
 func update_block_flow(sender: block, fork: fork_command) -> void:
 	remove_fork_connections(fork)
-	var _send: block
-	for s in get_children():
-		if s is GraphNode:
-			if s.title == sender.name:
-				_send = s.get_meta("block")
-
-	if _send == null:
-		# _send = sender
-		print("can't find block")
-		return
-
 	for c in fork.choices:
-		connect_blocks(c.next_block, _send, fork)
+		var next_block: block
+		for b in get_node("../../").flowchart.blocks.keys():
+			if c.next_block == b:
+				next_block = get_node("../../").flowchart.blocks[b]
+		if next_block == null:
+			print("can't find the block that this choice: ", c.text, " poitn to")
+			continue
+		connect_blocks(next_block, sender, fork)
 
 
 func remove_fork_connections(fork: fork_command) -> void:
 	var g_node_name: String
 	var g_node_output_idx: int
-
 	for g_node in get_children():
 		if g_node is GraphNode:
-			if g_node.block.outputs.has(fork):
+			if g_node.get_meta("block").outputs.has(fork):
 				g_node_name = g_node.get_name()
-				g_node_output_idx = g_node.block.outputs.find(fork)
+				g_node_output_idx = g_node.get_meta("block").outputs.find(fork)
 				break
 
 	for g_node in get_children():
 		if g_node is GraphNode:
-			if g_node.block.inputs.has(fork):
+			if g_node.get_meta("block").inputs.has(fork):
 				disconnect_node(
 					g_node_name,
 					g_node_output_idx,
 					g_node.get_name(),
-					g_node.block.inputs.find(fork)
+					g_node.get_meta("block").inputs.find(fork)
 				)
 				g_node.delete_inputs(fork)
 
 	for g_node in get_children():
 		if g_node is GraphNode:
-			if g_node.block.outputs.has(fork):
+			if g_node.get_meta("block").outputs.has(fork):
 				g_node.delete_outputs(fork)
 
 
@@ -218,12 +216,12 @@ func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
 			var g_node_meta: block = g_node.get_meta("block")
 			if g_node_meta == sender:
 				g_node.add_g_node_output(fork)
-				sender_idx = g_node.block.outputs.find(fork)
+				sender_idx = g_node_meta.outputs.find(fork)
 				sender_name = g_node.get_name()
 
 			if g_node_meta == receiver:
 				g_node.add_g_node_input(fork)
-				receiver_idx = g_node.block.inputs.find(fork)
+				receiver_idx = g_node_meta.inputs.find(fork)
 				receiver_name = g_node.get_name()
 
 	connect_node(sender_name, sender_idx, receiver_name, receiver_idx)

@@ -20,7 +20,7 @@ func preview():
 			if c.next_block == null:
 				choices_str.append("Empty")
 				continue
-			choices_str.append(c.next_block.name)
+			choices_str.append(c.next_block)
 		return String("Fork to: " + String(choices_str))
 
 

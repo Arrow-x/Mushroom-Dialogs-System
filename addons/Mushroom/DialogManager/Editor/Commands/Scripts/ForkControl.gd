@@ -70,7 +70,7 @@ func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo) -> 
 			create_choice_controle(i)
 
 
-func _on_connecting(sender) -> void:
+func _on_connecting(sender: block) -> void:
 	graph.update_block_flow(sender, current_fork)
 
 

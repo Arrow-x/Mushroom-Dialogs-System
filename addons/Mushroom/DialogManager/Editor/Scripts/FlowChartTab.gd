@@ -66,7 +66,6 @@ func _on_Button_pressed() -> void:
 	save_to_disc(flowchart.resource_path)
 
 
-# BUG: Godot Crashes when saving a graph_edit that has a node connected to itself
 func save_to_disc(path: String, overwrite := false) -> void:
 	var packed_scene = PackedScene.new()
 	packed_scene.pack(graph_edit)
