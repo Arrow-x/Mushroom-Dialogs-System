@@ -20,9 +20,9 @@ func _ready() -> void:
 		connect("close_request", self, "_on_GraphNode_closed")
 
 
-func delete_inputs(fork: fork_command):
+func delete_inputs(fork: fork_command) -> void:
 	var block: block = get_meta("block")
-	var idx = block.inputs.find(fork)
+	var idx := block.inputs.find(fork)
 	set_slot_enabled_left(idx, false)
 	if idx < c_inputs.size():
 		c_inputs[idx].queue_free()
@@ -30,9 +30,9 @@ func delete_inputs(fork: fork_command):
 	block.inputs.erase(fork)
 
 
-func delete_outputs(fork: fork_command):
+func delete_outputs(fork: fork_command) -> void:
 	var block: block = get_meta("block")
-	var idx = block.outputs.find(fork)
+	var idx := block.outputs.find(fork)
 	set_slot_enabled_right(idx, false)
 	if idx < c_outputs.size():
 		c_outputs[idx].queue_free()
