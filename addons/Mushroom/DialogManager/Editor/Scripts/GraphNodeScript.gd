@@ -35,10 +35,13 @@ func remove_slot(
 	meta_slots: Array, control_slots: Array, left_or_right: bool, fork: fork_command
 ) -> void:
 	var idx := meta_slots.find(fork)
-	if left_or_right:
-		set_slot_enabled_right(idx, false)
-	else:
-		set_slot_enabled_left(idx, false)
+
+	for f in meta_slots:
+		if left_or_right:
+			set_slot_enabled_right(meta_slots.find(f), false)
+		else:
+			set_slot_enabled_left(meta_slots.find(f), false)
+
 	if control_slots.size() > 0:
 		control_slots[idx].queue_free()
 		control_slots.remove(idx)
