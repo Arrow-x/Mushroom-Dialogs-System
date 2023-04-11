@@ -21,7 +21,15 @@ func sync_flowchart_graph() -> void:
 		if g_node is GraphNode:
 			for command in g_node.get_meta("block").commands:
 				if command is fork_command:
-					update_block_flow(g_node.get_meta("block"), command)
+					for c in command.choices:
+						var next_block: block
+						for b in get_node("../../").flowchart.blocks.keys():
+							if c.next_block == b:
+								next_block = get_node("../../").flowchart.blocks[b]
+						if next_block == null:
+							print("can't find the block that this choice: ", c.text, " poitn to")
+							continue
+						connect_blocks(next_block, g_node.get_meta("block"), command, false)
 
 
 func _on_AddBlockButton_pressed() -> void:
