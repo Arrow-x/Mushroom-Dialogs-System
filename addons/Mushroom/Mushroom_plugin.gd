@@ -7,6 +7,10 @@ var editor_instance
 
 func _enter_tree():
 	editor_instance = editor.instance()
+	remove_autoload_singleton("MushroomDialogManager")
+	add_autoload_singleton(
+		"MushroomDialogManager", "res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
+	)
 	get_editor_interface().get_editor_viewport().add_child(editor_instance)
 	make_visible(false)
 
