@@ -109,7 +109,12 @@ func close_node(d_node: String) -> void:
 							continue
 						if not g.get_meta("block").outputs.has(i):
 							continue
-						connect_blocks(deconecting_node.get_meta("block"), g.get_meta("block"), i)
+						connect_node(
+							g.get_name(),
+							g.get_meta("block").outputs.find(i),
+							deconecting_node.get_name(),
+							deconnecting_node_meta.inputs.find(i)
+						)
 						break
 		# Removie the blook commands and the it's editor
 		var command_tree: Tree = get_node(
