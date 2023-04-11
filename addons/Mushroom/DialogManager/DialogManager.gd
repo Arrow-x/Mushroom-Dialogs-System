@@ -84,6 +84,7 @@ func execute_dialog() -> void:
 					):
 						current_choices.append(null)
 						continue
+				# BUG: there is no block in next_block, just a String, should look up the block in the Flowchart
 				current_choices.append(cbi.choices[i].next_block)
 				UI.add_choice(cbi.choices[i], i, cbi.choices[i].next_index)
 			UI.show_choice()
