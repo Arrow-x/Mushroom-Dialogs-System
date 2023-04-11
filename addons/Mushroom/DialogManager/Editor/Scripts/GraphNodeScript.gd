@@ -22,16 +22,39 @@ func _ready() -> void:
 
 func delete_inputs(fork: fork_command) -> void:
 	var block: block = get_meta("block")
-	var idx := block.inputs.find(fork)
-	set_slot_enabled_left(idx, false)
-	if idx < c_inputs.size():
-		c_inputs[idx].queue_free()
-		c_inputs.remove(idx)
-	block.inputs.erase(fork)
+	remove_slot(block.inputs, c_inputs, false, fork)
 
 
 func delete_outputs(fork: fork_command) -> void:
 	var block: block = get_meta("block")
+	remove_slot(block.outputs, c_outputs, true, fork)
+
+
+# remove a slot from true:  right, false: left
+func remove_slot(
+	meta_slots: Array, control_slots: Array, left_or_right: bool, fork: fork_command
+) -> void:
+	var idx := meta_slots.find(fork)
+	if left_or_right:
+		set_slot_enabled_right(idx, false)
+	else:
+		set_slot_enabled_left(idx, false)
+	if control_slots.size() > 0:
+		control_slots[idx].queue_free()
+		control_slots.remove(idx)
+	meta_slots.erase(fork)
+
+	for f in meta_slots:
+		if left_or_right:
+			set_slot_enabled_right(meta_slots.find(f), true)
+			set_slot_type_right(meta_slots.find(f), 1)
+			set_slot_color_right(meta_slots.find(f), f.f_color)
+		else:
+			set_slot_enabled_left(meta_slots.find(f), true)
+			set_slot_type_left(meta_slots.find(f), 1)
+			set_slot_color_left(meta_slots.find(f), f.f_color)
+
+
 func add_g_node_output(fork: fork_command, mod_block: bool = true) -> void:
 	var block: block = get_meta("block")
 	if mod_block:
