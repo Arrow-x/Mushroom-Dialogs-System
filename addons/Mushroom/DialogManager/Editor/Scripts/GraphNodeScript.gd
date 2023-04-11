@@ -32,47 +32,38 @@ func delete_inputs(fork: fork_command) -> void:
 
 func delete_outputs(fork: fork_command) -> void:
 	var block: block = get_meta("block")
+func add_g_node_output(fork: fork_command, mod_block: bool = true) -> void:
+	var block: block = get_meta("block")
+	if mod_block:
+		if !block.outputs.has(fork):
+			block.outputs.append(fork)
 	var idx := block.outputs.find(fork)
-	set_slot_enabled_right(idx, false)
-	if idx < c_outputs.size():
-		c_outputs[idx].queue_free()
-		c_outputs.remove(idx)
-	block.outputs.erase(fork)
+	if !is_slot_enabled_right(idx):
+		create_contorl_for_g_node_connection(c_outputs, fork)
+		set_slot_enabled_right(idx, true)
+		set_slot_type_right(idx, 1)
+		set_slot_color_right(idx, fork.f_color)
 
 
-func add_g_node_output(fork: fork_command) -> void:
+func add_g_node_input(fork: fork_command, mod_block: bool = true) -> void:
 	var block: block = get_meta("block")
-	if !block.outputs.has(fork):
-		var cc: Control = Control.new()
-		cc.rect_min_size = Vector2(10, 10)
-		add_child(cc)
-		cc.set_owner(self)
-		block.outputs.append(fork)
-		c_outputs.append(cc)
-	set_slot_enabled_right(block.outputs.find(fork), true)
-	set_slot_type_right(block.outputs.find(fork), 1)
-	set_slot_color_right(block.outputs.find(fork), fork.f_color)
+	if mod_block:
+		if !block.inputs.has(fork):
+			block.inputs.append(fork)
+	var idx := block.inputs.find(fork)
+	if !is_slot_enabled_left(idx):
+		create_contorl_for_g_node_connection(c_inputs, fork)
+		set_slot_enabled_left(idx, true)
+		set_slot_type_left(idx, 1)
+		set_slot_color_left(idx, fork.f_color)
 
 
-func add_g_node_input(fork: fork_command, delete_undo: bool = false) -> void:
-	var block: block = get_meta("block")
-	if delete_undo == true:
-		var cc: Control = Control.new()
-		cc.rect_min_size = Vector2(10, 10)
-		add_child(cc)
-		cc.set_owner(self)
-		c_inputs.append(cc)
-
-	if !block.inputs.has(fork):
-		var cc: Control = Control.new()
-		cc.rect_min_size = Vector2(10, 10)
-		add_child(cc)
-		cc.set_owner(self)
-		block.inputs.append(fork)
-		c_inputs.append(cc)
-	set_slot_enabled_left(block.inputs.find(fork), true)
-	set_slot_type_left(block.inputs.find(fork), 1)
-	set_slot_color_left(block.inputs.find(fork), fork.f_color)
+func create_contorl_for_g_node_connection(io_c: Array, fork: fork_command) -> void:
+	var cc: Control = Control.new()
+	cc.rect_min_size = Vector2(10, 10)
+	add_child(cc)
+	cc.set_owner(self)
+	io_c.append(cc)
 
 
 func _on_GraphNode_raise_request() -> void:

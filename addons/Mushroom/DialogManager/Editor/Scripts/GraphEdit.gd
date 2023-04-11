@@ -224,7 +224,9 @@ func remove_fork_connections(fork: fork_command) -> void:
 				g_node.delete_outputs(fork)
 
 
-func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
+func connect_blocks(
+	receiver: block, sender: block, fork: fork_command, mod_block: bool = true
+) -> void:
 	if receiver == null:
 		return
 	var sender_idx
@@ -235,12 +237,12 @@ func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
 		if g_node is GraphNode:
 			var g_node_meta: block = g_node.get_meta("block")
 			if g_node_meta == sender:
-				g_node.add_g_node_output(fork)
+				g_node.add_g_node_output(fork, mod_block)
 				sender_idx = g_node_meta.outputs.find(fork)
 				sender_name = g_node.get_name()
 
 			if g_node_meta == receiver:
-				g_node.add_g_node_input(fork)
+				g_node.add_g_node_input(fork, mod_block)
 				receiver_idx = g_node_meta.inputs.find(fork)
 				receiver_name = g_node.get_name()
 
