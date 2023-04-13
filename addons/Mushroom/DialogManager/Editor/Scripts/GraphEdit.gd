@@ -11,6 +11,8 @@ onready var enter_name_scene: PackedScene = preload(
 var g_node_posititon := Vector2(40, 40)
 var undo_redo: UndoRedo
 
+var flowchart: FlowChart
+
 signal g_node_clicked
 signal flow_changed
 signal graph_node_close
