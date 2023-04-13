@@ -21,7 +21,15 @@ func sync_flowchart_graph() -> void:
 		if g_node is GraphNode:
 			for command in g_node.get_meta("block").commands:
 				if command is fork_command:
-					update_block_flow(g_node.get_meta("block"), command)
+					for c in command.choices:
+						var next_block: block
+						for b in get_node("../../").flowchart.blocks.keys():
+							if c.next_block == b:
+								next_block = get_node("../../").flowchart.blocks[b]
+						if next_block == null:
+							print("can't find the block that this choice: ", c.text, " poitn to")
+							continue
+						connect_blocks(next_block, g_node.get_meta("block"), command, false)
 
 
 func _on_AddBlockButton_pressed() -> void:
@@ -61,7 +69,9 @@ func add_block(title, offset = null, in_block = null) -> void:
 			var gnode_meta = gnode.get_meta("block")
 			if not gnode_meta.outputs.has(i):
 				continue
-			node.add_g_node_input(i, true)
+
+			node.add_g_node_input(i, false)
+
 			connect_node(
 				gnode.get_name(),
 				gnode_meta.outputs.find(i),
@@ -79,47 +89,65 @@ func close_node(d_node: String) -> void:
 			continue
 		if closed_node.title != d_node:
 			continue
-		for closed_node_output in closed_node.get_meta("block").outputs:
+
+		var closed_node_meta: block = closed_node.get_meta("block")
+
+		for closed_node_output in closed_node_meta.outputs:
 			for deconecting_node in get_children():
 				if not deconecting_node is GraphNode:
 					continue
-				if not deconecting_node.get_meta("block").inputs.has(closed_node_output):
+
+				var deconnecting_node_meta: block = deconecting_node.get_meta("block")
+
+				if not deconnecting_node_meta.inputs.has(closed_node_output):
 					continue
+
 				# disconnect all the nodes that are connected first
-				for d_input in deconecting_node.get_meta("block").inputs:
+				for d_input in deconnecting_node_meta.inputs:
 					for refresh_node in get_children():
 						if not refresh_node is GraphNode:
 							continue
 						if not refresh_node.get_meta("block").outputs.has(d_input):
 							continue
+
 						disconnect_node(
 							refresh_node.get_name(),
 							refresh_node.get_meta("block").outputs.find(d_input),
 							deconecting_node.get_name(),
-							deconecting_node.get_meta("block").inputs.find(d_input)
+							deconnecting_node_meta.inputs.find(d_input)
 						)
+
 						break
+
 				# delete the deleted fork
 				deconecting_node.delete_inputs(closed_node_output)
+
 				# reconect all the inputs
-				var d_i: Array = deconecting_node.get_meta("block").inputs
-				for i in d_i:
+				for i in deconnecting_node_meta.inputs:
 					for g in get_children():
 						if not g is GraphNode:
 							continue
 						if not g.get_meta("block").outputs.has(i):
 							continue
-						connect_blocks(deconecting_node.get_meta("block"), g.get_meta("block"), i)
+						connect_node(
+							g.get_name(),
+							g.get_meta("block").outputs.find(i),
+							deconecting_node.get_name(),
+							deconnecting_node_meta.inputs.find(i)
+						)
 						break
+
 		# Removie the blook commands and the it's editor
 		var command_tree: Tree = get_node(
 			"../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"
 		)
-		if command_tree.current_block == closed_node.get_meta("block"):
+		if command_tree.current_block == closed_node_meta:
 			command_tree.full_clear()
 			for s in command_tree.commands_settings.get_children():
 				s.queue_free()
-		get_node("../../").flowchart.blocks.erase(closed_node.get_meta("block").name)
+
+		get_node("../../").flowchart.blocks.erase(closed_node_meta.name)
+
 		# and then delete the node
 		closed_node.queue_free()
 
@@ -204,7 +232,9 @@ func remove_fork_connections(fork: fork_command) -> void:
 				g_node.delete_outputs(fork)
 
 
-func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
+func connect_blocks(
+	receiver: block, sender: block, fork: fork_command, mod_block: bool = true
+) -> void:
 	if receiver == null:
 		return
 	var sender_idx
@@ -215,12 +245,12 @@ func connect_blocks(receiver: block, sender: block, fork: fork_command) -> void:
 		if g_node is GraphNode:
 			var g_node_meta: block = g_node.get_meta("block")
 			if g_node_meta == sender:
-				g_node.add_g_node_output(fork)
+				g_node.add_g_node_output(fork, mod_block)
 				sender_idx = g_node_meta.outputs.find(fork)
 				sender_name = g_node.get_name()
 
 			if g_node_meta == receiver:
-				g_node.add_g_node_input(fork)
+				g_node.add_g_node_input(fork, mod_block)
 				receiver_idx = g_node_meta.inputs.find(fork)
 				receiver_name = g_node.get_name()
 
