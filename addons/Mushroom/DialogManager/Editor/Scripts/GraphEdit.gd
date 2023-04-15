@@ -1,9 +1,6 @@
 tool
 extends GraphEdit
 
-onready var graph_node: PackedScene = preload(
-	"res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn"
-)
 onready var enter_name_scene: PackedScene = preload(
 	"res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn"
 )
@@ -43,6 +40,7 @@ func _on_AddBlockButton_pressed() -> void:
 
 func add_block(title, offset = null, in_block = null) -> void:
 	var node: GraphNode = graph_node.instance()
+	var node: GraphNode = load("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn").instance()
 	node.title = title
 	if offset == null:
 		node.offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
