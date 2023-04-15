@@ -39,15 +39,21 @@ func _on_AddBlockButton_pressed() -> void:
 	enter_name.connect("new_text_confirm", self, "on_new_text_confirm")
 
 
-func add_block(title, offset = null, in_block = null) -> void:
-	var node: GraphNode = graph_node.instance()
+func add_block(title: String, offset = null, in_block: block = null) -> void:
+	create_GraphNode_from_block(title, offset, in_block)
+	if in_block != null:
+		print("reconnectiong")
+		connect_block_inputs(in_block)
+		connect_block_outputs(in_block)
+
+
+func create_GraphNode_from_block(title: String, offset = null, in_block: block = null) -> void:
 	var node: GraphNode = load("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn").instance()
 	node.title = title
 	if offset == null:
 		node.offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
 	else:
 		node.offset = offset
-
 	var _new_block: block
 	if in_block == null:
 		_new_block = block.new()
@@ -64,23 +70,22 @@ func add_block(title, offset = null, in_block = null) -> void:
 	node.set_owner(self)
 	graph_nodes[title] = node
 
+
+func connect_block_inputs(_new_block: block) -> void:
 	for i in _new_block.inputs:
-		for gnode in get_children():
-			if not gnode is GraphNode:
-				continue
-			var gnode_meta = gnode.get_meta("block")
-			if not gnode_meta.outputs.has(i):
-				continue
+		graph_nodes[_new_block.name].add_g_node_input(i, false)
+		var fb := flowchart.blocks
+		var err := connect_node(
+			graph_nodes[i.origin_block].get_name(),
+			fb[i.origin_block].block.outputs.find(i),
+			graph_nodes[_new_block.name].get_name(),
+			_new_block.inputs.find(i)
+		)
+		if err != OK:
+			print("failure! to connect inputs")
 
-			node.add_g_node_input(i, false)
 
-			connect_node(
-				gnode.get_name(),
-				gnode_meta.outputs.find(i),
-				node.get_name(),
-				_new_block.inputs.find(i)
-			)
-
+func connect_block_outputs(_new_block: block) -> void:
 	for o in _new_block.outputs:
 		update_block_flow(_new_block, o)
 
