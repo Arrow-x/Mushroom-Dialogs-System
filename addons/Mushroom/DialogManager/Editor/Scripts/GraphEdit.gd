@@ -16,20 +16,13 @@ signal flow_changed
 signal graph_node_close
 
 
-func sync_flowchart_graph() -> void:
-	for g_node in get_children():
-		if g_node is GraphNode:
-			for command in g_node.get_meta("block").commands:
-				if command is fork_command:
-					for c in command.choices:
-						var next_block: block
-						for b in get_node("../../").flowchart.blocks.keys():
-							if c.next_block == b:
-								next_block = get_node("../../").flowchart.blocks[b]
-						if next_block == null:
-							print("can't find the block that this choice: ", c.text, " poitn to")
-							continue
-						connect_blocks(next_block, g_node.get_meta("block"), command, false)
+func sync_flowchart_graph(fl: FlowChart) -> void:
+	flowchart = fl
+	var fb := flowchart.blocks
+	for b in fb:
+		create_GraphNode_from_block(b, fb[b].offset, fb[b].block)
+	for b in fb:
+		connect_block_outputs(fb[b].block)
 
 
 func _on_AddBlockButton_pressed() -> void:
