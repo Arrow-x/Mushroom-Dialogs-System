@@ -55,7 +55,7 @@ func add_block(title, offset = null, in_block = null) -> void:
 	else:
 		_new_block = in_block
 
-	get_node("../../").flowchart.blocks[_new_block.name] = _new_block
+	flowchart.blocks[title] = {block = _new_block, offset = node.offset}
 	node.set_meta("block", _new_block)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
 	node.connect("dragging", self, "on_node_dragged", [], CONNECT_PERSIST)
@@ -148,7 +148,7 @@ func close_node(d_node: String) -> void:
 			for s in command_tree.commands_settings.get_children():
 				s.queue_free()
 
-		get_node("../../").flowchart.blocks.erase(closed_node_meta.name)
+		flowchart.blocks.erase(closed_node_meta.name)
 		graph_nodes.erase(closed_node_meta.name)
 
 		# and then delete the node
@@ -177,11 +177,8 @@ func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title
 
 
 func set_node_offset(title: String, offset: Vector2) -> void:
-	for b in get_children():
-		if b is GraphNode:
-			if b.title == title:
-				b.set_offset(offset)
 	graph_nodes[title].set_offset(offset)
+	flowchart.blocks[title].offset = offset
 
 
 func on_new_text_confirm(new_title: String) -> void:
@@ -200,9 +197,9 @@ func update_block_flow(sender: block, fork: fork_command) -> void:
 	remove_fork_connections(fork)
 	for c in fork.choices:
 		var next_block: block
-		for b in get_node("../../").flowchart.blocks.keys():
+		for b in flowchart.blocks:
 			if c.next_block == b:
-				next_block = get_node("../../").flowchart.blocks[b]
+				next_block = flowchart.blocks[b].block
 		if next_block == null:
 			print("can't find the block that this choice: ", c.text, " poitn to")
 			continue
