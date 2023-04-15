@@ -5,6 +5,7 @@ class_name fork_command
 var type: String = "fork"
 export var f_color: Color
 export(Array, Resource) var choices
+export var origin_block: String
 
 
 func _init():

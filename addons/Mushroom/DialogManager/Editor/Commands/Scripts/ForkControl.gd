@@ -58,12 +58,14 @@ func free_choice_control(choice: Control = null) -> void:
 	is_changed()
 
 
-func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo) -> void:
+func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo, ge: GraphEdit) -> void:
 	current_fork = f
 	fc = flowcharttab.flowchart
-	graph = flowcharttab.graph_edit
+	graph = ge
 	current_block = cb
 	undo_redo = ur
+
+	current_fork.origin_block = current_block.name
 
 	if f.choices != null:
 		for i in f.choices:

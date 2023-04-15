@@ -32,6 +32,9 @@ func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
 		graph_edit.connect("graph_node_close", self, "undo_redo_graph_edit")
 		graph_edit.undo_redo = sent_undo_redo
 		get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree").full_clear()
+		get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree").undo_redo = sent_undo_redo
+		get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree").graph_edit = graph_edit
+
 		graph_edit.sync_flowchart_graph(flowchart)
 
 

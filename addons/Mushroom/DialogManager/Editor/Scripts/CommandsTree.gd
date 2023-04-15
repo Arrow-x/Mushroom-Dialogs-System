@@ -10,8 +10,9 @@ onready var commands_settings: Panel = get_node("../../CommandsSettings")
 
 onready var flowchart_tab: Control = get_node(_flowchart_tab)
 var current_block: block
-onready var undo_redo: UndoRedo = flowchart_tab.undo_redo
+onready var undo_redo: UndoRedo
 var current_node_block: String = ""
+var graph_edit: GraphEdit
 
 var current_command_item: Command
 var current_command_column
@@ -70,7 +71,7 @@ func create_commands(graph_edit = null, node_name = null) -> void:
 		return
 
 	full_clear()
-	flowchart_tab.graph_edit.set_selected(node)
+	# flowchart_tab.graph_edit.set_selected(node)
 	commands_settings._currnet_title = meta.name
 	current_block = meta
 	current_node_block = node.title
@@ -276,7 +277,7 @@ func create_command_editor(item: TreeItem = null) -> void:
 		elif current_item is fork_command:
 			var fork_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
 			commands_settings.add_child(fork_control, true)
-			fork_control.set_up(current_item, flowchart_tab, current_block, undo_redo)
+			fork_control.set_up(current_item, flowchart_tab, current_block, undo_redo, graph_edit)
 
 		elif current_item is condition_command:
 			var condition_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn").instance()
