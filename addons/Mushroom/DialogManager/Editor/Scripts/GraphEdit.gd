@@ -9,6 +9,7 @@ var g_node_posititon := Vector2(40, 40)
 var undo_redo: UndoRedo
 
 var flowchart: FlowChart
+var graph_nodes: Dictionary
 
 signal g_node_clicked
 signal flow_changed
@@ -61,6 +62,7 @@ func add_block(title, offset = null, in_block = null) -> void:
 	node.connect("node_closed", self, "on_node_close", [], CONNECT_PERSIST)
 	add_child(node)
 	node.set_owner(self)
+	graph_nodes[title] = node
 
 	for i in _new_block.inputs:
 		for gnode in get_children():
@@ -147,6 +149,7 @@ func close_node(d_node: String) -> void:
 				s.queue_free()
 
 		get_node("../../").flowchart.blocks.erase(closed_node_meta.name)
+		graph_nodes.erase(closed_node_meta.name)
 
 		# and then delete the node
 		closed_node.queue_free()
@@ -178,6 +181,7 @@ func set_node_offset(title: String, offset: Vector2) -> void:
 		if b is GraphNode:
 			if b.title == title:
 				b.set_offset(offset)
+	graph_nodes[title].set_offset(offset)
 
 
 func on_new_text_confirm(new_title: String) -> void:
