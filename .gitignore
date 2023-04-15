@@ -1,7 +1,6 @@
 .import
 Tests
-icon.png.import
-
-addons/godot-plugin-refresher
 logs
+icon.png.import
+addons/godot-plugin-refresher
 addons/zylann.editor_debugger
