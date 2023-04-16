@@ -35,7 +35,6 @@ func _on_AddBlockButton_pressed() -> void:
 func add_block(title: String, offset = null, in_block: block = null) -> void:
 	create_GraphNode_from_block(title, offset, in_block)
 	if in_block != null:
-		print("reconnectiong")
 		connect_block_inputs(in_block)
 		connect_block_outputs(in_block)
 
@@ -191,66 +190,24 @@ func on_new_text_confirm(new_title: String) -> void:
 	undo_redo.commit_action()
 
 
-func update_block_flow(sender: block, fork: fork_command) -> void:
-	remove_fork_connections(fork)
+func update_block_flow(sender: block, fork: fork_command, mod: bool = true) -> void:
+	graph_nodes[sender.name].add_g_node_output(fork, mod)
+	for b in graph_nodes:
+		if flowchart.blocks[b].block.inputs.has(fork):
+			disconnect_node(
+				graph_nodes[sender.name].get_name(),
+				sender.outputs.find(fork),
+				graph_nodes[b].get_name(),
+				flowchart.blocks[b].block.inputs.find(fork)
+			)
+			graph_nodes[b].delete_inputs(fork)
+
 	for c in fork.choices:
-		var next_block: block
-		for b in flowchart.blocks:
-			if c.next_block == b:
-				next_block = flowchart.blocks[b].block
-		if next_block == null:
-			print("can't find the block that this choice: ", c.text, " poitn to")
-			continue
-		connect_blocks(next_block, sender, fork)
-
-
-func remove_fork_connections(fork: fork_command) -> void:
-	var g_node_name: String
-	var g_node_output_idx: int
-	for g_node in get_children():
-		if g_node is GraphNode:
-			if g_node.get_meta("block").outputs.has(fork):
-				g_node_name = g_node.get_name()
-				g_node_output_idx = g_node.get_meta("block").outputs.find(fork)
-				break
-
-	for g_node in get_children():
-		if g_node is GraphNode:
-			if g_node.get_meta("block").inputs.has(fork):
-				disconnect_node(
-					g_node_name,
-					g_node_output_idx,
-					g_node.get_name(),
-					g_node.get_meta("block").inputs.find(fork)
-				)
-				g_node.delete_inputs(fork)
-
-	for g_node in get_children():
-		if g_node is GraphNode:
-			if g_node.get_meta("block").outputs.has(fork):
-				g_node.delete_outputs(fork)
-
-
-func connect_blocks(
-	receiver: block, sender: block, fork: fork_command, mod_block: bool = true
-) -> void:
-	if receiver == null:
-		return
-	var sender_idx
-	var receiver_idx
-	var sender_name: String
-	var receiver_name: String
-	for g_node in get_children():
-		if g_node is GraphNode:
-			var g_node_meta: block = g_node.get_meta("block")
-			if g_node_meta == sender:
-				g_node.add_g_node_output(fork, mod_block)
-				sender_idx = g_node_meta.outputs.find(fork)
-				sender_name = g_node.get_name()
-
-			if g_node_meta == receiver:
-				g_node.add_g_node_input(fork, mod_block)
-				receiver_idx = g_node_meta.inputs.find(fork)
-				receiver_name = g_node.get_name()
-
-	connect_node(sender_name, sender_idx, receiver_name, receiver_idx)
+		var c_destination = c.next_block
+		graph_nodes[c_destination].add_g_node_input(fork, mod)
+		connect_node(
+			graph_nodes[sender.name].get_name(),
+			sender.outputs.find(fork),
+			graph_nodes[c_destination].get_name(),
+			flowchart.blocks[c_destination].block.inputs.find(fork)
+		)
