@@ -8,6 +8,8 @@ signal node_closed
 var c_inputs: Array
 var c_outputs: Array
 
+var already_connected: Array
+
 
 func _ready() -> void:
 	if !is_connected("raise_request", self, "_on_GraphNode_raise_request"):

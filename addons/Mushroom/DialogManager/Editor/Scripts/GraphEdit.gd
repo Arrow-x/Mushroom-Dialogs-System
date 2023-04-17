@@ -192,7 +192,7 @@ func on_new_text_confirm(new_title: String) -> void:
 
 func update_block_flow(sender: block, fork: fork_command, mod: bool = true) -> void:
 	graph_nodes[sender.name].add_g_node_output(fork, mod)
-	for b in graph_nodes:
+	for b in graph_nodes[sender.name].already_connected:
 		if flowchart.blocks[b].block.inputs.has(fork):
 			disconnect_node(
 				graph_nodes[sender.name].get_name(),
@@ -200,11 +200,13 @@ func update_block_flow(sender: block, fork: fork_command, mod: bool = true) -> v
 				graph_nodes[b].get_name(),
 				flowchart.blocks[b].block.inputs.find(fork)
 			)
+			graph_nodes[sender.name].already_connected.erase(b)
 			graph_nodes[b].delete_inputs(fork)
 
 	for c in fork.choices:
 		var c_destination = c.next_block
 		graph_nodes[c_destination].add_g_node_input(fork, mod)
+		graph_nodes[sender.name].already_connected.append(c_destination)
 		connect_node(
 			graph_nodes[sender.name].get_name(),
 			sender.outputs.find(fork),
