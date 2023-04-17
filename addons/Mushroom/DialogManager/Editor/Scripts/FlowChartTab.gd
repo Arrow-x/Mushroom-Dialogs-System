@@ -38,6 +38,7 @@ func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
 		command_tree.full_clear()
 		command_tree.undo_redo = sent_undo_redo
 		command_tree.graph_edit = graph_edit
+		command_tree.flowchart_tab = self
 
 		graph_edit.sync_flowchart_graph(flowchart)
 
