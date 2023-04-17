@@ -69,7 +69,7 @@ func create_commands(graph_edit = null, node_name = null) -> void:
 		return
 
 	full_clear()
-	# flowchart_tab.graph_edit.set_selected(node)
+	graph_edit.set_selected(node)
 	commands_settings._currnet_title = meta.name
 	current_block = meta
 	current_node_block = node.title
