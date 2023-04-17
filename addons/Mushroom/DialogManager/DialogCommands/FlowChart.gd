@@ -8,5 +8,5 @@ export(Array, Resource) var characters: Array
 export var blocks: Dictionary
 
 
-func get_name():
+func get_name() -> String:
 	return self.resource_path.get_file().trim_suffix(".tres")
