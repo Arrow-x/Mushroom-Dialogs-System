@@ -65,7 +65,7 @@ func create_GraphNode_from_block(title: String, offset = null, in_block: block =
 
 func connect_block_inputs(_new_block: block) -> void:
 	for i in _new_block.inputs:
-		graph_nodes[_new_block.name].add_g_node_input(i, false)
+		graph_nodes[_new_block.name].add_g_node_input(i)
 		var fb := flowchart.blocks
 		var err := connect_node(
 			graph_nodes[i.origin_block].get_name(),
@@ -82,6 +82,7 @@ func connect_block_outputs(_new_block: block) -> void:
 		update_block_flow(_new_block, o)
 
 
+# TODO: oooh I am looking forwadf to refactoring this massive boy
 func close_node(d_node: String) -> void:
 	for closed_node in get_children():
 		if not closed_node is GraphNode:
@@ -190,8 +191,8 @@ func on_new_text_confirm(new_title: String) -> void:
 	undo_redo.commit_action()
 
 
-func update_block_flow(sender: block, fork: fork_command, mod: bool = true) -> void:
-	graph_nodes[sender.name].add_g_node_output(fork, mod)
+func update_block_flow(sender: block, fork: fork_command) -> void:
+	graph_nodes[sender.name].add_g_node_output(fork)
 	for b in graph_nodes[sender.name].already_connected:
 		if flowchart.blocks[b].block.inputs.has(fork):
 			disconnect_node(
@@ -205,7 +206,7 @@ func update_block_flow(sender: block, fork: fork_command, mod: bool = true) -> v
 
 	for c in fork.choices:
 		var c_destination = c.next_block
-		graph_nodes[c_destination].add_g_node_input(fork, mod)
+		graph_nodes[c_destination].add_g_node_input(fork)
 		graph_nodes[sender.name].already_connected.append(c_destination)
 		connect_node(
 			graph_nodes[sender.name].get_name(),

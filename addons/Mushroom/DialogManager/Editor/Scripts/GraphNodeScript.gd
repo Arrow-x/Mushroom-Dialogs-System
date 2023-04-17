@@ -60,11 +60,10 @@ func remove_slot(
 			set_slot_color_left(meta_slots.find(f), f.f_color)
 
 
-func add_g_node_output(fork: fork_command, mod_block: bool = true) -> void:
+func add_g_node_output(fork: fork_command) -> void:
 	var block: block = get_meta("block")
-	if mod_block:
-		if !block.outputs.has(fork):
-			block.outputs.append(fork)
+	if !block.outputs.has(fork):
+		block.outputs.append(fork)
 	var idx := block.outputs.find(fork)
 	if !is_slot_enabled_right(idx):
 		create_contorl_for_g_node_connection(c_outputs, fork)
@@ -73,11 +72,10 @@ func add_g_node_output(fork: fork_command, mod_block: bool = true) -> void:
 		set_slot_color_right(idx, fork.f_color)
 
 
-func add_g_node_input(fork: fork_command, mod_block: bool = true) -> void:
+func add_g_node_input(fork: fork_command) -> void:
 	var block: block = get_meta("block")
-	if mod_block:
-		if !block.inputs.has(fork):
-			block.inputs.append(fork)
+	if !block.inputs.has(fork):
+		block.inputs.append(fork)
 	var idx := block.inputs.find(fork)
 	if !is_slot_enabled_left(idx):
 		create_contorl_for_g_node_connection(c_inputs, fork)
