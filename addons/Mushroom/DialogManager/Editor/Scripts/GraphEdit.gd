@@ -81,75 +81,40 @@ func connect_block_outputs(_new_block: block) -> void:
 		update_block_flow(_new_block, o)
 
 
-# TODO: oooh I am looking forwadf to refactoring this massive boy
 func close_node(d_node: String) -> void:
-	for closed_node in get_children():
-		if not closed_node is GraphNode:
-			continue
-		if closed_node.title != d_node:
-			continue
+	for closed_node_output in flowchart.get_block(d_node).outputs:
+		for c in closed_node_output.choices:
+			var deconecting_node = c.next_block
+			for d_input in flowchart.get_block(deconecting_node).inputs:
+				disconnect_node(
+					graph_nodes[d_input.origin_block].get_name(),
+					flowchart.get_block(d_input.origin_block).outputs.find(d_input),
+					graph_nodes[deconecting_node].get_name(),
+					flowchart.get_block(deconecting_node).inputs.find(d_input)
+				)
+			graph_nodes[deconecting_node].delete_inputs(closed_node_output)
 
-		var closed_node_meta: block = closed_node.get_meta("block")
+			for d_input in flowchart.get_block(deconecting_node).inputs:
+				connect_node(
+					graph_nodes[d_input.origin_block].get_name(),
+					flowchart.get_block(d_input.origin_block).outputs.find(d_input),
+					graph_nodes[deconecting_node].get_name(),
+					flowchart.get_block(deconecting_node).inputs.find(d_input)
+				)
 
-		for closed_node_output in closed_node_meta.outputs:
-			for deconecting_node in get_children():
-				if not deconecting_node is GraphNode:
-					continue
+	# Removie the blook commands and the it's editor
+	var command_tree: Tree = get_node(
+		"../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"
+	)
+	if command_tree.current_block == flowchart.get_block(d_node):
+		command_tree.full_clear()
+		for s in command_tree.commands_settings.get_children():
+			s.queue_free()
 
-				var deconnecting_node_meta: block = deconecting_node.get_meta("block")
-
-				if not deconnecting_node_meta.inputs.has(closed_node_output):
-					continue
-
-				# disconnect all the nodes that are connected first
-				for d_input in deconnecting_node_meta.inputs:
-					for refresh_node in get_children():
-						if not refresh_node is GraphNode:
-							continue
-						if not refresh_node.get_meta("block").outputs.has(d_input):
-							continue
-
-						disconnect_node(
-							refresh_node.get_name(),
-							refresh_node.get_meta("block").outputs.find(d_input),
-							deconecting_node.get_name(),
-							deconnecting_node_meta.inputs.find(d_input)
-						)
-
-						break
-
-				# delete the deleted fork
-				deconecting_node.delete_inputs(closed_node_output)
-
-				# reconect all the inputs
-				for i in deconnecting_node_meta.inputs:
-					for g in get_children():
-						if not g is GraphNode:
-							continue
-						if not g.get_meta("block").outputs.has(i):
-							continue
-						connect_node(
-							g.get_name(),
-							g.get_meta("block").outputs.find(i),
-							deconecting_node.get_name(),
-							deconnecting_node_meta.inputs.find(i)
-						)
-						break
-
-		# Removie the blook commands and the it's editor
-		var command_tree: Tree = get_node(
-			"../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"
-		)
-		if command_tree.current_block == closed_node_meta:
-			command_tree.full_clear()
-			for s in command_tree.commands_settings.get_children():
-				s.queue_free()
-
-		flowchart.blocks.erase(closed_node_meta.name)
-		graph_nodes.erase(closed_node_meta.name)
-
-		# and then delete the node
-		closed_node.queue_free()
+	flowchart.blocks.erase(d_node)
+	# and then delete the node
+	graph_nodes[d_node].queue_free()
+	graph_nodes.erase(d_node)
 
 
 func on_node_close(node: GraphNode) -> void:
