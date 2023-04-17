@@ -20,9 +20,9 @@ func sync_flowchart_graph(fl: FlowChart) -> void:
 	flowchart = fl
 	var fb := flowchart.blocks
 	for b in fb:
-		create_GraphNode_from_block(b, fb[b].offset, fb[b].block)
+		create_GraphNode_from_block(b, flowchart.get_block_offset(b), flowchart.get_block(b))
 	for b in fb:
-		connect_block_outputs(fb[b].block)
+		connect_block_outputs(flowchart.get_block(b))
 
 
 func _on_AddBlockButton_pressed() -> void:
@@ -66,10 +66,9 @@ func create_GraphNode_from_block(title: String, offset = null, in_block: block =
 func connect_block_inputs(_new_block: block) -> void:
 	for i in _new_block.inputs:
 		graph_nodes[_new_block.name].add_g_node_input(i)
-		var fb := flowchart.blocks
 		var err := connect_node(
 			graph_nodes[i.origin_block].get_name(),
-			fb[i.origin_block].block.outputs.find(i),
+			flowchart.get_block(i.origin_block).outputs.find(i),
 			graph_nodes[_new_block.name].get_name(),
 			_new_block.inputs.find(i)
 		)
@@ -194,12 +193,12 @@ func on_new_text_confirm(new_title: String) -> void:
 func update_block_flow(sender: block, fork: fork_command) -> void:
 	graph_nodes[sender.name].add_g_node_output(fork)
 	for b in graph_nodes[sender.name].already_connected:
-		if flowchart.blocks[b].block.inputs.has(fork):
+		if flowchart.get_block(b).inputs.has(fork):
 			disconnect_node(
 				graph_nodes[sender.name].get_name(),
 				sender.outputs.find(fork),
 				graph_nodes[b].get_name(),
-				flowchart.blocks[b].block.inputs.find(fork)
+				flowchart.get_block(b).inputs.find(fork)
 			)
 			graph_nodes[sender.name].already_connected.erase(b)
 			graph_nodes[b].delete_inputs(fork)
@@ -212,5 +211,5 @@ func update_block_flow(sender: block, fork: fork_command) -> void:
 			graph_nodes[sender.name].get_name(),
 			sender.outputs.find(fork),
 			graph_nodes[c_destination].get_name(),
-			flowchart.blocks[c_destination].block.inputs.find(fork)
+			flowchart.get_block(c_destination).inputs.find(fork)
 		)
