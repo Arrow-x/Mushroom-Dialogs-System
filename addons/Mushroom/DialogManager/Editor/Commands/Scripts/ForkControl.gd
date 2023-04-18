@@ -46,6 +46,7 @@ func add_choice_contol(c: choice = null, idx: int = -1) -> void:
 		current_fork.choices.append(n_c)
 	create_choice_controle(n_c, idx)
 	is_changed()
+	_on_connecting(current_block)
 
 
 func free_choice_control(choice: Control = null) -> void:
@@ -56,6 +57,7 @@ func free_choice_control(choice: Control = null) -> void:
 		current_fork.choices.erase(choice.current_choice)
 		choice.queue_free()
 	is_changed()
+	_on_connecting(current_block)
 
 
 func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo, ge: GraphEdit) -> void:
