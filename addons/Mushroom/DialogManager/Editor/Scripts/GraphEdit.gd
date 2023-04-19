@@ -76,9 +76,9 @@ func connect_block_inputs(_new_block: block) -> void:
 			print("failure! to connect inputs")
 
 
-func connect_block_outputs(_new_block: block) -> void:
+func connect_block_outputs(_new_block: block, del_first: bool = false) -> void:
 	for o in _new_block.outputs:
-		update_block_flow(_new_block, o)
+		update_block_flow(_new_block, o, del_first)
 
 
 func close_node(d_node: String) -> void:
@@ -159,20 +159,20 @@ func on_new_text_confirm(new_title: String) -> void:
 	undo_redo.commit_action()
 
 
-func update_block_flow(sender: block, fork: fork_command) -> void:
+func update_block_flow(sender: block, fork: fork_command, delete_first: bool) -> void:
 	graph_nodes[sender.name].add_g_node_output(fork)
-	# BUG: after loading  from disc, the disconnect fails
-	for b in graph_nodes[sender.name].already_connected:
-		if not flowchart.get_block(b).inputs.has(fork):
-			continue
-		disconnect_node(
-			graph_nodes[sender.name].get_name(),
-			sender.outputs.find(fork),
-			graph_nodes[b].get_name(),
-			flowchart.get_block(b).inputs.find(fork)
-		)
-		graph_nodes[sender.name].already_connected.erase(b)
-		delete_connected_input(b, fork)
+	if delete_first:
+		for b in graph_nodes[sender.name].already_connected:
+			if not flowchart.get_block(b).inputs.has(fork):
+				continue
+			disconnect_node(
+				graph_nodes[sender.name].get_name(),
+				sender.outputs.find(fork),
+				graph_nodes[b].get_name(),
+				flowchart.get_block(b).inputs.find(fork)
+			)
+			graph_nodes[sender.name].already_connected.erase(b)
+			delete_connected_input(b, fork)
 
 	for c in fork.choices:
 		var c_destination: String = c.next_block
