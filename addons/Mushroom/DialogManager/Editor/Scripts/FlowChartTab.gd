@@ -26,7 +26,7 @@ func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
 		graph_edit.connect(
 			"g_node_clicked",
 			get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),
-			"on_GraphNode_clicked"
+			"create_commands"
 		)
 		graph_edit.connect("flow_changed", self, "changed_flowchart")
 		graph_edit.connect("graph_node_close", self, "undo_redo_graph_edit")

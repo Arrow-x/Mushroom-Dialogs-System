@@ -15,8 +15,6 @@ var graph_edit: GraphEdit
 var current_command_item: Command
 var current_command_column
 
-# TODO: Set up drag and droping, multiselect...
-
 
 func _ready():
 	connect("button_pressed", self, "_on_Tree_button_pressed")
@@ -43,36 +41,13 @@ func _on_Tree_button_pressed(item: TreeItem, _collumn: int, _id: int):
 	undo_redo.commit_action()
 
 
-func on_GraphNode_clicked(graph_edit, node_name) -> void:
-	undo_redo.create_action("seletect block")
-	undo_redo.add_do_method(self, "create_commands", graph_edit, node_name)
-	undo_redo.add_undo_method(self, "create_commands", graph_edit, current_node_block)
-	undo_redo.commit_action()
-
-
-func create_commands(graph_edit = null, node_name = null) -> void:
-	# TODO:  why is this so complicated? the graph node should just send it's block
-	var node
-	if graph_edit and node_name:
-		for g in graph_edit.get_children():
-			if g is GraphNode:
-				if g.get_title() == node_name:
-					node = g
-	else:
+func create_commands(meta: block) -> void:
+	if meta == current_block or meta == null:
 		return
-	if node == null:
-		return
-
-	var meta = node.get_meta("block")
-	# Don't update if the clicked g_node is already selected
-	if meta == current_block:
-		return
-
 	full_clear()
-	graph_edit.set_selected(node)
 	commands_settings._currnet_title = meta.name
 	current_block = meta
-	current_node_block = node.title
+	current_node_block = meta.name
 	current_block_label.text = "current block: " + meta.name
 
 	if commands_settings.get_child_count() != 0:

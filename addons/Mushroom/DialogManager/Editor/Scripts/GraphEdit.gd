@@ -11,6 +11,8 @@ var undo_redo: UndoRedo
 var flowchart: FlowChart
 var graph_nodes: Dictionary
 
+var current_selected_graph_node: String
+
 signal g_node_clicked
 signal flow_changed
 signal graph_node_close
@@ -130,8 +132,17 @@ func on_node_close(node: GraphNode) -> void:
 	undo_redo.commit_action()
 
 
-func on_GraphNode_clicked(node):
-	emit_signal("g_node_clicked", self, node.get_title())
+func on_GraphNode_clicked(node: GraphNode) -> void:
+	undo_redo.create_action("select Block node")
+	undo_redo.add_do_method(self, "send_block_to_tree", node.title)
+	undo_redo.add_undo_method(self, "send_block_to_tree", current_selected_graph_node)
+	undo_redo.commit_action()
+	current_selected_graph_node = node.title
+
+
+func send_block_to_tree(node: String) -> void:
+	emit_signal("g_node_clicked", flowchart.get_block(node))
+	set_selected(graph_nodes[node])
 
 
 func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title: String) -> void:
