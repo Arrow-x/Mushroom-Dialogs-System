@@ -171,11 +171,20 @@ func get_TreeItems(parent: TreeItem) -> Array:
 	return children
 
 
-func find_TreeItem(item: TreeItem) -> int:
-	var treeitems: Array = get_TreeItems(get_root())
+func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
+	var treeitems: Array
+	if parent == null:
+		treeitems = get_TreeItems(get_root())
+	else:
+		treeitems = get_TreeItems(parent)
+
 	for i in treeitems.size():
 		if treeitems[i] == item:
 			return i
+		elif treeitems[i].get_meta("0") is condition_command:
+			var r: int = find_TreeItem(item, treeitems[i])
+			if r >= 0:
+				return r
 	return -2
 
 
