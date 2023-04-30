@@ -15,11 +15,14 @@ var graph_edit: GraphEdit
 var current_command_item: Command
 var current_command_column
 
+signal moved(item, to_item, shift)
+
 
 func _ready():
 	connect("button_pressed", self, "_on_Tree_button_pressed")
 	var rmb_pop = get_node("CommandRmbPopup/AddCommandRmbPopupMenu")
 	rmb_pop.connect("index_pressed", self, "_on_add_command", [rmb_pop, true])
+	connect("moved", self, "move_treeitem")
 
 
 func _on_Tree_button_pressed(item: TreeItem, _collumn: int, _id: int):
@@ -165,6 +168,33 @@ func delete_command_clean(command) -> void:
 		if c_s.get_command() == command:
 			c_s.queue_free()
 
+
+func get_drag_data(position: Vector2) -> TreeItem:  # begin drag
+	var preview := Label.new()
+	preview.text = get_selected().get_text(0)
+
+	set_drag_preview(preview)  # not necessary
+
+	return get_selected()  # TreeItem
+
+
+func can_drop_data(position: Vector2, data) -> bool:
+	if not data is TreeItem:
+		return false
+	var to_item := get_item_at_position(position)
+	if to_item is TreeItem:
+		if to_item.get_meta("0") is condition_command:
+			set_drop_mode_flags(DROP_MODE_INBETWEEN | DROP_MODE_ON_ITEM)
+		else:
+			set_drop_mode_flags(DROP_MODE_INBETWEEN)
+	return true
+
+
+func drop_data(position: Vector2, item: TreeItem) -> void:  # end drag
+	var to_item := get_item_at_position(position)
+	var shift := get_drop_section_at_position(position)
+	# shift == 0 if dropping on item, -1, +1 if in between
+	emit_signal("moved", item, to_item, shift)
 func get_TreeItems(parent: TreeItem) -> Array:
 	var item = parent.get_children()
 	var children = []
