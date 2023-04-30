@@ -134,7 +134,7 @@ func add_command(command: Command, idx: int = -1, parent = null) -> TreeItem:
 	return _item
 
 
-func delete_command(command: Command, tree: TreeItem = null) -> void:
+func delete_command(command: Command, tree: TreeItem = null) -> int:
 	var d_tree: Array
 	var d_block: block
 
@@ -149,18 +149,21 @@ func delete_command(command: Command, tree: TreeItem = null) -> void:
 		if c.get_meta("0") == command:
 			c.free()
 			d_block.commands.erase(command)
+			delete_command_clean(command)
+			return 1
 		elif c.get_meta("0") is condition_command:
-			delete_command(command, c)
-			continue
-		else:
-			continue
+			var b = delete_command(command, c)
+			if b != 500:
+				delete_command_clean(command)
+				return 1
+	return 500
 
-		update_commad_tree(current_block)
-		for c_s in commands_settings.get_children():
-			if c_s.get_command() == command:
-				c_s.queue_free()
-		return
 
+func delete_command_clean(command) -> void:
+	update_commad_tree(current_block)
+	for c_s in commands_settings.get_children():
+		if c_s.get_command() == command:
+			c_s.queue_free()
 
 func get_TreeItems(parent: TreeItem) -> Array:
 	var item = parent.get_children()
