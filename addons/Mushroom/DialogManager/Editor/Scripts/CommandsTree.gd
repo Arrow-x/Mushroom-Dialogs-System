@@ -148,18 +148,19 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 		d_tree = get_TreeItems(get_root())
 		d_block = current_block
 
-	for c in d_tree:
-		if c.get_meta("0") == command:
-			c.free()
-			d_block.commands.erase(command)
+	for c in d_tree.size():
+		var d_c = d_tree[c]
+		if d_c.get_meta("0") == command:
+			d_c.free()
+			d_block.commands.remove(c)
 			delete_command_clean(command)
 			return 1
-		elif c.get_meta("0") is condition_command:
-			var b = delete_command(command, c)
-			if b != 500:
+		elif d_c.get_meta("0") is condition_command:
+			var b = delete_command(command, d_c)
+			if b != -1:
 				delete_command_clean(command)
 				return 1
-	return 500
+	return -1
 
 
 func delete_command_clean(command) -> void:
