@@ -223,20 +223,21 @@ func move_treeitem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 		0:
 			c_to_item.condition_block.commands.append(c_item)
 		1:
-			if not c_to_item is condition_command:
+			if c_to_item is condition_command:
+				c_to_item.condition_block.commands.insert(0, c_item)
+			else:
 				if to_item_idx + 1 > c_p_to_item.size():
 					c_p_to_item.append(c_item)
 				else:
 					c_p_to_item.insert(to_item_idx + 1, c_item)
-			elif c_to_item is condition_command:
-				c_to_item.condition_block.commands.insert(0, c_item)
 		-100:
 			c_p_to_item.append(c_item)
 
 	if item.get_parent() == p_to_item:
-		if not c_to_item is condition_command:
+		if not to_item_idx == -2:
 			if item_idx > to_item_idx:
 				item_idx = item_idx + 1
+
 	if item.get_parent() == get_root():
 		current_block.commands.remove(item_idx)
 	else:
