@@ -24,7 +24,7 @@ func _ready():
 	connect("button_pressed", self, "_on_Tree_button_pressed")
 	var rmb_pop = get_node("CommandRmbPopup/AddCommandRmbPopupMenu")
 	rmb_pop.connect("index_pressed", self, "_on_add_command", [rmb_pop, true])
-	connect("moved", self, "move_treeitem")
+	connect("moved", self, "_on_move_treeitem")
 
 
 func _on_Tree_button_pressed(item: TreeItem, _collumn: int, _id: int):
@@ -120,7 +120,7 @@ func create_command(command: Command, idx: int = -1, parent = null) -> void:
 
 
 func add_command(command: Command, idx: int = -1, parent = null) -> TreeItem:
-	# TODO: put the current block as a meta data on the parent, should simplify alot of code?
+	# TODO: put the parrent array as a meta data on the item
 	if get_root() == null:
 		parent = self.create_item()
 		self.set_hide_root(true)
@@ -201,14 +201,24 @@ func drop_data(position: Vector2, item: TreeItem) -> void:  # end drag
 	emit_signal("moved", item, to_item, shift)
 
 
-func move_treeitem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
+func _on_move_treeitem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
+	var item_idx: int = find_TreeItem(item)
+	var parent_item: TreeItem = item.get_parent() if item != null else get_root()
+	var c_p_to_item: Array = (
+		current_block.commands
+		if parent_item == get_root()
+		else parent_item.get_meta("0").condition_block.commands
+	)
+	undo_redo.create_action("drag command")
+	undo_redo.add_do_method(self, "move_treeitem", item, to_item, shift)
+	undo_redo.add_undo_method(self, "undo_move_treeitem", item.get_meta("0"), c_p_to_item, item_idx)
+	undo_redo.commit_action()
+
+
+func move_treeitem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) -> void:
 	var to_item_idx: int = find_TreeItem(to_item)
 	var item_idx: int = find_TreeItem(item)
-
-	if to_item_idx == -1:
-		return
 	var c_item := item.get_meta("0") as Command
-
 	var c_to_item: Command = to_item.get_meta("0") if to_item != null else null
 	var p_to_item: TreeItem = to_item.get_parent() if to_item != null else get_root()
 	var c_p_to_item: Array = (
@@ -246,6 +256,23 @@ func move_treeitem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 	update_commad_tree(current_block)
 
 
+func undo_move_treeitem(og_item_command: Command, og_parent_commands: Array, og_idx: int):
+	var to_item := get_TreeItems_from_Command(og_item_command)
+	var p_to_item := to_item.get_parent()
+	var c_p_to_item: Command = p_to_item.get_meta("0") if p_to_item.has_meta("0") else null
+	var item_idx := find_TreeItem(to_item)
+
+	if item_idx == -2:
+		print("can't find it")
+		return
+	if to_item == null or p_to_item == get_root():
+		current_block.commands.remove(item_idx)
+	elif c_p_to_item is condition_command:
+		c_p_to_item.condition_block.commands.remove(item_idx)
+	og_parent_commands.insert(og_idx, og_item_command)
+	update_commad_tree(current_block)
+
+
 func get_TreeItems(parent: TreeItem) -> Array:
 	var item = parent.get_children()
 	var children = []
@@ -257,6 +284,8 @@ func get_TreeItems(parent: TreeItem) -> Array:
 
 func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
 	var treeitems: Array
+	if item == null:
+		return -2
 	if parent == null:
 		treeitems = get_TreeItems(get_root())
 	else:
