@@ -69,12 +69,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 allow_rmb_select = true
 hide_root = true
-select_mode = 2
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-_flowchart_tab = NodePath("../../../..")
 
 [node name="CommandRmbPopup" type="PopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"]
 margin_right = 20.0
