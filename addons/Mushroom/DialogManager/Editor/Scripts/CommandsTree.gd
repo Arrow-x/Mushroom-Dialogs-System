@@ -16,10 +16,9 @@ var current_command_item: Command
 var current_command_column
 
 signal moved(item, to_item, shift)
+enum resault { success = 1, not_found = -2 }
 
 
-# TODO: add a the current command to the root
-# TODO: have them have the same refrence? or this will create overhead?
 func _ready():
 	connect("button_pressed", self, "_on_Tree_button_pressed")
 	var rmb_pop = get_node("CommandRmbPopup/AddCommandRmbPopupMenu")
@@ -74,7 +73,7 @@ func full_clear() -> void:
 
 func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 	if current_block == null:
-		print("there is no block selected")
+		push_error("there is no block selected")
 		return
 
 	var _command: Command = pop_up.get_item_metadata(id).duplicate()
@@ -119,17 +118,13 @@ func create_command(command: Command, idx: int = -1, parent = null) -> void:
 	update_commad_tree(current_block)
 
 
-func add_command(command: Command, idx: int = -1, parent = null) -> TreeItem:
-	# TODO: put the parrent array as a meta data on the item
+func add_command(command: Command, idx: int = -1, parent: TreeItem = null) -> TreeItem:
+	var l_parent := parent
 	if get_root() == null:
-		parent = self.create_item()
+		l_parent = self.create_item()
 		self.set_hide_root(true)
 
-	var p = parent
-	if parent != null:
-		p = parent
-
-	var _item: TreeItem = self.create_item(p, idx)
+	var _item: TreeItem = self.create_item(l_parent, idx)
 	_item.set_text(0, command.preview())
 	_item.set_icon(0, command.get_icon())
 	_item.set_meta("command", command)
@@ -157,16 +152,16 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 			d_c.free()
 			d_block.commands.remove(c)
 			delete_command_clean(command)
-			return 1
+			return resault.success
 		elif d_c.get_meta("command") is condition_command:
 			var b = delete_command(command, d_c)
-			if b != -1:
+			if b != resault.not_found:
 				delete_command_clean(command)
-				return 1
-	return -1
+				return resault.success
+	return resault.not_found
 
 
-func delete_command_clean(command) -> void:
+func delete_command_clean(command: Command) -> void:
 	update_commad_tree(current_block)
 	for c_s in commands_settings.get_children():
 		if c_s.get_command() == command:
@@ -209,6 +204,12 @@ func _on_move_treeitem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 		if parent_item == get_root()
 		else parent_item.get_meta("command").condition_block.commands
 	)
+
+	if not to_item == null:
+		if to_item.get_parent() == item:
+			push_error("can't dragge into self")
+			return
+
 	undo_redo.create_action("drag command")
 	undo_redo.add_do_method(self, "move_treeitem", item, to_item, shift)
 	undo_redo.add_undo_method(
@@ -228,6 +229,8 @@ func move_treeitem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) 
 		if p_to_item == get_root()
 		else p_to_item.get_meta("command").condition_block.commands
 	)
+	if item_idx == resault.not_found:
+		return
 
 	match shift:
 		-1:
@@ -245,10 +248,12 @@ func move_treeitem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) 
 		-100:
 			c_p_to_item.append(c_item)
 
-	if item.get_parent() == p_to_item:
-		if not to_item_idx == -2:
-			if item_idx > to_item_idx:
-				item_idx = item_idx + 1
+	if not to_item_idx == resault.not_found:
+		if not shift == 0:
+			if item.get_parent() == p_to_item:
+				if not shift == 1 and not c_to_item is condition_command:
+					if item_idx > to_item_idx:
+						item_idx = item_idx + 1
 
 	if item.get_parent() == get_root():
 		current_block.commands.remove(item_idx)
@@ -268,8 +273,8 @@ func undo_move_treeitem(og_item_command: Command, og_parent_commands: Array, og_
 	)
 	var item_idx := find_TreeItem(to_item)
 
-	if item_idx == -2:
-		print("can't find it")
+	if item_idx == resault.not_found:
+		push_error("can't find it")
 		return
 	if to_item == null or p_to_item == get_root():
 		current_block.commands.remove(item_idx)
@@ -291,7 +296,7 @@ func get_TreeItems(parent: TreeItem) -> Array:
 func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
 	var treeitems: Array
 	if item == null:
-		return -2
+		return resault.not_found
 	if parent == null:
 		treeitems = get_TreeItems(get_root())
 	else:
@@ -302,15 +307,15 @@ func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
 			return i
 		elif treeitems[i].get_meta("command") is condition_command:
 			var r: int = find_TreeItem(item, treeitems[i])
-			if r >= 0:
+			if r != resault.not_found:
 				return r
-	return -2
+	return resault.not_found
 
 
 func prepare_command_editor(cmd: Command) -> void:
 # TODO: why does this exit?
 	if cmd == null:
-		print("can't find treeitem")
+		push_error("can't find treeitem")
 		return
 	create_command_editor(get_TreeItems_from_Command(cmd))
 
