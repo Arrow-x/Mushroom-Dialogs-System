@@ -26,6 +26,10 @@ func sync_flowchart_graph(fl: FlowChart) -> void:
 	for b in fb:
 		connect_block_outputs(flowchart.get_block(b))
 
+	if flowchart.first_block == null:
+		create_GraphNode_from_block("first_block")
+		on_GraphNode_clicked(graph_nodes["first_block"])
+
 
 func _on_AddBlockButton_pressed() -> void:
 	var enter_name: WindowDialog = enter_name_scene.instance()
@@ -59,10 +63,17 @@ func create_GraphNode_from_block(title: String, offset = null, in_block: block =
 	node.set_meta("block", _new_block)
 	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
 	node.connect("dragging", self, "on_node_dragged", [], CONNECT_PERSIST)
-	node.connect("node_closed", self, "on_node_close", [], CONNECT_PERSIST)
+	if title != "first_block":
+		node.connect("node_closed", self, "on_node_close", [], CONNECT_PERSIST)
 	add_child(node)
 	node.set_owner(self)
 	graph_nodes[title] = node
+
+	if title == "first_block":
+		graph_nodes["first_block"].set_modulate(Color("#f8ac52"))
+		flowchart.first_block = flowchart.blocks["first_block"].block
+		node.show_close = false
+		node.selected = true
 
 
 func connect_block_inputs(_new_block: block) -> void:

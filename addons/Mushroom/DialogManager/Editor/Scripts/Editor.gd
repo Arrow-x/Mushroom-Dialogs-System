@@ -14,8 +14,8 @@ func open_flowchart_scene(flowchart_scene: FlowChart, undo_redo: UndoRedo) -> vo
 			return
 
 	var ed := editor_scn.instance()
-	ed.set_flowchart(flowchart_scene, undo_redo)
 	flowcharts_container.add_child(ed)
+	ed.set_flowchart(flowchart_scene, undo_redo)
 
 	ed.name = flowchart_scene.get_name()
 	ed.flow_tabs = f_tabs
