@@ -16,10 +16,9 @@ var current_command_item: Command
 var current_command_column
 
 signal moved(item, to_item, shift)
+enum resault { success = 1, not_found = -2 }
 
 
-# TODO: add a the current command to the root
-# TODO: have them have the same refrence? or this will create overhead?
 func _ready():
 	connect("button_pressed", self, "_on_Tree_button_pressed")
 	var rmb_pop = get_node("CommandRmbPopup/AddCommandRmbPopupMenu")
@@ -28,13 +27,13 @@ func _ready():
 
 
 func _on_Tree_button_pressed(item: TreeItem, _collumn: int, _id: int):
-	var cmd: Command = item.get_meta("0")
+	var cmd: Command = item.get_meta("command")
 	var parent_command: Command = null
 	var idx: int = find_TreeItem(item)
 	var parent: TreeItem = null
 
-	if item.get_parent().has_meta("0"):
-		var parent_meta = item.get_parent().get_meta("0")
+	if item.get_parent().has_meta("command"):
+		var parent_meta = item.get_parent().get_meta("command")
 		if parent_meta is condition_command:
 			parent_command = parent_meta
 			idx = parent_meta.condition_block.commands.find(cmd)
@@ -74,7 +73,7 @@ func full_clear() -> void:
 
 func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 	if current_block == null:
-		print("there is no block selected")
+		push_error("there is no block selected")
 		return
 
 	var _command: Command = pop_up.get_item_metadata(id).duplicate()
@@ -83,7 +82,7 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 	var p: Command = null
 
 	if is_rmb:
-		var selec_m: Command = get_selected().get_meta("0")
+		var selec_m: Command = get_selected().get_meta("command")
 		if selec_m is condition_command:
 			p = selec_m
 		else:
@@ -91,8 +90,8 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 			if selec_p == get_root():
 				idx = find_TreeItem(get_selected()) + 1
 			else:
-				idx = selec_p.get_meta("0").condition_block.commands.find(selec_m) + 1
-				p = selec_p.get_meta("0")
+				idx = selec_p.get_meta("command").condition_block.commands.find(selec_m) + 1
+				p = selec_p.get_meta("command")
 
 	undo_redo.create_action("Added Command")
 	undo_redo.add_do_method(self, "create_command", _command, idx, p)
@@ -119,20 +118,16 @@ func create_command(command: Command, idx: int = -1, parent = null) -> void:
 	update_commad_tree(current_block)
 
 
-func add_command(command: Command, idx: int = -1, parent = null) -> TreeItem:
-	# TODO: put the parrent array as a meta data on the item
+func add_command(command: Command, idx: int = -1, parent: TreeItem = null) -> TreeItem:
+	var l_parent := parent
 	if get_root() == null:
-		parent = self.create_item()
+		l_parent = self.create_item()
 		self.set_hide_root(true)
 
-	var p = parent
-	if parent != null:
-		p = parent
-
-	var _item: TreeItem = self.create_item(p, idx)
+	var _item: TreeItem = self.create_item(l_parent, idx)
 	_item.set_text(0, command.preview())
 	_item.set_icon(0, command.get_icon())
-	_item.set_meta("0", command)
+	_item.set_meta("command", command)
 	_item.add_button(
 		0, load("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png")
 	)
@@ -146,27 +141,27 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 
 	if tree:
 		d_tree = get_TreeItems(tree)
-		d_block = tree.get_meta("0").condition_block
+		d_block = tree.get_meta("command").condition_block
 	else:
 		d_tree = get_TreeItems(get_root())
 		d_block = current_block
 
 	for c in d_tree.size():
 		var d_c = d_tree[c]
-		if d_c.get_meta("0") == command:
+		if d_c.get_meta("command") == command:
 			d_c.free()
 			d_block.commands.remove(c)
 			delete_command_clean(command)
-			return 1
-		elif d_c.get_meta("0") is condition_command:
+			return resault.success
+		elif d_c.get_meta("command") is condition_command:
 			var b = delete_command(command, d_c)
-			if b != -1:
+			if b != resault.not_found:
 				delete_command_clean(command)
-				return 1
-	return -1
+				return resault.success
+	return resault.not_found
 
 
-func delete_command_clean(command) -> void:
+func delete_command_clean(command: Command) -> void:
 	update_commad_tree(current_block)
 	for c_s in commands_settings.get_children():
 		if c_s.get_command() == command:
@@ -187,7 +182,7 @@ func can_drop_data(position: Vector2, data) -> bool:
 		return false
 	var to_item := get_item_at_position(position)
 	if to_item is TreeItem:
-		if to_item.get_meta("0") is condition_command:
+		if to_item.get_meta("command") is condition_command:
 			set_drop_mode_flags(DROP_MODE_INBETWEEN | DROP_MODE_ON_ITEM)
 		else:
 			set_drop_mode_flags(DROP_MODE_INBETWEEN)
@@ -207,25 +202,35 @@ func _on_move_treeitem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 	var c_p_to_item: Array = (
 		current_block.commands
 		if parent_item == get_root()
-		else parent_item.get_meta("0").condition_block.commands
+		else parent_item.get_meta("command").condition_block.commands
 	)
+
+	if not to_item == null:
+		if to_item.get_parent() == item:
+			push_error("can't dragge into self")
+			return
+
 	undo_redo.create_action("drag command")
 	undo_redo.add_do_method(self, "move_treeitem", item, to_item, shift)
-	undo_redo.add_undo_method(self, "undo_move_treeitem", item.get_meta("0"), c_p_to_item, item_idx)
+	undo_redo.add_undo_method(
+		self, "undo_move_treeitem", item.get_meta("command"), c_p_to_item, item_idx
+	)
 	undo_redo.commit_action()
 
 
 func move_treeitem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) -> void:
 	var to_item_idx: int = find_TreeItem(to_item)
 	var item_idx: int = find_TreeItem(item)
-	var c_item := item.get_meta("0") as Command
-	var c_to_item: Command = to_item.get_meta("0") if to_item != null else null
+	var c_item := item.get_meta("command") as Command
+	var c_to_item: Command = to_item.get_meta("command") if to_item != null else null
 	var p_to_item: TreeItem = to_item.get_parent() if to_item != null else get_root()
 	var c_p_to_item: Array = (
 		current_block.commands
 		if p_to_item == get_root()
-		else p_to_item.get_meta("0").condition_block.commands
+		else p_to_item.get_meta("command").condition_block.commands
 	)
+	if item_idx == resault.not_found:
+		return
 
 	match shift:
 		-1:
@@ -243,15 +248,17 @@ func move_treeitem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) 
 		-100:
 			c_p_to_item.append(c_item)
 
-	if item.get_parent() == p_to_item:
-		if not to_item_idx == -2:
-			if item_idx > to_item_idx:
-				item_idx = item_idx + 1
+	if not to_item_idx == resault.not_found:
+		if not shift == 0:
+			if item.get_parent() == p_to_item:
+				if not shift == 1 and not c_to_item is condition_command:
+					if item_idx > to_item_idx:
+						item_idx = item_idx + 1
 
 	if item.get_parent() == get_root():
 		current_block.commands.remove(item_idx)
 	else:
-		item.get_parent().get_meta("0").condition_block.commands.remove(item_idx)
+		item.get_parent().get_meta("command").condition_block.commands.remove(item_idx)
 
 	update_commad_tree(current_block)
 
@@ -259,11 +266,15 @@ func move_treeitem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) 
 func undo_move_treeitem(og_item_command: Command, og_parent_commands: Array, og_idx: int):
 	var to_item := get_TreeItems_from_Command(og_item_command)
 	var p_to_item := to_item.get_parent()
-	var c_p_to_item: Command = p_to_item.get_meta("0") if p_to_item.has_meta("0") else null
+	var c_p_to_item: Command = (
+		p_to_item.get_meta("command")
+		if p_to_item.has_meta("command")
+		else null
+	)
 	var item_idx := find_TreeItem(to_item)
 
-	if item_idx == -2:
-		print("can't find it")
+	if item_idx == resault.not_found:
+		push_error("can't find it")
 		return
 	if to_item == null or p_to_item == get_root():
 		current_block.commands.remove(item_idx)
@@ -285,7 +296,7 @@ func get_TreeItems(parent: TreeItem) -> Array:
 func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
 	var treeitems: Array
 	if item == null:
-		return -2
+		return resault.not_found
 	if parent == null:
 		treeitems = get_TreeItems(get_root())
 	else:
@@ -294,17 +305,17 @@ func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
 	for i in treeitems.size():
 		if treeitems[i] == item:
 			return i
-		elif treeitems[i].get_meta("0") is condition_command:
+		elif treeitems[i].get_meta("command") is condition_command:
 			var r: int = find_TreeItem(item, treeitems[i])
-			if r >= 0:
+			if r != resault.not_found:
 				return r
-	return -2
+	return resault.not_found
 
 
 func prepare_command_editor(cmd: Command) -> void:
 # TODO: why does this exit?
 	if cmd == null:
-		print("can't find treeitem")
+		push_error("can't find treeitem")
 		return
 	create_command_editor(get_TreeItems_from_Command(cmd))
 
@@ -316,7 +327,7 @@ func get_TreeItems_from_Command(command: Command, parent: TreeItem = null) -> Tr
 	else:
 		tree = get_TreeItems(parent)
 	for t in tree:
-		var t_cmd: Command = t.get_meta("0")
+		var t_cmd: Command = t.get_meta("command")
 		if t_cmd == command:
 			return t
 		elif t_cmd is condition_command:
@@ -336,7 +347,7 @@ func update_commad_tree(block: block, parent: TreeItem = null) -> void:
 
 
 func _on_CommandsTree_item_activated() -> void:
-	var sel_c: Command = get_selected().get_meta("0")
+	var sel_c: Command = get_selected().get_meta("command")
 	undo_redo.create_action("selecting a command")
 	undo_redo.add_do_method(self, "prepare_command_editor", sel_c)
 	undo_redo.add_undo_method(self, "prepare_command_editor", current_command_item)
@@ -351,7 +362,7 @@ func create_command_editor(item: TreeItem = null) -> void:
 			c.queue_free()
 		return
 
-	var current_item = item.get_meta("0")
+	var current_item = item.get_meta("command")
 
 	for c in get_TreeItems(get_root()):
 		c.deselect(0)
