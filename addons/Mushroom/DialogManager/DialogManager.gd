@@ -124,11 +124,11 @@ func execute_dialog() -> void:
 					advance()
 
 		"set_var":  #TO DEBUG
-			var req_node_string: String = String(cbi.var_path)
-			if req_node_string.is_rel_path():
-				req_node_string = req_node_string.insert(0, "/root/")
-				cbi.var_path = NodePath(req_node_string)
-			get_node(cbi.var_path).set(cbi.var_name, cbi.var_value)
+			if cbi.var_path.is_rel_path():
+				var req_node_path := NodePath(cbi.var_path.insert(0, "/root/"))
+				get_node(req_node_path).set(cbi.var_name, cbi.var_value)
+			else:
+				push_error("NodePath in change var command is not valid")
 			indexer = indexer + 1
 			advance()
 

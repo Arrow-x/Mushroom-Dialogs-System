@@ -379,6 +379,10 @@ func create_command_editor(item: TreeItem = null) -> void:
 			var condition_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn").instance()
 			commands_settings.add_child(condition_control, true)
 			condition_control.set_up(current_item)
+		elif current_item is set_var_command:
+			var set_var_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SetVar.tscn").instance()
+			commands_settings.add_child(set_var_control, true)
+			set_var_control.set_up(current_item)
 
 
 func _on_CommandsTree_item_rmb_selected(position: Vector2) -> void:
