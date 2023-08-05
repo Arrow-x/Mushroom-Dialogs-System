@@ -11,6 +11,13 @@ export(String, "Left", "Right", "Center") var por_pos: String = "Right"
 
 export var append_text: bool = false
 
+export var is_cond: bool = false
+
+export(String) var required_node
+export var required_var: String
+export var check_val: String
+export(String) var condition_type
+
 
 func preview() -> String:
 	return String("Say: " + name + ": " + say)

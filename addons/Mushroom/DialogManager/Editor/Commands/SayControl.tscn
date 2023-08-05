@@ -11,9 +11,86 @@ script = ExtResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="NameHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="IsCondCheckBox" type="CheckButton" parent="VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 40.0
+text = "Conditional Command"
+
+[node name="CondVBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+visible = false
+margin_top = 44.0
+margin_right = 1024.0
+margin_bottom = 130.0
+
+[node name="ReqNode" type="HBoxContainer" parent="VBoxContainer/CondVBoxContainer"]
 margin_right = 1024.0
 margin_bottom = 24.0
+
+[node name="Label" type="Label" parent="VBoxContainer/CondVBoxContainer/ReqNode"]
+margin_top = 5.0
+margin_right = 99.0
+margin_bottom = 19.0
+text = "Required Node:"
+
+[node name="ReqNodeInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqNode"]
+margin_left = 103.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="ReqVar" type="HBoxContainer" parent="VBoxContainer/CondVBoxContainer"]
+margin_top = 28.0
+margin_right = 1024.0
+margin_bottom = 52.0
+
+[node name="Label" type="Label" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
+margin_top = 5.0
+margin_right = 116.0
+margin_bottom = 19.0
+text = "Required Variable:"
+
+[node name="ReqVarInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
+margin_left = 120.0
+margin_right = 980.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="CheckType" type="MenuButton" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
+margin_left = 984.0
+margin_right = 1024.0
+margin_bottom = 24.0
+focus_mode = 2
+text = "type"
+items = [ "==", null, 0, false, false, 0, 0, null, "", false, "!=", null, 0, false, false, 1, 0, null, "", false, "<", null, 0, false, false, 2, 0, null, "", false, "<=", null, 0, false, false, 3, 0, null, "", false, ">", null, 0, false, false, 4, 0, null, "", false, ">=", null, 0, false, false, 5, 0, null, "", false ]
+
+[node name="ReqVal" type="HBoxContainer" parent="VBoxContainer/CondVBoxContainer"]
+margin_top = 56.0
+margin_right = 1024.0
+margin_bottom = 80.0
+
+[node name="Label2" type="Label" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
+margin_top = 5.0
+margin_right = 39.0
+margin_bottom = 19.0
+text = "Value:"
+
+[node name="CheckValInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
+margin_left = 43.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Seperator" type="Panel" parent="VBoxContainer/CondVBoxContainer"]
+modulate = Color( 0, 0, 0, 1 )
+margin_top = 84.0
+margin_right = 1024.0
+margin_bottom = 86.61
+rect_min_size = Vector2( 0, 2.61 )
+
+[node name="NameHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 44.0
+margin_right = 1024.0
+margin_bottom = 68.0
 
 [node name="NameLabel" type="Label" parent="VBoxContainer/NameHBoxContainer"]
 margin_top = 5.0
@@ -28,8 +105,24 @@ margin_right = 1024.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
+[node name="AppendHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 72.0
+margin_right = 1024.0
+margin_bottom = 96.0
+
+[node name="Label" type="Label" parent="VBoxContainer/AppendHBoxContainer"]
+margin_top = 5.0
+margin_right = 57.0
+margin_bottom = 19.0
+text = "Append: "
+
+[node name="AppendCheckBox" type="CheckBox" parent="VBoxContainer/AppendHBoxContainer"]
+margin_left = 61.0
+margin_right = 85.0
+margin_bottom = 24.0
+
 [node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer"]
-margin_top = 28.0
+margin_top = 100.0
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
@@ -60,7 +153,7 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VSplitContainer"]
 margin_top = 26.0
 margin_right = 1024.0
-margin_bottom = 572.0
+margin_bottom = 500.0
 
 [node name="PortraitHBoxContainer" type="HBoxContainer" parent="VBoxContainer/VSplitContainer/VBoxContainer"]
 margin_right = 1024.0
@@ -99,5 +192,10 @@ size_flags_horizontal = 3
 text = "Choose a Posititon"
 items = [ "Left", null, 0, false, false, 0, 0, null, "", false, "right", null, 0, false, false, 1, 0, null, "", false, "center", null, 0, false, false, 2, 0, null, "", false ]
 
+[connection signal="toggled" from="VBoxContainer/IsCondCheckBox" to="." method="_on_IsCondCheckBox_toggled"]
+[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_ReqNodeInput_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_ReqVarInput_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_CheckValInput_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/NameHBoxContainer/NameLineEdit" to="." method="_on_NameLineEdit_text_changed"]
+[connection signal="toggled" from="VBoxContainer/AppendHBoxContainer/AppendCheckBox" to="." method="_on_AppendCheckBox_toggled"]
 [connection signal="text_changed" from="VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit" to="." method="_on_TextEdit_text_changed"]

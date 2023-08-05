@@ -50,25 +50,19 @@ func execute_dialog() -> void:
 	match cbi.type:
 		#to add: BBCode Support, Better Portraits support
 		"say":  #ToDebug
+			if cbi.is_cond:
+				if (
+					calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type)
+					== false
+				):
+					indexer = indexer + 1
+					advance()
+					return
 			UI.hide_say()
 			UI.add_text(cbi.say, cbi.name, cbi.append_text)
 			UI.add_portrait(cbi.portrait, cbi.por_pos)
 			UI.show_say()
 			indexer = indexer + 1
-
-		"cond_say":
-			if (
-				calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type)
-				== true
-			):
-				UI.hide_say()
-				UI.add_text(cbi.say, cbi.name, cbi.append_text)
-				UI.add_portrait(cbi.portrait, cbi.por_pos)
-				UI.show_say()
-				indexer = indexer + 1
-				return
-			indexer = indexer + 1
-			advance()
 
 		"fork":
 			UI.hide_say()
@@ -165,38 +159,35 @@ func execute_dialog() -> void:
 				advance()
 
 
-func calc_var(req_node: NodePath, req_var: String, chek_val: int, type_cond: String) -> bool:
-	var req_node_string: String = String(req_node)
-
-	if req_node_string.is_rel_path():
-		req_node_string = req_node_string.insert(0, "/root/")
-		req_node = NodePath(req_node_string)
-
-	var req_val = get_node(req_node).get(req_var)
+func calc_var(req_node: NodePath, req_var: String, chek_val, type_cond: String) -> bool:
+	var val_container = get_node(req_node).get(req_var)
+	if val_container == null:
+		push_error("calc_var couldn't get the node")
+		return false
 
 	match type_cond:
 		">=":
-			if chek_val >= req_val:
+			if chek_val >= val_container:
 				return true
 
 		"<=":
-			if chek_val <= req_val:
+			if chek_val <= val_container:
 				return true
 
 		">":
-			if chek_val > req_val:
+			if chek_val > val_container:
 				return true
 
 		"<":
-			if chek_val < req_val:
+			if chek_val < val_container:
 				return true
 
 		"==":
-			if chek_val == req_val:
+			if chek_val == val_container:
 				return true
 
 		"!=":
-			if chek_val != req_val:
+			if chek_val != val_container:
 				return true
 
 	return false
@@ -209,9 +200,9 @@ func _on_make_choice(id: int, index) -> void:
 	execute_dialog()
 
 
-func send_dialog(dblock) -> void:
+func send_flowchart(dblock: FlowChart) -> void:
 	if !is_ON:
-		current_block = dblock
+		current_block = dblock.first_block
 		indexer = 0
 		UI = UI_pc.instance()
 		add_child(UI)
