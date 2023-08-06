@@ -16,9 +16,11 @@ onready var check_type: MenuButton = $VBoxContainer/CondVBoxContainer/ReqVar/Che
 onready var append_check: CheckBox = $VBoxContainer/AppendHBoxContainer/AppendCheckBox
 
 var current_say: say_command
+var undo_redo: UndoRedo
+var current_toogle: bool = false
 
 
-func set_up(c_s: say_command):
+func set_up(c_s: say_command, u_r: UndoRedo):
 	current_say = c_s
 
 	var check_type_popup: PopupMenu = get_node("VBoxContainer/CondVBoxContainer/ReqVar/CheckType").get_popup()
@@ -26,6 +28,7 @@ func set_up(c_s: say_command):
 
 	name_line_edit.text = c_s.name
 	say_text_edit.text = c_s.say
+	undo_redo = u_r
 
 	is_cond.pressed = c_s.is_cond
 	req_node.text = c_s.required_node
@@ -75,7 +78,15 @@ func _on_ReqNodeInput_text_changed(new_text: String) -> void:
 
 
 func _on_IsCondCheckBox_toggled(button_pressed: bool) -> void:
-	# TODO: Undo Redo this most like likly
+	undo_redo.create_action("toggle condition")
+	undo_redo.add_do_method(self, "show_condition_toggle", button_pressed)
+	undo_redo.add_undo_method(self, "show_condition_toggle", current_toogle)
+	undo_redo.commit_action()
+	current_toogle = button_pressed
+
+
+func show_condition_toggle(button_pressed: bool) -> void:
+	is_cond.pressed = button_pressed
 	cond_box.visible = button_pressed
 	current_say.is_cond = button_pressed
 	is_changed()
