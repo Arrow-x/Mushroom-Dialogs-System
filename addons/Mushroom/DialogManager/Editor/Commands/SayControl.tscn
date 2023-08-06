@@ -49,19 +49,19 @@ margin_right = 116.0
 margin_bottom = 19.0
 text = "Required Variable:"
 
-[node name="ReqVarInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
-margin_left = 120.0
-margin_right = 980.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-
 [node name="CheckType" type="MenuButton" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
-margin_left = 984.0
-margin_right = 1024.0
+margin_left = 120.0
+margin_right = 172.0
 margin_bottom = 24.0
 focus_mode = 2
-text = "type"
+text = "type:  "
 items = [ "==", null, 0, false, false, 0, 0, null, "", false, "!=", null, 0, false, false, 1, 0, null, "", false, "<", null, 0, false, false, 2, 0, null, "", false, "<=", null, 0, false, false, 3, 0, null, "", false, ">", null, 0, false, false, 4, 0, null, "", false, ">=", null, 0, false, false, 5, 0, null, "", false ]
+
+[node name="ReqVarInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
+margin_left = 176.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
 
 [node name="ReqVal" type="HBoxContainer" parent="VBoxContainer/CondVBoxContainer"]
 margin_top = 56.0
@@ -87,10 +87,26 @@ margin_right = 1024.0
 margin_bottom = 86.61
 rect_min_size = Vector2( 0, 2.61 )
 
-[node name="NameHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="AppendHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 44.0
 margin_right = 1024.0
 margin_bottom = 68.0
+
+[node name="Label" type="Label" parent="VBoxContainer/AppendHBoxContainer"]
+margin_top = 5.0
+margin_right = 57.0
+margin_bottom = 19.0
+text = "Append: "
+
+[node name="AppendCheckBox" type="CheckBox" parent="VBoxContainer/AppendHBoxContainer"]
+margin_left = 61.0
+margin_right = 85.0
+margin_bottom = 24.0
+
+[node name="NameHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 72.0
+margin_right = 1024.0
+margin_bottom = 96.0
 
 [node name="NameLabel" type="Label" parent="VBoxContainer/NameHBoxContainer"]
 margin_top = 5.0
@@ -104,22 +120,6 @@ margin_left = 64.0
 margin_right = 1024.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
-
-[node name="AppendHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 72.0
-margin_right = 1024.0
-margin_bottom = 96.0
-
-[node name="Label" type="Label" parent="VBoxContainer/AppendHBoxContainer"]
-margin_top = 5.0
-margin_right = 57.0
-margin_bottom = 19.0
-text = "Append: "
-
-[node name="AppendCheckBox" type="CheckBox" parent="VBoxContainer/AppendHBoxContainer"]
-margin_left = 61.0
-margin_right = 85.0
-margin_bottom = 24.0
 
 [node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer"]
 margin_top = 100.0
@@ -196,6 +196,6 @@ items = [ "Left", null, 0, false, false, 0, 0, null, "", false, "right", null, 0
 [connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_ReqNodeInput_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_ReqVarInput_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_CheckValInput_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/NameHBoxContainer/NameLineEdit" to="." method="_on_NameLineEdit_text_changed"]
 [connection signal="toggled" from="VBoxContainer/AppendHBoxContainer/AppendCheckBox" to="." method="_on_AppendCheckBox_toggled"]
+[connection signal="text_changed" from="VBoxContainer/NameHBoxContainer/NameLineEdit" to="." method="_on_NameLineEdit_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit" to="." method="_on_TextEdit_text_changed"]

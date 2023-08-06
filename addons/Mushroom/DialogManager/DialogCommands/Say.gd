@@ -16,7 +16,7 @@ export var is_cond: bool = false
 export(String) var required_node
 export var required_var: String
 export var check_val: String
-export(String) var condition_type
+export(String) var condition_type = "type: "
 
 
 func preview() -> String:

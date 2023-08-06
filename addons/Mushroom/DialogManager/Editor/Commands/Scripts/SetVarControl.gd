@@ -29,5 +29,9 @@ func _on_SetValLineEdit_text_changed(new_text: String) -> void:
 	is_changed()
 
 
+func get_command() -> Command:
+	return command
+
+
 func is_changed() -> void:
 	command.emit_signal("changed")

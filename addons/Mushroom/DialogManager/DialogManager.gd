@@ -48,8 +48,7 @@ func execute_dialog() -> void:
 		return
 
 	match cbi.type:
-		#to add: BBCode Support, Better Portraits support
-		"say":  #ToDebug
+		"say":
 			if cbi.is_cond:
 				if (
 					calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type)
@@ -117,7 +116,7 @@ func execute_dialog() -> void:
 					indexer = indexer + 1
 					advance()
 
-		"set_var":  #TO DEBUG
+		"set_var":
 			if cbi.var_path.is_rel_path():
 				var req_node_path := NodePath(cbi.var_path.insert(0, "/root/"))
 				get_node(req_node_path).set(cbi.var_name, cbi.var_value)
@@ -160,7 +159,7 @@ func execute_dialog() -> void:
 
 
 func calc_var(req_node: NodePath, req_var: String, chek_val, type_cond: String) -> bool:
-	var val_container = get_node(req_node).get(req_var)
+	var val_container = get_node(String(req_node).insert(0, "/root/")).get(req_var)
 	if val_container == null:
 		push_error("calc_var couldn't get the node")
 		return false
@@ -203,6 +202,7 @@ func _on_make_choice(id: int, index) -> void:
 func send_flowchart(dblock: FlowChart) -> void:
 	if !is_ON:
 		current_block = dblock.first_block
+		current_flowchart = dblock
 		indexer = 0
 		UI = UI_pc.instance()
 		add_child(UI)

@@ -9,7 +9,7 @@ export var condition_block: Resource
 export(String) var required_node
 export var required_var: String
 export(String) var check_val
-export(String) var condition_type
+export(String) var condition_type = "Type: "
 
 
 func _init():
