@@ -67,18 +67,16 @@ func execute_dialog() -> void:
 			UI.hide_say()
 			UI.hide_choice()
 			current_choices.clear()
-			for i in cbi.choices.size():
-				if cbi.type == "cond_choice":
+			for choice_idx in cbi.choices.size():
+				var ci: choice = cbi.choices[choice_idx]
+				if ci.is_cond:
 					if (
-						calc_var(
-							cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type
-						)
-						== true
+						calc_var(ci.required_node, ci.required_var, ci.check_val, ci.condition_type)
+						== false
 					):
-						current_choices.append(null)
 						continue
-				current_choices.append(current_flowchart.get_block(cbi.choices[i].next_block))
-				UI.add_choice(cbi.choices[i], i, cbi.choices[i].next_index)
+				current_choices.append(current_flowchart.get_block(ci.next_block))
+				UI.add_choice(ci, choice_idx, ci.next_index)
 			UI.show_choice()
 
 		"jump":  #TO DEBUG

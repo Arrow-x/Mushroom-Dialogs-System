@@ -17,10 +17,6 @@ func get_command() -> Command:
 
 
 func _on_AddChoiceButton_pressed() -> void:
-	adding_choice_action()
-
-
-func adding_choice_action() -> void:
 	undo_redo.create_action("adding_choice")
 	undo_redo.add_do_method(self, "add_choice_contol")
 	undo_redo.add_undo_method(self, "free_choice_control")
@@ -45,7 +41,6 @@ func add_choice_contol(c: choice = null, idx: int = -1) -> void:
 		n_c = c
 		current_fork.choices.append(n_c)
 	create_choice_controle(n_c, idx)
-	is_changed()
 	_on_connecting(current_block)
 
 
@@ -56,7 +51,6 @@ func free_choice_control(choice: Control = null) -> void:
 	else:
 		current_fork.choices.erase(choice.current_choice)
 		choice.queue_free()
-	is_changed()
 	_on_connecting(current_block)
 
 
@@ -76,6 +70,7 @@ func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo, ge:
 
 func _on_connecting(sender: block) -> void:
 	graph.update_block_flow(sender, current_fork, true)
+	is_changed()
 
 
 func is_changed() -> void:
