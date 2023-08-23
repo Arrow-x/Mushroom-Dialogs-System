@@ -397,7 +397,7 @@ func create_command_editor(item: TreeItem = null) -> void:
 		elif current_item is animation_command:
 			var set_var_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.tscn").instance()
 			commands_settings.add_child(set_var_control, true)
-			set_var_control.set_up(current_item)
+			set_var_control.set_up(current_item, undo_redo)
 
 
 func _on_CommandsTree_item_rmb_selected(position: Vector2) -> void:

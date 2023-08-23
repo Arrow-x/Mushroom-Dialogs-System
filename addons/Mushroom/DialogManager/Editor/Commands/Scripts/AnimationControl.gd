@@ -2,6 +2,10 @@ tool
 extends Node
 
 var animation_cmd: animation_command
+var undo_redo: UndoRedo
+
+var current_from_end: bool
+
 onready var anim_type_ctrl: MenuButton = $VBoxContainer/TypeHBoxContainer/TypeMenu
 onready var anim_path_ctrl: LineEdit = $VBoxContainer/PathHBoxContainer/PathLineEdit
 onready var anim_name_ctrl: LineEdit = $VBoxContainer/ANameHBoxContainer/NameLineEdit
@@ -10,8 +14,9 @@ onready var speed_ctrl: LineEdit = $VBoxContainer/SpeedHBoxContainer/SpeedLineEd
 onready var from_end_ctrl: CheckButton = $VBoxContainer/FromEndHBoxContainer/FromEndCheck
 
 
-func set_up(a_cmd: animation_command) -> void:
+func set_up(a_cmd: animation_command, u_r: UndoRedo) -> void:
 	animation_cmd = a_cmd
+	undo_redo = u_r
 	anim_type_ctrl.get_popup().connect(
 		"id_pressed", self, "_on_anim_type", [anim_type_ctrl.get_popup()]
 	)
@@ -44,6 +49,15 @@ func _on_SpeedLineEdit_text_changed(new_text: String) -> void:
 
 
 func _on_FromEndCheck_toggled(button_pressed: bool) -> void:
+	undo_redo.create_action("toggle from_end")
+	undo_redo.add_do_method(self, "toggle_from_end", button_pressed)
+	undo_redo.add_undo_method(self, "toggle_from_end", current_from_end)
+	undo_redo.commit_action()
+	current_from_end = button_pressed
+
+
+func toggle_from_end(button_pressed: bool) -> void:
+	from_end_ctrl.pressed = button_pressed
 	animation_cmd.from_end = button_pressed
 	is_changed()
 
