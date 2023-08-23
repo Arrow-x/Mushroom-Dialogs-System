@@ -9,8 +9,8 @@ var current_from_end: bool
 onready var anim_type_ctrl: MenuButton = $VBoxContainer/TypeHBoxContainer/TypeMenu
 onready var anim_path_ctrl: LineEdit = $VBoxContainer/PathHBoxContainer/PathLineEdit
 onready var anim_name_ctrl: LineEdit = $VBoxContainer/ANameHBoxContainer/NameLineEdit
-onready var blend_ctrl: LineEdit = $VBoxContainer/BlendHBoxContainer/BlendLineEdit
-onready var speed_ctrl: LineEdit = $VBoxContainer/SpeedHBoxContainer/SpeedLineEdit
+onready var blend_ctrl: SpinBox = $VBoxContainer/BlendHBoxContainer/BlendLineEdit
+onready var speed_ctrl: SpinBox = $VBoxContainer/SpeedHBoxContainer/SpeedLineEdit
 onready var from_end_ctrl: CheckButton = $VBoxContainer/FromEndHBoxContainer/FromEndCheck
 
 
@@ -23,8 +23,8 @@ func set_up(a_cmd: animation_command, u_r: UndoRedo) -> void:
 	anim_type_ctrl.text = animation_cmd.anim_type
 	anim_path_ctrl.text = animation_cmd.animation_path
 	anim_name_ctrl.text = animation_cmd.animation_name
-	blend_ctrl.text = String(animation_cmd.custom_blend)
-	speed_ctrl.text = String(animation_cmd.custom_speed)
+	blend_ctrl.value = animation_cmd.custom_blend
+	speed_ctrl.value = animation_cmd.custom_speed
 	from_end_ctrl.pressed = animation_cmd.from_end
 
 
@@ -38,13 +38,13 @@ func _on_NameLineEdit_text_changed(new_text: String) -> void:
 	is_changed()
 
 
-func _on_BlendLineEdit_text_changed(new_text: String) -> void:
-	animation_cmd.custom_blend = float(new_text)
+func _on_SpeedLineEdit_value_changed(value: float) -> void:
+	animation_cmd.custom_speed = value
 	is_changed()
 
 
-func _on_SpeedLineEdit_text_changed(new_text: String) -> void:
-	animation_cmd.custom_speed = float(new_text)
+func _on_BlendLineEdit_value_changed(value: float) -> void:
+	animation_cmd.custom_blend = value
 	is_changed()
 
 

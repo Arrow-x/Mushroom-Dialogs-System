@@ -55,11 +55,13 @@ margin_right = 45.0
 margin_bottom = 19.0
 text = "Blend: "
 
-[node name="BlendLineEdit" type="LineEdit" parent="VBoxContainer/BlendHBoxContainer"]
+[node name="BlendLineEdit" type="SpinBox" parent="VBoxContainer/BlendHBoxContainer"]
 margin_left = 49.0
 margin_right = 1024.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
+step = 0.1
+page = 10.0
 
 [node name="SpeedHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 84.0
@@ -72,11 +74,13 @@ margin_right = 51.0
 margin_bottom = 19.0
 text = "Speed : "
 
-[node name="SpeedLineEdit" type="LineEdit" parent="VBoxContainer/SpeedHBoxContainer"]
+[node name="SpeedLineEdit" type="SpinBox" parent="VBoxContainer/SpeedHBoxContainer"]
 margin_left = 55.0
 margin_right = 1024.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
+step = 0.1
+page = 10.0
 
 [node name="FromEndHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 112.0
@@ -102,12 +106,12 @@ margin_bottom = 176.0
 
 [node name="Label" type="Label" parent="VBoxContainer/TypeHBoxContainer"]
 margin_top = 3.0
-margin_right = 72.0
+margin_right = 108.0
 margin_bottom = 17.0
-text = "From End : "
+text = "Animation Type: "
 
 [node name="TypeMenu" type="MenuButton" parent="VBoxContainer/TypeHBoxContainer"]
-margin_left = 76.0
+margin_left = 112.0
 margin_right = 1024.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -116,6 +120,6 @@ items = [ "Wait", null, 0, false, false, 0, 0, null, "", false, "Continue", null
 
 [connection signal="text_changed" from="VBoxContainer/PathHBoxContainer/PathLineEdit" to="." method="_on_PathLineEdit_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/ANameHBoxContainer/NameLineEdit" to="." method="_on_NameLineEdit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/BlendHBoxContainer/BlendLineEdit" to="." method="_on_BlendLineEdit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/SpeedHBoxContainer/SpeedLineEdit" to="." method="_on_SpeedLineEdit_text_changed"]
+[connection signal="value_changed" from="VBoxContainer/BlendHBoxContainer/BlendLineEdit" to="." method="_on_BlendLineEdit_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/SpeedHBoxContainer/SpeedLineEdit" to="." method="_on_SpeedLineEdit_value_changed"]
 [connection signal="toggled" from="VBoxContainer/FromEndHBoxContainer/FromEndCheck" to="." method="_on_FromEndCheck_toggled"]
