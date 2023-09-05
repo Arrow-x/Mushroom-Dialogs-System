@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/JumpControl.gd" type="Script" id=1]
+
+[node name="Control" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="BlockHBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 24.0
+
+[node name="Label" type="Label" parent="BlockHBoxContainer"]
+margin_top = 5.0
+margin_right = 40.0
+margin_bottom = 19.0
+text = "Index:"
+
+[node name="SpinBox" type="SpinBox" parent="BlockHBoxContainer"]
+margin_left = 44.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="GlobalHBoxContainer" type="HBoxContainer" parent="."]
+margin_top = 28.0
+margin_right = 1024.0
+margin_bottom = 68.0
+
+[node name="Label" type="Label" parent="GlobalHBoxContainer"]
+margin_top = 13.0
+margin_right = 45.0
+margin_bottom = 27.0
+text = "Global:"
+
+[node name="CheckButton" type="CheckButton" parent="GlobalHBoxContainer"]
+margin_left = 49.0
+margin_right = 1024.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+
+[node name="BlockHBoxContainer2" type="HBoxContainer" parent="."]
+visible = false
+margin_top = 72.0
+margin_right = 1024.0
+margin_bottom = 92.0
+
+[node name="Label2" type="Label" parent="BlockHBoxContainer2"]
+margin_top = 3.0
+margin_right = 34.0
+margin_bottom = 17.0
+text = "Black"
+
+[node name="MenuButton" type="MenuButton" parent="BlockHBoxContainer2"]
+margin_left = 38.0
+margin_right = 1024.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Choose a block"
+
+[connection signal="value_changed" from="BlockHBoxContainer/SpinBox" to="." method="_on_SpinBox_value_changed"]
+[connection signal="toggled" from="GlobalHBoxContainer/CheckButton" to="." method="_on_CheckButton_toggled"]
+[connection signal="about_to_show" from="BlockHBoxContainer2/MenuButton" to="." method="_on_MenuButton_about_to_show"]

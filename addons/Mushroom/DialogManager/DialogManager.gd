@@ -79,8 +79,9 @@ func execute_dialog() -> void:
 				UI.add_choice(ci, choice_idx, ci.next_index)
 			UI.show_choice()
 
-		"jump":  #TO DEBUG
-			current_block = cbi.jump_block
+		"jump":
+			if cbi.global:
+				current_block = cbi.jump_block
 			indexer = cbi.jump_index
 			advance()
 
