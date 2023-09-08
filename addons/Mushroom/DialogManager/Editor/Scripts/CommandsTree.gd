@@ -406,6 +406,11 @@ func create_command_editor(item: TreeItem = null) -> void:
 			commands_settings.add_child(jump_control, true)
 			jump_control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
 
+		elif current_item is sound_command:
+			var sound_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn").instance()
+			commands_settings.add_child(sound_control, true)
+			sound_control.set_up(current_item)
+
 
 func _on_CommandsTree_item_rmb_selected(position: Vector2) -> void:
 	var pop: PopupMenu = get_node("CommandRmbPopup")
