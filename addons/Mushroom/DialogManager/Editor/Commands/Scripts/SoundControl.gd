@@ -5,6 +5,7 @@ var current_sound: sound_command
 var undo_redo: UndoRedo
 var current_effect: AudioEffect
 var current_stream: AudioStream
+var current_mix_id: int
 var default_stream_text := "..."
 var default_effect_text := "..."
 
@@ -104,6 +105,14 @@ func _on_BusLineEdit_text_changed(new_text: String) -> void:
 
 
 func _on_MixMenu_id_pressed(id: int, mix_menu_pop: Popup) -> void:
+	undo_redo.create_action("select mix target")
+	undo_redo.add_do_method(self, "select_mix", id, mix_menu_pop)
+	undo_redo.add_undo_method(self, "select_mix", current_mix_id, mix_menu_pop)
+	undo_redo.commit_action()
+	current_mix_id = id
+
+
+func select_mix(id: int, mix_menu_pop: Popup) -> void:
 	current_sound.mix_target = id
 	mix_menu.text = mix_menu_pop.get_item_text(id)
 	is_changed()
