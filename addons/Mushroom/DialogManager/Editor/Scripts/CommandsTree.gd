@@ -312,7 +312,7 @@ func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
 	return resault.not_found
 
 
-func prepare_command_editor(cmd: Command) -> void:
+func prepare_command_editor(cmd: Command = null) -> void:
 # TODO: why does this exit?
 	if cmd == null:
 		push_error("can't find treeitem")
@@ -409,7 +409,7 @@ func create_command_editor(item: TreeItem = null) -> void:
 		elif current_item is sound_command:
 			var sound_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn").instance()
 			commands_settings.add_child(sound_control, true)
-			sound_control.set_up(current_item)
+			sound_control.set_up(current_item, undo_redo)
 
 
 func _on_CommandsTree_item_rmb_selected(position: Vector2) -> void:
