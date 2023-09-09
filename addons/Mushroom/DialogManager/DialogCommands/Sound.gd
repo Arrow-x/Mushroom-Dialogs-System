@@ -13,7 +13,8 @@ export var effect: AudioEffect
 
 
 func preview() -> String:
-	return String("Play Sound: " + stream.resource_path.get_file())
+	var stream_name: String = stream.resource_path.get_file() if stream != null else "null"
+	return String("Play Sound: " + stream_name)
 
 
 func get_icon() -> Resource:
