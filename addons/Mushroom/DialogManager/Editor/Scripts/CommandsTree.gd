@@ -411,6 +411,11 @@ func create_command_editor(item: TreeItem = null) -> void:
 			commands_settings.add_child(sound_control, true)
 			sound_control.set_up(current_item, undo_redo)
 
+		elif current_item is change_ui:
+			var change_ui_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.tscn").instance()
+			commands_settings.add_child(change_ui_control, true)
+			change_ui_control.set_up(current_item, undo_redo)
+
 
 func _on_CommandsTree_item_rmb_selected(position: Vector2) -> void:
 	var pop: PopupMenu = get_node("CommandRmbPopup")
