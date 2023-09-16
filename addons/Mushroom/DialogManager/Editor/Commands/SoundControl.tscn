@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/SoundControl.gd" type="Script" id=1]
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/TresDragger.gd" type="Script" id=2]
+[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/Dragger.gd" type="Script" id=2]
 
 [node name="SoundCommandControl" type="VBoxContainer"]
 anchor_right = 1.0
@@ -30,6 +30,7 @@ text = "Drag an Audio Stream!"
 align = 1
 script = ExtResource( 2 )
 type = "AudioStream"
+extension = "tres"
 
 [node name="Clean" type="Button" parent="StremHBoxContainer"]
 margin_left = 1004.0
@@ -137,6 +138,7 @@ text = "Drag and AudioEffect!"
 align = 1
 script = ExtResource( 2 )
 type = "AudioEffect"
+extension = "tres"
 
 [node name="Clean" type="Button" parent="EffectHBoxContainer"]
 margin_left = 1004.0
