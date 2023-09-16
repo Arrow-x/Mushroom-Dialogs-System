@@ -45,16 +45,6 @@ _global_script_classes=[ {
 "path": "res://addons/Mushroom/DialogManager/DialogCommands/Choice.gd"
 }, {
 "base": "Command",
-"class": "cond_choice",
-"language": "GDScript",
-"path": "res://addons/Mushroom/DialogManager/DialogCommands/CondChoice.gd"
-}, {
-"base": "Command",
-"class": "cond_say",
-"language": "GDScript",
-"path": "res://addons/Mushroom/DialogManager/DialogCommands/CondSay.gd"
-}, {
-"base": "Command",
 "class": "condition_command",
 "language": "GDScript",
 "path": "res://addons/Mushroom/DialogManager/DialogCommands/Condition.gd"
@@ -92,8 +82,6 @@ _global_script_class_icons={
 "block": "",
 "change_ui": "",
 "choice": "",
-"cond_choice": "",
-"cond_say": "",
 "condition_command": "",
 "fork_command": "",
 "jump_command": "",
@@ -107,6 +95,10 @@ _global_script_class_icons={
 config/name="MushroomDialogSystem"
 run/low_processor_mode=true
 config/icon="res://icon.png"
+
+[autoload]
+
+DialogManagerNode="*res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
 
 [debug]
 
