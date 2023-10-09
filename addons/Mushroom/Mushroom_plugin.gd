@@ -3,6 +3,7 @@ extends EditorPlugin
 
 const editor := preload("res://addons/Mushroom/DialogManager/Editor/Editor.tscn")
 var editor_instance
+var counter: int = 2
 
 
 func _enter_tree():
@@ -28,6 +29,15 @@ func handles(object):
 func edit(object):
 	editor_instance.open_flowchart_scene(object, get_undo_redo())
 	make_visible(true)
+
+
+func apply_changes() -> void:
+	# HACK: this event fire twice for some reason
+	if counter == 2:
+		counter -= 1
+	elif counter == 1:
+		editor_instance.save_flowcharts()
+		counter = 2
 
 
 func has_main_screen():

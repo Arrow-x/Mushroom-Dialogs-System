@@ -43,15 +43,15 @@ func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
 		graph_edit.sync_flowchart_graph(flowchart)
 
 
-func _on_Button_pressed() -> void:
+func on_save_button_pressed() -> void:
 	if flowchart.resource_path == "":
+		flow_tabs.set_tab_title(get_position_in_parent(), String(name + "(*)"))
 		var _i: FileDialog = FileDialog.new()
 		_i.resizable = true
 		_i.set_size(Vector2(800, 500))
-		_i.get_line_edit().set_text("new_resource.tres")
+		_i.get_line_edit().set_text(String(name.trim_suffix("(*)") + ".tres"))
 		_i.get_line_edit().select(0, 12)
 		_i.connect("file_selected", self, "save_to_disc", [true])
-
 		add_child(_i)
 		_i.popup_centered()
 		return
@@ -61,20 +61,15 @@ func _on_Button_pressed() -> void:
 
 func save_to_disc(path: String, overwrite := false) -> void:
 	ResourceSaver.save(path, flowchart)
-
 	if overwrite == true:
 		flowchart.set_path(path)
-		name = flowchart.get_name()
-	if name.findn("(*)") != -1:
-		name = name.rstrip("(*)")
 
-	flow_tabs.set_tab_title(get_position_in_parent(), name)
+	flow_tabs.set_tab_title(get_position_in_parent(), flowchart.get_name())
 	modified = false
 	emit_signal("done_saving")
 
 
 func changed_flowchart() -> void:
 	if name.findn("(*)") == -1:
-		name = String(name + "(*)")
-		flow_tabs.set_tab_title(get_position_in_parent(), name)
+		flow_tabs.set_tab_title(get_position_in_parent(), String(name + "(*)"))
 		modified = true

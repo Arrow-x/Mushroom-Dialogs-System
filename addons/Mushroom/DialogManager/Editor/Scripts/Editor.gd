@@ -1,8 +1,9 @@
 tool
 extends Control
-var editor_scn := preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
+
 onready var flowcharts_container := $VBoxContainer/FlowCharTabs
 onready var f_tabs := $VBoxContainer/Tabs
+onready var editor_scn := preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
 
 
 func open_flowchart_scene(flowchart_scene: FlowChart, undo_redo: UndoRedo) -> void:
@@ -57,7 +58,7 @@ func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window
 		confirm_window.queue_free()
 		return
 	if custom_action == "save":
-		flowchart_editors[tab]._on_Button_pressed()
+		flowchart_editors[tab].on_save_button_pressed()
 		flowchart_editors[tab].connect(
 			"done_saving",
 			self,
@@ -72,6 +73,11 @@ func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window
 func _on_Tabs_reposition_active_tab_request(idx_to: int) -> void:
 	var flowchart_editor: Control = flowcharts_container.get_children()[f_tabs.get_current_tab()]
 	flowcharts_container.move_child(flowchart_editor, idx_to)
+
+
+func save_flowcharts() -> void:
+	for container in flowcharts_container.get_children():
+		container.on_save_button_pressed()
 
 
 func _free_tab_and_select_another(flowchart_editors, tab, confirm_window = null) -> void:
