@@ -34,8 +34,9 @@ func set_up(c_s: say_command, u_r: UndoRedo, fl: FlowChart):
 
 	if c_s.character != null:
 		character_menu.text = c_s.character.name
+	if c_s.portrait_id != "":
+		portraits_menu.text = c_s.portrait_id
 	say_text_edit.text = c_s.say
-	portraits_menu.text = c_s.portrait_id
 	is_cond.pressed = c_s.is_cond
 	req_node.text = c_s.required_node
 	req_var.text = c_s.required_var
@@ -56,22 +57,39 @@ func _on_TextEdit_text_changed():
 	is_changed()
 
 
-# TODO: UndoRedo selecting characters
 func _on_Character_Selected(id: int) -> void:
-	character_menu.text = character_menu.get_popup().get_item_text(id)
-	current_say.character = character_menu.get_popup().get_item_metadata(id)
-	portraits_menu.text = ""
+	var s_char: Chararcter = character_menu.get_popup().get_item_metadata(id)
+	undo_redo.create_action("select character")
+	undo_redo.add_do_method(self, "select_character", s_char)
+	undo_redo.add_undo_method(self, "select_character", current_say.character)
+	undo_redo.commit_action()
+
+
+func select_character(character: Chararcter = null) -> void:
+	character_menu.text = character.name if character != null else ""
+	current_say.character = character
+	portraits_menu.text = "Select a Portrait"
 	current_say.portrait_id = ""
 	current_say.portrait = null
 	is_changed()
 
 
-# TODO: UndoRedo selecting portraits
 func _on_Portrait_Selected(id: int) -> void:
 	var portrait_name := portraits_menu.get_popup().get_item_text(id)
-	portraits_menu.text = portrait_name
-	current_say.portrait_id = portrait_name
-	current_say.portrait = current_say.character.portraits[portrait_name]
+	undo_redo.create_action("select a portrait")
+	undo_redo.add_do_method(self, "select_portrait", portrait_name)
+	undo_redo.add_undo_method(self, "select_portrait", current_say.portrait_id)
+	undo_redo.commit_action()
+
+
+func select_portrait(character: String = "") -> void:
+	portraits_menu.text = character
+	current_say.portrait_id = character
+	current_say.portrait = (
+		current_say.character.portraits[character]
+		if current_say.character != null and character != ""
+		else null
+	)
 	is_changed()
 
 
