@@ -58,7 +58,7 @@ func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window
 		confirm_window.queue_free()
 		return
 	if custom_action == "save":
-		flowchart_editors[tab].on_save_button_pressed()
+		flowchart_editors[tab].check_flowchart_path_before_save()
 		flowchart_editors[tab].connect(
 			"done_saving",
 			self,
@@ -77,7 +77,7 @@ func _on_Tabs_reposition_active_tab_request(idx_to: int) -> void:
 
 func save_flowcharts() -> void:
 	for container in flowcharts_container.get_children():
-		container.on_save_button_pressed()
+		container.check_flowchart_path_before_save()
 
 
 func _free_tab_and_select_another(flowchart_editors, tab, confirm_window = null) -> void:

@@ -145,4 +145,4 @@ script = ExtResource( 7 )
 
 [connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_CommandsTree_item_activated"]
 [connection signal="item_rmb_selected" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_CommandsTree_item_rmb_selected"]
-[connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/SaveButton" to="." method="on_save_button_pressed"]
+[connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/SaveButton" to="." method="check_flowchart_path_before_save"]

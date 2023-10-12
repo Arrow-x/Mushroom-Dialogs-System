@@ -43,7 +43,7 @@ func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
 		graph_edit.sync_flowchart_graph(flowchart)
 
 
-func on_save_button_pressed() -> void:
+func check_flowchart_path_before_save() -> void:
 	if flowchart.resource_path == "":
 		flow_tabs.set_tab_title(get_position_in_parent(), String(name + "(*)"))
 		var _i: FileDialog = FileDialog.new()
@@ -51,15 +51,15 @@ func on_save_button_pressed() -> void:
 		_i.set_size(Vector2(800, 500))
 		_i.get_line_edit().set_text(String(name.trim_suffix("(*)") + ".tres"))
 		_i.get_line_edit().select(0, 12)
-		_i.connect("file_selected", self, "save_to_disc", [true])
+		_i.connect("file_selected", self, "save_flowchart_to_disc", [true])
 		add_child(_i)
 		_i.popup_centered()
 		return
 
-	save_to_disc(flowchart.resource_path)
+	save_flowchart_to_disc(flowchart.resource_path)
 
 
-func save_to_disc(path: String, overwrite := false) -> void:
+func save_flowchart_to_disc(path: String, overwrite := false) -> void:
 	ResourceSaver.save(path, flowchart)
 	if overwrite == true:
 		flowchart.set_path(path)
