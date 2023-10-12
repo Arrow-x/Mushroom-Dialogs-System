@@ -4,20 +4,16 @@ onready var character_menu: MenuButton = $VBoxContainer/CharacterHBoxContainer/C
 onready var portraits_menu: MenuButton = $VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton
 onready var say_text_edit: TextEdit = $VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit
 onready var v_slit: VSplitContainer = $VBoxContainer/VSplitContainer
-
 onready var is_cond: CheckButton = $VBoxContainer/IsCondCheckBox
-
 onready var cond_box: VBoxContainer = $VBoxContainer/CondVBoxContainer
-
 onready var req_node: LineEdit = $VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput
 onready var req_var: LineEdit = $VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput
 onready var req_val: LineEdit = $VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput
 onready var check_type: MenuButton = $VBoxContainer/CondVBoxContainer/ReqVal/CheckType
 onready var append_check: CheckBox = $VBoxContainer/AppendHBoxContainer/AppendCheckBox
 
-var current_say: say_command
 var undo_redo: UndoRedo
-var current_toogle: bool = false
+var current_say: say_command
 var current_flowchart: FlowChart
 
 
@@ -135,9 +131,8 @@ func _on_ReqNodeInput_text_changed(new_text: String) -> void:
 func _on_IsCondCheckBox_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle condition")
 	undo_redo.add_do_method(self, "show_condition_toggle", button_pressed)
-	undo_redo.add_undo_method(self, "show_condition_toggle", current_toogle)
+	undo_redo.add_undo_method(self, "show_condition_toggle", current_say.is_cond)
 	undo_redo.commit_action()
-	current_toogle = button_pressed
 
 
 func show_condition_toggle(button_pressed: bool) -> void:

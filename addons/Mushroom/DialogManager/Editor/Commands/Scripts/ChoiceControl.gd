@@ -17,7 +17,6 @@ onready var check_type: MenuButton = $CondVBoxContainer/ReqVar/CheckType
 var current_choice: choice
 var flowchart: FlowChart
 var undo_redo: UndoRedo
-var current_toogle: bool = false
 
 signal conncting
 signal removing_choice
@@ -106,9 +105,8 @@ func _on_ReqNodeInput_text_changed(new_text: String) -> void:
 func _on_IsCondCheckBox_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle condition")
 	undo_redo.add_do_method(self, "show_condition_toggle", button_pressed)
-	undo_redo.add_undo_method(self, "show_condition_toggle", current_toogle)
+	undo_redo.add_undo_method(self, "show_condition_toggle", current_choice.is_cond)
 	undo_redo.commit_action()
-	current_toogle = button_pressed
 
 
 func show_condition_toggle(button_pressed: bool) -> void:
