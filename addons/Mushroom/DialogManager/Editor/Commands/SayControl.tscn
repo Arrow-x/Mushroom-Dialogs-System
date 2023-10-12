@@ -49,16 +49,8 @@ margin_right = 116.0
 margin_bottom = 19.0
 text = "Required Variable:"
 
-[node name="CheckType" type="MenuButton" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
-margin_left = 120.0
-margin_right = 172.0
-margin_bottom = 24.0
-focus_mode = 2
-text = "type:  "
-items = [ "==", null, 0, false, false, 0, 0, null, "", false, "!=", null, 0, false, false, 1, 0, null, "", false, "<", null, 0, false, false, 2, 0, null, "", false, "<=", null, 0, false, false, 3, 0, null, "", false, ">", null, 0, false, false, 4, 0, null, "", false, ">=", null, 0, false, false, 5, 0, null, "", false ]
-
 [node name="ReqVarInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
-margin_left = 176.0
+margin_left = 120.0
 margin_right = 1024.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
@@ -74,8 +66,16 @@ margin_right = 39.0
 margin_bottom = 19.0
 text = "Value:"
 
-[node name="CheckValInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
+[node name="CheckType" type="MenuButton" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
 margin_left = 43.0
+margin_right = 95.0
+margin_bottom = 24.0
+focus_mode = 2
+text = "type:  "
+items = [ "==", null, 0, false, false, 0, 0, null, "", false, "!=", null, 0, false, false, 1, 0, null, "", false, "<", null, 0, false, false, 2, 0, null, "", false, "<=", null, 0, false, false, 3, 0, null, "", false, ">", null, 0, false, false, 4, 0, null, "", false, ">=", null, 0, false, false, 5, 0, null, "", false ]
+
+[node name="CheckValInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
+margin_left = 99.0
 margin_right = 1024.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
@@ -103,26 +103,27 @@ margin_left = 61.0
 margin_right = 85.0
 margin_bottom = 24.0
 
-[node name="NameHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="CharacterHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 72.0
 margin_right = 1024.0
-margin_bottom = 96.0
+margin_bottom = 92.0
 
-[node name="NameLabel" type="Label" parent="VBoxContainer/NameHBoxContainer"]
-margin_top = 5.0
-margin_right = 60.0
-margin_bottom = 19.0
+[node name="CharacterLabel" type="Label" parent="VBoxContainer/CharacterHBoxContainer"]
+margin_top = 3.0
+margin_right = 72.0
+margin_bottom = 17.0
 rect_min_size = Vector2( 60, 0 )
-text = "Name : "
+text = "Character : "
 
-[node name="NameLineEdit" type="LineEdit" parent="VBoxContainer/NameHBoxContainer"]
-margin_left = 64.0
+[node name="CharacterMenuButton" type="MenuButton" parent="VBoxContainer/CharacterHBoxContainer"]
+margin_left = 76.0
 margin_right = 1024.0
-margin_bottom = 24.0
+margin_bottom = 20.0
 size_flags_horizontal = 3
+text = "select a charcter"
 
 [node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer"]
-margin_top = 100.0
+margin_top = 96.0
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
@@ -153,7 +154,7 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VSplitContainer"]
 margin_top = 26.0
 margin_right = 1024.0
-margin_bottom = 500.0
+margin_bottom = 504.0
 
 [node name="PortraitHBoxContainer" type="HBoxContainer" parent="VBoxContainer/VSplitContainer/VBoxContainer"]
 margin_right = 1024.0
@@ -197,5 +198,6 @@ items = [ "Left", null, 0, false, false, 0, 0, null, "", false, "right", null, 0
 [connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_ReqVarInput_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_CheckValInput_text_changed"]
 [connection signal="toggled" from="VBoxContainer/AppendHBoxContainer/AppendCheckBox" to="." method="_on_AppendCheckBox_toggled"]
-[connection signal="text_changed" from="VBoxContainer/NameHBoxContainer/NameLineEdit" to="." method="_on_NameLineEdit_text_changed"]
+[connection signal="about_to_show" from="VBoxContainer/CharacterHBoxContainer/CharacterMenuButton" to="." method="_on_CharacterMenuButton_about_to_show"]
 [connection signal="text_changed" from="VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit" to="." method="_on_TextEdit_text_changed"]
+[connection signal="about_to_show" from="VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton" to="." method="_on_PortraitMenuButton_about_to_show"]

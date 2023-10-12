@@ -4,9 +4,10 @@ class_name say_command
 
 var type: String = "say"
 
-export var name: String
+export(Resource) var character: Resource
 export(String, MULTILINE) var say: String
-export var portrait: Texture
+export var portrait_id: String
+export var portrait: StreamTexture
 export(String, "Left", "Right", "Center") var por_pos: String = "Right"
 
 export var append_text: bool = false
@@ -20,7 +21,11 @@ export(String) var condition_type = "=="
 
 
 func preview() -> String:
-	return String("Say: " + name + ": " + say)
+	var prev: String = String("Say: " + say)
+	if character != null:
+		prev = String(prev + " by: " + character.name)
+
+	return prev
 
 
 func get_icon() -> Resource:

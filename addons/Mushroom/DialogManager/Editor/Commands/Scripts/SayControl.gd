@@ -1,7 +1,7 @@
 tool
 extends Control
-
-onready var name_line_edit: LineEdit = $VBoxContainer/NameHBoxContainer/NameLineEdit
+onready var character_menu: MenuButton = $VBoxContainer/CharacterHBoxContainer/CharacterMenuButton
+onready var portraits_menu: MenuButton = $VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton
 onready var say_text_edit: TextEdit = $VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit
 onready var v_slit: VSplitContainer = $VBoxContainer/VSplitContainer
 
@@ -12,24 +12,30 @@ onready var cond_box: VBoxContainer = $VBoxContainer/CondVBoxContainer
 onready var req_node: LineEdit = $VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput
 onready var req_var: LineEdit = $VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput
 onready var req_val: LineEdit = $VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput
-onready var check_type: MenuButton = $VBoxContainer/CondVBoxContainer/ReqVar/CheckType
+onready var check_type: MenuButton = $VBoxContainer/CondVBoxContainer/ReqVal/CheckType
 onready var append_check: CheckBox = $VBoxContainer/AppendHBoxContainer/AppendCheckBox
 
 var current_say: say_command
 var undo_redo: UndoRedo
 var current_toogle: bool = false
+var current_flowchart: FlowChart
 
 
-func set_up(c_s: say_command, u_r: UndoRedo):
+func set_up(c_s: say_command, u_r: UndoRedo, fl: FlowChart):
 	current_say = c_s
+	current_flowchart = fl
 
-	var check_type_popup: PopupMenu = get_node("VBoxContainer/CondVBoxContainer/ReqVar/CheckType").get_popup()
+	var check_type_popup: PopupMenu = get_node("VBoxContainer/CondVBoxContainer/ReqVal/CheckType").get_popup()
 	check_type_popup.connect("id_pressed", self, "_on_CheckTypePopup", [check_type_popup])
+	character_menu.get_popup().connect("id_pressed", self, "_on_Character_Selected")
+	portraits_menu.get_popup().connect("id_pressed", self, "_on_Portrait_Selected")
 
-	name_line_edit.text = c_s.name
-	say_text_edit.text = c_s.say
 	undo_redo = u_r
 
+	if c_s.character != null:
+		character_menu.text = c_s.character.name
+	say_text_edit.text = c_s.say
+	portraits_menu.text = c_s.portrait_id
 	is_cond.pressed = c_s.is_cond
 	req_node.text = c_s.required_node
 	req_var.text = c_s.required_var
@@ -50,15 +56,46 @@ func _on_TextEdit_text_changed():
 	is_changed()
 
 
-func _on_NameLineEdit_text_changed(new_text: String):
-	current_say.name = new_text
+# TODO: UndoRedo selecting characters
+func _on_Character_Selected(id: int) -> void:
+	character_menu.text = character_menu.get_popup().get_item_text(id)
+	current_say.character = character_menu.get_popup().get_item_metadata(id)
+	portraits_menu.text = ""
+	current_say.portrait_id = ""
+	current_say.portrait = null
 	is_changed()
+
+
+# TODO: UndoRedo selecting portraits
+func _on_Portrait_Selected(id: int) -> void:
+	var portrait_name := portraits_menu.get_popup().get_item_text(id)
+	portraits_menu.text = portrait_name
+	current_say.portrait_id = portrait_name
+	current_say.portrait = current_say.character.portraits[portrait_name]
+	is_changed()
+
+
+func _on_CharacterMenuButton_about_to_show() -> void:
+	var pop := character_menu.get_popup()
+	pop.clear()
+	var fc_chars := current_flowchart.characters
+	for c_idx in fc_chars.size():
+		pop.add_item(fc_chars[c_idx].name)
+		pop.set_item_metadata(c_idx, fc_chars[c_idx])
+
+
+func _on_PortraitMenuButton_about_to_show() -> void:
+	var pop := portraits_menu.get_popup()
+	pop.clear()
+	var char_portrs: Dictionary = current_say.character.portraits
+	for c in char_portrs:
+		pop.add_item(c)
 
 
 func _on_CheckTypePopup(id: int, popup: PopupMenu) -> void:
 	var pp_text: String = popup.get_item_text(id)
 	current_say.condition_type = pp_text
-	get_node("VBoxContainer/CondVBoxContainer/ReqVar/CheckType").text = pp_text
+	get_node("VBoxContainer/CondVBoxContainer/ReqVal/CheckType").text = pp_text
 	is_changed()
 
 

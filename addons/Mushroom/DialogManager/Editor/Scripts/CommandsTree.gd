@@ -379,7 +379,7 @@ func create_command_editor(item: TreeItem = null) -> void:
 		if current_item is say_command:
 			var say_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn").instance()
 			commands_settings.add_child(say_control, true)
-			say_control.set_up(current_item, undo_redo)
+			say_control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
 
 		elif current_item is fork_command:
 			var fork_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
