@@ -1,8 +1,6 @@
 tool
 extends Command
-class_name jump_command
-
-var type: String = "jump"
+class_name JumpCommand
 
 export var jump_block: Resource
 export var jump_index: int = 0
@@ -25,3 +23,11 @@ func preview() -> String:
 
 func get_icon() -> Resource:
 	return load("res://addons/Mushroom/DialogManager/Editor/icons/fork_icon.png")
+
+
+func get_class() -> String:
+	return "JumpCommand"
+
+
+func is_class(c: String) -> bool:
+	return c == "JumpCommand"

@@ -7,7 +7,7 @@ onready var current_block_label: Label = get_node(
 onready var commands_settings: Panel = get_node("../../CommandsSettings")
 
 var flowchart_tab: Control
-var current_block: block
+var current_block: Block
 var undo_redo: UndoRedo
 var graph_edit: GraphEdit
 
@@ -32,7 +32,7 @@ func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int):
 
 	if item.get_parent().has_meta("command"):
 		var parent_meta = item.get_parent().get_meta("command")
-		if parent_meta is condition_command:
+		if parent_meta is ConditionCommand:
 			parent_command = parent_meta
 			idx = parent_meta.condition_block.commands.find(cmd)
 			parent = item.get_parent()
@@ -43,7 +43,7 @@ func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int):
 	undo_redo.commit_action()
 
 
-func initeate_Tree_from_Block(meta: block) -> void:
+func initeate_Tree_from_Block(meta: Block) -> void:
 	if meta == current_block or meta == null:
 		return
 	full_clear()
@@ -79,7 +79,7 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 
 	if is_rmb:
 		var selec_m: Command = get_selected().get_meta("command")
-		if selec_m is condition_command:
+		if selec_m is ConditionCommand:
 			p = selec_m
 		else:
 			var selec_p := get_selected().get_parent()
@@ -104,7 +104,7 @@ func add_command_to_block(command: Command, idx: int = -1, parent = null) -> voi
 			cbc.insert(idx, command)
 
 	else:
-		if parent is condition_command:
+		if parent is ConditionCommand:
 			var prc: Array = parent.condition_block.commands
 			if idx == -1:
 				prc.append(command)
@@ -135,7 +135,7 @@ func create_TreeItem_from_Command(
 
 func delete_command(command: Command, tree: TreeItem = null) -> int:
 	var d_tree: Array
-	var d_block: block
+	var d_block: Block
 
 	if tree:
 		d_tree = get_TreeItems(tree)
@@ -143,7 +143,7 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 	else:
 		d_tree = get_TreeItems(get_root())
 		d_block = current_block
-
+	# TODO: if the command is ForkCommand then remove it from block outputs and GraphNode
 	for c in d_tree.size():
 		var d_c = d_tree[c]
 		if d_c.get_meta("command") == command:
@@ -152,7 +152,7 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 			free_Command_editor(command)
 			create_Tree_from_Block(current_block)
 			return resault.success
-		elif d_c.get_meta("command") is condition_command:
+		elif d_c.get_meta("command") is ConditionCommand:
 			var b = delete_command(command, d_c)
 			if b != resault.not_found:
 				free_Command_editor(command)
@@ -181,7 +181,7 @@ func can_drop_data(position: Vector2, data) -> bool:
 		return false
 	var to_item := get_item_at_position(position)
 	if to_item is TreeItem:
-		if to_item.get_meta("command") is condition_command:
+		if to_item.get_meta("command") is ConditionCommand:
 			set_drop_mode_flags(DROP_MODE_INBETWEEN | DROP_MODE_ON_ITEM)
 		else:
 			set_drop_mode_flags(DROP_MODE_INBETWEEN)
@@ -237,7 +237,7 @@ func move_TreeItem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) 
 		0:
 			c_to_item.condition_block.commands.append(c_item)
 		1:
-			if c_to_item is condition_command:
+			if c_to_item is ConditionCommand:
 				c_to_item.condition_block.commands.insert(0, c_item)
 			else:
 				if to_item_idx + 1 > c_p_to_item.size():
@@ -250,7 +250,7 @@ func move_TreeItem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) 
 	if not to_item_idx == resault.not_found:
 		if not shift == 0:
 			if item.get_parent() == p_to_item:
-				if not shift == 1 and not c_to_item is condition_command:
+				if not shift == 1 and not c_to_item is ConditionCommand:
 					if item_idx > to_item_idx:
 						item_idx = item_idx + 1
 
@@ -277,7 +277,7 @@ func undo_move_TreeItem(og_item_command: Command, og_parent_commands: Array, og_
 		return
 	if to_item == null or p_to_item == get_root():
 		current_block.commands.remove(item_idx)
-	elif c_p_to_item is condition_command:
+	elif c_p_to_item is ConditionCommand:
 		c_p_to_item.condition_block.commands.remove(item_idx)
 	og_parent_commands.insert(og_idx, og_item_command)
 	create_Tree_from_Block(current_block)
@@ -304,7 +304,7 @@ func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
 	for i in treeitems.size():
 		if treeitems[i] == item:
 			return i
-		elif treeitems[i].get_meta("command") is condition_command:
+		elif treeitems[i].get_meta("command") is ConditionCommand:
 			var r: int = find_TreeItem(item, treeitems[i])
 			if r != resault.not_found:
 				return r
@@ -321,19 +321,19 @@ func get_TreeItem_from_Command(command: Command, parent: TreeItem = null) -> Tre
 		var t_cmd: Command = t.get_meta("command")
 		if t_cmd == command:
 			return t
-		elif t_cmd is condition_command:
+		elif t_cmd is ConditionCommand:
 			var s := get_TreeItem_from_Command(command, t)
 			if s != null:
 				return s
 	return null
 
 
-func create_Tree_from_Block(block: block, parent: TreeItem = null) -> void:
+func create_Tree_from_Block(block: Block, parent: TreeItem = null) -> void:
 	if parent == null:
 		self.clear()
 	for i in block.commands:
 		var created_item: TreeItem = create_TreeItem_from_Command(i, -1, parent)
-		if i is condition_command:
+		if i is ConditionCommand:
 			create_Tree_from_Block(i.condition_block, created_item)
 
 
@@ -371,45 +371,49 @@ func create_Command_editor(cmd: Command = null) -> void:
 			if commands_settings.get_child(0) != null:
 				commands_settings.get_child(0).free()
 
-		if current_item is say_command:
-			var say_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn").instance()
-			commands_settings.add_child(say_control, true)
-			say_control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
+		var control: Control
+		match current_item.get_class():
+			"SayCommand":
+				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn").instance()
+				commands_settings.add_child(control, true)
+				control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
 
-		elif current_item is fork_command:
-			var fork_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
-			commands_settings.add_child(fork_control, true)
-			fork_control.set_up(current_item, flowchart_tab, current_block, undo_redo, graph_edit)
+			"ForkCommand":
+				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
+				commands_settings.add_child(control, true)
+				control.set_up(current_item, flowchart_tab, current_block, undo_redo, graph_edit)
 
-		elif current_item is condition_command:
-			var condition_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn").instance()
-			commands_settings.add_child(condition_control, true)
-			condition_control.set_up(current_item)
+			"ConditionCommand":
+				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn").instance()
+				commands_settings.add_child(control, true)
+				control.set_up(current_item)
 
-		elif current_item is set_var_command:
-			var set_var_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SetVar.tscn").instance()
-			commands_settings.add_child(set_var_control, true)
-			set_var_control.set_up(current_item)
+			"SetVarCommand":
+				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SetVar.tscn").instance()
+				commands_settings.add_child(control, true)
+				control.set_up(current_item)
 
-		elif current_item is animation_command:
-			var animation_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.tscn").instance()
-			commands_settings.add_child(animation_control, true)
-			animation_control.set_up(current_item, undo_redo)
+			"AnimationCommand":
+				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.tscn").instance()
+				commands_settings.add_child(control, true)
+				control.set_up(current_item, undo_redo)
 
-		elif current_item is jump_command:
-			var jump_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/JumpControl.tscn").instance()
-			commands_settings.add_child(jump_control, true)
-			jump_control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
+			"JumpCommand":
+				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/JumpControl.tscn").instance()
+				commands_settings.add_child(control, true)
+				control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
 
-		elif current_item is sound_command:
-			var sound_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn").instance()
-			commands_settings.add_child(sound_control, true)
-			sound_control.set_up(current_item, undo_redo)
+			"SoundCommand":
+				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn").instance()
+				commands_settings.add_child(control, true)
+				control.set_up(current_item, undo_redo)
 
-		elif current_item is change_ui:
-			var change_ui_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.tscn").instance()
-			commands_settings.add_child(change_ui_control, true)
-			change_ui_control.set_up(current_item, undo_redo)
+			"ChangeUICommand":
+				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.tscn").instance()
+				commands_settings.add_child(control, true)
+				control.set_up(current_item, undo_redo)
+			_:
+				return
 
 
 func _on_TreeItem_rmb_selected(position: Vector2) -> void:

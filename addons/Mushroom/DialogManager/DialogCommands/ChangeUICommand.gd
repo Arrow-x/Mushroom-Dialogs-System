@@ -1,8 +1,7 @@
 tool
 extends Command
-class_name change_ui
+class_name ChangeUICommand
 
-var type: String = "change_ui"
 export(PackedScene) var next_UI
 export(bool) var change_to_default = false
 
@@ -19,3 +18,11 @@ func preview() -> String:
 
 func get_icon() -> Resource:
 	return load("res://addons/Mushroom/DialogManager/Editor/icons/say_icon.png")
+
+
+func get_class() -> String:
+	return "ChangeUICommand"
+
+
+func is_class(c: String) -> bool:
+	return c == "ChangeUICommand"

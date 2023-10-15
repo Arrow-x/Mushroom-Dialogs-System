@@ -38,23 +38,23 @@ func _on_AddBlockButton_pressed() -> void:
 	enter_name.connect("new_text_confirm", self, "on_new_text_confirm")
 
 
-func add_block(title: String, offset = null, in_block: block = null) -> void:
+func add_block(title: String, offset = null, in_block: Block = null) -> void:
 	create_GraphNode_from_block(title, offset, in_block)
 	if in_block != null:
 		connect_block_inputs(in_block)
 		connect_block_outputs(in_block)
 
 
-func create_GraphNode_from_block(title: String, offset = null, in_block: block = null) -> void:
+func create_GraphNode_from_block(title: String, offset = null, in_block: Block = null) -> void:
 	var node: GraphNode = load("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn").instance()
 	node.title = title
 	if offset == null:
 		node.offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
 	else:
 		node.offset = offset
-	var _new_block: block
+	var _new_block: Block
 	if in_block == null:
-		_new_block = block.new()
+		_new_block = Block.new()
 		_new_block.name = title
 	else:
 		_new_block = in_block
@@ -76,7 +76,7 @@ func create_GraphNode_from_block(title: String, offset = null, in_block: block =
 		node.selected = true
 
 
-func connect_block_inputs(_new_block: block) -> void:
+func connect_block_inputs(_new_block: Block) -> void:
 	for i in _new_block.inputs:
 		graph_nodes[_new_block.name].add_g_node_input(i)
 		var err := connect_node(
@@ -89,7 +89,7 @@ func connect_block_inputs(_new_block: block) -> void:
 			print("failure! to connect inputs")
 
 
-func connect_block_outputs(_new_block: block, del_first: bool = false) -> void:
+func connect_block_outputs(_new_block: Block, del_first: bool = false) -> void:
 	for o in _new_block.outputs:
 		update_block_flow(_new_block, o, del_first)
 
@@ -115,7 +115,7 @@ func close_node(d_node: String) -> void:
 	graph_nodes.erase(d_node)
 
 
-func delete_connected_input(deconecting_node: String, closed_node_output: fork_command) -> void:
+func delete_connected_input(deconecting_node: String, closed_node_output: ForkCommand) -> void:
 	for d_input in flowchart.get_block(deconecting_node).inputs:
 		disconnect_node(
 			graph_nodes[d_input.origin_block].get_name(),
@@ -181,7 +181,7 @@ func on_new_text_confirm(new_title: String) -> void:
 	undo_redo.commit_action()
 
 
-func update_block_flow(sender: block, fork: fork_command, delete_first: bool) -> void:
+func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> void:
 	graph_nodes[sender.name].add_g_node_output(fork)
 	if delete_first:
 		for b in graph_nodes[sender.name].already_connected:

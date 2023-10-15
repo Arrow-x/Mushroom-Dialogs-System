@@ -1,8 +1,6 @@
 tool
 extends Command
-class_name say_command
-
-var type: String = "say"
+class_name SayCommand
 
 export(Resource) var character: Resource
 export(String, MULTILINE) var say: String
@@ -30,3 +28,11 @@ func preview() -> String:
 
 func get_icon() -> Resource:
 	return load("res://addons/Mushroom/DialogManager/Editor/icons/say_icon.png")
+
+
+func get_class() -> String:
+	return "SayCommand"
+
+
+func is_class(c: String) -> bool:
+	return c == "SayCommand"

@@ -1,10 +1,10 @@
 tool
 extends Control
 
-var current_condition: condition_command
+var current_condition: ConditionCommand
 
 
-func set_up(cc: condition_command) -> void:
+func set_up(cc: ConditionCommand) -> void:
 	current_condition = cc
 
 	var check_type_popup: PopupMenu = get_node("ReqVar/CheckType").get_popup()

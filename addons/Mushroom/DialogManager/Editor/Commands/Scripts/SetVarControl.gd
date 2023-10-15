@@ -1,13 +1,13 @@
 tool
 extends Control
 
-var command: set_var_command
+var command: SetVarCommand
 onready var var_node_lineedit: LineEdit = $VBoxContainer/VarNodeHBoxContainer/VarNodeLineEdit
 onready var var_name_lineedit: LineEdit = $VBoxContainer/VarNameHBoxContainer/VarNameLineEdit
 onready var var_val_lineedit: LineEdit = $VBoxContainer/SetValHBoxContainer/SetValLineEdit
 
 
-func set_up(c: set_var_command) -> void:
+func set_up(c: SetVarCommand) -> void:
 	command = c
 	var_node_lineedit.text = command.var_path
 	var_name_lineedit.text = command.var_name

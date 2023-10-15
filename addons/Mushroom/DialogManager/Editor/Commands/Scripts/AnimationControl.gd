@@ -1,7 +1,7 @@
 tool
 extends Node
 
-var animation_cmd: animation_command
+var animation_cmd: AnimationCommand
 var undo_redo: UndoRedo
 
 var current_from_end: bool
@@ -14,7 +14,7 @@ onready var speed_ctrl: SpinBox = $VBoxContainer/SpeedHBoxContainer/SpeedLineEdi
 onready var from_end_ctrl: CheckButton = $VBoxContainer/FromEndHBoxContainer/FromEndCheck
 
 
-func set_up(a_cmd: animation_command, u_r: UndoRedo) -> void:
+func set_up(a_cmd: AnimationCommand, u_r: UndoRedo) -> void:
 	animation_cmd = a_cmd
 	undo_redo = u_r
 	anim_type_ctrl.get_popup().connect(

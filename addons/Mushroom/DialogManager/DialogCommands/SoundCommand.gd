@@ -1,8 +1,6 @@
 tool
 extends Command
-class_name sound_command
-
-var type: String = "sound_command"
+class_name SoundCommand
 
 export var stream: AudioStream
 export(float, -80, 24) var volume_db: float = 0.0
@@ -19,3 +17,11 @@ func preview() -> String:
 
 func get_icon() -> Resource:
 	return load("res://addons/Mushroom/DialogManager/Editor/icons/say_icon.png")
+
+
+func get_class() -> String:
+	return "SoundCommand"
+
+
+func is_class(c: String) -> bool:
+	return c == "SoundCommand"

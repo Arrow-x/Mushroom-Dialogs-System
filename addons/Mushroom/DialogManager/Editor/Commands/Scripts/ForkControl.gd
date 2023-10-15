@@ -4,8 +4,8 @@ onready var choices_container: Control = $ScrollContainer/ChoicesContainer
 onready var add_choice_button: Button = $ScrollContainer/ChoicesContainer/InfoBar/AddChoiceButton
 onready var graph: GraphEdit
 
-var current_fork: fork_command
-var current_block: block
+var current_fork: ForkCommand
+var current_block: Block
 var fc: FlowChart
 var undo_redo: UndoRedo
 
@@ -32,10 +32,10 @@ func removing_choice_action(choice_c: Control) -> void:
 	undo_redo.commit_action()
 
 
-func add_choice_contol(c: choice = null, idx: int = -1) -> void:
-	var n_c: choice
+func add_choice_contol(c: Choice = null, idx: int = -1) -> void:
+	var n_c: Choice
 	if c == null:
-		n_c = choice.new()
+		n_c = Choice.new()
 		current_fork.choices.append(n_c)
 	else:
 		n_c = c
@@ -54,7 +54,7 @@ func free_choice_control(choice: Control = null) -> void:
 	_on_connecting(current_block)
 
 
-func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo, ge: GraphEdit) -> void:
+func set_up(f: ForkCommand, flowcharttab: Control, cb: Block, ur: UndoRedo, ge: GraphEdit) -> void:
 	current_fork = f
 	fc = flowcharttab.flowchart
 	graph = ge
@@ -68,7 +68,7 @@ func set_up(f: fork_command, flowcharttab: Control, cb: block, ur: UndoRedo, ge:
 			create_choice_controle(i)
 
 
-func _on_connecting(sender: block) -> void:
+func _on_connecting(sender: Block) -> void:
 	graph.update_block_flow(sender, current_fork, true)
 	is_changed()
 
@@ -77,7 +77,7 @@ func is_changed() -> void:
 	current_fork.emit_signal("changed")
 
 
-func create_choice_controle(choice: choice, idx: int = -1) -> void:
+func create_choice_controle(choice: Choice, idx: int = -1) -> void:
 	var choice_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn").instance()
 	choice_control.connect("conncting", self, "_on_connecting", [current_block])
 	choice_control.connect("removing_choice", self, "removing_choice_action")

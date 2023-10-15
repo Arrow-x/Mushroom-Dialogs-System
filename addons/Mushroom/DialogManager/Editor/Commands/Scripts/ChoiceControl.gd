@@ -14,7 +14,7 @@ onready var req_var: LineEdit = $CondVBoxContainer/ReqVar/ReqVarInput
 onready var req_val: LineEdit = $CondVBoxContainer/ReqVal/CheckValInput
 onready var check_type: MenuButton = $CondVBoxContainer/ReqVar/CheckType
 
-var current_choice: choice
+var current_choice: Choice
 var flowchart: FlowChart
 var undo_redo: UndoRedo
 
@@ -22,7 +22,7 @@ signal conncting
 signal removing_choice
 
 
-func set_up(c: choice, fct: FlowChart, u: UndoRedo) -> void:
+func set_up(c: Choice, fct: FlowChart, u: UndoRedo) -> void:
 	flowchart = fct
 	current_choice = c
 	choice_text.text = c.text

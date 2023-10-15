@@ -6,12 +6,12 @@ onready var chose_block_control: HBoxContainer = $BlockHBoxContainer2
 onready var block_selection_cotrol: MenuButton = $BlockHBoxContainer2/MenuButton
 
 var flowchart: FlowChart
-var current_jump: jump_command
+var current_jump: JumpCommand
 var undo_redo: UndoRedo
 var current_toogle: bool
 
 
-func set_up(jump: jump_command, u_r: UndoRedo, fl: FlowChart):
+func set_up(jump: JumpCommand, u_r: UndoRedo, fl: FlowChart):
 	flowchart = fl
 	current_jump = jump
 	undo_redo = u_r
@@ -53,15 +53,15 @@ func _on_MenuButton_about_to_show() -> void:
 
 
 func change_jump_block(idx, m: PopupMenu) -> void:
-	var n_block: block = flowchart.get_block(m.get_item_text(idx))
-	var p_block: block = current_jump.jump_block
+	var n_block: Block = flowchart.get_block(m.get_item_text(idx))
+	var p_block: Block = current_jump.jump_block
 	undo_redo.create_action("change next block")
 	undo_redo.add_do_method(self, "do_change_jump_block", n_block)
 	undo_redo.add_undo_method(self, "do_change_jump_block", p_block)
 	undo_redo.commit_action()
 
 
-func do_change_jump_block(next_block: block = null) -> void:
+func do_change_jump_block(next_block: Block = null) -> void:
 	if next_block != null:
 		current_jump.jump_block = next_block
 		block_selection_cotrol.text = next_block.name

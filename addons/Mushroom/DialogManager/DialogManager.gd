@@ -6,7 +6,7 @@ onready var indexer: int = 0
 onready var audio_player: AudioStreamPlayer = $AudioStreamPlayer
 
 var current_flowchart  #The whole flowchart thing is unnessery unitil we make an editor
-var current_block: block
+var current_block: Block
 var current_choices: Array
 var UI
 var is_ON: bool = false
@@ -47,8 +47,8 @@ func execute_dialog() -> void:
 		advance()
 		return
 
-	match cbi.type:
-		"say":
+	match cbi.get_class():
+		"SayCommand":
 			if cbi.is_cond:
 				if (
 					calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type)
@@ -63,12 +63,12 @@ func execute_dialog() -> void:
 			UI.show_say()
 			indexer = indexer + 1
 
-		"fork":
+		"ForkCommand":
 			UI.hide_say()
 			UI.hide_choice()
 			current_choices.clear()
 			for choice_idx in cbi.choices.size():
-				var ci: choice = cbi.choices[choice_idx]
+				var ci: Choice = cbi.choices[choice_idx]
 				if ci.is_cond:
 					if (
 						calc_var(ci.required_node, ci.required_var, ci.check_val, ci.condition_type)
@@ -79,13 +79,13 @@ func execute_dialog() -> void:
 				UI.add_choice(ci, choice_idx, ci.next_index)
 			UI.show_choice()
 
-		"jump":
+		"JumpCommand":
 			if cbi.global:
 				current_block = cbi.jump_block
 			indexer = cbi.jump_index
 			advance()
 
-		"condition":
+		"ConditionCommand":
 			if (
 				calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type)
 				== true
@@ -99,7 +99,7 @@ func execute_dialog() -> void:
 			indexer = indexer + 1
 			advance()
 
-		"animation":
+		"AnimationCommand":
 			var a = get_node(cbi.animation_path)
 			a.play(cbi.animation_name, cbi.custom_blend, cbi.custom_speed, cbi.from_end)
 			match cbi.anim_type:
@@ -115,7 +115,7 @@ func execute_dialog() -> void:
 					indexer = indexer + 1
 					advance()
 
-		"set_var":
+		"SetVarCommand":
 			if cbi.var_path.is_rel_path():
 				var req_node_path := NodePath(cbi.var_path.insert(0, "/root/"))
 				get_node(req_node_path).set(cbi.var_name, cbi.var_value)
@@ -124,7 +124,7 @@ func execute_dialog() -> void:
 			indexer = indexer + 1
 			advance()
 
-		"change_ui":  #To Debug
+		"ChangeUICommand":  #To Debug
 			if cbi.change_to_default == true:
 				UI.queue_free()
 				UI = UI_pc.instance()
@@ -138,7 +138,7 @@ func execute_dialog() -> void:
 			indexer = indexer + 1
 			advance()
 
-		"sound_command":
+		"SoundCommand":
 			if cbi.stream != null:
 				audio_player.stop()
 				audio_player.set_stream(cbi.stream)

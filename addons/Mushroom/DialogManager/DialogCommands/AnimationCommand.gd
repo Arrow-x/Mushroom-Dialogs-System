@@ -1,8 +1,6 @@
 tool
 extends Command
-class_name animation_command
-#this is a path to the animatiomnPlayer Node
-var type := "animation"
+class_name AnimationCommand
 
 export(String) var animation_path
 export(String) var animation_name
@@ -32,3 +30,11 @@ func preview() -> String:
 
 func get_icon() -> Resource:
 	return load("res://addons/Mushroom/DialogManager/Editor/icons/fork_icon.png")
+
+
+func get_class() -> String:
+	return "AnimationCommand"
+
+
+func is_class(c: String) -> bool:
+	return c == "AnimationCommand"

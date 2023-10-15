@@ -13,11 +13,11 @@ onready var check_type: MenuButton = $VBoxContainer/CondVBoxContainer/ReqVal/Che
 onready var append_check: CheckBox = $VBoxContainer/AppendHBoxContainer/AppendCheckBox
 
 var undo_redo: UndoRedo
-var current_say: say_command
+var current_say: SayCommand
 var current_flowchart: FlowChart
 
 
-func set_up(c_s: say_command, u_r: UndoRedo, fl: FlowChart):
+func set_up(c_s: SayCommand, u_r: UndoRedo, fl: FlowChart):
 	current_say = c_s
 	current_flowchart = fl
 

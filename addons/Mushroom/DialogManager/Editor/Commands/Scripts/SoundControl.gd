@@ -1,7 +1,7 @@
 tool
 extends Control
 
-var current_sound: sound_command
+var current_sound: SoundCommand
 var undo_redo: UndoRedo
 var current_effect: AudioEffect
 var current_stream: AudioStream
@@ -17,7 +17,7 @@ onready var bus_lineedit := $BusHBoxContainer/BusLineEdit
 onready var effect := $EffectHBoxContainer/Effect
 
 
-func set_up(cmd: sound_command, u_r: UndoRedo) -> void:
+func set_up(cmd: SoundCommand, u_r: UndoRedo) -> void:
 	current_sound = cmd
 	undo_redo = u_r
 	stream.text = (

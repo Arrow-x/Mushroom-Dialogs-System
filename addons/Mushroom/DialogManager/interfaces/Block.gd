@@ -1,6 +1,6 @@
 tool
 extends Resource
-class_name block
+class_name Block
 
 #each block should now what flowchart it is parented to
 export var name: String

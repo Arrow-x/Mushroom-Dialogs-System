@@ -1,8 +1,7 @@
 tool
 extends Command
-class_name fork_command
+class_name ForkCommand
 
-var type: String = "fork"
 export var f_color: Color
 export(Array, Resource) var choices
 export var origin_block: String
@@ -27,3 +26,11 @@ func preview():
 
 func get_icon() -> Resource:
 	return load("res://addons/Mushroom/DialogManager/Editor/icons/fork_icon.png")
+
+
+func get_class() -> String:
+	return "ForkCommand"
+
+
+func is_class(c: String) -> bool:
+	return c == "ForkCommand"

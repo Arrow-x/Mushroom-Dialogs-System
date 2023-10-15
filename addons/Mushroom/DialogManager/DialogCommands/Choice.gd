@@ -1,5 +1,5 @@
 extends Resource
-class_name choice
+class_name Choice
 
 export(String, MULTILINE) var text setget set_choice_text
 
@@ -26,3 +26,11 @@ func set_choice_text(new_text: String) -> void:
 func set_choice_next_index(new_idx: int) -> void:
 	next_index = new_idx
 	emit_changed()
+
+
+func get_class() -> String:
+	return "Choice"
+
+
+func is_class(c: String) -> bool:
+	return c == "Choice"

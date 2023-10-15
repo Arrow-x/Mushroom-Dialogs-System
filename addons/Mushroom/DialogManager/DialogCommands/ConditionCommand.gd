@@ -1,8 +1,6 @@
 tool
 extends Command
-class_name condition_command
-
-var type: String = "condition"
+class_name ConditionCommand
 
 export var condition_block: Resource
 
@@ -13,7 +11,7 @@ export(String) var condition_type = "=="
 
 
 func _init():
-	condition_block = block.new()
+	condition_block = Block.new()
 
 
 func preview() -> String:
@@ -22,3 +20,11 @@ func preview() -> String:
 
 func get_icon() -> Resource:
 	return load("res://addons/Mushroom/DialogManager/Editor/icons/condition_fork.png")
+
+
+func get_class() -> String:
+	return "ConditionCommand"
+
+
+func is_class(c: String) -> bool:
+	return c == "ConditionCommand"

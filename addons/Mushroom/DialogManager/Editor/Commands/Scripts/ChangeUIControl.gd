@@ -1,7 +1,7 @@
 tool
 extends VBoxContainer
 
-var current_change_ui: change_ui
+var current_change_ui: ChangeUICommand
 var undo_redo: UndoRedo
 var toggle: bool
 var current_ui_scene: PackedScene
@@ -11,7 +11,7 @@ onready var ui_drag_target := $UIHBoxContainer/HBoxContainer/UIDragTargetLabel
 onready var ui_drag_container := $UIHBoxContainer
 
 
-func set_up(cmd: change_ui, u_r: UndoRedo) -> void:
+func set_up(cmd: ChangeUICommand, u_r: UndoRedo) -> void:
 	current_change_ui = cmd
 	undo_redo = u_r
 	default_check.pressed = current_change_ui.change_to_default

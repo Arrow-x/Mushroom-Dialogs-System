@@ -1,8 +1,6 @@
 tool
 extends Command
-class_name set_var_command
-
-var type: String = "set_var"
+class_name SetVarCommand
 
 export(String) var var_path: String
 export(String) var var_name: String
@@ -15,3 +13,11 @@ func preview() -> String:
 
 func get_icon() -> Resource:
 	return load("res://addons/Mushroom/DialogManager/Editor/icons/say_icon.png")
+
+
+func get_class() -> String:
+	return "SetVarCommand"
+
+
+func is_class(c: String) -> bool:
+	return c == "SetVarCommand"
