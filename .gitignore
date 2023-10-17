@@ -1,8 +1,9 @@
 .import
+.godot
+addons/plugin_refresher
+addons/zylann.editor_debugger
 Tests
 logs
 icon.png.import
-addons/godot-plugin-refresher
-addons/zylann.editor_debugger
 icon.png
 default_env.tres
