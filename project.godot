@@ -1,0 +1,118 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Command",
+"class": "AnimationCommand",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/AnimationCommand.gd"
+}, {
+"base": "Resource",
+"class": "Block",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/interfaces/Block.gd"
+}, {
+"base": "Command",
+"class": "ChangeUICommand",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/ChangeUICommand.gd"
+}, {
+"base": "Resource",
+"class": "Chararcter",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/interfaces/Character.gd"
+}, {
+"base": "Resource",
+"class": "Choice",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/Choice.gd"
+}, {
+"base": "Resource",
+"class": "Command",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/interfaces/Command.gd"
+}, {
+"base": "Command",
+"class": "ConditionCommand",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/ConditionCommand.gd"
+}, {
+"base": "Resource",
+"class": "FlowChart",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/interfaces/FlowChart.gd"
+}, {
+"base": "Command",
+"class": "ForkCommand",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/ForkCommand.gd"
+}, {
+"base": "Command",
+"class": "JumpCommand",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/JumpCommand.gd"
+}, {
+"base": "Command",
+"class": "SayCommand",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/SayCommand.gd"
+}, {
+"base": "Command",
+"class": "SetVarCommand",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/SetVarCommand.gd"
+}, {
+"base": "Command",
+"class": "SoundCommand",
+"language": "GDScript",
+"path": "res://addons/Mushroom/DialogManager/DialogCommands/SoundCommand.gd"
+} ]
+_global_script_class_icons={
+"AnimationCommand": "",
+"Block": "",
+"ChangeUICommand": "",
+"Chararcter": "",
+"Choice": "",
+"Command": "",
+"ConditionCommand": "",
+"FlowChart": "",
+"ForkCommand": "",
+"JumpCommand": "",
+"SayCommand": "",
+"SetVarCommand": "",
+"SoundCommand": ""
+}
+
+[application]
+
+config/name="MushroomDialogSystem"
+config/icon="res://icon.png"
+
+[autoload]
+
+DialogManagerNode="*res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/Mushroom/plugin.cfg" )
+
+[gui]
+
+common/drop_mouse_on_gui_input_disabled=true
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+quality/driver/driver_name="GLES2"
+vram_compression/import_etc=true
+vram_compression/import_etc2=false
