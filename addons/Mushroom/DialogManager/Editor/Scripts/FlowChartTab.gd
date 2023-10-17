@@ -29,7 +29,6 @@ func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
 			"initeate_Tree_from_Block"
 		)
 		graph_edit.connect("flow_changed", self, "changed_flowchart")
-		graph_edit.connect("graph_node_close", self, "undo_redo_graph_edit")
 		graph_edit.undo_redo = sent_undo_redo
 
 		var command_tree: Tree = get_node(
