@@ -10,59 +10,59 @@ script = ExtResource( 1 )
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_bottom = -520.0
+offset_bottom = -520.0
 
 [node name="VarNodeHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="VarNodeLabel" type="Label" parent="VBoxContainer/VarNodeHBoxContainer"]
-margin_top = 5.0
-margin_right = 97.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 97.0
+offset_bottom = 19.0
 text = "Variable Node: "
 
 [node name="VarNodeLineEdit" type="LineEdit" parent="VBoxContainer/VarNodeHBoxContainer"]
-margin_left = 101.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 101.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="VarNameHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 28.0
-margin_right = 1024.0
-margin_bottom = 52.0
+offset_top = 28.0
+offset_right = 1024.0
+offset_bottom = 52.0
 size_flags_horizontal = 3
 
 [node name="VarNameLabel" type="Label" parent="VBoxContainer/VarNameHBoxContainer"]
-margin_top = 5.0
-margin_right = 101.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 101.0
+offset_bottom = 19.0
 text = "Variable Name: "
 
 [node name="VarNameLineEdit" type="LineEdit" parent="VBoxContainer/VarNameHBoxContainer"]
-margin_left = 105.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 105.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="SetValHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 56.0
-margin_right = 1024.0
-margin_bottom = 80.0
+offset_top = 56.0
+offset_right = 1024.0
+offset_bottom = 80.0
 size_flags_horizontal = 3
 
 [node name="SetValLabel" type="Label" parent="VBoxContainer/SetValHBoxContainer"]
-margin_top = 5.0
-margin_right = 74.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 74.0
+offset_bottom = 19.0
 text = "New Valua: "
 
 [node name="SetValLineEdit" type="LineEdit" parent="VBoxContainer/SetValHBoxContainer"]
-margin_left = 78.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 78.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [connection signal="text_changed" from="VBoxContainer/VarNodeHBoxContainer/VarNodeLineEdit" to="." method="_on_VarNodeLineEdit_text_changed"]

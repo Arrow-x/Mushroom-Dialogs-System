@@ -12,139 +12,139 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="IsCondCheckBox" type="CheckButton" parent="VBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 40.0
+offset_right = 1024.0
+offset_bottom = 40.0
 text = "Conditional Command"
 
 [node name="CondVBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
 visible = false
-margin_top = 44.0
-margin_right = 1024.0
-margin_bottom = 130.0
+offset_top = 44.0
+offset_right = 1024.0
+offset_bottom = 130.0
 
 [node name="ReqNode" type="HBoxContainer" parent="VBoxContainer/CondVBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_right = 1024.0
+offset_bottom = 24.0
 
 [node name="Label" type="Label" parent="VBoxContainer/CondVBoxContainer/ReqNode"]
-margin_top = 5.0
-margin_right = 99.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 99.0
+offset_bottom = 19.0
 text = "Required Node:"
 
 [node name="ReqNodeInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqNode"]
-margin_left = 103.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 103.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ReqVar" type="HBoxContainer" parent="VBoxContainer/CondVBoxContainer"]
-margin_top = 28.0
-margin_right = 1024.0
-margin_bottom = 52.0
+offset_top = 28.0
+offset_right = 1024.0
+offset_bottom = 52.0
 
 [node name="Label" type="Label" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
-margin_top = 5.0
-margin_right = 116.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 116.0
+offset_bottom = 19.0
 text = "Required Variable:"
 
 [node name="ReqVarInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
-margin_left = 120.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 120.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ReqVal" type="HBoxContainer" parent="VBoxContainer/CondVBoxContainer"]
-margin_top = 56.0
-margin_right = 1024.0
-margin_bottom = 80.0
+offset_top = 56.0
+offset_right = 1024.0
+offset_bottom = 80.0
 
 [node name="Label2" type="Label" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
-margin_top = 5.0
-margin_right = 39.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 39.0
+offset_bottom = 19.0
 text = "Value:"
 
 [node name="CheckType" type="MenuButton" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
-margin_left = 43.0
-margin_right = 95.0
-margin_bottom = 24.0
+offset_left = 43.0
+offset_right = 95.0
+offset_bottom = 24.0
 focus_mode = 2
 text = "type:  "
 items = [ "==", null, 0, false, false, 0, 0, null, "", false, "!=", null, 0, false, false, 1, 0, null, "", false, "<", null, 0, false, false, 2, 0, null, "", false, "<=", null, 0, false, false, 3, 0, null, "", false, ">", null, 0, false, false, 4, 0, null, "", false, ">=", null, 0, false, false, 5, 0, null, "", false ]
 
 [node name="CheckValInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
-margin_left = 99.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 99.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="Seperator" type="Panel" parent="VBoxContainer/CondVBoxContainer"]
 modulate = Color( 0, 0, 0, 1 )
-margin_top = 84.0
-margin_right = 1024.0
-margin_bottom = 86.61
-rect_min_size = Vector2( 0, 2.61 )
+offset_top = 84.0
+offset_right = 1024.0
+offset_bottom = 86.61
+custom_minimum_size = Vector2( 0, 2.61 )
 
 [node name="AppendHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 44.0
-margin_right = 1024.0
-margin_bottom = 68.0
+offset_top = 44.0
+offset_right = 1024.0
+offset_bottom = 68.0
 
 [node name="Label" type="Label" parent="VBoxContainer/AppendHBoxContainer"]
-margin_top = 5.0
-margin_right = 57.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 57.0
+offset_bottom = 19.0
 text = "Append: "
 
 [node name="AppendCheckBox" type="CheckBox" parent="VBoxContainer/AppendHBoxContainer"]
-margin_left = 61.0
-margin_right = 85.0
-margin_bottom = 24.0
+offset_left = 61.0
+offset_right = 85.0
+offset_bottom = 24.0
 
 [node name="CharacterHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 72.0
-margin_right = 1024.0
-margin_bottom = 92.0
+offset_top = 72.0
+offset_right = 1024.0
+offset_bottom = 92.0
 
 [node name="CharacterLabel" type="Label" parent="VBoxContainer/CharacterHBoxContainer"]
-margin_top = 3.0
-margin_right = 72.0
-margin_bottom = 17.0
-rect_min_size = Vector2( 60, 0 )
+offset_top = 3.0
+offset_right = 72.0
+offset_bottom = 17.0
+custom_minimum_size = Vector2( 60, 0 )
 text = "Character : "
 
 [node name="CharacterMenuButton" type="MenuButton" parent="VBoxContainer/CharacterHBoxContainer"]
-margin_left = 76.0
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_left = 76.0
+offset_right = 1024.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 text = "select a charcter"
 
 [node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer"]
-margin_top = 96.0
-margin_right = 1024.0
-margin_bottom = 600.0
+offset_top = 96.0
+offset_right = 1024.0
+offset_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="SayHBoxContainer" type="HBoxContainer" parent="VBoxContainer/VSplitContainer"]
-margin_right = 1024.0
-margin_bottom = 14.0
+offset_right = 1024.0
+offset_bottom = 14.0
 size_flags_horizontal = 3
 
 [node name="SayLabel" type="Label" parent="VBoxContainer/VSplitContainer/SayHBoxContainer"]
-margin_right = 60.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 60, 0 )
+offset_right = 60.0
+offset_bottom = 14.0
+custom_minimum_size = Vector2( 60, 0 )
 size_flags_vertical = 1
 text = "Say Text"
 
 [node name="TextEdit" type="TextEdit" parent="VBoxContainer/VSplitContainer/SayHBoxContainer"]
-margin_left = 64.0
-margin_right = 1024.0
-margin_bottom = 14.0
+offset_left = 64.0
+offset_right = 1024.0
+offset_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -152,44 +152,44 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VSplitContainer"]
-margin_top = 26.0
-margin_right = 1024.0
-margin_bottom = 504.0
+offset_top = 26.0
+offset_right = 1024.0
+offset_bottom = 504.0
 
 [node name="PortraitHBoxContainer" type="HBoxContainer" parent="VBoxContainer/VSplitContainer/VBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_right = 1024.0
+offset_bottom = 20.0
 
 [node name="PortraitLabel" type="Label" parent="VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer"]
-margin_top = 3.0
-margin_right = 60.0
-margin_bottom = 17.0
-rect_min_size = Vector2( 60, 0 )
+offset_top = 3.0
+offset_right = 60.0
+offset_bottom = 17.0
+custom_minimum_size = Vector2( 60, 0 )
 text = "Portrait :"
 
 [node name="PortraitMenuButton" type="MenuButton" parent="VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer"]
-margin_left = 64.0
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_left = 64.0
+offset_right = 1024.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 text = "Select a Portrait"
 
 [node name="PortraitPositionHBoxContainer" type="HBoxContainer" parent="VBoxContainer/VSplitContainer/VBoxContainer"]
-margin_top = 24.0
-margin_right = 1024.0
-margin_bottom = 55.0
+offset_top = 24.0
+offset_right = 1024.0
+offset_bottom = 55.0
 
 [node name="PortraitPositionLabel" type="Label" parent="VBoxContainer/VSplitContainer/VBoxContainer/PortraitPositionHBoxContainer"]
-margin_right = 60.0
-margin_bottom = 31.0
-rect_min_size = Vector2( 60, 0 )
+offset_right = 60.0
+offset_bottom = 31.0
+custom_minimum_size = Vector2( 60, 0 )
 text = "Portrait 
 Position :"
 
 [node name="PortraitPositionMenuButton" type="MenuButton" parent="VBoxContainer/VSplitContainer/VBoxContainer/PortraitPositionHBoxContainer"]
-margin_left = 64.0
-margin_right = 1024.0
-margin_bottom = 31.0
+offset_left = 64.0
+offset_right = 1024.0
+offset_bottom = 31.0
 size_flags_horizontal = 3
 text = "Choose a Posititon"
 items = [ "Left", null, 0, false, false, 0, 0, null, "", false, "right", null, 0, false, false, 1, 0, null, "", false, "center", null, 0, false, false, 2, 0, null, "", false ]
@@ -199,6 +199,6 @@ items = [ "Left", null, 0, false, false, 0, 0, null, "", false, "right", null, 0
 [connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_ReqVarInput_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_CheckValInput_text_changed"]
 [connection signal="toggled" from="VBoxContainer/AppendHBoxContainer/AppendCheckBox" to="." method="_on_AppendCheckBox_toggled"]
-[connection signal="about_to_show" from="VBoxContainer/CharacterHBoxContainer/CharacterMenuButton" to="." method="_on_CharacterMenuButton_about_to_show"]
+[connection signal="about_to_popup" from="VBoxContainer/CharacterHBoxContainer/CharacterMenuButton" to="." method="_on_CharacterMenuButton_about_to_show"]
 [connection signal="text_changed" from="VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit" to="." method="_on_TextEdit_text_changed"]
-[connection signal="about_to_show" from="VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton" to="." method="_on_PortraitMenuButton_about_to_show"]
+[connection signal="about_to_popup" from="VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton" to="." method="_on_PortraitMenuButton_about_to_show"]

@@ -1,16 +1,16 @@
 extends Resource
 class_name Choice
 
-export(String, MULTILINE) var text setget set_choice_text
+@export var text : String: set = set_choice_text
 
-export var next_block: String setget set_next_block
-export var next_index: int = 0 setget set_choice_next_index
+@export var next_block: String: set = set_next_block
+@export var next_index: int = 0: set = set_choice_next_index
 
-export var is_cond: bool = false
-export(String) var required_node
-export var required_var: String
-export var check_val: String
-export(String) var condition_type = "=="
+@export var is_cond: bool = false
+@export var required_node: String
+@export var required_var: String
+@export var check_val: String
+@export var condition_type: String = "=="
 
 
 func set_next_block(next_text: String) -> void:

@@ -9,147 +9,147 @@ script = ExtResource( 1 )
 
 [node name="Panel2" type="Panel" parent="."]
 modulate = Color( 0, 0.6, 1, 1 )
-margin_right = 1024.0
-margin_bottom = 5.0
-rect_min_size = Vector2( 0, 5 )
+offset_right = 1024.0
+offset_bottom = 5.0
+custom_minimum_size = Vector2( 0, 5 )
 
 [node name="IsCondCheckBox" type="CheckButton" parent="."]
-margin_top = 9.0
-margin_right = 1024.0
-margin_bottom = 49.0
+offset_top = 9.0
+offset_right = 1024.0
+offset_bottom = 49.0
 text = "Conditional Command"
 
 [node name="CondVBoxContainer" type="VBoxContainer" parent="."]
 visible = false
-margin_top = 53.0
-margin_right = 1024.0
-margin_bottom = 139.0
+offset_top = 53.0
+offset_right = 1024.0
+offset_bottom = 139.0
 
 [node name="ReqNode" type="HBoxContainer" parent="CondVBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_right = 1024.0
+offset_bottom = 24.0
 
 [node name="Label" type="Label" parent="CondVBoxContainer/ReqNode"]
-margin_top = 5.0
-margin_right = 99.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 99.0
+offset_bottom = 19.0
 text = "Required Node:"
 
 [node name="ReqNodeInput" type="LineEdit" parent="CondVBoxContainer/ReqNode"]
-margin_left = 103.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 103.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ReqVar" type="HBoxContainer" parent="CondVBoxContainer"]
-margin_top = 28.0
-margin_right = 1024.0
-margin_bottom = 52.0
+offset_top = 28.0
+offset_right = 1024.0
+offset_bottom = 52.0
 
 [node name="Label" type="Label" parent="CondVBoxContainer/ReqVar"]
-margin_top = 5.0
-margin_right = 116.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 116.0
+offset_bottom = 19.0
 text = "Required Variable:"
 
 [node name="CheckType" type="MenuButton" parent="CondVBoxContainer/ReqVar"]
-margin_left = 120.0
-margin_right = 172.0
-margin_bottom = 24.0
+offset_left = 120.0
+offset_right = 172.0
+offset_bottom = 24.0
 focus_mode = 2
 text = "type:  "
 items = [ "==", null, 0, false, false, 0, 0, null, "", false, "!=", null, 0, false, false, 1, 0, null, "", false, "<", null, 0, false, false, 2, 0, null, "", false, "<=", null, 0, false, false, 3, 0, null, "", false, ">", null, 0, false, false, 4, 0, null, "", false, ">=", null, 0, false, false, 5, 0, null, "", false ]
 
 [node name="ReqVarInput" type="LineEdit" parent="CondVBoxContainer/ReqVar"]
-margin_left = 176.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 176.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ReqVal" type="HBoxContainer" parent="CondVBoxContainer"]
-margin_top = 56.0
-margin_right = 1024.0
-margin_bottom = 80.0
+offset_top = 56.0
+offset_right = 1024.0
+offset_bottom = 80.0
 
 [node name="Label2" type="Label" parent="CondVBoxContainer/ReqVal"]
-margin_top = 5.0
-margin_right = 39.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 39.0
+offset_bottom = 19.0
 text = "Value:"
 
 [node name="CheckValInput" type="LineEdit" parent="CondVBoxContainer/ReqVal"]
-margin_left = 43.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 43.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="Seperator" type="Panel" parent="CondVBoxContainer"]
 modulate = Color( 0, 0, 0, 1 )
-margin_top = 84.0
-margin_right = 1024.0
-margin_bottom = 86.61
-rect_min_size = Vector2( 0, 2.61 )
+offset_top = 84.0
+offset_right = 1024.0
+offset_bottom = 86.61
+custom_minimum_size = Vector2( 0, 2.61 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 53.0
-margin_right = 1024.0
-margin_bottom = 77.0
+offset_top = 53.0
+offset_right = 1024.0
+offset_bottom = 77.0
 
 [node name="Label" type="Label" parent="HBoxContainer"]
-margin_top = 5.0
-margin_right = 74.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 74.0
+offset_bottom = 19.0
 text = "Choice Text"
 
 [node name="ChoiceText" type="LineEdit" parent="HBoxContainer"]
-margin_left = 78.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 78.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
-margin_top = 81.0
-margin_right = 1024.0
-margin_bottom = 101.0
+offset_top = 81.0
+offset_right = 1024.0
+offset_bottom = 101.0
 
 [node name="Label" type="Label" parent="HBoxContainer2"]
-margin_top = 3.0
-margin_right = 69.0
-margin_bottom = 17.0
+offset_top = 3.0
+offset_right = 69.0
+offset_bottom = 17.0
 text = "Next Block"
 
 [node name="NextBlockList" type="MenuButton" parent="HBoxContainer2"]
-margin_left = 73.0
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_left = 73.0
+offset_right = 1024.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="."]
-margin_top = 105.0
-margin_right = 1024.0
-margin_bottom = 129.0
+offset_top = 105.0
+offset_right = 1024.0
+offset_bottom = 129.0
 
 [node name="Label" type="Label" parent="HBoxContainer3"]
-margin_top = 5.0
-margin_right = 74.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 74.0
+offset_bottom = 19.0
 text = "Next Index "
 
 [node name="NextIndex" type="SpinBox" parent="HBoxContainer3"]
-margin_left = 78.0
-margin_right = 152.0
-margin_bottom = 24.0
+offset_left = 78.0
+offset_right = 152.0
+offset_bottom = 24.0
 
 [node name="Control" type="Control" parent="HBoxContainer3"]
-margin_left = 156.0
-margin_right = 1000.0
-margin_bottom = 24.0
+offset_left = 156.0
+offset_right = 1000.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="DeleteChoice" type="Button" parent="HBoxContainer3"]
-margin_left = 1004.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 1004.0
+offset_right = 1024.0
+offset_bottom = 24.0
 text = "X"
 
 [connection signal="toggled" from="IsCondCheckBox" to="." method="_on_IsCondCheckBox_toggled"]
@@ -157,6 +157,6 @@ text = "X"
 [connection signal="text_changed" from="CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_ReqVarInput_text_changed"]
 [connection signal="text_changed" from="CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_CheckValInput_text_changed"]
 [connection signal="text_changed" from="HBoxContainer/ChoiceText" to="." method="_on_ChoiceText_text_changed"]
-[connection signal="about_to_show" from="HBoxContainer2/NextBlockList" to="." method="_on_NextBlockList_about_to_show"]
+[connection signal="about_to_popup" from="HBoxContainer2/NextBlockList" to="." method="_on_NextBlockList_about_to_show"]
 [connection signal="value_changed" from="HBoxContainer3/NextIndex" to="." method="_on_NextIndex_value_changed"]
 [connection signal="pressed" from="HBoxContainer3/DeleteChoice" to="." method="_on_DeleteChoice_pressed"]

@@ -1,4 +1,4 @@
-tool
+@tool
 extends PopupMenu
 
 
@@ -34,9 +34,9 @@ func popit(button: Button) -> void:
 	ready_commands()
 	popup(
 		Rect2(
-			button.rect_global_position.x,
-			button.rect_global_position.y + button.rect_size.y,
-			rect_size.x,
-			rect_size.y
+			button.global_position.x,
+			button.global_position.y + button.size.y,
+			size.x,
+			size.y
 		)
 	)

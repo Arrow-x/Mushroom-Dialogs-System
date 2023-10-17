@@ -9,42 +9,42 @@ anchor_bottom = 1.0
 script = ExtResource( 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 40.0
+offset_right = 1024.0
+offset_bottom = 40.0
 
 [node name="Label" type="Label" parent="HBoxContainer"]
-margin_top = 13.0
-margin_right = 117.0
-margin_bottom = 27.0
+offset_top = 13.0
+offset_right = 117.0
+offset_bottom = 27.0
 text = "Change to Default:"
 
 [node name="IsDefaultCheckButton" type="CheckButton" parent="HBoxContainer"]
-margin_left = 121.0
-margin_right = 1024.0
-margin_bottom = 40.0
+offset_left = 121.0
+offset_right = 1024.0
+offset_bottom = 40.0
 size_flags_horizontal = 3
 
 [node name="UIHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 44.0
-margin_right = 1024.0
-margin_bottom = 64.0
+offset_top = 44.0
+offset_right = 1024.0
+offset_bottom = 64.0
 
 [node name="Label" type="Label" parent="UIHBoxContainer"]
-margin_top = 3.0
-margin_right = 114.0
-margin_bottom = 17.0
+offset_top = 3.0
+offset_right = 114.0
+offset_bottom = 17.0
 text = "UI packed scene: "
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UIHBoxContainer"]
-margin_left = 118.0
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_left = 118.0
+offset_right = 1024.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 
 [node name="UIDragTargetLabel" type="Label" parent="UIHBoxContainer/HBoxContainer"]
-margin_top = 3.0
-margin_right = 883.0
-margin_bottom = 17.0
+offset_top = 3.0
+offset_right = 883.0
+offset_bottom = 17.0
 mouse_filter = 0
 size_flags_horizontal = 3
 text = "..."
@@ -54,9 +54,9 @@ type = "PackedScene"
 extension = "tscn"
 
 [node name="ClearButton" type="Button" parent="UIHBoxContainer/HBoxContainer"]
-margin_left = 887.0
-margin_right = 906.0
-margin_bottom = 20.0
+offset_left = 887.0
+offset_right = 906.0
+offset_bottom = 20.0
 text = "c"
 
 [connection signal="toggled" from="HBoxContainer/IsDefaultCheckButton" to="." method="_on_IsDefaultCheckButton_toggled"]

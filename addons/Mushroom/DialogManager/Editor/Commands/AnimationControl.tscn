@@ -12,108 +12,108 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="PathHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_right = 1024.0
+offset_bottom = 24.0
 
 [node name="Label" type="Label" parent="VBoxContainer/PathHBoxContainer"]
-margin_top = 5.0
-margin_right = 36.0
-margin_bottom = 19.0
-text = "Path: "
+offset_top = 5.0
+offset_right = 36.0
+offset_bottom = 19.0
+text = "Path3D: "
 
 [node name="PathLineEdit" type="LineEdit" parent="VBoxContainer/PathHBoxContainer"]
-margin_left = 40.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 40.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ANameHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 28.0
-margin_right = 1024.0
-margin_bottom = 52.0
+offset_top = 28.0
+offset_right = 1024.0
+offset_bottom = 52.0
 
 [node name="Label" type="Label" parent="VBoxContainer/ANameHBoxContainer"]
-margin_top = 5.0
-margin_right = 46.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 46.0
+offset_bottom = 19.0
 text = "Name: "
 
 [node name="NameLineEdit" type="LineEdit" parent="VBoxContainer/ANameHBoxContainer"]
-margin_left = 50.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 50.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="BlendHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 56.0
-margin_right = 1024.0
-margin_bottom = 80.0
+offset_top = 56.0
+offset_right = 1024.0
+offset_bottom = 80.0
 
 [node name="Label" type="Label" parent="VBoxContainer/BlendHBoxContainer"]
-margin_top = 5.0
-margin_right = 45.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 45.0
+offset_bottom = 19.0
 text = "Blend: "
 
 [node name="BlendLineEdit" type="SpinBox" parent="VBoxContainer/BlendHBoxContainer"]
-margin_left = 49.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 49.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 step = 0.1
 page = 10.0
 
 [node name="SpeedHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 84.0
-margin_right = 1024.0
-margin_bottom = 108.0
+offset_top = 84.0
+offset_right = 1024.0
+offset_bottom = 108.0
 
 [node name="Label" type="Label" parent="VBoxContainer/SpeedHBoxContainer"]
-margin_top = 5.0
-margin_right = 51.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 51.0
+offset_bottom = 19.0
 text = "Speed : "
 
 [node name="SpeedLineEdit" type="SpinBox" parent="VBoxContainer/SpeedHBoxContainer"]
-margin_left = 55.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 55.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 step = 0.1
 page = 10.0
 
 [node name="FromEndHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 112.0
-margin_right = 1024.0
-margin_bottom = 152.0
+offset_top = 112.0
+offset_right = 1024.0
+offset_bottom = 152.0
 
 [node name="Label" type="Label" parent="VBoxContainer/FromEndHBoxContainer"]
-margin_top = 13.0
-margin_right = 72.0
-margin_bottom = 27.0
+offset_top = 13.0
+offset_right = 72.0
+offset_bottom = 27.0
 text = "From End : "
 
 [node name="FromEndCheck" type="CheckButton" parent="VBoxContainer/FromEndHBoxContainer"]
-margin_left = 76.0
-margin_right = 1024.0
-margin_bottom = 40.0
+offset_left = 76.0
+offset_right = 1024.0
+offset_bottom = 40.0
 size_flags_horizontal = 3
 
 [node name="TypeHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 156.0
-margin_right = 1024.0
-margin_bottom = 176.0
+offset_top = 156.0
+offset_right = 1024.0
+offset_bottom = 176.0
 
 [node name="Label" type="Label" parent="VBoxContainer/TypeHBoxContainer"]
-margin_top = 3.0
-margin_right = 108.0
-margin_bottom = 17.0
+offset_top = 3.0
+offset_right = 108.0
+offset_bottom = 17.0
 text = "Animation Type: "
 
 [node name="TypeMenu" type="MenuButton" parent="VBoxContainer/TypeHBoxContainer"]
-margin_left = 112.0
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_left = 112.0
+offset_right = 1024.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 text = "Set Animation Type"
 items = [ "Wait", null, 0, false, false, 0, 0, null, "", false, "Continue", null, 0, false, false, 1, 0, null, "", false ]

@@ -2,13 +2,13 @@
 
 [ext_resource path="res://addons/Mushroom/DialogManager/Editor/Scripts/EnterNameScene.gd" type="Script" id=1]
 
-[node name="EnterNameScene" type="WindowDialog"]
+[node name="EnterNameScene" type="Window"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -806.0
-margin_bottom = -459.0
-rect_min_size = Vector2( 218, 141 )
-popup_exclusive = true
+offset_right = -806.0
+offset_bottom = -459.0
+custom_minimum_size = Vector2( 218, 141 )
+exclusive = true
 window_title = "Enter a Name for the block"
 resizable = true
 script = ExtResource( 1 )
@@ -24,63 +24,63 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="VBoxContainer"]
-margin_right = 218.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 0, 20 )
+offset_right = 218.0
+offset_bottom = 20.0
+custom_minimum_size = Vector2( 0, 20 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
-margin_top = 24.0
-margin_right = 218.0
-margin_bottom = 93.0
+offset_top = 24.0
+offset_right = 218.0
+offset_bottom = 93.0
 size_flags_vertical = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Control2" type="Control" parent="VBoxContainer"]
-margin_top = 97.0
-margin_right = 218.0
-margin_bottom = 117.0
-rect_min_size = Vector2( 0, 20 )
+offset_top = 97.0
+offset_right = 218.0
+offset_bottom = 117.0
+custom_minimum_size = Vector2( 0, 20 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 121.0
-margin_right = 218.0
-margin_bottom = 141.0
+offset_top = 121.0
+offset_right = 218.0
+offset_bottom = 141.0
 
 [node name="Cancel" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_right = 54.0
-margin_bottom = 20.0
-focus_neighbour_top = NodePath("../../LineEdit")
-focus_neighbour_right = NodePath("../OK")
+offset_right = 54.0
+offset_bottom = 20.0
+focus_neighbor_top = NodePath("../../LineEdit")
+focus_neighbor_right = NodePath("../OK")
 text = "Cancel"
 
 [node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
-margin_left = 58.0
-margin_right = 183.0
-margin_bottom = 20.0
+offset_left = 58.0
+offset_right = 183.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 
 [node name="OK" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 187.0
-margin_right = 218.0
-margin_bottom = 20.0
-focus_neighbour_left = NodePath("../Cancel")
-focus_neighbour_top = NodePath("../../LineEdit")
+offset_left = 187.0
+offset_right = 218.0
+offset_bottom = 20.0
+focus_neighbor_left = NodePath("../Cancel")
+focus_neighbor_top = NodePath("../../LineEdit")
 text = "OK"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [connection signal="text_changed" from="VBoxContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
-[connection signal="text_entered" from="VBoxContainer/LineEdit" to="." method="_on_LineEdit_text_entered"]
+[connection signal="text_submitted" from="VBoxContainer/LineEdit" to="." method="_on_LineEdit_text_entered"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Cancel" to="." method="_on_Cancel_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/OK" to="." method="_on_OK_pressed"]

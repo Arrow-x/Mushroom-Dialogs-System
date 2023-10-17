@@ -1,8 +1,8 @@
-tool
+@tool
 extends Control
-onready var choices_container: Control = $ScrollContainer/ChoicesContainer
-onready var add_choice_button: Button = $ScrollContainer/ChoicesContainer/InfoBar/AddChoiceButton
-onready var graph: GraphEdit
+@onready var choices_container: Control = $ScrollContainer/ChoicesContainer
+@onready var add_choice_button: Button = $ScrollContainer/ChoicesContainer/InfoBar/AddChoiceButton
+@onready var graph: GraphEdit
 
 var current_fork: ForkCommand
 var current_block: Block
@@ -12,23 +12,17 @@ var undo_redo: UndoRedo
 signal adding_choice
 
 
-func get_command() -> Command:
-	return current_fork
-
-
 func _on_AddChoiceButton_pressed() -> void:
 	undo_redo.create_action("adding_choice")
-	undo_redo.add_do_method(self, "add_choice_contol")
-	undo_redo.add_undo_method(self, "free_choice_control")
+	undo_redo.add_do_method(add_choice_contol)
+	undo_redo.add_undo_method(free_choice_control)
 	undo_redo.commit_action()
 
 
 func removing_choice_action(choice_c: Control) -> void:
 	undo_redo.create_action("removing_choice")
-	undo_redo.add_do_method(self, "free_choice_control", choice_c)
-	undo_redo.add_undo_method(
-		self, "add_choice_contol", choice_c.current_choice, choice_c.get_index()
-	)
+	undo_redo.add_do_method(free_choice_control.bind(choice_c))
+	undo_redo.add_undo_method(add_choice_contol.bind(choice_c.current_choice, choice_c.get_index()))
 	undo_redo.commit_action()
 
 
@@ -73,17 +67,24 @@ func _on_connecting(sender: Block) -> void:
 	is_changed()
 
 
-func is_changed() -> void:
-	current_fork.emit_signal("changed")
-
-
 func create_choice_controle(choice: Choice, idx: int = -1) -> void:
-	var choice_control: Control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn").instance()
-	choice_control.connect("conncting", self, "_on_connecting", [current_block])
-	choice_control.connect("removing_choice", self, "removing_choice_action")
+	var choice_control: Control = (
+		load("res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn").instantiate()
+	)
+
+	choice_control.conncting.connect(_on_connecting.bind(current_block))
+	choice_control.removing_choice.connect(removing_choice_action)
 	choices_container.add_child(choice_control)
 	if idx != -1:
 		choices_container.move_child(choice_control, idx)
 	choice_control.set_up(choice, fc, undo_redo)
-	if !choice.is_connected("changed", self, "is_changed"):
-		choice.connect("changed", self, "is_changed")
+	if !choice.changed.is_connected(is_changed):
+		choice.changed.connect(is_changed)
+
+
+func get_command() -> Command:
+	return current_fork
+
+
+func is_changed() -> void:
+	current_fork.changed.emit()

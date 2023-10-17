@@ -8,60 +8,60 @@ anchor_bottom = 1.0
 script = ExtResource( 1 )
 
 [node name="ReqNode" type="HBoxContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_right = 1024.0
+offset_bottom = 24.0
 
 [node name="Label" type="Label" parent="ReqNode"]
-margin_top = 5.0
-margin_right = 99.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 99.0
+offset_bottom = 19.0
 text = "Required Node:"
 
 [node name="ReqNodeInput" type="LineEdit" parent="ReqNode"]
-margin_left = 103.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 103.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ReqVar" type="HBoxContainer" parent="."]
-margin_top = 28.0
-margin_right = 1024.0
-margin_bottom = 52.0
+offset_top = 28.0
+offset_right = 1024.0
+offset_bottom = 52.0
 
 [node name="Label" type="Label" parent="ReqVar"]
-margin_top = 5.0
-margin_right = 116.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 116.0
+offset_bottom = 19.0
 text = "Required Variable:"
 
 [node name="CheckType" type="MenuButton" parent="ReqVar"]
-margin_left = 120.0
-margin_right = 170.0
-margin_bottom = 24.0
+offset_left = 120.0
+offset_right = 170.0
+offset_bottom = 24.0
 text = "Type: "
 items = [ "==", null, 0, false, false, 0, 0, null, "", false, "!=", null, 0, false, false, 1, 0, null, "", false, "<", null, 0, false, false, 2, 0, null, "", false, "<=", null, 0, false, false, 3, 0, null, "", false, ">", null, 0, false, false, 4, 0, null, "", false, ">=", null, 0, false, false, 5, 0, null, "", false ]
 
 [node name="ReqVarInput" type="LineEdit" parent="ReqVar"]
-margin_left = 174.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 174.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 56.0
-margin_right = 1024.0
-margin_bottom = 80.0
+offset_top = 56.0
+offset_right = 1024.0
+offset_bottom = 80.0
 
 [node name="Label2" type="Label" parent="HBoxContainer"]
-margin_top = 5.0
-margin_right = 39.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 39.0
+offset_bottom = 19.0
 text = "Value:"
 
 [node name="CheckValInput" type="LineEdit" parent="HBoxContainer"]
-margin_left = 43.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 43.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [connection signal="text_changed" from="ReqNode/ReqNodeInput" to="." method="_on_ReqNodeInput_text_changed"]

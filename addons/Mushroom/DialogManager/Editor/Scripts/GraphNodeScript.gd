@@ -1,25 +1,25 @@
-tool
+@tool
 extends GraphNode
-
-signal graph_node_meta
-signal dragging
-signal node_closed
 
 var c_inputs: Array
 var c_outputs: Array
 
 var already_connected: Array
 
+signal graph_node_meta
+signal dragging
+signal node_closed
+
 
 func _ready() -> void:
-	if !is_connected("raise_request", self, "_on_GraphNode_raise_request"):
-		connect("raise_request", self, "_on_GraphNode_raise_request")
+	if !raise_request.is_connected(_on_GraphNode_raise_request):
+		raise_request.connect(_on_GraphNode_raise_request)
 
-	if !is_connected("dragged", self, "_on_GraphNode_dragged"):
-		connect("dragged", self, "_on_GraphNode_dragged")
+	if !dragged.is_connected(_on_GraphNode_dragged):
+		dragged.connect(_on_GraphNode_dragged)
 
-	if !is_connected("close_request", self, "_on_GraphNode_closed"):
-		connect("close_request", self, "_on_GraphNode_closed")
+	if !close_request.is_connected(_on_GraphNode_closed):
+		close_request.connect(_on_GraphNode_closed)
 
 
 func delete_inputs(fork: ForkCommand) -> void:
@@ -46,7 +46,7 @@ func remove_slot(
 
 	if control_slots.size() > 0:
 		control_slots[idx].queue_free()
-		control_slots.remove(idx)
+		control_slots.remove_at(idx)
 	meta_slots.erase(fork)
 
 	for f in meta_slots:
@@ -86,19 +86,19 @@ func add_g_node_input(fork: ForkCommand) -> void:
 
 func create_contorl_for_g_node_connection(io_c: Array, fork: ForkCommand) -> void:
 	var cc: Control = Control.new()
-	cc.rect_min_size = Vector2(10, 10)
+	cc.custom_minimum_size = Vector2(10, 10)
 	add_child(cc)
 	cc.set_owner(self)
 	io_c.append(cc)
 
 
 func _on_GraphNode_raise_request() -> void:
-	emit_signal("graph_node_meta", self)
+	graph_node_meta.emit(self)
 
 
 func _on_GraphNode_dragged(from, too) -> void:
-	emit_signal("dragging", from, too, self.title)
+	dragging.emit(from, too, self.title)
 
 
 func _on_GraphNode_closed() -> void:
-	emit_signal("node_closed", self)
+	node_closed.emit(self)

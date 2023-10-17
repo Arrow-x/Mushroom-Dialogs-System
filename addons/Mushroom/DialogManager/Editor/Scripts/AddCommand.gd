@@ -1,10 +1,9 @@
-tool
+@tool
 extends Button
 
-var pop_up: Popup
+@onready var pop_up: Popup = $AddCommandPopupMenu
 
 
 func _ready():
-	pop_up = get_node("AddCommandPopupMenu")
-	connect("pressed", pop_up, "popit", [self])
-	pop_up.connect("id_pressed", get_node("../../../CommandsTree"), "_on_add_command", [pop_up])
+	pressed.connect(pop_up.popit.bind(self))
+	pop_up.id_pressed.connect(get_node("../../../CommandsTree")._on_add_command.bind(pop_up))

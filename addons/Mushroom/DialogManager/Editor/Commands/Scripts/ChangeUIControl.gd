@@ -1,4 +1,4 @@
-tool
+@tool
 extends VBoxContainer
 
 var current_change_ui: ChangeUICommand
@@ -6,22 +6,22 @@ var undo_redo: UndoRedo
 var toggle: bool
 var current_ui_scene: PackedScene
 
-onready var default_check := $HBoxContainer/IsDefaultCheckButton
-onready var ui_drag_target := $UIHBoxContainer/HBoxContainer/UIDragTargetLabel
-onready var ui_drag_container := $UIHBoxContainer
+@onready var default_check := $HBoxContainer/IsDefaultCheckButton
+@onready var ui_drag_target := $UIHBoxContainer/HBoxContainer/UIDragTargetLabel
+@onready var ui_drag_container := $UIHBoxContainer
 
 
 func set_up(cmd: ChangeUICommand, u_r: UndoRedo) -> void:
 	current_change_ui = cmd
 	undo_redo = u_r
-	default_check.pressed = current_change_ui.change_to_default
+	default_check.button_pressed = current_change_ui.change_to_default
 	change_ui_scene(current_change_ui.next_UI)
 
 
 func _on_IsDefaultCheckButton_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle default ui")
-	undo_redo.add_do_method(self, "toggle_ui", button_pressed)
-	undo_redo.add_undo_method(self, "toggle_ui", toggle)
+	undo_redo.add_do_method(toggle_ui.bind(button_pressed))
+	undo_redo.add_undo_method(toggle_ui.bind(toggle))
 	undo_redo.commit_action()
 	toggle = button_pressed
 
@@ -36,18 +36,17 @@ func toggle_ui(button_pressed: bool) -> void:
 
 
 func _on_UIDragTargetLabel_value_dragged(value: PackedScene) -> void:
-	print(value)
 	undo_redo.create_action("drag a new UI scene")
-	undo_redo.add_do_method(self, "change_ui_scene", value)
-	undo_redo.add_undo_method(self, "change_ui_scene", current_ui_scene)
+	undo_redo.add_do_method(change_ui_scene.bind(value))
+	undo_redo.add_undo_method(change_ui_scene.bind(current_ui_scene))
 	undo_redo.commit_action()
 	current_ui_scene = value
 
 
 func _on_ClearButton_pressed() -> void:
 	undo_redo.create_action("drag a new UI scene")
-	undo_redo.add_do_method(self, "change_ui_scene", null)
-	undo_redo.add_undo_method(self, "change_ui_scene", current_ui_scene)
+	undo_redo.add_do_method(change_ui_scene)
+	undo_redo.add_undo_method(change_ui_scene.bind(current_ui_scene))
 	undo_redo.commit_action()
 	current_ui_scene = null
 

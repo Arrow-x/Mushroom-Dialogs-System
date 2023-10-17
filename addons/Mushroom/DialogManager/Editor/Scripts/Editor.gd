@@ -1,9 +1,9 @@
-tool
+@tool
 extends Control
 
-onready var flowcharts_container := $VBoxContainer/FlowCharTabs
-onready var f_tabs := $VBoxContainer/Tabs
-onready var editor_scn := preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
+@onready var flowcharts_container := $VBoxContainer/FlowCharTabs
+@onready var f_tabs := $VBoxContainer/TabBar
+@onready var editor_scn := preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
 
 
 func open_flowchart_scene(flowchart_scene: FlowChart, undo_redo: UndoRedo) -> void:
@@ -14,7 +14,7 @@ func open_flowchart_scene(flowchart_scene: FlowChart, undo_redo: UndoRedo) -> vo
 			_on_NewFlowChartTabs_tab_clicked(c_tab_idx)
 			return
 
-	var ed := editor_scn.instance()
+	var ed := editor_scn.instantiate()
 	flowcharts_container.add_child(ed)
 	ed.set_flowchart(flowchart_scene, undo_redo)
 
@@ -41,11 +41,11 @@ func _on_NewFlowChartTabs_tab_close(tab: int) -> void:
 		var _c := AcceptDialog.new()
 		_c.set_text("Save changes in flowchart before closing?")
 		_c.set_title("Please Confirm...")
-		_c.add_button("Cancel", OS.is_ok_left_and_cancel_right(), "cancel")
-		_c.add_button("Don't Save", OS.is_ok_left_and_cancel_right(), "discard")
-		_c.get_ok().set_text("Save & Close")
-		_c.connect("confirmed", self, "_close_confirm_choice", ["save", flowchart_editors, tab, _c])
-		_c.connect("custom_action", self, "_close_confirm_choice", [flowchart_editors, tab, _c])
+		_c.add_cancel_button("Cancel")
+		_c.add_button("Don't Save", false, "discard")
+		_c.get_ok_button().set_text("Save & Close")
+		_c.confirmed.connect(_close_confirm_choice.bind("save", flowchart_editors, tab, _c))
+		_c.custom_action.connect(_close_confirm_choice.bind(flowchart_editors, tab, _c))
 		_c.set_size(Vector2(0, 0))
 		add_child(_c)
 		_c.popup_centered()
@@ -59,11 +59,8 @@ func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window
 		return
 	if custom_action == "save":
 		flowchart_editors[tab].check_flowchart_path_before_save()
-		flowchart_editors[tab].connect(
-			"done_saving",
-			self,
-			"_free_tab_and_select_another",
-			[flowchart_editors, tab, confirm_window]
+		flowchart_editors[tab].done_saving.connect(
+			_free_tab_and_select_another.bind(flowchart_editors, tab, confirm_window)
 		)
 		return
 

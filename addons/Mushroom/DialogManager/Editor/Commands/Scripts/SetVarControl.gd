@@ -1,10 +1,11 @@
-tool
+@tool
 extends Control
 
+@onready var var_node_lineedit: LineEdit = $VBoxContainer/VarNodeHBoxContainer/VarNodeLineEdit
+@onready var var_name_lineedit: LineEdit = $VBoxContainer/VarNameHBoxContainer/VarNameLineEdit
+@onready var var_val_lineedit: LineEdit = $VBoxContainer/SetValHBoxContainer/SetValLineEdit
+
 var command: SetVarCommand
-onready var var_node_lineedit: LineEdit = $VBoxContainer/VarNodeHBoxContainer/VarNodeLineEdit
-onready var var_name_lineedit: LineEdit = $VBoxContainer/VarNameHBoxContainer/VarNameLineEdit
-onready var var_val_lineedit: LineEdit = $VBoxContainer/SetValHBoxContainer/SetValLineEdit
 
 
 func set_up(c: SetVarCommand) -> void:
@@ -34,4 +35,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	command.emit_signal("changed")
+	command.changed.emit()

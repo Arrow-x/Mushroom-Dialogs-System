@@ -1,132 +1,113 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://5065d1tmhdeq"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/DialogUI/UIcontroller.gd" type="Script" id=1]
-[ext_resource path="res://addons/Mushroom/DialogManager/DialogUI/TypeWriter.gd" type="Script" id=2]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/DialogUI/UIcontroller.gd" id="1"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/DialogUI/TypeWriter.gd" id="2"]
 
-[node name="DialogUI" type="Control"]
+[node name="DialogUI" type="Control" node_paths=PackedStringArray("say_pannel", "say_text", "say_name", "next_button", "choice_container", "right_portrait", "center_portrait", "left_portrait")]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 3.07437
-margin_right = 3.07434
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-_say_pannel = NodePath("SayPanel")
-_say_text = NodePath("SayPanel/SayText")
-_say_name = NodePath("SayPanel/NameText")
-_next_button = NodePath("SayPanel/NextButton")
-_choice_container = NodePath("VBoxChoiceContainer")
-_right_portrait = NodePath("RightPortrait")
-_center_portrait = NodePath("CenterPortrait")
-_left_portrait = NodePath("LeftPortrait")
+offset_left = 3.07437
+offset_right = 3.07434
+script = ExtResource("1")
+say_pannel = NodePath("SayPanel")
+say_text = NodePath("SayPanel/SayText")
+say_name = NodePath("SayPanel/NameText")
+next_button = NodePath("SayPanel/NextButton")
+choice_container = NodePath("VBoxChoiceContainer")
+right_portrait = NodePath("RightPortrait")
+center_portrait = NodePath("CenterPortrait")
+left_portrait = NodePath("LeftPortrait")
 
 [node name="PortraitContainer" type="Control" parent="."]
+anchors_preset = 0
 grow_horizontal = 2
 grow_vertical = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="RightPortrait" type="TextureRect" parent="."]
+layout_mode = 0
 anchor_left = 0.64
 anchor_top = 0.045
 anchor_right = 0.884
 anchor_bottom = 0.5
-margin_left = -1.85059
-margin_top = 78.5751
-margin_right = -1.85059
-margin_bottom = 78.5751
-rect_pivot_offset = Vector2( 40.394, -98.7395 )
-expand = true
+offset_left = -1.85059
+offset_top = 78.5751
+offset_right = -1.85059
+offset_bottom = 78.5751
+pivot_offset = Vector2(40.394, -98.7395)
+expand_mode = 1
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CenterPortrait" type="TextureRect" parent="."]
+layout_mode = 0
 anchor_left = 0.406
 anchor_top = 0.045
 anchor_right = 0.61
 anchor_bottom = 0.5
-margin_left = -1.85062
-margin_top = 78.5751
-margin_right = -1.85059
-margin_bottom = 78.5751
-rect_pivot_offset = Vector2( 280.01, -98.7395 )
-expand = true
+offset_left = -1.85062
+offset_top = 78.5751
+offset_right = -1.85059
+offset_bottom = 78.5751
+pivot_offset = Vector2(280.01, -98.7395)
+expand_mode = 1
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="LeftPortrait" type="TextureRect" parent="."]
+layout_mode = 0
 anchor_left = 0.111
 anchor_top = 0.045
 anchor_right = 0.329
 anchor_bottom = 0.5
-margin_left = -2.91008
-margin_top = 78.5751
-margin_right = -2.91016
-margin_bottom = 78.5751
-rect_pivot_offset = Vector2( 582.09, -98.7395 )
-expand = true
+offset_left = -2.91008
+offset_top = 78.5751
+offset_right = -2.91016
+offset_bottom = 78.5751
+pivot_offset = Vector2(582.09, -98.7395)
+expand_mode = 1
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SayPanel" type="Panel" parent="."]
+layout_mode = 0
 anchor_left = 0.1
 anchor_top = 0.531
 anchor_right = 0.9
 anchor_bottom = 0.908
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SayText" type="RichTextLabel" parent="SayPanel"]
+layout_mode = 0
 anchor_left = 0.02
 anchor_top = 0.2
 anchor_right = 0.975
 anchor_bottom = 0.833
 bbcode_enabled = true
-bbcode_text = "Color me [color = aqua] Impressed [/color] for this [b] Great [/b] [i] isn't it[/i]
-"
 text = "Color me [color = aqua] Impressed [/color] for this  Great   isn't it
 "
 scroll_active = false
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource("2")
 
 [node name="NameText" type="RichTextLabel" parent="SayPanel"]
+layout_mode = 0
 anchor_left = 0.021
 anchor_right = 0.138
 anchor_bottom = 0.11
-margin_right = -1.52588e-05
-margin_bottom = -1.90735e-06
+offset_right = -1.52588e-05
 bbcode_enabled = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="NextButton" type="Button" parent="SayPanel"]
+layout_mode = 0
 anchor_left = 0.75
 anchor_top = 0.8
 anchor_right = 0.9
 anchor_bottom = 0.83
-margin_right = 12.0
-margin_bottom = 20.0
+offset_right = 12.0
+offset_bottom = 20.0
 text = "NEXT"
 
 [node name="VBoxChoiceContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
 anchor_left = 0.25
 anchor_top = 0.05
 anchor_right = 0.75
 anchor_bottom = 0.488
 alignment = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}

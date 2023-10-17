@@ -1,10 +1,9 @@
-tool
+@tool
 extends Tree
 
-onready var current_block_label: Label = get_node(
-	"../inspectorHeader/inspectorHeaderHBoxContainer/CurrentBlock"
-)
-onready var commands_settings: Panel = get_node("../../CommandsSettings")
+@onready
+var current_block_label := get_node("../inspectorHeader/inspectorHeaderHBoxContainer/CurrentBlock")
+@onready var commands_settings := get_node("../../CommandsSettings")
 
 var flowchart_tab: Control
 var current_block: Block
@@ -18,10 +17,10 @@ enum resault { success = 1, not_found = -2 }
 
 
 func _ready():
-	connect("button_pressed", self, "_on_TreeItem_x_button_pressed")
+	button_clicked.connect(_on_TreeItem_x_button_pressed)
 	var rmb_pop = get_node("CommandRmbPopup/AddCommandRmbPopupMenu")
-	rmb_pop.connect("index_pressed", self, "_on_add_command", [rmb_pop, true])
-	connect("moved", self, "_on_move_TreeItem")
+	rmb_pop.index_pressed.connect(_on_add_command.bind(rmb_pop, true))
+	moved.connect(_on_move_TreeItem)
 
 
 func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int):
@@ -38,8 +37,8 @@ func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int):
 			parent = item.get_parent()
 
 	undo_redo.create_action("delete_command")
-	undo_redo.add_do_method(self, "delete_command", cmd, parent)
-	undo_redo.add_undo_method(self, "add_command_to_block", cmd, idx, parent_command)
+	undo_redo.add_do_method(delete_command.bind(cmd, parent))
+	undo_redo.add_undo_method(add_command_to_block.bind(cmd, idx, parent_command))
 	undo_redo.commit_action()
 
 
@@ -90,8 +89,8 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 				p = selec_p.get_meta("command")
 
 	undo_redo.create_action("Added Command")
-	undo_redo.add_do_method(self, "add_command_to_block", _command, idx, p)
-	undo_redo.add_undo_method(self, "delete_command", _command)
+	undo_redo.add_do_method(add_command_to_block.bind(_command, idx, p))
+	undo_redo.add_undo_method(delete_command.bind(_command))
 	undo_redo.commit_action()
 
 
@@ -143,12 +142,12 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 	else:
 		d_tree = get_TreeItems(get_root())
 		d_block = current_block
-	# TODO: if the command is ForkCommand then remove it from block outputs and GraphNode
+	# TODO: if the command is ForkCommand then erase it from block outputs and GraphNode
 	for c in d_tree.size():
 		var d_c = d_tree[c]
 		if d_c.get_meta("command") == command:
 			d_c.free()
-			d_block.commands.remove(c)
+			d_block.commands.erase(c)
 			free_Command_editor(command)
 			create_Tree_from_Block(current_block)
 			return resault.success
@@ -167,7 +166,7 @@ func free_Command_editor(command: Command) -> void:
 			c_s.queue_free()
 
 
-func get_drag_data(_position: Vector2) -> TreeItem:
+func _get_drag_data(_position: Vector2):
 	var preview := Label.new()
 	preview.text = get_selected().get_text(0)
 
@@ -176,7 +175,7 @@ func get_drag_data(_position: Vector2) -> TreeItem:
 	return get_selected()
 
 
-func can_drop_data(position: Vector2, data) -> bool:
+func _can_drop_data(position: Vector2, data) -> bool:
 	if not data is TreeItem:
 		return false
 	var to_item := get_item_at_position(position)
@@ -188,11 +187,11 @@ func can_drop_data(position: Vector2, data) -> bool:
 	return true
 
 
-func drop_data(position: Vector2, item: TreeItem) -> void:  # end drag
+func _drop_data(position: Vector2, item) -> void:
 	var to_item := get_item_at_position(position)
 	var shift := get_drop_section_at_position(position)
 	# shift == 0 if dropping on item, -1, +1 if in between
-	emit_signal("moved", item, to_item, shift)
+	moved.emit(item, to_item, shift)
 
 
 func _on_move_TreeItem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
@@ -210,9 +209,9 @@ func _on_move_TreeItem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 			return
 
 	undo_redo.create_action("drag command")
-	undo_redo.add_do_method(self, "move_TreeItem", item, to_item, shift)
+	undo_redo.add_do_method(move_TreeItem.bind(item, to_item, shift))
 	undo_redo.add_undo_method(
-		self, "undo_move_TreeItem", item.get_meta("command"), c_p_to_item, item_idx
+		undo_move_TreeItem.bind(item.get_meta("command"), c_p_to_item, item_idx)
 	)
 	undo_redo.commit_action()
 
@@ -255,9 +254,9 @@ func move_TreeItem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) 
 						item_idx = item_idx + 1
 
 	if item.get_parent() == get_root():
-		current_block.commands.remove(item_idx)
+		current_block.commands.erase(item_idx)
 	else:
-		item.get_parent().get_meta("command").condition_block.commands.remove(item_idx)
+		item.get_parent().get_meta("command").condition_block.commands.erase(item_idx)
 
 	create_Tree_from_Block(current_block)
 
@@ -266,9 +265,7 @@ func undo_move_TreeItem(og_item_command: Command, og_parent_commands: Array, og_
 	var to_item := get_TreeItem_from_Command(og_item_command)
 	var p_to_item := to_item.get_parent()
 	var c_p_to_item: Command = (
-		p_to_item.get_meta("command")
-		if p_to_item.has_meta("command")
-		else null
+		p_to_item.get_meta("command") if p_to_item.has_meta("command") else null
 	)
 	var item_idx := find_TreeItem(to_item)
 
@@ -276,9 +273,9 @@ func undo_move_TreeItem(og_item_command: Command, og_parent_commands: Array, og_
 		push_error("can't find it")
 		return
 	if to_item == null or p_to_item == get_root():
-		current_block.commands.remove(item_idx)
+		current_block.commands.erase(item_idx)
 	elif c_p_to_item is ConditionCommand:
-		c_p_to_item.condition_block.commands.remove(item_idx)
+		c_p_to_item.condition_block.commands.erase(item_idx)
 	og_parent_commands.insert(og_idx, og_item_command)
 	create_Tree_from_Block(current_block)
 
@@ -340,8 +337,8 @@ func create_Tree_from_Block(block: Block, parent: TreeItem = null) -> void:
 func _on_TreeItem_double_clicked() -> void:
 	var sel_c: Command = get_selected().get_meta("command")
 	undo_redo.create_action("selecting a command")
-	undo_redo.add_do_method(self, "create_Command_editor", sel_c)
-	undo_redo.add_undo_method(self, "create_Command_editor", prev_selected_Command)
+	undo_redo.add_do_method(create_Command_editor.bind(sel_c))
+	undo_redo.add_undo_method(create_Command_editor.bind(prev_selected_Command))
 	undo_redo.commit_action()
 
 	prev_selected_Command = sel_c
@@ -365,8 +362,8 @@ func create_Command_editor(cmd: Command = null) -> void:
 	item.select(0)
 
 	if current_item != null:
-		if !current_item.is_connected("changed", self, "create_Tree_from_Block"):
-			current_item.connect("changed", self, "create_Tree_from_Block", [current_block])
+		if !current_item.changed.is_connected(create_Tree_from_Block):
+			current_item.changed.connect(create_Tree_from_Block.bind(current_block))
 		if commands_settings.get_child_count() != 0:
 			if commands_settings.get_child(0) != null:
 				commands_settings.get_child(0).free()
@@ -374,50 +371,80 @@ func create_Command_editor(cmd: Command = null) -> void:
 		var control: Control
 		match current_item.get_class():
 			"SayCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn").instance()
+				control = (
+					load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn")
+					. instantiate()
+				)
 				commands_settings.add_child(control, true)
 				control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
 
 			"ForkCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
+				control = (
+					load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn")
+					. instantiate()
+				)
 				commands_settings.add_child(control, true)
 				control.set_up(current_item, flowchart_tab, current_block, undo_redo, graph_edit)
 
 			"ConditionCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn").instance()
+				control = (
+					load(
+						"res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn"
+					)
+					. instantiate()
+				)
 				commands_settings.add_child(control, true)
 				control.set_up(current_item)
 
 			"SetVarCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SetVar.tscn").instance()
+				control = (
+					load("res://addons/Mushroom/DialogManager/Editor/Commands/SetVar.tscn")
+					. instantiate()
+				)
 				commands_settings.add_child(control, true)
 				control.set_up(current_item)
 
 			"AnimationCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.tscn").instance()
+				control = (
+					load(
+						"res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.tscn"
+					)
+					. instantiate()
+				)
 				commands_settings.add_child(control, true)
 				control.set_up(current_item, undo_redo)
 
 			"JumpCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/JumpControl.tscn").instance()
+				control = (
+					load("res://addons/Mushroom/DialogManager/Editor/Commands/JumpControl.tscn")
+					. instantiate()
+				)
 				commands_settings.add_child(control, true)
 				control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
 
 			"SoundCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn").instance()
+				control = (
+					load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn")
+					. instantiate()
+				)
 				commands_settings.add_child(control, true)
 				control.set_up(current_item, undo_redo)
 
 			"ChangeUICommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.tscn").instance()
+				control = (
+					load("res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.tscn")
+					. instantiate()
+				)
 				commands_settings.add_child(control, true)
 				control.set_up(current_item, undo_redo)
 			_:
 				return
 
 
-func _on_TreeItem_rmb_selected(position: Vector2) -> void:
+func _on_TreeItem_rmb_selected(position: Vector2, mouse_button_index: int) -> void:
+	if mouse_button_index != 2:
+		return
 	var pop: PopupMenu = get_node("CommandRmbPopup")
 	pop.set_up()
 	var gmp := get_global_mouse_position()
-	pop.popup(Rect2(gmp.x, gmp.y, pop.rect_size.x, pop.rect_size.y))
+	pop.popup(Rect2(gmp.x, gmp.y, pop.size.x, pop.size.y))

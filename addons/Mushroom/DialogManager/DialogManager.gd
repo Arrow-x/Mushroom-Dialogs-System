@@ -1,9 +1,9 @@
 extends Node
 
-export(PackedScene) var UI_pc: PackedScene  #A Default UI sceen Is required
+@export var UI_pc: PackedScene  #A Default UI sceen Is required
 
-onready var indexer: int = 0
-onready var audio_player: AudioStreamPlayer = $AudioStreamPlayer
+@onready var indexer: int = 0
+@onready var audio_player: AudioStreamPlayer = $AudioStreamPlayer
 
 var current_flowchart  #The whole flowchart thing is unnessery unitil we make an editor
 var current_block: Block
@@ -105,7 +105,7 @@ func execute_dialog() -> void:
 			match cbi.anim_type:
 				"wait":
 					while (
-						yield(get_node(cbi.animation_path), "animation_finished")
+						await get_node(cbi.animation_path).animation_finished
 						!= cbi.animation_name
 					):
 						pass
@@ -127,13 +127,13 @@ func execute_dialog() -> void:
 		"ChangeUICommand":  #To Debug
 			if cbi.change_to_default == true:
 				UI.queue_free()
-				UI = UI_pc.instance()
+				UI = UI_pc.instantiate()
 				add_child(UI)
 				indexer = indexer + 1
 				advance()
 				return
 			UI.queue_free()
-			UI = cbi.next_UI.instance()
+			UI = cbi.next_UI.instantiate()
 			add_child(UI)
 			indexer = indexer + 1
 			advance()
@@ -150,7 +150,7 @@ func execute_dialog() -> void:
 					AudioServer.add_bus_effect(AudioServer.get_bus_index(cbi.bus), cbi.effect)
 				_skipped = false
 				audio_player.play()
-				yield(audio_player, "finished")
+				await audio_player.finished
 
 			if _skipped == false:
 				indexer = indexer + 1
@@ -203,7 +203,7 @@ func send_flowchart(dblock: FlowChart) -> void:
 		current_block = dblock.first_block
 		current_flowchart = dblock
 		indexer = 0
-		UI = UI_pc.instance()
+		UI = UI_pc.instantiate()
 		add_child(UI)
 		execute_dialog()
 		is_ON = true

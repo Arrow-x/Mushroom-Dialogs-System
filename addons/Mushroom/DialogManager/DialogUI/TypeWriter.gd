@@ -1,6 +1,6 @@
 extends RichTextLabel
 
-export var speed: int = 50
+@export var speed: int = 50
 
 var _isready: bool
 var _speed_mult: float = 1
@@ -8,16 +8,14 @@ var _last_speed: int = 1
 var _done: bool
 var _error
 
-onready var _tween: Tween = Tween.new()
+@onready var _tween: Tween = create_tween()
 
 signal message_done
 signal message_start
 
 
 func _ready():
-	add_child(_tween)
-
-	_tween.playback_speed = speed
+	_tween.set_speed_scale(speed)
 
 	var sbb = speedbb.new()
 	sbb.caller = self
@@ -27,17 +25,17 @@ func _ready():
 func _process(_delta):
 	if _speed_mult != _last_speed:
 		_last_speed = _speed_mult
-		_tween.playback_speed = _speed_mult * speed
+		_tween.set_speed_scale(_speed_mult * speed)
 
 
 func send_message(val: String, append: bool = false):
 	if append:
-		var _start_value = get_bbcode().length()
-		append_bbcode(" " + val)
+		var _start_value = get_text().length()
+		append_text(" " + val)
 		_start_msg(_start_value)
 		return
 
-	set_bbcode(val)
+	set_text(val)
 	parse_bbcode(val)
 	_start_msg()
 
@@ -46,24 +44,19 @@ func _start_msg(start_tween: int = 0):
 	_speed_mult = 1
 	_last_speed = 1
 
-	visible_characters = 0
-	percent_visible = 0
-
-	if _tween.is_active():
-		_tween.remove_all()
+	set_visible_characters(0)
+	set_visible_ratio(0)
 
 	if speed != 0:
-		_tween.playback_speed = speed
+		_tween.set_speed_scale(speed)
 		_done = false
-		_error = _tween.interpolate_property(
-			self, "visible_characters", start_tween, text.length(), text.length() - start_tween
+		_tween.tween_property(
+			self, "visible_characters", text.length(), text.length() - start_tween
 		)
-		_tween.start()
 		emit_signal("message_start")
-		yield(_tween, "tween_completed")
 		_on_done()
 	else:
-		percent_visible = 1.0
+		set_visible_ratio(get_text().length())
 		_on_done()
 
 
@@ -74,7 +67,6 @@ func _on_done():
 
 func skip_tween():
 	_on_done()
-	_tween.remove_all()
 	visible_characters = -1
 
 
@@ -89,7 +81,7 @@ class speedbb:
 	var caller: Node = null
 
 	func _process_custom_fx(char_fx) -> bool:
-		if Engine.editor_hint:
+		if Engine.is_editor_hint():
 			return true
 		# main loop
 		if char_fx.visible and caller != null and char_fx.env.has(""):

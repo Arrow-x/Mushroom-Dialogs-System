@@ -1,7 +1,7 @@
-tool
+@tool
 extends GraphEdit
 
-onready var enter_name_scene: PackedScene = preload(
+@onready var enter_name_scene: PackedScene = preload(
 	"res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn"
 )
 
@@ -32,10 +32,10 @@ func sync_flowchart_graph(fl: FlowChart) -> void:
 
 
 func _on_AddBlockButton_pressed() -> void:
-	var enter_name: WindowDialog = enter_name_scene.instance()
+	var enter_name: Window = enter_name_scene.instantiate()
 	add_child(enter_name, true)
 	enter_name.popup_centered()
-	enter_name.connect("new_text_confirm", self, "on_new_text_confirm")
+	enter_name.new_text_confirm.connect(on_new_text_confirm)
 
 
 func add_block(title: String, offset = null, in_block: Block = null) -> void:
@@ -46,7 +46,9 @@ func add_block(title: String, offset = null, in_block: Block = null) -> void:
 
 
 func create_GraphNode_from_block(title: String, offset = null, in_block: Block = null) -> void:
-	var node: GraphNode = load("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn").instance()
+	var node: GraphNode = (
+		load("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn").instantiate()
+	)
 	node.title = title
 	if offset == null:
 		node.offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
@@ -61,10 +63,10 @@ func create_GraphNode_from_block(title: String, offset = null, in_block: Block =
 
 	flowchart.blocks[title] = {block = _new_block, offset = node.offset}
 	node.set_meta("block", _new_block)
-	node.connect("graph_node_meta", self, "on_GraphNode_clicked", [], CONNECT_PERSIST)
-	node.connect("dragging", self, "on_node_dragged", [], CONNECT_PERSIST)
+	node.graph_node_meta.connect(on_GraphNode_clicked, CONNECT_PERSIST)
+	node.dragging.connect(on_node_dragged, CONNECT_PERSIST)
 	if title != "first_block":
-		node.connect("node_closed", self, "on_node_close", [], CONNECT_PERSIST)
+		node.node_closed.connect(on_node_close, CONNECT_PERSIST)
 	add_child(node)
 	node.set_owner(self)
 	graph_nodes[title] = node
@@ -136,17 +138,15 @@ func delete_connected_input(deconecting_node: String, closed_node_output: ForkCo
 
 func on_node_close(node: GraphNode) -> void:
 	undo_redo.create_action("Block Closed")
-	undo_redo.add_do_method(self, "close_node", node.get_title())
-	undo_redo.add_undo_method(
-		self, "add_block", node.get_title(), node.offset, node.get_meta("block")
-	)
+	undo_redo.add_do_method(close_node.bind(node.get_title()))
+	undo_redo.add_undo_method(add_block.bind(node.get_title(), node.offset, node.get_meta("block")))
 	undo_redo.commit_action()
 
 
 func on_GraphNode_clicked(node: GraphNode) -> void:
 	undo_redo.create_action("select Block node")
-	undo_redo.add_do_method(self, "send_block_to_tree", node.title)
-	undo_redo.add_undo_method(self, "send_block_to_tree", current_selected_graph_node)
+	undo_redo.add_do_method(send_block_to_tree.bind(node.title))
+	undo_redo.add_undo_method(send_block_to_tree.bind(current_selected_graph_node))
 	undo_redo.commit_action()
 	current_selected_graph_node = node.title
 
@@ -158,8 +158,8 @@ func send_block_to_tree(node: String) -> void:
 
 func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title: String) -> void:
 	undo_redo.create_action("Moving Block")
-	undo_redo.add_do_method(self, "set_node_offset", node_title, finished_offset)
-	undo_redo.add_undo_method(self, "set_node_offset", node_title, start_offset)
+	undo_redo.add_do_method(set_node_offset.bind(node_title, finished_offset))
+	undo_redo.add_undo_method(set_node_offset.bind(node_title, start_offset))
 	undo_redo.commit_action()
 	emit_signal("flow_changed")
 
@@ -176,8 +176,8 @@ func on_new_text_confirm(new_title: String) -> void:
 		return
 
 	undo_redo.create_action("Creating a block")
-	undo_redo.add_do_method(self, "add_block", new_title)
-	undo_redo.add_undo_method(self, "close_node", new_title)
+	undo_redo.add_do_method(add_block.bind(new_title))
+	undo_redo.add_undo_method(close_node.bind(new_title))
 	undo_redo.commit_action()
 
 
@@ -198,7 +198,7 @@ func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> 
 
 	for c in fork.choices:
 		var c_destination: String = c.next_block
-		if c_destination.empty():
+		if c_destination.is_empty():
 			continue
 		graph_nodes[c_destination].add_g_node_input(fork)
 		graph_nodes[sender.name].already_connected.append(c_destination)

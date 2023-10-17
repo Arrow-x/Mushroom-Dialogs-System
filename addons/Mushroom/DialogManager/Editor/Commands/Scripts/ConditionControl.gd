@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 var current_condition: ConditionCommand
@@ -8,7 +8,7 @@ func set_up(cc: ConditionCommand) -> void:
 	current_condition = cc
 
 	var check_type_popup: PopupMenu = get_node("ReqVar/CheckType").get_popup()
-	check_type_popup.connect("id_pressed", self, "_on_CheckTypePopup", [check_type_popup])
+	check_type_popup.id_pressed.connect(_on_CheckTypePopup.bind(check_type_popup))
 
 	get_node("ReqNode/ReqNodeInput").text = current_condition.required_node
 	get_node("ReqVar/ReqVarInput").text = current_condition.required_var
@@ -43,4 +43,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_condition.emit_signal("changed")
+	current_condition.changed.emit()

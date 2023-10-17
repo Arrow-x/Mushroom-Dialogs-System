@@ -1,17 +1,17 @@
-tool
+@tool
 extends Command
 class_name ChangeUICommand
 
-export(PackedScene) var next_UI
-export(bool) var change_to_default = false
+@export var next_UI: PackedScene
+@export var change_to_default: bool = false
 
 
 func preview() -> String:
 	if change_to_default:
-		return String("change_ui to default")
+		return "change_ui to default"
 	else:
 		if next_UI != null:
-			return String("change_ui to " + next_UI.resource_path.get_file())
+			return str("change_ui to " + next_UI.resource_path.get_file())
 		else:
 			return "Change to null!"
 

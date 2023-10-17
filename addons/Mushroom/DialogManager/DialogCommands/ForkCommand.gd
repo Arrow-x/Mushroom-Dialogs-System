@@ -1,10 +1,10 @@
-tool
+@tool
 extends Command
 class_name ForkCommand
 
-export var f_color: Color
-export(Array, Resource) var choices
-export var origin_block: String
+@export var f_color: Color
+@export var choices: Array[Resource]
+@export var origin_block: String
 
 
 func _init():
@@ -12,8 +12,8 @@ func _init():
 
 
 func preview():
-	if choices.empty():
-		return String("Fork")
+	if choices.is_empty():
+		return "Fork"
 	else:
 		var choices_str: Array
 		for c in choices:
@@ -21,7 +21,7 @@ func preview():
 				choices_str.append("Empty")
 				continue
 			choices_str.append(c.next_block)
-		return String("Fork to: " + String(choices_str))
+		return str("Fork to: " + str(choices_str))
 
 
 func get_icon() -> Resource:

@@ -1,16 +1,17 @@
-tool
+@tool
 extends Control
-onready var character_menu: MenuButton = $VBoxContainer/CharacterHBoxContainer/CharacterMenuButton
-onready var portraits_menu: MenuButton = $VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton
-onready var say_text_edit: TextEdit = $VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit
-onready var v_slit: VSplitContainer = $VBoxContainer/VSplitContainer
-onready var is_cond: CheckButton = $VBoxContainer/IsCondCheckBox
-onready var cond_box: VBoxContainer = $VBoxContainer/CondVBoxContainer
-onready var req_node: LineEdit = $VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput
-onready var req_var: LineEdit = $VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput
-onready var req_val: LineEdit = $VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput
-onready var check_type: MenuButton = $VBoxContainer/CondVBoxContainer/ReqVal/CheckType
-onready var append_check: CheckBox = $VBoxContainer/AppendHBoxContainer/AppendCheckBox
+@onready var character_menu: MenuButton = $VBoxContainer/CharacterHBoxContainer/CharacterMenuButton
+@onready
+var portraits_menu: MenuButton = $VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton
+@onready var say_text_edit: TextEdit = $VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit
+@onready var v_slit: VSplitContainer = $VBoxContainer/VSplitContainer
+@onready var is_cond: CheckButton = $VBoxContainer/IsCondCheckBox
+@onready var cond_box: VBoxContainer = $VBoxContainer/CondVBoxContainer
+@onready var req_node: LineEdit = $VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput
+@onready var req_var: LineEdit = $VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput
+@onready var req_val: LineEdit = $VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput
+@onready var check_type: MenuButton = $VBoxContainer/CondVBoxContainer/ReqVal/CheckType
+@onready var append_check: CheckBox = $VBoxContainer/AppendHBoxContainer/AppendCheckBox
 
 var undo_redo: UndoRedo
 var current_say: SayCommand
@@ -21,10 +22,12 @@ func set_up(c_s: SayCommand, u_r: UndoRedo, fl: FlowChart):
 	current_say = c_s
 	current_flowchart = fl
 
-	var check_type_popup: PopupMenu = get_node("VBoxContainer/CondVBoxContainer/ReqVal/CheckType").get_popup()
-	check_type_popup.connect("id_pressed", self, "_on_CheckTypePopup", [check_type_popup])
-	character_menu.get_popup().connect("id_pressed", self, "_on_Character_Selected")
-	portraits_menu.get_popup().connect("id_pressed", self, "_on_Portrait_Selected")
+	var check_type_popup: PopupMenu = (
+		get_node("VBoxContainer/CondVBoxContainer/ReqVal/CheckType").get_popup()
+	)
+	check_type_popup.id_pressed.connect(_on_CheckTypePopup.bind(check_type_popup))
+	character_menu.get_popup().id_pressed.connect(_on_Character_Selected)
+	portraits_menu.get_popup().id_pressed.connect(_on_Portrait_Selected)
 
 	undo_redo = u_r
 
@@ -33,12 +36,12 @@ func set_up(c_s: SayCommand, u_r: UndoRedo, fl: FlowChart):
 	if c_s.portrait_id != "":
 		portraits_menu.text = c_s.portrait_id
 	say_text_edit.text = c_s.say
-	is_cond.pressed = c_s.is_cond
+	is_cond.button_pressed = c_s.is_cond
 	req_node.text = c_s.required_node
 	req_var.text = c_s.required_var
 	req_val.text = c_s.check_val
 	check_type.text = c_s.condition_type
-	append_check.pressed = c_s.append_text
+	append_check.button_pressed = c_s.append_text
 
 	set_say_box_hight()
 
@@ -56,8 +59,8 @@ func _on_TextEdit_text_changed():
 func _on_Character_Selected(id: int) -> void:
 	var s_char: Chararcter = character_menu.get_popup().get_item_metadata(id)
 	undo_redo.create_action("select character")
-	undo_redo.add_do_method(self, "select_character", s_char)
-	undo_redo.add_undo_method(self, "select_character", current_say.character)
+	undo_redo.add_do_method(select_character.bind(s_char))
+	undo_redo.add_undo_method(select_character.bind(current_say.character))
 	undo_redo.commit_action()
 
 
@@ -73,8 +76,8 @@ func select_character(character: Chararcter = null) -> void:
 func _on_Portrait_Selected(id: int) -> void:
 	var portrait_name := portraits_menu.get_popup().get_item_text(id)
 	undo_redo.create_action("select a portrait")
-	undo_redo.add_do_method(self, "select_portrait", portrait_name)
-	undo_redo.add_undo_method(self, "select_portrait", current_say.portrait_id)
+	undo_redo.add_do_method(select_portrait.bind(portrait_name))
+	undo_redo.add_undo_method(select_portrait.bind(current_say.portrait_id))
 	undo_redo.commit_action()
 
 
@@ -130,13 +133,13 @@ func _on_ReqNodeInput_text_changed(new_text: String) -> void:
 
 func _on_IsCondCheckBox_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle condition")
-	undo_redo.add_do_method(self, "show_condition_toggle", button_pressed)
-	undo_redo.add_undo_method(self, "show_condition_toggle", current_say.is_cond)
+	undo_redo.add_do_method(show_condition_toggle.bind(button_pressed))
+	undo_redo.add_undo_method(show_condition_toggle.bind(current_say.is_cond))
 	undo_redo.commit_action()
 
 
 func show_condition_toggle(button_pressed: bool) -> void:
-	is_cond.pressed = button_pressed
+	is_cond.button_pressed = button_pressed
 	cond_box.visible = button_pressed
 	current_say.is_cond = button_pressed
 	is_changed()
@@ -152,4 +155,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_say.emit_signal("changed")
+	current_say.changed.emit()

@@ -1,11 +1,11 @@
-tool
+@tool
 extends Resource
 class_name FlowChart
 
-export var first_block: Resource
-export var local_vars: Array
-export(Array, Resource) var characters: Array
-export var blocks: Dictionary
+@export var first_block: Block
+@export var local_vars: Array
+@export var characters: Array[Chararcter]
+@export var blocks: Dictionary
 
 
 func get_name() -> String:

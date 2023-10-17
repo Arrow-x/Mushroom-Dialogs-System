@@ -9,21 +9,21 @@ anchor_bottom = 1.0
 script = ExtResource( 1 )
 
 [node name="StremHBoxContainer" type="HBoxContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_right = 1024.0
+offset_bottom = 20.0
 
 [node name="Label" type="Label" parent="StremHBoxContainer"]
-margin_top = 3.0
-margin_right = 90.0
-margin_bottom = 17.0
+offset_top = 3.0
+offset_right = 90.0
+offset_bottom = 17.0
 text = "Audio Stream:"
 
 [node name="Stream" type="Label" parent="StremHBoxContainer"]
-margin_left = 94.0
-margin_top = 3.0
-margin_right = 1000.0
-margin_bottom = 17.0
-hint_tooltip = "Drag and Drop an AudioStream"
+offset_left = 94.0
+offset_top = 3.0
+offset_right = 1000.0
+offset_bottom = 17.0
+tooltip_text = "Drag and Drop an AudioStream"
 mouse_filter = 0
 size_flags_horizontal = 3
 text = "Drag an Audio Stream!"
@@ -33,46 +33,46 @@ type = "AudioStream"
 extension = "tres"
 
 [node name="Clean" type="Button" parent="StremHBoxContainer"]
-margin_left = 1004.0
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_left = 1004.0
+offset_right = 1024.0
+offset_bottom = 20.0
 text = "C"
 
 [node name="VoilumHBoxContainer2" type="HBoxContainer" parent="."]
-margin_top = 24.0
-margin_right = 1024.0
-margin_bottom = 48.0
+offset_top = 24.0
+offset_right = 1024.0
+offset_bottom = 48.0
 
 [node name="Label" type="Label" parent="VoilumHBoxContainer2"]
-margin_top = 5.0
-margin_right = 75.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 75.0
+offset_bottom = 19.0
 text = "Volume_db:"
 
 [node name="Volume" type="SpinBox" parent="VoilumHBoxContainer2"]
-margin_left = 79.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 79.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 min_value = -80.0
 max_value = 24.0
 step = 0.1
 
 [node name="PitchHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 52.0
-margin_right = 1024.0
-margin_bottom = 76.0
+offset_top = 52.0
+offset_right = 1024.0
+offset_bottom = 76.0
 
 [node name="Label" type="Label" parent="PitchHBoxContainer"]
-margin_top = 5.0
-margin_right = 73.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 73.0
+offset_bottom = 19.0
 text = "Pitch Scale:"
 
 [node name="Pitch" type="SpinBox" parent="PitchHBoxContainer"]
-margin_left = 77.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 77.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 min_value = 0.01
 max_value = 4.0
@@ -80,58 +80,58 @@ step = 0.1
 value = 1.0
 
 [node name="MixHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 80.0
-margin_right = 1024.0
-margin_bottom = 100.0
+offset_top = 80.0
+offset_right = 1024.0
+offset_bottom = 100.0
 
 [node name="Label" type="Label" parent="MixHBoxContainer"]
-margin_top = 3.0
-margin_right = 70.0
-margin_bottom = 17.0
+offset_top = 3.0
+offset_right = 70.0
+offset_bottom = 17.0
 text = "Mix Target:"
 
 [node name="MixMenuButton" type="MenuButton" parent="MixHBoxContainer"]
-margin_left = 74.0
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_left = 74.0
+offset_right = 1024.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 text = "Chose a mix target"
 items = [ "MIX_TARGET_STEREO", null, 0, false, false, 0, 0, null, "", false, "MIX_TARGET_SURROUND", null, 0, false, false, 1, 0, null, "", false, "MIX_TARGET_CENTER", null, 0, false, false, 2, 0, null, "", false ]
 
 [node name="BusHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 104.0
-margin_right = 1024.0
-margin_bottom = 128.0
+offset_top = 104.0
+offset_right = 1024.0
+offset_bottom = 128.0
 
 [node name="Label" type="Label" parent="BusHBoxContainer"]
-margin_top = 5.0
-margin_right = 28.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 28.0
+offset_bottom = 19.0
 text = "Bus:"
 
 [node name="BusLineEdit" type="LineEdit" parent="BusHBoxContainer"]
-margin_left = 32.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 32.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="EffectHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 132.0
-margin_right = 1024.0
-margin_bottom = 152.0
+offset_top = 132.0
+offset_right = 1024.0
+offset_bottom = 152.0
 
 [node name="Label" type="Label" parent="EffectHBoxContainer"]
-margin_top = 3.0
-margin_right = 39.0
-margin_bottom = 17.0
+offset_top = 3.0
+offset_right = 39.0
+offset_bottom = 17.0
 text = "Effect:"
 
 [node name="Effect" type="Label" parent="EffectHBoxContainer"]
-margin_left = 43.0
-margin_top = 3.0
-margin_right = 1000.0
-margin_bottom = 17.0
-hint_tooltip = "Drag and Drop an AudioEffect"
+offset_left = 43.0
+offset_top = 3.0
+offset_right = 1000.0
+offset_bottom = 17.0
+tooltip_text = "Drag and Drop an AudioEffect"
 mouse_filter = 0
 size_flags_horizontal = 3
 text = "Drag and AudioEffect!"
@@ -141,9 +141,9 @@ type = "AudioEffect"
 extension = "tres"
 
 [node name="Clean" type="Button" parent="EffectHBoxContainer"]
-margin_left = 1004.0
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_left = 1004.0
+offset_right = 1024.0
+offset_bottom = 20.0
 text = "C"
 
 [connection signal="value_dragged" from="StremHBoxContainer/Stream" to="." method="_on_Stream_value_dragged"]

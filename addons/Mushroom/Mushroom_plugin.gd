@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 const editor := preload("res://addons/Mushroom/DialogManager/Editor/Editor.tscn")
@@ -7,31 +7,31 @@ var counter: int = 2
 
 
 func _enter_tree():
-	editor_instance = editor.instance()
+	editor_instance = editor.instantiate()
 	remove_autoload_singleton("DialogManagerNode")
 	add_autoload_singleton(
 		"DialogManagerNode", "res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
 	)
-	get_editor_interface().get_editor_viewport().add_child(editor_instance)
-	make_visible(false)
+	get_editor_interface().get_editor_main_screen().add_child(editor_instance)
+	_make_visible(false)
 
 
 func _exit_tree():
 	editor_instance.queue_free()
 
 
-func handles(object):
+func _handles(object: Object):
 	if object is FlowChart:
 		if object.get_name() != "":
 			return true
 
 
-func edit(object):
-	editor_instance.open_flowchart_scene(object, get_undo_redo())
-	make_visible(true)
+func _edit(object: Object):
+	editor_instance.open_flowchart_scene(object, UndoRedo.new())
+	_make_visible(true)
 
 
-func apply_changes() -> void:
+func _apply_changes() -> void:
 	# HACK: this event fire twice for some reason
 	if counter == 2:
 		counter -= 1
@@ -40,19 +40,18 @@ func apply_changes() -> void:
 		counter = 2
 
 
-func has_main_screen():
+func _has_main_screen():
 	return true
 
 
-func make_visible(visible):
+func _make_visible(visible):
 	if editor_instance:
 		editor_instance.visible = visible
 
 
-func get_plugin_name():
+func _get_plugin_name():
 	return "Mushroom"
 
-
-func get_plugin_icon():
-	# Must return some kind of Texture for the icon.
-	return get_editor_interface().get_base_control().get_icon("Node", "EditorIcons")
+# func _get_plugin_icon():
+# 	# Must return some kind of Texture for the icon.
+# 	return get_editor_interface().get_base_control().get_icon("Node", "EditorIcons")
