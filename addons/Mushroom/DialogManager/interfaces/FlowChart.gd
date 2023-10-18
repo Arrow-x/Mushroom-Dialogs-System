@@ -9,12 +9,12 @@ class_name FlowChart
 
 
 func get_name() -> String:
-	return self.resource_path.get_file().trim_suffix(".tres")
+	return get_path().get_file().trim_suffix(".tres")
 
 
 func get_block(b_name: String) -> Block:
 	return blocks[b_name].block
 
 
-func get_block_offset(b_name: String) -> Block:
+func get_block_offset(b_name: String) -> Vector2:
 	return blocks[b_name].offset

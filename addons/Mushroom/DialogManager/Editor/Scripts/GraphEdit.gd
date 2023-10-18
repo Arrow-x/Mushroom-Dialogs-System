@@ -51,9 +51,9 @@ func create_GraphNode_from_block(title: String, offset = null, in_block: Block =
 	)
 	node.title = title
 	if offset == null:
-		node.offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
+		node.position_offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
 	else:
-		node.offset = offset
+		node.position_offset = offset
 	var _new_block: Block
 	if in_block == null:
 		_new_block = Block.new()
@@ -61,7 +61,7 @@ func create_GraphNode_from_block(title: String, offset = null, in_block: Block =
 	else:
 		_new_block = in_block
 
-	flowchart.blocks[title] = {block = _new_block, offset = node.offset}
+	flowchart.blocks[title] = {block = _new_block, offset = node.position_offset}
 	node.set_meta("block", _new_block)
 	node.graph_node_meta.connect(on_GraphNode_clicked, CONNECT_PERSIST)
 	node.dragging.connect(on_node_dragged, CONNECT_PERSIST)
@@ -139,7 +139,9 @@ func delete_connected_input(deconecting_node: String, closed_node_output: ForkCo
 func on_node_close(node: GraphNode) -> void:
 	undo_redo.create_action("Block Closed")
 	undo_redo.add_do_method(close_node.bind(node.get_title()))
-	undo_redo.add_undo_method(add_block.bind(node.get_title(), node.offset, node.get_meta("block")))
+	undo_redo.add_undo_method(
+		add_block.bind(node.get_title(), node.position_offset, node.get_meta("block"))
+	)
 	undo_redo.commit_action()
 
 
@@ -165,8 +167,8 @@ func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title
 
 
 func set_node_offset(title: String, offset: Vector2) -> void:
-	graph_nodes[title].set_offset(offset)
-	flowchart.blocks[title].offset = offset
+	graph_nodes[title].set_position(offset)
+	flowchart.blocks[title].position_offset = offset
 
 
 func on_new_text_confirm(new_title: String) -> void:

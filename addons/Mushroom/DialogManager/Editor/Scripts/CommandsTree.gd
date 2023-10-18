@@ -23,7 +23,7 @@ func _ready():
 	moved.connect(_on_move_TreeItem)
 
 
-func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int):
+func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int, _mouse_idx: int):
 	var cmd: Command = item.get_meta("command")
 	var parent_command: Command = null
 	var idx: int = find_TreeItem(item)
@@ -137,17 +137,17 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 	var d_block: Block
 
 	if tree:
-		d_tree = get_TreeItems(tree)
+		d_tree = tree.get_children()
 		d_block = tree.get_meta("command").condition_block
 	else:
-		d_tree = get_TreeItems(get_root())
+		d_tree = get_root().get_children()
 		d_block = current_block
 	# TODO: if the command is ForkCommand then erase it from block outputs and GraphNode
 	for c in d_tree.size():
 		var d_c = d_tree[c]
 		if d_c.get_meta("command") == command:
 			d_c.free()
-			d_block.commands.erase(c)
+			d_block.commands.remove_at(c)
 			free_Command_editor(command)
 			create_Tree_from_Block(current_block)
 			return resault.success
@@ -254,9 +254,9 @@ func move_TreeItem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) 
 						item_idx = item_idx + 1
 
 	if item.get_parent() == get_root():
-		current_block.commands.erase(item_idx)
+		current_block.commands.remove_at(item_idx)
 	else:
-		item.get_parent().get_meta("command").condition_block.commands.erase(item_idx)
+		item.get_parent().get_meta("command").condition_block.commands.remove_at(item_idx)
 
 	create_Tree_from_Block(current_block)
 
@@ -273,20 +273,11 @@ func undo_move_TreeItem(og_item_command: Command, og_parent_commands: Array, og_
 		push_error("can't find it")
 		return
 	if to_item == null or p_to_item == get_root():
-		current_block.commands.erase(item_idx)
+		current_block.commands.remove_at(item_idx)
 	elif c_p_to_item is ConditionCommand:
-		c_p_to_item.condition_block.commands.erase(item_idx)
+		c_p_to_item.condition_block.commands.remove_at(item_idx)
 	og_parent_commands.insert(og_idx, og_item_command)
 	create_Tree_from_Block(current_block)
-
-
-func get_TreeItems(parent: TreeItem) -> Array:
-	var item = parent.get_children()
-	var children = []
-	while item:
-		children.append(item)
-		item = item.get_next()
-	return children
 
 
 func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
@@ -294,9 +285,9 @@ func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
 	if item == null:
 		return resault.not_found
 	if parent == null:
-		treeitems = get_TreeItems(get_root())
+		treeitems = get_root().get_children()
 	else:
-		treeitems = get_TreeItems(parent)
+		treeitems = parent.get_children()
 
 	for i in treeitems.size():
 		if treeitems[i] == item:
@@ -311,9 +302,9 @@ func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
 func get_TreeItem_from_Command(command: Command, parent: TreeItem = null) -> TreeItem:
 	var tree: Array
 	if parent == null:
-		tree = get_TreeItems(get_root())
+		tree = get_root().get_children()
 	else:
-		tree = get_TreeItems(parent)
+		tree = parent.get_children()
 	for t in tree:
 		var t_cmd: Command = t.get_meta("command")
 		if t_cmd == command:
@@ -356,7 +347,7 @@ func create_Command_editor(cmd: Command = null) -> void:
 
 	var current_item = item.get_meta("command")
 
-	for c in get_TreeItems(get_root()):
+	for c in get_root().get_children():
 		c.deselect(0)
 
 	item.select(0)

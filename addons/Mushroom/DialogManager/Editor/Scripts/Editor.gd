@@ -6,9 +6,9 @@ extends Control
 @onready var editor_scn := preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
 
 
-func open_flowchart_scene(flowchart_scene: FlowChart, undo_redo: UndoRedo) -> void:
+func open_flowchart_scene(flowchart: FlowChart, undo_redo: UndoRedo) -> void:
 	for tab in flowcharts_container.get_children():
-		if tab.flowchart == flowchart_scene:
+		if tab.flowchart == flowchart:
 			var c_tab_idx = flowcharts_container.get_children().find(tab)
 			f_tabs.set_current_tab(c_tab_idx)
 			_on_NewFlowChartTabs_tab_clicked(c_tab_idx)
@@ -16,12 +16,12 @@ func open_flowchart_scene(flowchart_scene: FlowChart, undo_redo: UndoRedo) -> vo
 
 	var ed := editor_scn.instantiate()
 	flowcharts_container.add_child(ed)
-	ed.set_flowchart(flowchart_scene, undo_redo)
+	ed.set_flowchart(flowchart, undo_redo)
 
-	ed.name = flowchart_scene.get_name()
+	ed.name = flowchart.get_name()
 	ed.flow_tabs = f_tabs
-
-	f_tabs.add_tab(flowchart_scene.get_name())
+	prints("hello: ", flowchart.get_path().get_file().trim_suffix(".tres"))
+	f_tabs.add_tab(flowchart.get_name())
 	f_tabs.set_current_tab(flowcharts_container.get_children().find(ed))
 
 
@@ -51,6 +51,7 @@ func _on_NewFlowChartTabs_tab_close(tab: int) -> void:
 		_c.popup_centered()
 		return
 	_free_tab_and_select_another(flowchart_editors, tab)
+
 
 
 func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window) -> void:
