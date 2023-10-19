@@ -64,7 +64,7 @@ func save_flowchart_to_disc(path: String, overwrite := false) -> void:
 	if overwrite == true:
 		flowchart.set_path(path)
 
-	flow_tabs.set_tab_title(get_index(), flowchart.get_name())
+	flow_tabs.set_tab_title(get_index(), flowchart.get_flowchart_name())
 	modified = false
 	emit_signal("done_saving")
 

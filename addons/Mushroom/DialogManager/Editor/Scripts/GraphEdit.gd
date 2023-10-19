@@ -168,7 +168,7 @@ func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title
 
 func set_node_offset(title: String, offset: Vector2) -> void:
 	graph_nodes[title].set_position(offset)
-	flowchart.blocks[title].position_offset = offset
+	flowchart.blocks[title].offset = offset
 
 
 func on_new_text_confirm(new_title: String) -> void:

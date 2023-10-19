@@ -23,7 +23,9 @@ func _ready():
 	moved.connect(_on_move_TreeItem)
 
 
-func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int, _mouse_idx: int):
+func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int, mouse_idx: int):
+	if mouse_idx != 1:
+		return
 	var cmd: Command = item.get_meta("command")
 	var parent_command: Command = null
 	var idx: int = find_TreeItem(item)

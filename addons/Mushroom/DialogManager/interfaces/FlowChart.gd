@@ -8,8 +8,9 @@ class_name FlowChart
 @export var blocks: Dictionary
 
 
-func get_name() -> String:
-	return get_path().get_file().trim_suffix(".tres")
+func get_flowchart_name() -> String:
+	var flowchart_name := self.get_path().get_file().trim_suffix(".tres")
+	return flowchart_name
 
 
 func get_block(b_name: String) -> Block:
