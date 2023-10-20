@@ -2,8 +2,8 @@
 
 [ext_resource type="PackedScene" path="res://addons/Mushroom/DialogManager/Editor/AddCommnadPopupMenu.tscn" id="1"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandsTree.gd" id="2"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/AddCommandMenuButton.gd" id="2_4yys5"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/FlowChartTab.gd" id="3"]
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/AddCommand.gd" id="4"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandsSettings.gd" id="5"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandRmbPopup.gd" id="6"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/GraphEdit.gd" id="7"]
@@ -37,12 +37,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -1.0
 
-[node name="AddCommand" type="Button" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
+[node name="AddCommandMenuButton" type="MenuButton" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
 layout_mode = 2
 text = "Add Command"
-script = ExtResource("4")
+script = ExtResource("2_4yys5")
 
-[node name="AddCommandPopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommand" instance=ExtResource("1")]
+[node name="spacer" type="Control" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CurrentBlock" type="Label" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
 layout_mode = 2
@@ -108,6 +110,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("7")
 
+[connection signal="about_to_popup" from="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommandMenuButton" to="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommandMenuButton" method="_on_about_to_popup"]
 [connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_TreeItem_double_clicked"]
 [connection signal="item_mouse_selected" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_TreeItem_rmb_selected"]
 [connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/SaveButton" to="." method="check_flowchart_path_before_save"]

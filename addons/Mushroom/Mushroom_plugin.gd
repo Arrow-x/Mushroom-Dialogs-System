@@ -22,7 +22,7 @@ func _exit_tree():
 
 func _handles(object: Object):
 	if object is FlowChart:
-		if object.get_name() != "":
+		if object.get_flowchart_name() != "":
 			return true
 
 

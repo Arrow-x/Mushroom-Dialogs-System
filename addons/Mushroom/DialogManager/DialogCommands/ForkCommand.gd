@@ -3,7 +3,7 @@ extends Command
 class_name ForkCommand
 
 @export var f_color: Color
-@export var choices: Array[Resource]
+@export var choices: Array[Choice]
 @export var origin_block: String
 
 
