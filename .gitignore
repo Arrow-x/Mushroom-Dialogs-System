@@ -6,3 +6,4 @@ addons/godot-plugin-refresher
 addons/zylann.editor_debugger
 icon.png
 default_env.tres
+addons/plugin_refresher
