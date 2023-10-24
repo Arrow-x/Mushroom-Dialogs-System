@@ -100,7 +100,7 @@ func close_node(d_node: String) -> void:
 	for closed_node_output in flowchart.get_block(d_node).outputs:
 		for c in closed_node_output.choices:
 			var deconecting_node: String = c.next_block
-			delete_connected_input(deconecting_node, closed_node_output)
+			delete_input(deconecting_node, closed_node_output)
 
 	# Removie the blook commands and the it's editor
 	var command_tree: Tree = get_node(
@@ -117,23 +117,66 @@ func close_node(d_node: String) -> void:
 	graph_nodes.erase(d_node)
 
 
-func delete_connected_input(deconecting_node: String, closed_node_output: ForkCommand) -> void:
-	for d_input in flowchart.get_block(deconecting_node).inputs:
-		disconnect_node(
-			graph_nodes[d_input.origin_block].get_name(),
-			flowchart.get_block(d_input.origin_block).outputs.find(d_input),
-			graph_nodes[deconecting_node].get_name(),
-			flowchart.get_block(deconecting_node).inputs.find(d_input)
-		)
+func delete_input(deconecting_node: String, closed_node_output: ForkCommand) -> void:
+	disconnect_inputs(deconecting_node)
 	graph_nodes[deconecting_node].delete_inputs(closed_node_output)
+	reconnect_inputs(deconecting_node)
 
-	for d_input in flowchart.get_block(deconecting_node).inputs:
-		connect_node(
-			graph_nodes[d_input.origin_block].get_name(),
-			flowchart.get_block(d_input.origin_block).outputs.find(d_input),
+
+func disconnect_outputs(deconecting_node: String) -> void:
+	for o in flowchart.get_block(deconecting_node).outputs:
+		for c in o.choices:
+			var dest: String = c.next_block
+			if dest.is_empty():
+				continue
+			disconnect_node(
+				graph_nodes[deconecting_node].get_name(),
+				flowchart.get_block(deconecting_node).outputs.find(o),
+				graph_nodes[dest].get_name(),
+				flowchart.get_block(dest).inputs.find(o)
+			)
+
+
+func disconnect_inputs(deconecting_node: String) -> void:
+	for o in flowchart.get_block(deconecting_node).inputs:
+		disconnect_node(
+			graph_nodes[o.origin_block].get_name(),
+			flowchart.get_block(o.origin_block).outputs.find(o),
 			graph_nodes[deconecting_node].get_name(),
-			flowchart.get_block(deconecting_node).inputs.find(d_input)
+			flowchart.get_block(deconecting_node).inputs.find(o)
 		)
+
+
+func reconnect_inputs(deconecting_node: String) -> void:
+	for o in flowchart.get_block(deconecting_node).inputs:
+		connect_node(
+			graph_nodes[o.origin_block].get_name(),
+			flowchart.get_block(o.origin_block).outputs.find(o),
+			graph_nodes[deconecting_node].get_name(),
+			flowchart.get_block(deconecting_node).inputs.find(o)
+		)
+
+
+func reconnect_outputs(deconecting_node: String) -> void:
+	for o in flowchart.get_block(deconecting_node).outputs:
+		for c in o.choices:
+			var dest: String = c.next_block
+			if dest.is_empty():
+				continue
+			connect_node(
+				graph_nodes[deconecting_node].get_name(),
+				flowchart.get_block(deconecting_node).outputs.find(o),
+				graph_nodes[dest].get_name(),
+				flowchart.get_block(dest).inputs.find(o)
+			)
+
+
+func delete_output(deconecting_node: String, del_output: ForkCommand) -> void:
+	disconnect_outputs(deconecting_node)
+	for c in del_output.choices:
+		delete_input(c.next_block, del_output)
+	graph_nodes[deconecting_node].delete_outputs(del_output)
+	reconnect_outputs(deconecting_node)
 
 
 func on_node_close(node: GraphNode) -> void:
@@ -196,7 +239,7 @@ func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> 
 				flowchart.get_block(b).inputs.find(fork)
 			)
 			graph_nodes[sender.name].already_connected.erase(b)
-			delete_connected_input(b, fork)
+			delete_input(b, fork)
 
 	for c in fork.choices:
 		var c_destination: String = c.next_block

@@ -137,6 +137,8 @@ func create_TreeItem_from_Command(
 func delete_command(command: Command, tree: TreeItem = null) -> int:
 	var d_tree: Array
 	var d_block: Block
+	if command is ForkCommand:
+		graph_edit.delete_output(current_block.name, command)
 
 	if tree:
 		d_tree = tree.get_children()
@@ -144,7 +146,6 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 	else:
 		d_tree = get_root().get_children()
 		d_block = current_block
-	# TODO: if the command is ForkCommand then erase it from block outputs and GraphNode
 	for c in d_tree.size():
 		var d_c = d_tree[c]
 		if d_c.get_meta("command") == command:
