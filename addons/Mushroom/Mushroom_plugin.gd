@@ -27,7 +27,7 @@ func _handles(object: Object):
 
 
 func _edit(object: Object):
-	editor_instance.open_flowchart_scene(object, UndoRedo.new())
+	editor_instance.open_flowchart_scene(object, get_undo_redo())
 	_make_visible(true)
 
 

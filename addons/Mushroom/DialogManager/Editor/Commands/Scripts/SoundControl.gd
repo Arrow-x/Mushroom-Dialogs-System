@@ -2,7 +2,7 @@
 extends Control
 
 var current_sound: SoundCommand
-var undo_redo: UndoRedo
+var undo_redo: EditorUndoRedoManager
 var current_effect: AudioEffect
 var current_stream: AudioStream
 var current_mix_id: int
@@ -17,7 +17,7 @@ var default_effect_text := "..."
 @onready var effect := $EffectHBoxContainer/Effect
 
 
-func set_up(cmd: SoundCommand, u_r: UndoRedo) -> void:
+func set_up(cmd: SoundCommand, u_r: EditorUndoRedoManager) -> void:
 	current_sound = cmd
 	undo_redo = u_r
 	stream.text = (
@@ -41,16 +41,16 @@ func set_up(cmd: SoundCommand, u_r: UndoRedo) -> void:
 
 func _on_CleanStream_pressed() -> void:
 	undo_redo.create_action("clear stream")
-	undo_redo.add_do_method(add_stream.bind(null))
-	undo_redo.add_undo_method(add_stream.bind(current_stream))
+	undo_redo.add_do_method(self, "add_stream", null)
+	undo_redo.add_undo_method(self, "add_stream", current_stream)
 	undo_redo.commit_action()
 	current_stream = null
 
 
 func _on_Stream_value_dragged(data: AudioStream) -> void:
 	undo_redo.create_action("drag in stream")
-	undo_redo.add_do_method(add_stream.bind(data))
-	undo_redo.add_undo_method(add_stream.bind(current_stream))
+	undo_redo.add_do_method(self, "add_stream", data)
+	undo_redo.add_undo_method(self, "add_stream", current_stream)
 	undo_redo.commit_action()
 	current_stream = data
 
@@ -76,16 +76,16 @@ func _on_Pitch_value_changed(value: float) -> void:
 
 func _on_CleanEffect_pressed() -> void:
 	undo_redo.create_action("clear effect")
-	undo_redo.add_do_method(add_effect)
-	undo_redo.add_undo_method(add_effect.bind(current_effect))
+	undo_redo.add_do_method(self, "add_effect")
+	undo_redo.add_undo_method(self, "add_effect", current_effect)
 	undo_redo.commit_action()
 	current_effect = null
 
 
 func _on_Effect_value_dragged(data: AudioEffect) -> void:
 	undo_redo.create_action("drag in effect")
-	undo_redo.add_do_method(add_effect.bind(data))
-	undo_redo.add_undo_method(add_effect.bind(current_effect))
+	undo_redo.add_do_method(self, "add_effect", data)
+	undo_redo.add_undo_method(self, "add_effect", current_effect)
 	undo_redo.commit_action()
 	current_effect = data
 
@@ -106,8 +106,8 @@ func _on_BusLineEdit_text_changed(new_text: String) -> void:
 
 func _on_MixMenu_id_pressed(id: int, mix_menu_pop: Popup) -> void:
 	undo_redo.create_action("select mix target")
-	undo_redo.add_do_method(select_mix.bind(id, mix_menu_pop))
-	undo_redo.add_undo_method(select_mix.bind(current_mix_id, mix_menu_pop))
+	undo_redo.add_do_method(self, "select_mix", id, mix_menu_pop)
+	undo_redo.add_undo_method(self, "select_mix", current_mix_id, mix_menu_pop)
 	undo_redo.commit_action()
 	current_mix_id = id
 

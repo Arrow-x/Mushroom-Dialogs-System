@@ -6,7 +6,7 @@ extends Control
 @onready var editor_scn := preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
 
 
-func open_flowchart_scene(flowchart: FlowChart, undo_redo: UndoRedo) -> void:
+func open_flowchart_scene(flowchart: FlowChart, undo_redo: EditorUndoRedoManager) -> void:
 	for tab in flowcharts_container.get_children():
 		if tab.flowchart == flowchart:
 			var c_tab_idx = flowcharts_container.get_children().find(tab)

@@ -2,7 +2,7 @@
 extends Node
 
 var animation_cmd: AnimationCommand
-var undo_redo: UndoRedo
+var undo_redo: EditorUndoRedoManager
 
 var current_from_end: bool
 
@@ -14,7 +14,7 @@ var current_from_end: bool
 @onready var from_end_ctrl: CheckButton = $VBoxContainer/FromEndHBoxContainer/FromEndCheck
 
 
-func set_up(a_cmd: AnimationCommand, u_r: UndoRedo) -> void:
+func set_up(a_cmd: AnimationCommand, u_r: EditorUndoRedoManager) -> void:
 	animation_cmd = a_cmd
 	undo_redo = u_r
 	anim_type_ctrl.get_popup().id_pressed.connect(_on_anim_type.bind(anim_type_ctrl.get_popup()))
@@ -48,8 +48,8 @@ func _on_BlendLineEdit_value_changed(value: float) -> void:
 
 func _on_FromEndCheck_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle from_end")
-	undo_redo.add_do_method(toggle_from_end.bind(button_pressed))
-	undo_redo.add_undo_method(toggle_from_end.bind(current_from_end))
+	undo_redo.add_do_method(self, "toggle_from_end", button_pressed)
+	undo_redo.add_undo_method(self, "toggle_from_end", current_from_end)
 	undo_redo.commit_action()
 	current_from_end = button_pressed
 

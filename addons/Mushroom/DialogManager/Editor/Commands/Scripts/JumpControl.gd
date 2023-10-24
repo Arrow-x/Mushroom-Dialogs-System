@@ -8,11 +8,11 @@ extends Control
 
 var flowchart: FlowChart
 var current_jump: JumpCommand
-var undo_redo: UndoRedo
+var undo_redo: EditorUndoRedoManager
 var current_toogle: bool
 
 
-func set_up(jump: JumpCommand, u_r: UndoRedo, fl: FlowChart) -> void:
+func set_up(jump: JumpCommand, u_r: EditorUndoRedoManager, fl: FlowChart) -> void:
 	flowchart = fl
 	current_jump = jump
 	undo_redo = u_r
@@ -30,8 +30,8 @@ func _on_SpinBox_value_changed(value: float) -> void:
 
 func _on_CheckButton_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle local_jump")
-	undo_redo.add_do_method(show_block_menu.bind(button_pressed))
-	undo_redo.add_undo_method(show_block_menu.bind(current_toogle))
+	undo_redo.add_do_method(self, "show_block_menu", button_pressed)
+	undo_redo.add_undo_method(self, "show_block_menu", current_toogle)
 	undo_redo.commit_action()
 	current_toogle = button_pressed
 
@@ -57,8 +57,8 @@ func change_jump_block(idx, m: PopupMenu) -> void:
 	var n_block: Block = flowchart.get_block(m.get_item_text(idx))
 	var p_block: Block = current_jump.jump_block
 	undo_redo.create_action("change next block")
-	undo_redo.add_do_method(do_change_jump_block.bind(n_block))
-	undo_redo.add_undo_method(do_change_jump_block.bind(p_block))
+	undo_redo.add_do_method(self, "do_change_jump_block", n_block)
+	undo_redo.add_undo_method(self, "do_change_jump_block", p_block)
 	undo_redo.commit_action()
 
 

@@ -7,7 +7,7 @@ var current_block_label := get_node("../inspectorHeader/inspectorHeaderHBoxConta
 
 var flowchart_tab: Control
 var current_block: Block
-var undo_redo: UndoRedo
+var undo_redo: EditorUndoRedoManager
 var graph_edit: GraphEdit
 
 var prev_selected_Command: Command
@@ -39,8 +39,8 @@ func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int, mous
 			parent = item.get_parent()
 
 	undo_redo.create_action("delete_command")
-	undo_redo.add_do_method(delete_command.bind(cmd, parent))
-	undo_redo.add_undo_method(add_command_to_block.bind(cmd, idx, parent_command))
+	undo_redo.add_do_method(self, "delete_command", cmd, parent)
+	undo_redo.add_undo_method(self, "add_command_to_block", cmd, idx, parent_command)
 	undo_redo.commit_action()
 
 
@@ -91,8 +91,8 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 				p = selec_p.get_meta("command")
 
 	undo_redo.create_action("Added Command")
-	undo_redo.add_do_method(add_command_to_block.bind(_command, idx, p))
-	undo_redo.add_undo_method(delete_command.bind(_command))
+	undo_redo.add_do_method(self, "add_command_to_block", _command, idx, p)
+	undo_redo.add_undo_method(self, "delete_command", _command)
 	undo_redo.commit_action()
 
 
@@ -212,9 +212,9 @@ func _on_move_TreeItem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 			return
 
 	undo_redo.create_action("drag command")
-	undo_redo.add_do_method(move_TreeItem.bind(item, to_item, shift))
+	undo_redo.add_do_method(self, "move_TreeItem", item, to_item, shift)
 	undo_redo.add_undo_method(
-		undo_move_TreeItem.bind(item.get_meta("command"), c_p_to_item, item_idx)
+		self, "undo_move_TreeItem", item.get_meta("command"), c_p_to_item, item_idx
 	)
 	undo_redo.commit_action()
 
@@ -331,8 +331,8 @@ func create_Tree_from_Block(block: Block, parent: TreeItem = null) -> void:
 func _on_TreeItem_double_clicked() -> void:
 	var sel_c: Command = get_selected().get_meta("command")
 	undo_redo.create_action("selecting a command")
-	undo_redo.add_do_method(create_Command_editor.bind(sel_c))
-	undo_redo.add_undo_method(create_Command_editor.bind(prev_selected_Command))
+	undo_redo.add_do_method(self, "create_Command_editor", sel_c)
+	undo_redo.add_undo_method(self, "create_Command_editor", prev_selected_Command)
 	undo_redo.commit_action()
 
 	prev_selected_Command = sel_c

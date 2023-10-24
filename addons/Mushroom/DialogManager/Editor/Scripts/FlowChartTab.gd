@@ -16,7 +16,7 @@ func check_for_duplicates(name) -> bool:
 	return false
 
 
-func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
+func set_flowchart(chart, sent_undo_redo: EditorUndoRedoManager) -> void:
 	if chart is FlowChart:
 		flowchart = chart
 		var graph_edit: GraphEdit = get_node("GraphContainer/GraphEdit")

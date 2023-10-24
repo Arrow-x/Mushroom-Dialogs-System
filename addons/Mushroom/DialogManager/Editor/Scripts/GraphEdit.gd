@@ -8,7 +8,7 @@ extends GraphEdit
 )
 
 var g_node_posititon := Vector2(40, 40)
-var undo_redo: UndoRedo
+var undo_redo: EditorUndoRedoManager
 
 var flowchart: FlowChart
 var graph_nodes: Dictionary
@@ -34,16 +34,16 @@ func on_new_text_confirm(new_title: String) -> void:
 		return
 
 	undo_redo.create_action("Creating a block")
-	undo_redo.add_do_method(add_block.bind(new_title))
-	undo_redo.add_undo_method(close_node.bind(new_title))
+	undo_redo.add_do_method(self, "add_block", new_title)
+	undo_redo.add_undo_method(self, "close_node", new_title)
 	undo_redo.commit_action()
 
 
 func on_node_close(node: GraphNode) -> void:
 	undo_redo.create_action("Block Closed")
-	undo_redo.add_do_method(close_node.bind(node.get_title()))
+	undo_redo.add_do_method(self, "close_node", node.get_title())
 	undo_redo.add_undo_method(
-		add_block.bind(node.get_title(), node.position_offset, node.get_meta("block"))
+		self, "add_block", node.get_title(), node.position_offset, node.get_meta("block")
 	)
 	undo_redo.commit_action()
 
@@ -233,8 +233,8 @@ func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> 
 
 func on_GraphNode_clicked(node: GraphNode) -> void:
 	undo_redo.create_action("select Block node")
-	undo_redo.add_do_method(send_block_to_tree.bind(node.title))
-	undo_redo.add_undo_method(send_block_to_tree.bind(current_selected_graph_node))
+	undo_redo.add_do_method(self, "send_block_to_tree", node.title)
+	undo_redo.add_undo_method(self, "send_block_to_tree", current_selected_graph_node)
 	undo_redo.commit_action()
 	current_selected_graph_node = node.title
 
@@ -246,12 +246,12 @@ func send_block_to_tree(node: String) -> void:
 
 func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title: String) -> void:
 	undo_redo.create_action("Moving Block")
-	undo_redo.add_do_method(set_node_offset.bind(node_title, finished_offset))
-	undo_redo.add_undo_method(set_node_offset.bind(node_title, start_offset))
+	undo_redo.add_do_method(self, "set_node_offset", node_title, finished_offset)
+	undo_redo.add_undo_method(self, "set_node_offset", node_title, start_offset)
 	undo_redo.commit_action()
 	emit_signal("flow_changed")
 
 
 func set_node_offset(title: String, offset: Vector2) -> void:
-	graph_nodes[title].set_position(offset)
+	graph_nodes[title].position_offset = offset
 	flowchart.blocks[title].offset = offset

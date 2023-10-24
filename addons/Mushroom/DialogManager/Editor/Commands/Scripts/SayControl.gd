@@ -13,12 +13,12 @@ var portraits_menu: MenuButton = $VBoxContainer/VSplitContainer/VBoxContainer/Po
 @onready var check_type: MenuButton = $VBoxContainer/CondVBoxContainer/ReqVal/CheckType
 @onready var append_check: CheckBox = $VBoxContainer/AppendHBoxContainer/AppendCheckBox
 
-var undo_redo: UndoRedo
+var undo_redo: EditorUndoRedoManager
 var current_say: SayCommand
 var current_flowchart: FlowChart
 
 
-func set_up(c_s: SayCommand, u_r: UndoRedo, fl: FlowChart):
+func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart):
 	current_say = c_s
 	current_flowchart = fl
 
@@ -59,8 +59,8 @@ func _on_TextEdit_text_changed():
 func _on_Character_Selected(id: int) -> void:
 	var s_char: Chararcter = character_menu.get_popup().get_item_metadata(id)
 	undo_redo.create_action("select character")
-	undo_redo.add_do_method(select_character.bind(s_char))
-	undo_redo.add_undo_method(select_character.bind(current_say.character))
+	undo_redo.add_do_method(self, "select_character", s_char)
+	undo_redo.add_undo_method(self, "select_character", current_say.character)
 	undo_redo.commit_action()
 
 
@@ -76,8 +76,8 @@ func select_character(character: Chararcter = null) -> void:
 func _on_Portrait_Selected(id: int) -> void:
 	var portrait_name := portraits_menu.get_popup().get_item_text(id)
 	undo_redo.create_action("select a portrait")
-	undo_redo.add_do_method(select_portrait.bind(portrait_name))
-	undo_redo.add_undo_method(select_portrait.bind(current_say.portrait_id))
+	undo_redo.add_do_method(self, "select_portrait", portrait_name)
+	undo_redo.add_undo_method(self, "select_portrait", current_say.portrait_id)
 	undo_redo.commit_action()
 
 
@@ -133,8 +133,8 @@ func _on_ReqNodeInput_text_changed(new_text: String) -> void:
 
 func _on_IsCondCheckBox_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle condition")
-	undo_redo.add_do_method(show_condition_toggle.bind(button_pressed))
-	undo_redo.add_undo_method(show_condition_toggle.bind(current_say.is_cond))
+	undo_redo.add_do_method(self, "show_condition_toggle", button_pressed)
+	undo_redo.add_undo_method(self, "show_condition_toggle", current_say.is_cond)
 	undo_redo.commit_action()
 
 

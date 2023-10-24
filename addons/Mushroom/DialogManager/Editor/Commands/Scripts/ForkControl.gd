@@ -7,22 +7,24 @@ extends Control
 var current_fork: ForkCommand
 var current_block: Block
 var fc: FlowChart
-var undo_redo: UndoRedo
+var undo_redo: EditorUndoRedoManager
 
 signal adding_choice
 
 
 func _on_AddChoiceButton_pressed() -> void:
 	undo_redo.create_action("adding_choice")
-	undo_redo.add_do_method(add_choice_contol)
-	undo_redo.add_undo_method(free_choice_control)
+	undo_redo.add_do_method(self, "add_choice_contol")
+	undo_redo.add_undo_method(self, "free_choice_control")
 	undo_redo.commit_action()
 
 
 func removing_choice_action(choice_c: Control) -> void:
 	undo_redo.create_action("removing_choice")
-	undo_redo.add_do_method(free_choice_control.bind(choice_c))
-	undo_redo.add_undo_method(add_choice_contol.bind(choice_c.current_choice, choice_c.get_index()))
+	undo_redo.add_do_method(self, "free_choice_control", choice_c)
+	undo_redo.add_undo_method(
+		self, "add_choice_contol", choice_c.current_choice, choice_c.get_index()
+	)
 	undo_redo.commit_action()
 
 
@@ -48,7 +50,9 @@ func free_choice_control(choice: Control = null) -> void:
 	_on_connecting(current_block)
 
 
-func set_up(f: ForkCommand, flowcharttab: Control, cb: Block, ur: UndoRedo, ge: GraphEdit) -> void:
+func set_up(
+	f: ForkCommand, flowcharttab: Control, cb: Block, ur: EditorUndoRedoManager, ge: GraphEdit
+) -> void:
 	current_fork = f
 	fc = flowcharttab.flowchart
 	graph = ge

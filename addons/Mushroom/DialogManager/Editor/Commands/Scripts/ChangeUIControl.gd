@@ -2,7 +2,7 @@
 extends VBoxContainer
 
 var current_change_ui: ChangeUICommand
-var undo_redo: UndoRedo
+var undo_redo: EditorUndoRedoManager
 var toggle: bool
 var current_ui_scene: PackedScene
 
@@ -11,7 +11,7 @@ var current_ui_scene: PackedScene
 @onready var ui_drag_container := $UIHBoxContainer
 
 
-func set_up(cmd: ChangeUICommand, u_r: UndoRedo) -> void:
+func set_up(cmd: ChangeUICommand, u_r: EditorUndoRedoManager) -> void:
 	current_change_ui = cmd
 	undo_redo = u_r
 	default_check.button_pressed = current_change_ui.change_to_default
@@ -20,8 +20,8 @@ func set_up(cmd: ChangeUICommand, u_r: UndoRedo) -> void:
 
 func _on_IsDefaultCheckButton_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle default ui")
-	undo_redo.add_do_method(toggle_ui.bind(button_pressed))
-	undo_redo.add_undo_method(toggle_ui.bind(toggle))
+	undo_redo.add_do_method(self, "toggle_ui", button_pressed)
+	undo_redo.add_undo_method(self, "toggle_ui", toggle)
 	undo_redo.commit_action()
 	toggle = button_pressed
 
@@ -37,16 +37,16 @@ func toggle_ui(button_pressed: bool) -> void:
 
 func _on_UIDragTargetLabel_value_dragged(value: PackedScene) -> void:
 	undo_redo.create_action("drag a new UI scene")
-	undo_redo.add_do_method(change_ui_scene.bind(value))
-	undo_redo.add_undo_method(change_ui_scene.bind(current_ui_scene))
+	undo_redo.add_do_method(self, "change_ui_scene", value)
+	undo_redo.add_undo_method(self, "change_ui_scene", current_ui_scene)
 	undo_redo.commit_action()
 	current_ui_scene = value
 
 
 func _on_ClearButton_pressed() -> void:
 	undo_redo.create_action("drag a new UI scene")
-	undo_redo.add_do_method(change_ui_scene)
-	undo_redo.add_undo_method(change_ui_scene.bind(current_ui_scene))
+	undo_redo.add_do_method(self, "change_ui_scene")
+	undo_redo.add_undo_method(self, "change_ui_scene", current_ui_scene)
 	undo_redo.commit_action()
 	current_ui_scene = null
 

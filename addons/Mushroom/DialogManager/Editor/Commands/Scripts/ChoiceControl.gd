@@ -16,13 +16,13 @@ extends VBoxContainer
 
 var current_choice: Choice
 var flowchart: FlowChart
-var undo_redo: UndoRedo
+var undo_redo: EditorUndoRedoManager
 
 signal conncting
 signal removing_choice
 
 
-func set_up(c: Choice, fct: FlowChart, u: UndoRedo) -> void:
+func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager) -> void:
 	flowchart = fct
 	current_choice = c
 	choice_text.text = c.text
@@ -64,8 +64,8 @@ func change_next_bloc(index, m: PopupMenu) -> void:
 	var n_block_name := m.get_item_text(index)
 	var p_block_name := current_choice.next_block
 	undo_redo.create_action("change next block")
-	undo_redo.add_do_method(do_change_next_block.bind(n_block_name))
-	undo_redo.add_undo_method(do_change_next_block.bind(p_block_name))
+	undo_redo.add_do_method(self, "do_change_next_block", n_block_name)
+	undo_redo.add_undo_method(self, "do_change_next_block", p_block_name)
 	undo_redo.commit_action()
 
 
@@ -104,8 +104,8 @@ func _on_ReqNodeInput_text_changed(new_text: String) -> void:
 
 func _on_IsCondCheckBox_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle condition")
-	undo_redo.add_do_method(show_condition_toggle.bind(button_pressed))
-	undo_redo.add_undo_method(show_condition_toggle.bind(current_choice.is_cond))
+	undo_redo.add_do_method(self, "show_condition_toggle", button_pressed)
+	undo_redo.add_undo_method(self, "show_condition_toggle", current_choice.is_cond)
 	undo_redo.commit_action()
 
 
