@@ -1,6 +1,8 @@
 @tool
 extends GraphEdit
 
+# TODO: rewrite update_block_flow logic
+
 @onready var enter_name_scene: PackedScene = preload(
 	"res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn"
 )
@@ -18,24 +20,32 @@ signal flow_changed
 signal graph_node_close
 
 
-func sync_flowchart_graph(fl: FlowChart) -> void:
-	flowchart = fl
-	var fb := flowchart.blocks
-	for b in fb:
-		create_GraphNode_from_block(b, flowchart.get_block_offset(b), flowchart.get_block(b))
-	for b in fb:
-		connect_block_outputs(flowchart.get_block(b))
-
-	if flowchart.first_block == null:
-		create_GraphNode_from_block("first_block")
-		on_GraphNode_clicked(graph_nodes["first_block"])
-
-
 func _on_AddBlockButton_pressed() -> void:
 	var enter_name: Window = enter_name_scene.instantiate()
 	add_child(enter_name, true)
 	enter_name.popup_centered()
 	enter_name.new_text_confirm.connect(on_new_text_confirm)
+
+
+func on_new_text_confirm(new_title: String) -> void:
+	if $"../../".check_for_duplicates(new_title) == true or new_title == "":
+		_on_AddBlockButton_pressed()
+		print("The Title is a duplicate!")
+		return
+
+	undo_redo.create_action("Creating a block")
+	undo_redo.add_do_method(add_block.bind(new_title))
+	undo_redo.add_undo_method(close_node.bind(new_title))
+	undo_redo.commit_action()
+
+
+func on_node_close(node: GraphNode) -> void:
+	undo_redo.create_action("Block Closed")
+	undo_redo.add_do_method(close_node.bind(node.get_title()))
+	undo_redo.add_undo_method(
+		add_block.bind(node.get_title(), node.position_offset, node.get_meta("block"))
+	)
+	undo_redo.commit_action()
 
 
 func add_block(title: String, offset = null, in_block: Block = null) -> void:
@@ -78,24 +88,6 @@ func create_GraphNode_from_block(title: String, offset = null, in_block: Block =
 		node.selected = true
 
 
-func connect_block_inputs(_new_block: Block) -> void:
-	for i in _new_block.inputs:
-		graph_nodes[_new_block.name].add_g_node_input(i)
-		var err := connect_node(
-			graph_nodes[i.origin_block].get_name(),
-			flowchart.get_block(i.origin_block).outputs.find(i),
-			graph_nodes[_new_block.name].get_name(),
-			_new_block.inputs.find(i)
-		)
-		if err != OK:
-			print("failure! to connect inputs")
-
-
-func connect_block_outputs(_new_block: Block, del_first: bool = false) -> void:
-	for o in _new_block.outputs:
-		update_block_flow(_new_block, o, del_first)
-
-
 func close_node(d_node: String) -> void:
 	for closed_node_output in flowchart.get_block(d_node).outputs:
 		for c in closed_node_output.choices:
@@ -115,6 +107,45 @@ func close_node(d_node: String) -> void:
 	# and then delete the node
 	graph_nodes[d_node].queue_free()
 	graph_nodes.erase(d_node)
+
+
+func sync_flowchart_graph(fl: FlowChart) -> void:
+	flowchart = fl
+	var fb := flowchart.blocks
+	for b in fb:
+		create_GraphNode_from_block(b, flowchart.get_block_offset(b), flowchart.get_block(b))
+	for b in fb:
+		connect_block_outputs(flowchart.get_block(b))
+
+	if flowchart.first_block == null:
+		create_GraphNode_from_block("first_block")
+		on_GraphNode_clicked(graph_nodes["first_block"])
+
+
+func connect_block_outputs(_new_block: Block, del_first: bool = false) -> void:
+	for o in _new_block.outputs:
+		update_block_flow(_new_block, o, del_first)
+
+
+func connect_block_inputs(_new_block: Block) -> void:
+	for i in _new_block.inputs:
+		graph_nodes[_new_block.name].add_g_node_input(i)
+		var err := connect_node(
+			graph_nodes[i.origin_block].get_name(),
+			flowchart.get_block(i.origin_block).outputs.find(i),
+			graph_nodes[_new_block.name].get_name(),
+			_new_block.inputs.find(i)
+		)
+		if err != OK:
+			print("failure! to connect inputs")
+
+
+func delete_output(deconecting_node: String, del_output: ForkCommand) -> void:
+	disconnect_outputs(deconecting_node)
+	for c in del_output.choices:
+		delete_input(c.next_block, del_output)
+	graph_nodes[deconecting_node].delete_outputs(del_output)
+	reconnect_outputs(deconecting_node)
 
 
 func delete_input(deconecting_node: String, closed_node_output: ForkCommand) -> void:
@@ -147,16 +178,6 @@ func disconnect_inputs(deconecting_node: String) -> void:
 		)
 
 
-func reconnect_inputs(deconecting_node: String) -> void:
-	for o in flowchart.get_block(deconecting_node).inputs:
-		connect_node(
-			graph_nodes[o.origin_block].get_name(),
-			flowchart.get_block(o.origin_block).outputs.find(o),
-			graph_nodes[deconecting_node].get_name(),
-			flowchart.get_block(deconecting_node).inputs.find(o)
-		)
-
-
 func reconnect_outputs(deconecting_node: String) -> void:
 	for o in flowchart.get_block(deconecting_node).outputs:
 		for c in o.choices:
@@ -171,59 +192,14 @@ func reconnect_outputs(deconecting_node: String) -> void:
 			)
 
 
-func delete_output(deconecting_node: String, del_output: ForkCommand) -> void:
-	disconnect_outputs(deconecting_node)
-	for c in del_output.choices:
-		delete_input(c.next_block, del_output)
-	graph_nodes[deconecting_node].delete_outputs(del_output)
-	reconnect_outputs(deconecting_node)
-
-
-func on_node_close(node: GraphNode) -> void:
-	undo_redo.create_action("Block Closed")
-	undo_redo.add_do_method(close_node.bind(node.get_title()))
-	undo_redo.add_undo_method(
-		add_block.bind(node.get_title(), node.position_offset, node.get_meta("block"))
-	)
-	undo_redo.commit_action()
-
-
-func on_GraphNode_clicked(node: GraphNode) -> void:
-	undo_redo.create_action("select Block node")
-	undo_redo.add_do_method(send_block_to_tree.bind(node.title))
-	undo_redo.add_undo_method(send_block_to_tree.bind(current_selected_graph_node))
-	undo_redo.commit_action()
-	current_selected_graph_node = node.title
-
-
-func send_block_to_tree(node: String) -> void:
-	emit_signal("g_node_clicked", flowchart.get_block(node))
-	set_selected(graph_nodes[node])
-
-
-func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title: String) -> void:
-	undo_redo.create_action("Moving Block")
-	undo_redo.add_do_method(set_node_offset.bind(node_title, finished_offset))
-	undo_redo.add_undo_method(set_node_offset.bind(node_title, start_offset))
-	undo_redo.commit_action()
-	emit_signal("flow_changed")
-
-
-func set_node_offset(title: String, offset: Vector2) -> void:
-	graph_nodes[title].set_position(offset)
-	flowchart.blocks[title].offset = offset
-
-
-func on_new_text_confirm(new_title: String) -> void:
-	if $"../../".check_for_duplicates(new_title) == true or new_title == "":
-		_on_AddBlockButton_pressed()
-		print("The Title is a duplicate!")
-		return
-
-	undo_redo.create_action("Creating a block")
-	undo_redo.add_do_method(add_block.bind(new_title))
-	undo_redo.add_undo_method(close_node.bind(new_title))
-	undo_redo.commit_action()
+func reconnect_inputs(deconecting_node: String) -> void:
+	for o in flowchart.get_block(deconecting_node).inputs:
+		connect_node(
+			graph_nodes[o.origin_block].get_name(),
+			flowchart.get_block(o.origin_block).outputs.find(o),
+			graph_nodes[deconecting_node].get_name(),
+			flowchart.get_block(deconecting_node).inputs.find(o)
+		)
 
 
 func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> void:
@@ -253,3 +229,29 @@ func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> 
 			graph_nodes[c_destination].get_name(),
 			flowchart.get_block(c_destination).inputs.find(fork)
 		)
+
+
+func on_GraphNode_clicked(node: GraphNode) -> void:
+	undo_redo.create_action("select Block node")
+	undo_redo.add_do_method(send_block_to_tree.bind(node.title))
+	undo_redo.add_undo_method(send_block_to_tree.bind(current_selected_graph_node))
+	undo_redo.commit_action()
+	current_selected_graph_node = node.title
+
+
+func send_block_to_tree(node: String) -> void:
+	emit_signal("g_node_clicked", flowchart.get_block(node))
+	set_selected(graph_nodes[node])
+
+
+func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title: String) -> void:
+	undo_redo.create_action("Moving Block")
+	undo_redo.add_do_method(set_node_offset.bind(node_title, finished_offset))
+	undo_redo.add_undo_method(set_node_offset.bind(node_title, start_offset))
+	undo_redo.commit_action()
+	emit_signal("flow_changed")
+
+
+func set_node_offset(title: String, offset: Vector2) -> void:
+	graph_nodes[title].set_position(offset)
+	flowchart.blocks[title].offset = offset
