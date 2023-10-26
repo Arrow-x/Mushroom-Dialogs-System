@@ -1,122 +1,94 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://dy1fqsaty2u30"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/AnimationControl.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/AnimationControl.gd" id="1"]
 
 [node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
+script = ExtResource("1")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="PathHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/PathHBoxContainer"]
-offset_top = 5.0
-offset_right = 36.0
-offset_bottom = 19.0
+layout_mode = 2
 text = "Path3D: "
 
 [node name="PathLineEdit" type="LineEdit" parent="VBoxContainer/PathHBoxContainer"]
-offset_left = 40.0
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ANameHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 28.0
-offset_right = 1024.0
-offset_bottom = 52.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/ANameHBoxContainer"]
-offset_top = 5.0
-offset_right = 46.0
-offset_bottom = 19.0
+layout_mode = 2
 text = "Name: "
 
 [node name="NameLineEdit" type="LineEdit" parent="VBoxContainer/ANameHBoxContainer"]
-offset_left = 50.0
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="BlendHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 56.0
-offset_right = 1024.0
-offset_bottom = 80.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/BlendHBoxContainer"]
-offset_top = 5.0
-offset_right = 45.0
-offset_bottom = 19.0
+layout_mode = 2
 text = "Blend: "
 
 [node name="BlendLineEdit" type="SpinBox" parent="VBoxContainer/BlendHBoxContainer"]
-offset_left = 49.0
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 step = 0.1
 page = 10.0
 
 [node name="SpeedHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 84.0
-offset_right = 1024.0
-offset_bottom = 108.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/SpeedHBoxContainer"]
-offset_top = 5.0
-offset_right = 51.0
-offset_bottom = 19.0
+layout_mode = 2
 text = "Speed : "
 
 [node name="SpeedLineEdit" type="SpinBox" parent="VBoxContainer/SpeedHBoxContainer"]
-offset_left = 55.0
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 step = 0.1
 page = 10.0
 
 [node name="FromEndHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 112.0
-offset_right = 1024.0
-offset_bottom = 152.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/FromEndHBoxContainer"]
-offset_top = 13.0
-offset_right = 72.0
-offset_bottom = 27.0
+layout_mode = 2
 text = "From End : "
 
 [node name="FromEndCheck" type="CheckButton" parent="VBoxContainer/FromEndHBoxContainer"]
-offset_left = 76.0
-offset_right = 1024.0
-offset_bottom = 40.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="TypeHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 156.0
-offset_right = 1024.0
-offset_bottom = 176.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/TypeHBoxContainer"]
-offset_top = 3.0
-offset_right = 108.0
-offset_bottom = 17.0
+layout_mode = 2
 text = "Animation Type: "
 
 [node name="TypeMenu" type="MenuButton" parent="VBoxContainer/TypeHBoxContainer"]
-offset_left = 112.0
-offset_right = 1024.0
-offset_bottom = 20.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Set Animation Type"
-items = [ "Wait", null, 0, false, false, 0, 0, null, "", false, "Continue", null, 0, false, false, 1, 0, null, "", false ]
+item_count = 2
+popup/item_0/text = "wait"
+popup/item_0/id = 0
+popup/item_1/text = "continue"
+popup/item_1/id = 1
 
 [connection signal="text_changed" from="VBoxContainer/PathHBoxContainer/PathLineEdit" to="." method="_on_PathLineEdit_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/ANameHBoxContainer/NameLineEdit" to="." method="_on_NameLineEdit_text_changed"]

@@ -2,13 +2,13 @@
 extends Command
 class_name AnimationCommand
 
-@export var animation_path: String
-@export var animation_name: String
+@export var animation_path: String = ""
+@export var animation_name: String = ""
 @export var custom_blend: float = -1
 @export var custom_speed: float = 1.0
 @export var from_end: bool = false
 
-@export_enum("Set Animation Type", "wait", "continue") var anim_type
+@export_enum("wait", "continue") var anim_type = "Set Animation Type"
 
 
 func preview() -> String:
