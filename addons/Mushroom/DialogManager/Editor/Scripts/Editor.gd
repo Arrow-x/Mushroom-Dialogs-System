@@ -50,7 +50,7 @@ func _on_NewFlowChartTabs_tab_close(tab: int) -> void:
 		add_child(_c)
 		_c.popup_centered()
 		return
-	_free_tab_and_select_another(flowchart_editors, tab)
+	free_tab_and_select_another(flowchart_editors, tab)
 
 
 func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window) -> void:
@@ -60,11 +60,11 @@ func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window
 	if custom_action == "save":
 		flowchart_editors[tab].check_flowchart_path_before_save()
 		flowchart_editors[tab].done_saving.connect(
-			_free_tab_and_select_another.bind(flowchart_editors, tab, confirm_window)
+			free_tab_and_select_another.bind(flowchart_editors, tab, confirm_window)
 		)
 		return
 
-	_free_tab_and_select_another(flowchart_editors, tab, confirm_window)
+	free_tab_and_select_another(flowchart_editors, tab, confirm_window)
 
 
 func _on_Tabs_reposition_active_tab_request(idx_to: int) -> void:
@@ -77,7 +77,7 @@ func save_flowcharts() -> void:
 		container.check_flowchart_path_before_save()
 
 
-func _free_tab_and_select_another(flowchart_editors, tab, confirm_window = null) -> void:
+func free_tab_and_select_another(flowchart_editors, tab, confirm_window = null) -> void:
 	if confirm_window != null:
 		confirm_window.queue_free()
 	if tab == f_tabs.get_current_tab():

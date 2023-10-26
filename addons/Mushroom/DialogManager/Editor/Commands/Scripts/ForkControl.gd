@@ -37,7 +37,7 @@ func add_choice_contol(c: Choice = null, idx: int = -1) -> void:
 		n_c = c
 		current_fork.choices.append(n_c)
 	create_choice_controle(n_c, idx)
-	_on_connecting(current_block)
+	update_block_in_graph(current_block)
 
 
 func free_choice_control(choice: Control = null) -> void:
@@ -47,7 +47,7 @@ func free_choice_control(choice: Control = null) -> void:
 	else:
 		current_fork.choices.erase(choice.current_choice)
 		choice.queue_free()
-	_on_connecting(current_block)
+	update_block_in_graph(current_block)
 
 
 func set_up(
@@ -66,7 +66,7 @@ func set_up(
 			create_choice_controle(i)
 
 
-func _on_connecting(sender: Block) -> void:
+func update_block_in_graph(sender: Block) -> void:
 	graph.update_block_flow(sender, current_fork, true)
 	is_changed()
 
@@ -76,7 +76,7 @@ func create_choice_controle(choice: Choice, idx: int = -1) -> void:
 		load("res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn").instantiate()
 	)
 
-	choice_control.conncting.connect(_on_connecting.bind(current_block))
+	choice_control.conncting.connect(update_block_in_graph.bind(current_block))
 	choice_control.removing_choice.connect(removing_choice_action)
 	choices_container.add_child(choice_control)
 	if idx != -1:
