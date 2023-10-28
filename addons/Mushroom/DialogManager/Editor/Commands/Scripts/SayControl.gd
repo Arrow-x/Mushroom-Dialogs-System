@@ -45,7 +45,9 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart):
 
 
 func set_say_box_hight():
-	v_slit.split_offset = say_text_edit.get_line_count() * 18
+	var new_offset := say_text_edit.get_line_count() * 18
+	if new_offset > v_slit.split_offset:
+		v_slit.split_offset = new_offset
 
 
 func _on_TextEdit_text_changed():
