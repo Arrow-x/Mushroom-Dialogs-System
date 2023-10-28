@@ -1,18 +1,16 @@
 @tool
 extends VBoxContainer
-@onready var choice_text: LineEdit = $HBoxContainer/ChoiceText
-@onready var next_block_menu: MenuButton = $HBoxContainer2/NextBlockList
-@onready var next_index_text: SpinBox = $HBoxContainer3/NextIndex
-@onready var delete_choice: Button = $HBoxContainer3/DeleteChoice
 
-@onready var is_cond: CheckButton = $IsCondCheckBox
-
-@onready var cond_box: VBoxContainer = $CondVBoxContainer
-
-@onready var req_node: LineEdit = $CondVBoxContainer/ReqNode/ReqNodeInput
-@onready var req_var: LineEdit = $CondVBoxContainer/ReqVar/ReqVarInput
-@onready var req_val: LineEdit = $CondVBoxContainer/ReqVal/CheckValInput
-@onready var check_type: MenuButton = $CondVBoxContainer/ReqVar/CheckType
+@export var choice_text: LineEdit
+@export var next_block_menu: MenuButton
+@export var next_index_text: SpinBox
+@export var delete_choice: Button
+@export var is_cond: CheckButton
+@export var cond_box: VBoxContainer
+@export var req_node: LineEdit
+@export var req_var: LineEdit
+@export var req_val: LineEdit
+@export var check_type: MenuButton
 
 var current_choice: Choice
 var flowchart: FlowChart

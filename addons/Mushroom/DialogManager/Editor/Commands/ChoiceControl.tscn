@@ -1,155 +1,130 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://dnwd4iberh8eq"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ChoiceControl.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ChoiceControl.gd" id="1"]
 
-[node name="Control" type="VBoxContainer"]
+[node name="Control" type="VBoxContainer" node_paths=PackedStringArray("choice_text", "next_block_menu", "next_index_text", "delete_choice", "is_cond", "cond_box", "req_node", "req_var", "req_val", "check_type")]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
+script = ExtResource("1")
+choice_text = NodePath("HBoxContainer/ChoiceText")
+next_block_menu = NodePath("HBoxContainer2/NextBlockList")
+next_index_text = NodePath("HBoxContainer3/NextIndex")
+delete_choice = NodePath("HBoxContainer3/DeleteChoice")
+is_cond = NodePath("IsCondCheckBox")
+cond_box = NodePath("CondVBoxContainer")
+req_node = NodePath("CondVBoxContainer/ReqNode/ReqNodeInput")
+req_var = NodePath("CondVBoxContainer/ReqVar/ReqVarInput")
+req_val = NodePath("CondVBoxContainer/ReqVal/CheckValInput")
+check_type = NodePath("CondVBoxContainer/ReqVar/CheckType")
 
 [node name="Panel2" type="Panel" parent="."]
-modulate = Color( 0, 0.6, 1, 1 )
-offset_right = 1024.0
-offset_bottom = 5.0
-custom_minimum_size = Vector2( 0, 5 )
+modulate = Color(0, 0.6, 1, 1)
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
 
 [node name="IsCondCheckBox" type="CheckButton" parent="."]
-offset_top = 9.0
-offset_right = 1024.0
-offset_bottom = 49.0
+layout_mode = 2
 text = "Conditional Command"
 
 [node name="CondVBoxContainer" type="VBoxContainer" parent="."]
 visible = false
-offset_top = 53.0
-offset_right = 1024.0
-offset_bottom = 139.0
+layout_mode = 2
 
 [node name="ReqNode" type="HBoxContainer" parent="CondVBoxContainer"]
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="CondVBoxContainer/ReqNode"]
-offset_top = 5.0
-offset_right = 99.0
-offset_bottom = 19.0
+layout_mode = 2
 text = "Required Node:"
 
 [node name="ReqNodeInput" type="LineEdit" parent="CondVBoxContainer/ReqNode"]
-offset_left = 103.0
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ReqVar" type="HBoxContainer" parent="CondVBoxContainer"]
-offset_top = 28.0
-offset_right = 1024.0
-offset_bottom = 52.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="CondVBoxContainer/ReqVar"]
-offset_top = 5.0
-offset_right = 116.0
-offset_bottom = 19.0
+layout_mode = 2
 text = "Required Variable:"
 
 [node name="CheckType" type="MenuButton" parent="CondVBoxContainer/ReqVar"]
-offset_left = 120.0
-offset_right = 172.0
-offset_bottom = 24.0
+layout_mode = 2
 focus_mode = 2
 text = "type:  "
-items = [ "==", null, 0, false, false, 0, 0, null, "", false, "!=", null, 0, false, false, 1, 0, null, "", false, "<", null, 0, false, false, 2, 0, null, "", false, "<=", null, 0, false, false, 3, 0, null, "", false, ">", null, 0, false, false, 4, 0, null, "", false, ">=", null, 0, false, false, 5, 0, null, "", false ]
+item_count = 6
+popup/item_0/text = "=="
+popup/item_0/id = 0
+popup/item_1/text = "<"
+popup/item_1/id = 1
+popup/item_2/text = ">"
+popup/item_2/id = 2
+popup/item_3/text = "<="
+popup/item_3/id = 3
+popup/item_4/text = ">="
+popup/item_4/id = 4
+popup/item_5/text = "!="
+popup/item_5/id = 5
 
 [node name="ReqVarInput" type="LineEdit" parent="CondVBoxContainer/ReqVar"]
-offset_left = 176.0
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ReqVal" type="HBoxContainer" parent="CondVBoxContainer"]
-offset_top = 56.0
-offset_right = 1024.0
-offset_bottom = 80.0
+layout_mode = 2
 
 [node name="Label2" type="Label" parent="CondVBoxContainer/ReqVal"]
-offset_top = 5.0
-offset_right = 39.0
-offset_bottom = 19.0
+layout_mode = 2
 text = "Value:"
 
 [node name="CheckValInput" type="LineEdit" parent="CondVBoxContainer/ReqVal"]
-offset_left = 43.0
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Seperator" type="Panel" parent="CondVBoxContainer"]
-modulate = Color( 0, 0, 0, 1 )
-offset_top = 84.0
-offset_right = 1024.0
-offset_bottom = 86.61
-custom_minimum_size = Vector2( 0, 2.61 )
+modulate = Color(0, 0, 0, 1)
+custom_minimum_size = Vector2(0, 2.61)
+layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-offset_top = 53.0
-offset_right = 1024.0
-offset_bottom = 77.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="HBoxContainer"]
-offset_top = 5.0
-offset_right = 74.0
-offset_bottom = 19.0
+layout_mode = 2
 text = "Choice Text"
 
 [node name="ChoiceText" type="LineEdit" parent="HBoxContainer"]
-offset_left = 78.0
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
-offset_top = 81.0
-offset_right = 1024.0
-offset_bottom = 101.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="HBoxContainer2"]
-offset_top = 3.0
-offset_right = 69.0
-offset_bottom = 17.0
+layout_mode = 2
 text = "Next Block"
 
 [node name="NextBlockList" type="MenuButton" parent="HBoxContainer2"]
-offset_left = 73.0
-offset_right = 1024.0
-offset_bottom = 20.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="."]
-offset_top = 105.0
-offset_right = 1024.0
-offset_bottom = 129.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="HBoxContainer3"]
-offset_top = 5.0
-offset_right = 74.0
-offset_bottom = 19.0
+layout_mode = 2
 text = "Next Index "
 
 [node name="NextIndex" type="SpinBox" parent="HBoxContainer3"]
-offset_left = 78.0
-offset_right = 152.0
-offset_bottom = 24.0
+layout_mode = 2
 
 [node name="Control" type="Control" parent="HBoxContainer3"]
-offset_left = 156.0
-offset_right = 1000.0
-offset_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="DeleteChoice" type="Button" parent="HBoxContainer3"]
-offset_left = 1004.0
-offset_right = 1024.0
-offset_bottom = 24.0
+layout_mode = 2
 text = "X"
 
 [connection signal="toggled" from="IsCondCheckBox" to="." method="_on_IsCondCheckBox_toggled"]
