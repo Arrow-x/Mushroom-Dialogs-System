@@ -1,17 +1,17 @@
 @tool
 extends Control
-@onready var character_menu: MenuButton = $VBoxContainer/CharacterHBoxContainer/CharacterMenuButton
-@onready
-var portraits_menu: MenuButton = $VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton
-@onready var say_text_edit: TextEdit = $VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit
-@onready var v_slit: VSplitContainer = $VBoxContainer/VSplitContainer
-@onready var is_cond: CheckButton = $VBoxContainer/IsCondCheckBox
-@onready var cond_box: VBoxContainer = $VBoxContainer/CondVBoxContainer
-@onready var req_node: LineEdit = $VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput
-@onready var req_var: LineEdit = $VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput
-@onready var req_val: LineEdit = $VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput
-@onready var check_type: MenuButton = $VBoxContainer/CondVBoxContainer/ReqVal/CheckType
-@onready var append_check: CheckBox = $VBoxContainer/AppendHBoxContainer/AppendCheckBox
+
+@export var character_menu: MenuButton
+@export var portraits_menu: MenuButton
+@export var say_text_edit: TextEdit
+@export var v_slit: VSplitContainer
+@export var is_cond: CheckButton
+@export var cond_box: VBoxContainer
+@export var req_node: LineEdit
+@export var req_var: LineEdit
+@export var req_val: LineEdit
+@export var check_type: MenuButton
+@export var append_check: CheckBox
 
 var undo_redo: EditorUndoRedoManager
 var current_say: SayCommand
@@ -110,7 +110,7 @@ func _on_PortraitMenuButton_about_to_show() -> void:
 func _on_checktype_popup(id: int, popup: PopupMenu) -> void:
 	var pp_text: String = popup.get_item_text(id)
 	current_say.condition_type = pp_text
-	get_node("VBoxContainer/CondVBoxContainer/ReqVal/CheckType").text = pp_text
+	check_type.text = pp_text
 	is_changed()
 
 
