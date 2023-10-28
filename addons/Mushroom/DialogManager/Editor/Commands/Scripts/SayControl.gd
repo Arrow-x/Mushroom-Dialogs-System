@@ -3,6 +3,7 @@ extends Control
 
 @export var character_menu: MenuButton
 @export var portraits_menu: MenuButton
+@export var portraits_pos_menu: MenuButton
 @export var say_text_edit: TextEdit
 @export var v_slit: VSplitContainer
 @export var is_cond: CheckButton
@@ -26,6 +27,7 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart):
 	check_type_popup.id_pressed.connect(_on_checktype_popup.bind(check_type_popup))
 	character_menu.get_popup().id_pressed.connect(_on_character_selected)
 	portraits_menu.get_popup().id_pressed.connect(_on_portrait_selected)
+	portraits_pos_menu.get_popup().id_pressed.connect(_on_portrait_pos_selected)
 
 	undo_redo = u_r
 
@@ -40,6 +42,7 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart):
 	req_val.text = c_s.check_val
 	check_type.text = c_s.condition_type
 	append_check.button_pressed = c_s.append_text
+	portraits_pos_menu.text = c_s.por_pos
 
 	set_say_box_hight()
 
@@ -89,6 +92,20 @@ func select_portrait(character: String = "") -> void:
 		if current_say.character != null and character != ""
 		else null
 	)
+	is_changed()
+
+
+func _on_portrait_pos_selected(id: int) -> void:
+	var portrait_pos_name := portraits_pos_menu.get_popup().get_item_text(id)
+	undo_redo.create_action("select portrait position")
+	undo_redo.add_do_method(self, "select_portrait_pos", portrait_pos_name)
+	undo_redo.add_undo_method(self, "select_portrait_pos", current_say.por_pos)
+	undo_redo.commit_action()
+
+
+func select_portrait_pos(pos: String) -> void:
+	portraits_pos_menu.text = pos
+	current_say.por_pos = pos
 	is_changed()
 
 

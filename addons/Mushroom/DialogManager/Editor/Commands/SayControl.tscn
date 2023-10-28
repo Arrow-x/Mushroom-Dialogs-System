@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/SayControl.gd" id="1"]
 
-[node name="Control" type="Control" node_paths=PackedStringArray("character_menu", "portraits_menu", "say_text_edit", "v_slit", "is_cond", "cond_box", "req_node", "req_var", "req_val", "check_type", "append_check")]
+[node name="Control" type="Control" node_paths=PackedStringArray("character_menu", "portraits_menu", "portraits_pos_menu", "say_text_edit", "v_slit", "is_cond", "cond_box", "req_node", "req_var", "req_val", "check_type", "append_check")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,6 +12,7 @@ grow_vertical = 2
 script = ExtResource("1")
 character_menu = NodePath("VBoxContainer/CharacterHBoxContainer/CharacterMenuButton")
 portraits_menu = NodePath("VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton")
+portraits_pos_menu = NodePath("VBoxContainer/VSplitContainer/VBoxContainer/PortraitPositionHBoxContainer/PortraitPositionMenuButton")
 say_text_edit = NodePath("VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit")
 v_slit = NodePath("VBoxContainer/VSplitContainer")
 is_cond = NodePath("VBoxContainer/IsCondCheckBox")
