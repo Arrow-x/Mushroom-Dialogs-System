@@ -69,6 +69,19 @@ text = "Value:"
 layout_mode = 2
 focus_mode = 2
 text = "type:  "
+item_count = 6
+popup/item_0/text = "=="
+popup/item_0/id = 0
+popup/item_1/text = "<"
+popup/item_1/id = 1
+popup/item_2/text = ">"
+popup/item_2/id = 2
+popup/item_3/text = "<="
+popup/item_3/id = 3
+popup/item_4/text = ">="
+popup/item_4/id = 4
+popup/item_5/text = "!="
+popup/item_5/id = 5
 
 [node name="CheckValInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
 layout_mode = 2
