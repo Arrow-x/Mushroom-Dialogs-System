@@ -1,9 +1,9 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://b57ggihn01qk0"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Scripts/GraphNodeScript.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/GraphNodeScript.gd" id="1"]
 
 [node name="GraphNode" type="GraphNode"]
-modulate = Color( 0.964706, 0.956863, 0.956863, 1 )
+modulate = Color(0.964706, 0.956863, 0.956863, 1)
 offset_left = 8.0
 offset_top = 7.0
 offset_right = 113.0
@@ -11,7 +11,4 @@ offset_bottom = 70.0
 mouse_filter = 1
 title = "First Block"
 show_close = true
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource("1")
