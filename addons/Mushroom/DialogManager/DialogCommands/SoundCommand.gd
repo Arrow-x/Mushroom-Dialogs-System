@@ -5,7 +5,7 @@ class_name SoundCommand
 @export var stream: AudioStream
 @export_range(-80, 24) var volume_db: float = 0.0
 @export_range(0.01, 4) var pitch_scale: float = 1
-@export var mix_target = 0
+@export_enum("Stereo", "Surround", "Center") var mix_target = 0
 @export var bus: String = "Master"
 @export var effect: AudioEffect
 
