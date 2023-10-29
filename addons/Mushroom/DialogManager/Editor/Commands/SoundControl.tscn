@@ -3,11 +3,17 @@
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/SoundControl.gd" id="1"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/Dragger.gd" id="2"]
 
-[node name="SoundCommandControl" type="VBoxContainer"]
+[node name="SoundCommandControl" type="VBoxContainer" node_paths=PackedStringArray("stream", "volume_slider", "pitch_slider", "mix_menu", "bus_lineedit", "effect")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1")
+stream = NodePath("StremHBoxContainer/Stream")
+volume_slider = NodePath("VoilumHBoxContainer2/Volume")
+pitch_slider = NodePath("PitchHBoxContainer/Pitch")
+mix_menu = NodePath("MixHBoxContainer/MixMenuButton")
+bus_lineedit = NodePath("BusHBoxContainer/BusLineEdit")
+effect = NodePath("EffectHBoxContainer/Effect")
 
 [node name="StremHBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -110,10 +116,10 @@ extension = "tres"
 layout_mode = 2
 text = "C"
 
-[connection signal="value_dragged" from="StremHBoxContainer/Stream" to="." method="_on_Stream_value_dragged"]
-[connection signal="pressed" from="StremHBoxContainer/Clean" to="." method="_on_CleanStream_pressed"]
-[connection signal="value_changed" from="VoilumHBoxContainer2/Volume" to="." method="_on_Volume_value_changed"]
-[connection signal="value_changed" from="PitchHBoxContainer/Pitch" to="." method="_on_Pitch_value_changed"]
-[connection signal="text_changed" from="BusHBoxContainer/BusLineEdit" to="." method="_on_BusLineEdit_text_changed"]
-[connection signal="value_dragged" from="EffectHBoxContainer/Effect" to="." method="_on_Effect_value_dragged"]
-[connection signal="pressed" from="EffectHBoxContainer/Clean" to="." method="_on_CleanEffect_pressed"]
+[connection signal="value_dragged" from="StremHBoxContainer/Stream" to="." method="_on_stream_value_dragged"]
+[connection signal="pressed" from="StremHBoxContainer/Clean" to="." method="_on_clean_stream_pressed"]
+[connection signal="value_changed" from="VoilumHBoxContainer2/Volume" to="." method="_on_volume_value_changed"]
+[connection signal="value_changed" from="PitchHBoxContainer/Pitch" to="." method="_on_pitch_value_changed"]
+[connection signal="text_changed" from="BusHBoxContainer/BusLineEdit" to="." method="_on_bus_line_edit_text_changed"]
+[connection signal="value_dragged" from="EffectHBoxContainer/Effect" to="." method="_on_effect_value_dragged"]
+[connection signal="pressed" from="EffectHBoxContainer/Clean" to="." method="_on_clean_effect_pressed"]
