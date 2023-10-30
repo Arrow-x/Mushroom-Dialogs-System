@@ -1,17 +1,17 @@
 @tool
-extends Node
+extends VBoxContainer
+
+@export var anim_path_ctrl: LineEdit
+@export var anim_name_ctrl: LineEdit
+@export var blend_ctrl: SpinBox
+@export var anim_type_ctrl: MenuButton
+@export var speed_ctrl: SpinBox
+@export var from_end_ctrl: CheckButton
 
 var animation_cmd: AnimationCommand
 var undo_redo: EditorUndoRedoManager
 
 var current_from_end: bool
-
-@onready var anim_type_ctrl: MenuButton = $VBoxContainer/TypeHBoxContainer/TypeMenu
-@onready var anim_path_ctrl: LineEdit = $VBoxContainer/PathHBoxContainer/PathLineEdit
-@onready var anim_name_ctrl: LineEdit = $VBoxContainer/ANameHBoxContainer/NameLineEdit
-@onready var blend_ctrl: SpinBox = $VBoxContainer/BlendHBoxContainer/BlendLineEdit
-@onready var speed_ctrl: SpinBox = $VBoxContainer/SpeedHBoxContainer/SpeedLineEdit
-@onready var from_end_ctrl: CheckButton = $VBoxContainer/FromEndHBoxContainer/FromEndCheck
 
 
 func set_up(a_cmd: AnimationCommand, u_r: EditorUndoRedoManager) -> void:
@@ -26,27 +26,27 @@ func set_up(a_cmd: AnimationCommand, u_r: EditorUndoRedoManager) -> void:
 	from_end_ctrl.button_pressed = animation_cmd.from_end
 
 
-func _on_PathLineEdit_text_changed(new_text: String) -> void:
+func _on_path_lineedit_text_changed(new_text: String) -> void:
 	animation_cmd.animation_path = new_text
 	is_changed()
 
 
-func _on_NameLineEdit_text_changed(new_text: String) -> void:
+func _on_name_lineedit_text_changed(new_text: String) -> void:
 	animation_cmd.animation_name = new_text
 	is_changed()
 
 
-func _on_SpeedLineEdit_value_changed(value: float) -> void:
+func _on_speed_lineedit_value_changed(value: float) -> void:
 	animation_cmd.custom_speed = value
 	is_changed()
 
 
-func _on_BlendLineEdit_value_changed(value: float) -> void:
+func _on_blend_lineedit_value_changed(value: float) -> void:
 	animation_cmd.custom_blend = value
 	is_changed()
 
 
-func _on_FromEndCheck_toggled(button_pressed: bool) -> void:
+func _on_from_endcheck_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle from_end")
 	undo_redo.add_do_method(self, "toggle_from_end", button_pressed)
 	undo_redo.add_undo_method(self, "toggle_from_end", current_from_end)
