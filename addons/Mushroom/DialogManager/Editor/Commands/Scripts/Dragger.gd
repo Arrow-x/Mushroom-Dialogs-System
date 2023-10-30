@@ -3,6 +3,7 @@ extends Control
 
 @export var type: String
 @export var extension: String
+
 signal value_dragged(value)
 
 

@@ -19,7 +19,7 @@ var current_say: SayCommand
 var current_flowchart: FlowChart
 
 
-func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart):
+func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart) -> void:
 	current_say = c_s
 	current_flowchart = fl
 
@@ -47,13 +47,13 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart):
 	set_say_box_hight()
 
 
-func set_say_box_hight():
+func set_say_box_hight() -> void:
 	var new_offset := say_text_edit.get_line_count() * 18
 	if new_offset > v_slit.split_offset:
 		v_slit.split_offset = new_offset
 
 
-func _on_TextEdit_text_changed():
+func _on_TextEdit_text_changed() -> void:
 	set_say_box_hight()
 	current_say.say = say_text_edit.text
 	is_changed()
