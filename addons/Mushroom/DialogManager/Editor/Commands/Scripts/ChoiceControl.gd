@@ -30,7 +30,7 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager) -> void:
 	next_index_text.value = c.next_index
 
 	var check_type_popup: PopupMenu = get_node("CondVBoxContainer/ReqVar/CheckType").get_popup()
-	check_type_popup.id_pressed.connect(_on_CheckTypePopup.bind(check_type_popup))
+	check_type_popup.id_pressed.connect(_on_checktype_popup.bind(check_type_popup))
 
 	is_cond.button_pressed = c.is_cond
 	req_node.text = c.required_node
@@ -39,17 +39,17 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager) -> void:
 	check_type.text = c.condition_type
 
 
-func _on_DeleteChoice_pressed():
+func _on_delete_choice_pressed() -> void:
 	emit_signal("removing_choice", self)
 	conncting.emit()
 
 
-func _on_NextIndex_value_changed(value: float) -> void:
+func _on_next_index_value_changed(value: float) -> void:
 	current_choice.next_index = int(value)
 	conncting.emit()
 
 
-func _on_NextBlockList_about_to_show() -> void:
+func _on_next_blocklist_about_to_show() -> void:
 	var menu: PopupMenu = next_block_menu.get_popup()
 	if !menu.index_pressed.is_connected(change_next_bloc):
 		menu.index_pressed.connect(change_next_bloc.bind(menu))
@@ -73,34 +73,34 @@ func do_change_next_block(next_block_name: String = "") -> void:
 	conncting.emit()
 
 
-func _on_CheckTypePopup(id: int, popup: PopupMenu) -> void:
+func _on_checktype_popup(id: int, popup: PopupMenu) -> void:
 	var pp_text: String = popup.get_item_text(id)
 	current_choice.condition_type = pp_text
 	get_node("CondVBoxContainer/ReqVar/CheckType").text = pp_text
 	conncting.emit()
 
 
-func _on_ChoiceText_text_changed(new_text: String) -> void:
+func _on_choicetext_text_changed(new_text: String) -> void:
 	current_choice.text = new_text
 	conncting.emit()
 
 
-func _on_CheckValInput_text_changed(new_text: String) -> void:
+func _on_check_val_input_text_changed(new_text: String) -> void:
 	current_choice.check_val = new_text
 	conncting.emit()
 
 
-func _on_ReqVarInput_text_changed(new_text: String) -> void:
+func _on_req_var_input_text_changed(new_text: String) -> void:
 	current_choice.required_var = new_text
 	conncting.emit()
 
 
-func _on_ReqNodeInput_text_changed(new_text: String) -> void:
+func _on_req_node_input_text_changed(new_text: String) -> void:
 	current_choice.required_node = new_text
 	conncting.emit()
 
 
-func _on_IsCondCheckBox_toggled(button_pressed: bool) -> void:
+func _on_is_cond_checkbox_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle condition")
 	undo_redo.add_do_method(self, "show_condition_toggle", button_pressed)
 	undo_redo.add_undo_method(self, "show_condition_toggle", current_choice.is_cond)

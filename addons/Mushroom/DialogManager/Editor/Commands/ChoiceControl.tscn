@@ -127,11 +127,11 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "X"
 
-[connection signal="toggled" from="IsCondCheckBox" to="." method="_on_IsCondCheckBox_toggled"]
-[connection signal="text_changed" from="CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_ReqNodeInput_text_changed"]
-[connection signal="text_changed" from="CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_ReqVarInput_text_changed"]
-[connection signal="text_changed" from="CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_CheckValInput_text_changed"]
-[connection signal="text_changed" from="HBoxContainer/ChoiceText" to="." method="_on_ChoiceText_text_changed"]
-[connection signal="about_to_popup" from="HBoxContainer2/NextBlockList" to="." method="_on_NextBlockList_about_to_show"]
-[connection signal="value_changed" from="HBoxContainer3/NextIndex" to="." method="_on_NextIndex_value_changed"]
-[connection signal="pressed" from="HBoxContainer3/DeleteChoice" to="." method="_on_DeleteChoice_pressed"]
+[connection signal="toggled" from="IsCondCheckBox" to="." method="_on_is_cond_checkbox_toggled"]
+[connection signal="text_changed" from="CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_req_node_input_text_changed"]
+[connection signal="text_changed" from="CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_req_var_input_text_changed"]
+[connection signal="text_changed" from="CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_check_val_input_text_changed"]
+[connection signal="text_changed" from="HBoxContainer/ChoiceText" to="." method="_on_choicetext_text_changed"]
+[connection signal="about_to_popup" from="HBoxContainer2/NextBlockList" to="." method="_on_next_blocklist_about_to_show"]
+[connection signal="value_changed" from="HBoxContainer3/NextIndex" to="." method="_on_next_index_value_changed"]
+[connection signal="pressed" from="HBoxContainer3/DeleteChoice" to="." method="_on_delete_choice_pressed"]
