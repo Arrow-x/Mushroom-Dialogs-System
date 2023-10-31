@@ -1,6 +1,10 @@
 @tool
 extends HSplitContainer
 
+@export var graph_edit: GraphEdit
+@export var add_block_button: Button
+@export var command_tree: Tree
+
 var flowchart: FlowChart
 var flow_tabs: TabBar
 
@@ -19,22 +23,13 @@ func check_for_duplicates(name) -> bool:
 func set_flowchart(chart, sent_undo_redo: EditorUndoRedoManager) -> void:
 	if chart is FlowChart:
 		flowchart = chart
-		var graph_edit: GraphEdit = get_node("GraphContainer/GraphEdit")
-		$GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton.button_down.connect(
-			graph_edit._on_AddBlockButton_pressed
-		)
-		graph_edit.g_node_clicked.connect(
-			(
-				get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree")
-				. initeate_Tree_from_Block
-			)
-		)
+
+		add_block_button.button_down.connect(graph_edit._on_AddBlockButton_pressed)
+
+		graph_edit.g_node_clicked.connect(command_tree.initeate_Tree_from_Block)
 		graph_edit.flow_changed.connect(changed_flowchart)
 		graph_edit.undo_redo = sent_undo_redo
 
-		var command_tree: Tree = get_node(
-			"InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"
-		)
 		command_tree.full_clear()
 		command_tree.undo_redo = sent_undo_redo
 		command_tree.graph_edit = graph_edit
@@ -44,7 +39,7 @@ func set_flowchart(chart, sent_undo_redo: EditorUndoRedoManager) -> void:
 
 
 func check_flowchart_path_before_save() -> void:
-	if flowchart.resource_path == "":
+	if flowchart != null and flowchart.resource_path == "":
 		flow_tabs.set_tab_title(get_index(), String(name + "(*)"))
 		var _i: FileDialog = FileDialog.new()
 		_i.resizable = true

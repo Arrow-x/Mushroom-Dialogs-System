@@ -8,13 +8,16 @@
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandRmbPopup.gd" id="6"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/GraphEdit.gd" id="7"]
 
-[node name="FlowChartTab" type="HSplitContainer"]
+[node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("3")
+graph_edit = NodePath("GraphContainer/GraphEdit")
+add_block_button = NodePath("GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton")
+command_tree = NodePath("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree")
 
 [node name="InspectorTabContainer" type="TabContainer" parent="."]
 layout_mode = 2
