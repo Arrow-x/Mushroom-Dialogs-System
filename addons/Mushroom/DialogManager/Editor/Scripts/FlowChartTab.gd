@@ -24,7 +24,7 @@ func set_flowchart(chart, sent_undo_redo: EditorUndoRedoManager) -> void:
 	if chart is FlowChart:
 		flowchart = chart
 
-		add_block_button.button_down.connect(graph_edit._on_AddBlockButton_pressed)
+		add_block_button.button_down.connect(graph_edit.on_add_block_button_pressed)
 
 		graph_edit.g_node_clicked.connect(command_tree.initeate_tree_from_block)
 		graph_edit.flow_changed.connect(changed_flowchart)

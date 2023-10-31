@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bdwysurgi6vsh"]
+[gd_scene load_steps=10 format=3 uid="uid://bdwysurgi6vsh"]
 
 [ext_resource type="PackedScene" path="res://addons/Mushroom/DialogManager/Editor/AddCommnadPopupMenu.tscn" id="1"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandsTree.gd" id="2"]
@@ -7,6 +7,8 @@
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandsSettings.gd" id="5"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandRmbPopup.gd" id="6"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/GraphEdit.gd" id="7"]
+[ext_resource type="PackedScene" uid="uid://dr44rkqgqfyrq" path="res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn" id="8_mcj0f"]
+[ext_resource type="PackedScene" uid="uid://b57ggihn01qk0" path="res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn" id="9_adxui"]
 
 [node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree")]
 anchors_preset = 15
@@ -111,11 +113,15 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Add Block"
 
-[node name="GraphEdit" type="GraphEdit" parent="GraphContainer"]
+[node name="GraphEdit" type="GraphEdit" parent="GraphContainer" node_paths=PackedStringArray("flowchart_tab", "command_tree")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("7")
+enter_name_scene = ExtResource("8_mcj0f")
+i_graph_node = ExtResource("9_adxui")
+flowchart_tab = NodePath("../..")
+command_tree = NodePath("../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree")
 
 [connection signal="about_to_popup" from="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommandMenuButton" to="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommandMenuButton" method="_on_about_to_popup"]
 [connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_tree_item_double_clicked"]

@@ -1,11 +1,10 @@
 @tool
 extends GraphEdit
 
-# TODO: rewrite update_block_flow logic
-
-@onready var enter_name_scene: PackedScene = preload(
-	"res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn"
-)
+@export var enter_name_scene: PackedScene
+@export var i_graph_node: PackedScene
+@export var flowchart_tab: Control
+@export var command_tree: Tree
 
 var g_node_posititon := Vector2(40, 40)
 var undo_redo: EditorUndoRedoManager
@@ -20,7 +19,7 @@ signal flow_changed
 signal graph_node_close
 
 
-func _on_AddBlockButton_pressed() -> void:
+func on_add_block_button_pressed() -> void:
 	var enter_name: Window = enter_name_scene.instantiate()
 	add_child(enter_name, true)
 	enter_name.popup_centered()
@@ -28,9 +27,10 @@ func _on_AddBlockButton_pressed() -> void:
 
 
 func on_new_text_confirm(new_title: String) -> void:
-	if $"../../".check_for_duplicates(new_title) == true or new_title == "":
-		_on_AddBlockButton_pressed()
-		print("The Title is a duplicate!")
+	if flowchart_tab.check_for_duplicates(new_title) == true or new_title == "":
+		# BUG: Making child transient exclusive, but parent has another exclusive child
+		push_error("The Title is a duplicate!")
+		on_add_block_button_pressed()
 		return
 
 	undo_redo.create_action("Creating a block")
@@ -49,16 +49,14 @@ func on_node_close(node: GraphNode) -> void:
 
 
 func add_block(title: String, offset = null, in_block: Block = null) -> void:
-	create_GraphNode_from_block(title, offset, in_block)
+	create_graph_node_from_block(title, offset, in_block)
 	if in_block != null:
 		connect_block_inputs(in_block)
 		connect_block_outputs(in_block)
 
 
-func create_GraphNode_from_block(title: String, offset = null, in_block: Block = null) -> void:
-	var node: GraphNode = (
-		load("res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn").instantiate()
-	)
+func create_graph_node_from_block(title: String, offset = null, in_block: Block = null) -> void:
+	var node: GraphNode = i_graph_node.instantiate()
 	node.title = title
 	if offset == null:
 		node.position_offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
@@ -73,7 +71,7 @@ func create_GraphNode_from_block(title: String, offset = null, in_block: Block =
 
 	flowchart.blocks[title] = {block = _new_block, offset = node.position_offset}
 	node.set_meta("block", _new_block)
-	node.graph_node_meta.connect(on_GraphNode_clicked, CONNECT_PERSIST)
+	node.graph_node_meta.connect(on_graph_node_clicked, CONNECT_PERSIST)
 	node.dragging.connect(on_node_dragged, CONNECT_PERSIST)
 	if title != "first_block":
 		node.node_closed.connect(on_node_close, CONNECT_PERSIST)
@@ -95,9 +93,6 @@ func close_node(d_node: String) -> void:
 			delete_input(deconecting_node, closed_node_output)
 
 	# Removie the blook commands and the it's editor
-	var command_tree: Tree = get_node(
-		"../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"
-	)
 	if command_tree.current_block == flowchart.get_block(d_node):
 		command_tree.full_clear()
 		for s in command_tree.commands_settings.get_children():
@@ -113,13 +108,13 @@ func sync_flowchart_graph(fl: FlowChart) -> void:
 	flowchart = fl
 	var fb := flowchart.blocks
 	for b in fb:
-		create_GraphNode_from_block(b, flowchart.get_block_offset(b), flowchart.get_block(b))
+		create_graph_node_from_block(b, flowchart.get_block_offset(b), flowchart.get_block(b))
 	for b in fb:
 		connect_block_outputs(flowchart.get_block(b))
 
 	if flowchart.first_block == null:
-		create_GraphNode_from_block("first_block")
-		on_GraphNode_clicked(graph_nodes["first_block"])
+		create_graph_node_from_block("first_block")
+		on_graph_node_clicked(graph_nodes["first_block"])
 
 
 func connect_block_outputs(_new_block: Block, del_first: bool = false) -> void:
@@ -231,7 +226,7 @@ func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> 
 		)
 
 
-func on_GraphNode_clicked(node: GraphNode) -> void:
+func on_graph_node_clicked(node: GraphNode) -> void:
 	undo_redo.create_action("select Block node")
 	undo_redo.add_do_method(self, "send_block_to_tree", node.title)
 	undo_redo.add_undo_method(self, "send_block_to_tree", current_selected_graph_node)
