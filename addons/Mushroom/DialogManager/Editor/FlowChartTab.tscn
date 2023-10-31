@@ -53,7 +53,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CommandsTree" type="Tree" parent="InspectorTabContainer/Block Settings/InspectorVContainer"]
+[node name="CommandsTree" type="Tree" parent="InspectorTabContainer/Block Settings/InspectorVContainer" node_paths=PackedStringArray("current_block_label", "commands_settings", "add_rmb_pop", "rmb_pop")]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -61,6 +61,10 @@ size_flags_vertical = 3
 allow_rmb_select = true
 hide_root = true
 script = ExtResource("2")
+current_block_label = NodePath("../inspectorHeader/inspectorHeaderHBoxContainer/CurrentBlock")
+commands_settings = NodePath("../../CommandsSettings")
+add_rmb_pop = NodePath("CommandRmbPopup/AddCommandRmbPopupMenu")
+rmb_pop = NodePath("CommandRmbPopup")
 
 [node name="CommandRmbPopup" type="PopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"]
 script = ExtResource("6")
@@ -114,6 +118,6 @@ size_flags_vertical = 3
 script = ExtResource("7")
 
 [connection signal="about_to_popup" from="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommandMenuButton" to="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommandMenuButton" method="_on_about_to_popup"]
-[connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_TreeItem_double_clicked"]
-[connection signal="item_mouse_selected" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_TreeItem_rmb_selected"]
+[connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_tree_item_double_clicked"]
+[connection signal="item_mouse_selected" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_tree_item_rmb_selected"]
 [connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/SaveButton" to="." method="check_flowchart_path_before_save"]
