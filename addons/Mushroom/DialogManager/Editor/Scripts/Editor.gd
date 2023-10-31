@@ -1,9 +1,8 @@
 @tool
 extends Control
 
-@onready var flowcharts_container := $VBoxContainer/FlowCharTabs
-@onready var f_tabs := $VBoxContainer/TabBar
-@onready var editor_scn := preload("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn")
+@export var flowcharts_container: Control
+@export var f_tabs: TabBar
 
 
 func open_flowchart_scene(flowchart: FlowChart, undo_redo: EditorUndoRedoManager) -> void:
@@ -11,10 +10,12 @@ func open_flowchart_scene(flowchart: FlowChart, undo_redo: EditorUndoRedoManager
 		if tab.flowchart == flowchart:
 			var c_tab_idx = flowcharts_container.get_children().find(tab)
 			f_tabs.set_current_tab(c_tab_idx)
-			_on_NewFlowChartTabs_tab_clicked(c_tab_idx)
+			_on_new_flowchart_tabs_tab_clicked(c_tab_idx)
 			return
 
-	var ed := editor_scn.instantiate()
+	var ed: Control = (
+		load("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn").instantiate()
+	)
 	flowcharts_container.add_child(ed)
 	ed.set_flowchart(flowchart, undo_redo)
 
@@ -25,14 +26,14 @@ func open_flowchart_scene(flowchart: FlowChart, undo_redo: EditorUndoRedoManager
 	f_tabs.set_current_tab(flowcharts_container.get_children().find(ed))
 
 
-func _on_NewFlowChartTabs_tab_clicked(tab: int) -> void:
+func _on_new_flowchart_tabs_tab_clicked(tab: int) -> void:
 	var flowchart_editors := flowcharts_container.get_children()
 	for c in flowchart_editors:
 		c.visible = false
 	flowchart_editors[tab].visible = true
 
 
-func _on_NewFlowChartTabs_tab_close(tab: int) -> void:
+func _on_new_flowchart_tabs_tab_close(tab: int) -> void:
 	var flowchart_editors := flowcharts_container.get_children()
 	if (
 		flowchart_editors[tab].modified == true
@@ -67,7 +68,7 @@ func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window
 	free_tab_and_select_another(flowchart_editors, tab, confirm_window)
 
 
-func _on_Tabs_reposition_active_tab_request(idx_to: int) -> void:
+func _on_tabs_reposition_active_tab_request(idx_to: int) -> void:
 	var flowchart_editor: Control = flowcharts_container.get_children()[f_tabs.get_current_tab()]
 	flowcharts_container.move_child(flowchart_editor, idx_to)
 
