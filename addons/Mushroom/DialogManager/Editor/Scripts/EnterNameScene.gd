@@ -1,12 +1,13 @@
 @tool
 extends Window
 
-signal new_text_confirm
-
-@onready var ok: Button = $VBoxContainer/HBoxContainer/OK
-@onready var cancel: Button = $VBoxContainer/HBoxContainer/Cancel
+@export var ok: Button
+@export var cancel: Button
+@export var line_edit: LineEdit
 
 var node_text: String
+
+signal new_text_confirm
 
 
 func _input(event):
@@ -15,27 +16,27 @@ func _input(event):
 
 
 func _ready():
-	close_requested.connect(_on_Cancel_pressed)
+	close_requested.connect(_on_cancel_pressed)
 	get_child(0).focus_mode = Control.FOCUS_CLICK
-	$VBoxContainer/LineEdit.grab_focus()
+	line_edit.grab_focus()
 	set_size(Vector2(218, 141))
 
 
-func _on_LineEdit_text_changed(new_text):
+func _on_line_edit_text_changed(new_text):
 	node_text = new_text
 
 
-func _on_OK_pressed():
+func _on_ok_pressed():
 	if node_text != null:
 		new_text_confirm.emit(node_text)
 		self.queue_free()
 
 
-func _on_Cancel_pressed():
+func _on_cancel_pressed():
 	self.queue_free()
 
 
-func _on_LineEdit_text_entered(new_text):
+func _on_line_edit_text_entered(new_text):
 	if node_text != null:
 		node_text = new_text
 		new_text_confirm.emit(node_text)
