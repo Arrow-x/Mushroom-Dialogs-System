@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://c5muk4ipow1xm"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/DialogManager.gd" type="Script" id=1]
-[ext_resource path="res://addons/Mushroom/DialogManager/DialogUI/UI.tscn" type="PackedScene" id=2]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/DialogManager.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://5065d1tmhdeq" path="res://addons/Mushroom/DialogManager/DialogUI/UI.tscn" id="2"]
 
 [node name="DialogManagerNode" type="CanvasLayer"]
-script = ExtResource( 1 )
-UI_pc = ExtResource( 2 )
+script = ExtResource("1")
+UI_pc = ExtResource("2")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

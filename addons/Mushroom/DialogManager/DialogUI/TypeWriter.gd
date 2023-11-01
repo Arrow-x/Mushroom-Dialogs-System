@@ -1,14 +1,13 @@
 extends RichTextLabel
 
 @export var speed: int = 50
+@onready var _tween: Tween = create_tween()
 
 var _isready: bool
 var _speed_mult: float = 1
 var _last_speed: int = 1
 var _done: bool
 var _error
-
-@onready var _tween: Tween = create_tween()
 
 signal message_done
 signal message_start
