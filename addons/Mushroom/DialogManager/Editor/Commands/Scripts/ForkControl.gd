@@ -1,19 +1,20 @@
 @tool
 extends Control
 
-@onready var choices_container: Control = $ScrollContainer/ChoicesContainer
-@onready var add_choice_button: Button = $ScrollContainer/ChoicesContainer/InfoBar/AddChoiceButton
-@onready var graph: GraphEdit
+@export var choices_container: VBoxContainer
+@export var add_choice_button: Button
+@export var i_choice_control: PackedScene
 
 var current_fork: ForkCommand
 var current_block: Block
 var fc: FlowChart
 var undo_redo: EditorUndoRedoManager
+var graph: GraphEdit
 
 signal adding_choice
 
 
-func _on_AddChoiceButton_pressed() -> void:
+func _on_add_choice_button_pressed() -> void:
 	undo_redo.create_action("adding_choice")
 	undo_redo.add_do_method(self, "add_choice_contol")
 	undo_redo.add_undo_method(self, "free_choice_control")
@@ -73,9 +74,7 @@ func update_block_in_graph(sender: Block) -> void:
 
 
 func create_choice_controle(choice: Choice, idx: int = -1) -> void:
-	var choice_control: Control = (
-		load("res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn").instantiate()
-	)
+	var choice_control: Control = i_choice_control.instantiate()
 
 	choice_control.conncting.connect(update_block_in_graph.bind(current_block))
 	choice_control.removing_choice.connect(removing_choice_action)
