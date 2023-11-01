@@ -14,8 +14,8 @@ extends Control
 @export var check_type: MenuButton
 @export var append_check: CheckBox
 
-var undo_redo: EditorUndoRedoManager
 var current_say: SayCommand
+var undo_redo: EditorUndoRedoManager
 var current_flowchart: FlowChart
 
 
@@ -53,7 +53,7 @@ func set_say_box_hight() -> void:
 		v_slit.split_offset = new_offset
 
 
-func _on_TextEdit_text_changed() -> void:
+func _on_text_edit_text_changed() -> void:
 	set_say_box_hight()
 	current_say.say = say_text_edit.text
 	is_changed()
@@ -109,7 +109,7 @@ func select_portrait_pos(pos: String) -> void:
 	is_changed()
 
 
-func _on_CharacterMenuButton_about_to_show() -> void:
+func _on_character_menu_button_about_to_show() -> void:
 	var pop := character_menu.get_popup()
 	pop.clear()
 	var fc_chars := current_flowchart.characters
@@ -118,7 +118,7 @@ func _on_CharacterMenuButton_about_to_show() -> void:
 		pop.set_item_metadata(c_idx, fc_chars[c_idx])
 
 
-func _on_PortraitMenuButton_about_to_show() -> void:
+func _on_portrait_menu_button_about_to_show() -> void:
 	var pop := portraits_menu.get_popup()
 	pop.clear()
 	var char_portrs: Dictionary = current_say.character.portraits
@@ -133,22 +133,22 @@ func _on_checktype_popup(id: int, popup: PopupMenu) -> void:
 	is_changed()
 
 
-func _on_CheckValInput_text_changed(new_text: String) -> void:
+func _on_check_val_input_text_changed(new_text: String) -> void:
 	current_say.check_val = new_text
 	is_changed()
 
 
-func _on_ReqVarInput_text_changed(new_text: String) -> void:
+func _on_req_var_input_text_changed(new_text: String) -> void:
 	current_say.required_var = new_text
 	is_changed()
 
 
-func _on_ReqNodeInput_text_changed(new_text: String) -> void:
+func _on_req_node_input_text_changed(new_text: String) -> void:
 	current_say.required_node = new_text
 	is_changed()
 
 
-func _on_IsCondCheckBox_toggled(button_pressed: bool) -> void:
+func _on_is_cond_check_box_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle condition")
 	undo_redo.add_do_method(self, "show_condition_toggle", button_pressed)
 	undo_redo.add_undo_method(self, "show_condition_toggle", current_say.is_cond)
@@ -162,7 +162,7 @@ func show_condition_toggle(button_pressed: bool) -> void:
 	is_changed()
 
 
-func _on_AppendCheckBox_toggled(button_pressed: bool) -> void:
+func _on_append_check_box_toggled(button_pressed: bool) -> void:
 	current_say.append_text = button_pressed
 	is_changed()
 

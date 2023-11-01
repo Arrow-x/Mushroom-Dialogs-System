@@ -171,11 +171,11 @@ popup/item_1/id = 1
 popup/item_2/text = "Center"
 popup/item_2/id = 2
 
-[connection signal="toggled" from="VBoxContainer/IsCondCheckBox" to="." method="_on_IsCondCheckBox_toggled"]
-[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_ReqNodeInput_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_ReqVarInput_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_CheckValInput_text_changed"]
-[connection signal="toggled" from="VBoxContainer/AppendHBoxContainer/AppendCheckBox" to="." method="_on_AppendCheckBox_toggled"]
-[connection signal="about_to_popup" from="VBoxContainer/CharacterHBoxContainer/CharacterMenuButton" to="." method="_on_CharacterMenuButton_about_to_show"]
-[connection signal="text_changed" from="VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit" to="." method="_on_TextEdit_text_changed"]
-[connection signal="about_to_popup" from="VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton" to="." method="_on_PortraitMenuButton_about_to_show"]
+[connection signal="toggled" from="VBoxContainer/IsCondCheckBox" to="." method="_on_is_cond_check_box_toggled"]
+[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_req_node_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_req_var_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_check_val_input_text_changed"]
+[connection signal="toggled" from="VBoxContainer/AppendHBoxContainer/AppendCheckBox" to="." method="_on_append_check_box_toggled"]
+[connection signal="about_to_popup" from="VBoxContainer/CharacterHBoxContainer/CharacterMenuButton" to="." method="_on_character_menu_button_about_to_show"]
+[connection signal="text_changed" from="VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit" to="." method="_on_text_edit_text_changed"]
+[connection signal="about_to_popup" from="VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton" to="." method="_on_portrait_menu_button_about_to_show"]
