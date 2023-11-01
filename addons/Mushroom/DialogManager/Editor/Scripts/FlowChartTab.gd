@@ -39,7 +39,10 @@ func set_flowchart(chart, sent_undo_redo: EditorUndoRedoManager) -> void:
 
 
 func check_flowchart_path_before_save() -> void:
-	if flowchart != null and flowchart.resource_path == "":
+	if flowchart == null:
+		return
+
+	if flowchart.resource_path == "":
 		flow_tabs.set_tab_title(get_index(), String(name + "(*)"))
 		var _i: FileDialog = FileDialog.new()
 		_i.resizable = true
