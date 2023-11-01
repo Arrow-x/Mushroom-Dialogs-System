@@ -1,70 +1,53 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://tgwiokob1t1j"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/SetVarControl.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/SetVarControl.gd" id="1"]
 
-[node name="Control" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-script = ExtResource( 1 )
-
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("var_node_lineedit", "var_name_lineedit", "var_val_lineedit")]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_bottom = -520.0
+script = ExtResource("1")
+var_node_lineedit = NodePath("VarNodeHBoxContainer/VarNodeLineEdit")
+var_name_lineedit = NodePath("VarNameHBoxContainer/VarNameLineEdit")
+var_val_lineedit = NodePath("SetValHBoxContainer/SetValLineEdit")
 
-[node name="VarNodeHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_right = 1024.0
-offset_bottom = 24.0
+[node name="VarNodeHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VarNodeLabel" type="Label" parent="VBoxContainer/VarNodeHBoxContainer"]
-offset_top = 5.0
-offset_right = 97.0
-offset_bottom = 19.0
+[node name="VarNodeLabel" type="Label" parent="VarNodeHBoxContainer"]
+layout_mode = 2
 text = "Variable Node: "
 
-[node name="VarNodeLineEdit" type="LineEdit" parent="VBoxContainer/VarNodeHBoxContainer"]
-offset_left = 101.0
-offset_right = 1024.0
-offset_bottom = 24.0
+[node name="VarNodeLineEdit" type="LineEdit" parent="VarNodeHBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VarNameHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 28.0
-offset_right = 1024.0
-offset_bottom = 52.0
+[node name="VarNameHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VarNameLabel" type="Label" parent="VBoxContainer/VarNameHBoxContainer"]
-offset_top = 5.0
-offset_right = 101.0
-offset_bottom = 19.0
+[node name="VarNameLabel" type="Label" parent="VarNameHBoxContainer"]
+layout_mode = 2
 text = "Variable Name: "
 
-[node name="VarNameLineEdit" type="LineEdit" parent="VBoxContainer/VarNameHBoxContainer"]
-offset_left = 105.0
-offset_right = 1024.0
-offset_bottom = 24.0
+[node name="VarNameLineEdit" type="LineEdit" parent="VarNameHBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SetValHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 56.0
-offset_right = 1024.0
-offset_bottom = 80.0
+[node name="SetValHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SetValLabel" type="Label" parent="VBoxContainer/SetValHBoxContainer"]
-offset_top = 5.0
-offset_right = 74.0
-offset_bottom = 19.0
+[node name="SetValLabel" type="Label" parent="SetValHBoxContainer"]
+layout_mode = 2
 text = "New Valua: "
 
-[node name="SetValLineEdit" type="LineEdit" parent="VBoxContainer/SetValHBoxContainer"]
-offset_left = 78.0
-offset_right = 1024.0
-offset_bottom = 24.0
+[node name="SetValLineEdit" type="LineEdit" parent="SetValHBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[connection signal="text_changed" from="VBoxContainer/VarNodeHBoxContainer/VarNodeLineEdit" to="." method="_on_VarNodeLineEdit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/VarNameHBoxContainer/VarNameLineEdit" to="." method="_on_VarNameLineEdit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/SetValHBoxContainer/SetValLineEdit" to="." method="_on_SetValLineEdit_text_changed"]
+[connection signal="text_changed" from="VarNodeHBoxContainer/VarNodeLineEdit" to="." method="_on_var_node_line_edit_text_changed"]
+[connection signal="text_changed" from="VarNameHBoxContainer/VarNameLineEdit" to="." method="_on_var_name_line_edit_text_changed"]
+[connection signal="text_changed" from="SetValHBoxContainer/SetValLineEdit" to="." method="_on_set_val_line_edit_text_changed"]
