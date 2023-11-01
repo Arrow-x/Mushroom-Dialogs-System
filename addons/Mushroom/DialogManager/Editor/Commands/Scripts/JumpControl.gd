@@ -1,15 +1,14 @@
 @tool
 extends Control
 
-@onready var index_control: SpinBox = $BlockHBoxContainer/SpinBox
-@onready var global_control: CheckButton = $GlobalHBoxContainer/CheckButton
-@onready var chose_block_control: HBoxContainer = $BlockHBoxContainer2
-@onready var block_selection_cotrol: MenuButton = $BlockHBoxContainer2/MenuButton
+@export var index_control: SpinBox
+@export var global_control: CheckButton
+@export var chose_block_control: HBoxContainer
+@export var block_selection_cotrol: MenuButton
 
-var flowchart: FlowChart
 var current_jump: JumpCommand
 var undo_redo: EditorUndoRedoManager
-var current_toogle: bool
+var flowchart: FlowChart
 
 
 func set_up(jump: JumpCommand, u_r: EditorUndoRedoManager, fl: FlowChart) -> void:
@@ -18,22 +17,20 @@ func set_up(jump: JumpCommand, u_r: EditorUndoRedoManager, fl: FlowChart) -> voi
 	undo_redo = u_r
 	index_control.value = jump.jump_index
 	global_control.button_pressed = jump.global
-	current_toogle = jump.global
 	block_selection_cotrol.text = jump.get_block_name()
 	show_block_menu(jump.global)
 
 
-func _on_SpinBox_value_changed(value: float) -> void:
+func _on_spin_box_value_changed(value: float) -> void:
 	current_jump.jump_index = int(value)
 	is_changed()
 
 
-func _on_CheckButton_toggled(button_pressed: bool) -> void:
+func _on_check_button_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle local_jump")
 	undo_redo.add_do_method(self, "show_block_menu", button_pressed)
-	undo_redo.add_undo_method(self, "show_block_menu", current_toogle)
+	undo_redo.add_undo_method(self, "show_block_menu", current_jump.global)
 	undo_redo.commit_action()
-	current_toogle = button_pressed
 
 
 func show_block_menu(toggle: bool) -> void:
@@ -43,7 +40,7 @@ func show_block_menu(toggle: bool) -> void:
 	is_changed()
 
 
-func _on_MenuButton_about_to_show() -> void:
+func _on_menu_button_about_to_show() -> void:
 	var menu: PopupMenu = block_selection_cotrol.get_popup()
 	menu.clear()
 	for b in flowchart.blocks:
