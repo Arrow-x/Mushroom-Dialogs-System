@@ -173,3 +173,14 @@ func get_command() -> Command:
 
 func is_changed() -> void:
 	current_say.changed.emit()
+
+
+func _on_wrap_button_pressed() -> void:
+	undo_redo.create_action("Set Say Text Wrap preview")
+	undo_redo.add_do_method(self, "set_say_text_wrap")
+	undo_redo.add_undo_method(self, "set_say_text_wrap")
+	undo_redo.commit_action()
+
+
+func set_say_text_wrap():
+	say_text_edit.wrap_mode = 1 - say_text_edit.wrap_mode
