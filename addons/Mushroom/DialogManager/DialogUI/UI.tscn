@@ -10,6 +10,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 3.07437
 offset_right = 3.07434
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1")
 say_pannel = NodePath("SayPanel")
 say_text = NodePath("SayPanel/SayText")
@@ -84,6 +86,8 @@ bbcode_enabled = true
 text = "Color me [color = aqua] Impressed [/color] for this  Great   isn't it
 "
 scroll_active = false
+visible_characters = 0
+visible_ratio = 0.0
 script = ExtResource("2")
 
 [node name="NameText" type="RichTextLabel" parent="SayPanel"]

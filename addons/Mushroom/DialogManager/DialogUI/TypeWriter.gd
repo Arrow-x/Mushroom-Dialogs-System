@@ -1,101 +1,40 @@
 extends RichTextLabel
 
-@export var speed: int = 50
-@onready var _tween: Tween = create_tween()
+@export_range(0, 1000) var speed: int = 50
 
-var _isready: bool
-var _speed_mult: float = 1
-var _last_speed: int = 1
-var _done: bool
-var _error
+@onready var tween: Tween = create_tween()
 
 signal message_done
 signal message_start
 
 
 func _ready():
-	_tween.set_speed_scale(speed)
-
-	var sbb = speedbb.new()
+	var sbb := SpeedBB.new()
 	sbb.caller = self
 	install_effect(sbb)
+	tween.finished.connect(tween_done)
 
 
-func _process(_delta):
-	if _speed_mult != _last_speed:
-		_last_speed = _speed_mult
-		_tween.set_speed_scale(_speed_mult * speed)
-
-
-func send_message(val: String, append: bool = false):
+func send_message(new_text: String, append: bool) -> void:
+	message_start.emit()
 	if append:
-		var _start_value = get_text().length()
-		append_text(" " + val)
-		_start_msg(_start_value)
-		return
-
-	set_text(val)
-	parse_bbcode(val)
-	_start_msg()
-
-
-func _start_msg(start_tween: int = 0):
-	_speed_mult = 1
-	_last_speed = 1
-
-	set_visible_characters(0)
-	set_visible_ratio(0)
-
-	if speed != 0:
-		_tween.set_speed_scale(speed)
-		_done = false
-		_tween.tween_property(
-			self, "visible_characters", text.length(), text.length() - start_tween
-		)
-		emit_signal("message_start")
-		_on_done()
+		append_text(new_text)
 	else:
-		set_visible_ratio(get_text().length())
-		_on_done()
+		text = new_text
+
+	tween.set_speed_scale(speed)
+	tween.tween_property(self, "visible_ratio", 1.0, get_total_character_count() / 2)
 
 
-func _on_done():
-	_done = true
-	emit_signal("message_done")
+func set_speed(val: float) -> void:
+	tween.set_speed_scale(val)
 
 
-func skip_tween():
-	_on_done()
-	visible_characters = -1
+func skip_tween() -> void:
+	tween.stop()
+	visible_ratio = 1.0
+	message_done.emit()
 
 
-func _block_speed(val: float):
-	if val > 0:
-		_speed_mult = val
-
-
-class speedbb:
-	extends RichTextEffect
-	var bbcode: String = "spd"
-	var caller: Node = null
-
-	func _process_custom_fx(char_fx) -> bool:
-		if Engine.is_editor_hint():
-			return true
-		# main loop
-		if char_fx.visible and caller != null and char_fx.env.has(""):
-			# first char of speed sequence
-			if (
-				char_fx.relative_index == 0
-				and ((caller.speed >= 0 and caller.percent_visible < 1.0) or caller.speed < 0)
-			):
-				caller._block_speed(char_fx.env[""])
-
-			# last char of speed sequence
-			if char_fx.env.get("_ct", -1) == char_fx.relative_index:
-				caller._block_speed(1)
-
-		# character counting, so it knows where to start and stop the speed
-		char_fx.env["_ct"] = max(char_fx.relative_index, char_fx.env.get("_ct", 0))
-
-		return true
+func tween_done() -> void:
+	message_done.emit()
