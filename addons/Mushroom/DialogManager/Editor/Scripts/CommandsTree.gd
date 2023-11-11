@@ -112,8 +112,10 @@ func add_command_to_block(command: Command, idx: int = -1, parent = null) -> voi
 				prc.append(command)
 			else:
 				prc.insert(idx, command)
-
+	if command is ForkCommand:
+		current_block.outputs.append(command)
 	create_tree_from_block(current_block)
+	graph_edit.connect_block_outputs(current_block, true)
 
 
 func create_tree_item_from_command(
