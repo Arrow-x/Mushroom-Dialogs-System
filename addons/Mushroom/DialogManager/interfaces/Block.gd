@@ -3,7 +3,7 @@ extends Resource
 class_name Block
 
 #each block should now what flowchart it is parented to
-@export var name: String
+@export var name: StringName
 @export var commands: Array[Command]  # (Array, Resource)
 
 #these are used when a block is used as condtional block
