@@ -200,24 +200,24 @@ func reconnect_inputs(deconecting_node: String) -> void:
 func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> void:
 	graph_nodes[sender.name].add_g_node_output(fork)
 	if delete_first:
-		for b in graph_nodes[sender.name].already_connected:
-			if not flowchart.get_block(b).inputs.has(fork):
+		for c_destination in graph_nodes[sender.name].connected_destenation_blocks:
+			if not flowchart.get_block(c_destination).inputs.has(fork):
 				continue
 			disconnect_node(
 				graph_nodes[sender.name].get_name(),
 				sender.outputs.find(fork),
-				graph_nodes[b].get_name(),
-				flowchart.get_block(b).inputs.find(fork)
+				graph_nodes[c_destination].get_name(),
+				flowchart.get_block(c_destination).inputs.find(fork)
 			)
-			graph_nodes[sender.name].already_connected.erase(b)
-			delete_input(b, fork)
+			graph_nodes[sender.name].connected_destenation_blocks.erase(c_destination)
+			delete_input(c_destination, fork)
 
 	for c in fork.choices:
 		var c_destination: String = c.next_block
 		if c_destination.is_empty():
 			continue
 		graph_nodes[c_destination].add_g_node_input(fork)
-		graph_nodes[sender.name].already_connected.append(c_destination)
+		graph_nodes[sender.name].connected_destenation_blocks.append(c_destination)
 		connect_node(
 			graph_nodes[sender.name].get_name(),
 			sender.outputs.find(fork),

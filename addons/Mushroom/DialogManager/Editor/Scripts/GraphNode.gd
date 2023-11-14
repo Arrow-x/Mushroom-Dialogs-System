@@ -4,7 +4,7 @@ extends GraphNode
 var c_inputs: Array
 var c_outputs: Array
 
-var already_connected: Array
+var connected_destenation_blocks: Array
 
 signal graph_node_meta
 signal dragging
