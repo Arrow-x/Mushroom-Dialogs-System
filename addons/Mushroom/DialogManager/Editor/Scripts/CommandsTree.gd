@@ -341,101 +341,93 @@ func _on_tree_item_double_clicked() -> void:
 	prev_selected_Command = sel_c
 
 
-func create_command_editor(cmd: Command = null) -> void:
-	if cmd == null:
-		push_error("can't find TreeItem")
+func create_command_editor(current_item = null) -> void:
+	# NOTE: typing current_item as Command will run get_class() on it and not the inhearted type
+	deselect_all()
+
+	if current_item == null:
 		return
-	var item := get_tree_item_from_command(cmd)
+
+	var item := get_tree_item_from_command(current_item)
 	if item == null:
-		for c in commands_settings.get_children():
-			c.queue_free()
 		return
 
-	var current_item = item.get_meta("command")
+	set_selected(item, 0)
+	ensure_cursor_is_visible()
 
-	for c in get_root().get_children():
-		c.deselect(0)
+	if !current_item.changed.is_connected(create_tree_from_block):
+		current_item.changed.connect(create_tree_from_block.bind(current_block))
 
-	item.select(0)
+	for c in commands_settings.get_children():
+		c.queue_free()
 
-	if current_item != null:
-		if !current_item.changed.is_connected(create_tree_from_block):
-			current_item.changed.connect(create_tree_from_block.bind(current_block))
-		if commands_settings.get_child_count() != 0:
-			if commands_settings.get_child(0) != null:
-				commands_settings.get_child(0).free()
+	var control
+	match current_item.get_class():
+		"SayCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
 
-		var control: Control
-		match current_item.get_class():
-			"SayCommand":
-				control = (
-					load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn")
-					. instantiate()
-				)
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
+		"ForkCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, flowchart_tab, current_block, undo_redo, graph_edit)
 
-			"ForkCommand":
-				control = (
-					load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn")
-					. instantiate()
-				)
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, flowchart_tab, current_block, undo_redo, graph_edit)
+		"ConditionCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item)
 
-			"ConditionCommand":
-				control = (
-					load(
-						"res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn"
-					)
-					. instantiate()
-				)
-				commands_settings.add_child(control, true)
-				control.set_up(current_item)
+		"SetVarCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/SetVar.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item)
 
-			"SetVarCommand":
-				control = (
-					load("res://addons/Mushroom/DialogManager/Editor/Commands/SetVar.tscn")
-					. instantiate()
-				)
-				commands_settings.add_child(control, true)
-				control.set_up(current_item)
+		"AnimationCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo)
 
-			"AnimationCommand":
-				control = (
-					load(
-						"res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.tscn"
-					)
-					. instantiate()
-				)
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, undo_redo)
+		"JumpCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/JumpControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
 
-			"JumpCommand":
-				control = (
-					load("res://addons/Mushroom/DialogManager/Editor/Commands/JumpControl.tscn")
-					. instantiate()
-				)
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
+		"SoundCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo)
 
-			"SoundCommand":
-				control = (
-					load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn")
-					. instantiate()
-				)
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, undo_redo)
-
-			"ChangeUICommand":
-				control = (
-					load("res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.tscn")
-					. instantiate()
-				)
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, undo_redo)
-			_:
-				return
+		"ChangeUICommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo)
+		_:
+			return
 
 
 func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> void:
