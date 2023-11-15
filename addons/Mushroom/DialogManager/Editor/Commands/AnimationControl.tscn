@@ -2,15 +2,15 @@
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/AnimationControl.gd" id="1"]
 
-[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("anim_type_ctrl", "anim_path_ctrl", "anim_name_ctrl", "blend_ctrl", "speed_ctrl", "from_end_ctrl")]
+[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("anim_path_ctrl", "anim_name_ctrl", "blend_ctrl", "anim_type_ctrl", "speed_ctrl", "from_end_ctrl")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1")
-anim_type_ctrl = NodePath("TypeHBoxContainer/TypeMenu")
 anim_path_ctrl = NodePath("PathHBoxContainer/PathLineEdit")
 anim_name_ctrl = NodePath("ANameHBoxContainer/NameLineEdit")
 blend_ctrl = NodePath("BlendHBoxContainer/BlendLineEdit")
+anim_type_ctrl = NodePath("TypeHBoxContainer/TypeMenu")
 speed_ctrl = NodePath("SpeedHBoxContainer/SpeedLineEdit")
 from_end_ctrl = NodePath("FromEndHBoxContainer/FromEndCheck")
 
@@ -90,18 +90,8 @@ popup/item_0/id = 0
 popup/item_1/text = "continue"
 popup/item_1/id = 1
 
-[node name="Control" type="Control" parent="." node_paths=PackedStringArray("anim_type_ctrl", "anim_path_ctrl", "anim_name_ctrl", "blend_ctrl", "speed_ctrl", "from_end_ctrl")]
-layout_mode = 2
-script = ExtResource("1")
-anim_type_ctrl = NodePath("../TypeHBoxContainer/TypeMenu")
-anim_path_ctrl = NodePath("../PathHBoxContainer/PathLineEdit")
-anim_name_ctrl = NodePath("../ANameHBoxContainer/NameLineEdit")
-blend_ctrl = NodePath("../BlendHBoxContainer/BlendLineEdit")
-speed_ctrl = NodePath("../SpeedHBoxContainer/SpeedLineEdit")
-from_end_ctrl = NodePath("../FromEndHBoxContainer/FromEndCheck")
-
-[connection signal="text_changed" from="PathHBoxContainer/PathLineEdit" to="Control" method="_on_path_lineedit_text_changed"]
-[connection signal="text_changed" from="ANameHBoxContainer/NameLineEdit" to="Control" method="_on_name_lineedit_text_changed"]
-[connection signal="value_changed" from="BlendHBoxContainer/BlendLineEdit" to="Control" method="_on_blend_lineedit_value_changed"]
-[connection signal="value_changed" from="SpeedHBoxContainer/SpeedLineEdit" to="Control" method="_on_speed_lineedit_value_changed"]
-[connection signal="toggled" from="FromEndHBoxContainer/FromEndCheck" to="Control" method="_on_from_end_check_toggled"]
+[connection signal="text_changed" from="PathHBoxContainer/PathLineEdit" to="." method="_on_path_lineedit_text_changed"]
+[connection signal="text_changed" from="ANameHBoxContainer/NameLineEdit" to="." method="_on_name_lineedit_text_changed"]
+[connection signal="value_changed" from="BlendHBoxContainer/BlendLineEdit" to="." method="_on_blend_lineedit_value_changed"]
+[connection signal="value_changed" from="SpeedHBoxContainer/SpeedLineEdit" to="." method="_on_speed_lineedit_value_changed"]
+[connection signal="toggled" from="FromEndHBoxContainer/FromEndCheck" to="." method="toggle_from_end"]

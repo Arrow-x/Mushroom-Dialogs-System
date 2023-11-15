@@ -18,11 +18,11 @@ func preview() -> String:
 			+ str(animation_path)
 			+ "'s "
 			+ str(animation_name)
-			+ "with speed of "
+			+ " with speed of "
 			+ str(custom_speed)
-			+ "blending at "
+			+ " blending at "
 			+ str(custom_blend)
-			+ "from end? "
+			+ " from end? "
 			+ str(from_end)
 		)
 	)
