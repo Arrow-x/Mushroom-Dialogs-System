@@ -1,29 +1,29 @@
-tool
+@tool
 extends Command
 class_name AnimationCommand
 
-export(String) var animation_path
-export(String) var animation_name
-export var custom_blend: float = -1
-export var custom_speed: float = 1.0
-export var from_end: bool = false
+@export var animation_path: String = ""
+@export var animation_name: String = ""
+@export var custom_blend: float = -1
+@export var custom_speed: float = 1.0
+@export var from_end: bool = false
 
-export(String, "Set Animation Type", "wait", "continue") var anim_type
+@export_enum("wait", "continue") var anim_type = "Set Animation Type"
 
 
 func preview() -> String:
 	return String(
 		(
 			"Animate: "
-			+ String(animation_path)
+			+ str(animation_path)
 			+ "'s "
-			+ String(animation_name)
-			+ "with speed of "
-			+ String(custom_speed)
-			+ "blending at "
-			+ String(custom_blend)
-			+ "from end? "
-			+ String(from_end)
+			+ str(animation_name)
+			+ " with speed of "
+			+ str(custom_speed)
+			+ " blending at "
+			+ str(custom_blend)
+			+ " from end? "
+			+ str(from_end)
 		)
 	)
 

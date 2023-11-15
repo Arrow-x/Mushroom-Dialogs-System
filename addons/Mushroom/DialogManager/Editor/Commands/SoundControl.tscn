@@ -1,155 +1,125 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://e8ir6x0dxwui"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/SoundControl.gd" type="Script" id=1]
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/Dragger.gd" type="Script" id=2]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/SoundControl.gd" id="1"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/Dragger.gd" id="2"]
 
-[node name="SoundCommandControl" type="VBoxContainer"]
+[node name="SoundCommandControl" type="VBoxContainer" node_paths=PackedStringArray("stream", "volume_slider", "pitch_slider", "mix_menu", "bus_lineedit", "effect")]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
+script = ExtResource("1")
+stream = NodePath("StremHBoxContainer/Stream")
+volume_slider = NodePath("VoilumHBoxContainer2/Volume")
+pitch_slider = NodePath("PitchHBoxContainer/Pitch")
+mix_menu = NodePath("MixHBoxContainer/MixMenuButton")
+bus_lineedit = NodePath("BusHBoxContainer/BusLineEdit")
+effect = NodePath("EffectHBoxContainer/Effect")
 
 [node name="StremHBoxContainer" type="HBoxContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 20.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="StremHBoxContainer"]
-margin_top = 3.0
-margin_right = 90.0
-margin_bottom = 17.0
+layout_mode = 2
 text = "Audio Stream:"
 
 [node name="Stream" type="Label" parent="StremHBoxContainer"]
-margin_left = 94.0
-margin_top = 3.0
-margin_right = 1000.0
-margin_bottom = 17.0
-hint_tooltip = "Drag and Drop an AudioStream"
-mouse_filter = 0
+layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "Drag and Drop an AudioStream"
+mouse_filter = 0
 text = "Drag an Audio Stream!"
-align = 1
-script = ExtResource( 2 )
+script = ExtResource("2")
 type = "AudioStream"
 extension = "tres"
 
 [node name="Clean" type="Button" parent="StremHBoxContainer"]
-margin_left = 1004.0
-margin_right = 1024.0
-margin_bottom = 20.0
+layout_mode = 2
 text = "C"
 
 [node name="VoilumHBoxContainer2" type="HBoxContainer" parent="."]
-margin_top = 24.0
-margin_right = 1024.0
-margin_bottom = 48.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="VoilumHBoxContainer2"]
-margin_top = 5.0
-margin_right = 75.0
-margin_bottom = 19.0
+layout_mode = 2
 text = "Volume_db:"
 
 [node name="Volume" type="SpinBox" parent="VoilumHBoxContainer2"]
-margin_left = 79.0
-margin_right = 1024.0
-margin_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 min_value = -80.0
 max_value = 24.0
 step = 0.1
 
 [node name="PitchHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 52.0
-margin_right = 1024.0
-margin_bottom = 76.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="PitchHBoxContainer"]
-margin_top = 5.0
-margin_right = 73.0
-margin_bottom = 19.0
+layout_mode = 2
 text = "Pitch Scale:"
 
 [node name="Pitch" type="SpinBox" parent="PitchHBoxContainer"]
-margin_left = 77.0
-margin_right = 1024.0
-margin_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 min_value = 0.01
 max_value = 4.0
 step = 0.1
-value = 1.0
+value = 1.01
 
 [node name="MixHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 80.0
-margin_right = 1024.0
-margin_bottom = 100.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="MixHBoxContainer"]
-margin_top = 3.0
-margin_right = 70.0
-margin_bottom = 17.0
+layout_mode = 2
 text = "Mix Target:"
 
 [node name="MixMenuButton" type="MenuButton" parent="MixHBoxContainer"]
-margin_left = 74.0
-margin_right = 1024.0
-margin_bottom = 20.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Chose a mix target"
-items = [ "MIX_TARGET_STEREO", null, 0, false, false, 0, 0, null, "", false, "MIX_TARGET_SURROUND", null, 0, false, false, 1, 0, null, "", false, "MIX_TARGET_CENTER", null, 0, false, false, 2, 0, null, "", false ]
+item_count = 3
+popup/item_0/text = "Stereo"
+popup/item_0/id = 0
+popup/item_1/text = "Surround"
+popup/item_1/id = 1
+popup/item_2/text = "Center"
+popup/item_2/id = 2
 
 [node name="BusHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 104.0
-margin_right = 1024.0
-margin_bottom = 128.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="BusHBoxContainer"]
-margin_top = 5.0
-margin_right = 28.0
-margin_bottom = 19.0
+layout_mode = 2
 text = "Bus:"
 
 [node name="BusLineEdit" type="LineEdit" parent="BusHBoxContainer"]
-margin_left = 32.0
-margin_right = 1024.0
-margin_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="EffectHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 132.0
-margin_right = 1024.0
-margin_bottom = 152.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="EffectHBoxContainer"]
-margin_top = 3.0
-margin_right = 39.0
-margin_bottom = 17.0
+layout_mode = 2
 text = "Effect:"
 
 [node name="Effect" type="Label" parent="EffectHBoxContainer"]
-margin_left = 43.0
-margin_top = 3.0
-margin_right = 1000.0
-margin_bottom = 17.0
-hint_tooltip = "Drag and Drop an AudioEffect"
-mouse_filter = 0
+layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "Drag and Drop an AudioEffect"
+mouse_filter = 0
 text = "Drag and AudioEffect!"
-align = 1
-script = ExtResource( 2 )
+script = ExtResource("2")
 type = "AudioEffect"
 extension = "tres"
 
 [node name="Clean" type="Button" parent="EffectHBoxContainer"]
-margin_left = 1004.0
-margin_right = 1024.0
-margin_bottom = 20.0
+layout_mode = 2
 text = "C"
 
-[connection signal="value_dragged" from="StremHBoxContainer/Stream" to="." method="_on_Stream_value_dragged"]
-[connection signal="pressed" from="StremHBoxContainer/Clean" to="." method="_on_CleanStream_pressed"]
-[connection signal="value_changed" from="VoilumHBoxContainer2/Volume" to="." method="_on_Volume_value_changed"]
-[connection signal="value_changed" from="PitchHBoxContainer/Pitch" to="." method="_on_Pitch_value_changed"]
-[connection signal="text_changed" from="BusHBoxContainer/BusLineEdit" to="." method="_on_BusLineEdit_text_changed"]
-[connection signal="value_dragged" from="EffectHBoxContainer/Effect" to="." method="_on_Effect_value_dragged"]
-[connection signal="pressed" from="EffectHBoxContainer/Clean" to="." method="_on_CleanEffect_pressed"]
+[connection signal="value_dragged" from="StremHBoxContainer/Stream" to="." method="_on_stream_value_dragged"]
+[connection signal="pressed" from="StremHBoxContainer/Clean" to="." method="_on_clean_stream_pressed"]
+[connection signal="value_changed" from="VoilumHBoxContainer2/Volume" to="." method="_on_volume_value_changed"]
+[connection signal="value_changed" from="PitchHBoxContainer/Pitch" to="." method="_on_pitch_value_changed"]
+[connection signal="text_changed" from="BusHBoxContainer/BusLineEdit" to="." method="_on_bus_line_edit_text_changed"]
+[connection signal="value_dragged" from="EffectHBoxContainer/Effect" to="." method="_on_effect_value_dragged"]
+[connection signal="pressed" from="EffectHBoxContainer/Clean" to="." method="_on_clean_effect_pressed"]

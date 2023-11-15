@@ -1,4 +1,4 @@
-tool
+@tool
 extends PopupMenu
 
 # This is a general menut that I will add stuffto it

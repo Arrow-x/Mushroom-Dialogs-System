@@ -1,29 +1,26 @@
-tool
+@tool
 extends VBoxContainer
 
+@export var default_check: CheckButton
+@export var ui_drag_target: Label
+@export var ui_drag_container: HBoxContainer
+
 var current_change_ui: ChangeUICommand
-var undo_redo: UndoRedo
-var toggle: bool
-var current_ui_scene: PackedScene
-
-onready var default_check := $HBoxContainer/IsDefaultCheckButton
-onready var ui_drag_target := $UIHBoxContainer/HBoxContainer/UIDragTargetLabel
-onready var ui_drag_container := $UIHBoxContainer
+var undo_redo: EditorUndoRedoManager
 
 
-func set_up(cmd: ChangeUICommand, u_r: UndoRedo) -> void:
+func set_up(cmd: ChangeUICommand, u_r: EditorUndoRedoManager) -> void:
 	current_change_ui = cmd
 	undo_redo = u_r
-	default_check.pressed = current_change_ui.change_to_default
+	default_check.button_pressed = current_change_ui.change_to_default
 	change_ui_scene(current_change_ui.next_UI)
 
 
-func _on_IsDefaultCheckButton_toggled(button_pressed: bool) -> void:
+func _on_is_default_checkbutton_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle default ui")
 	undo_redo.add_do_method(self, "toggle_ui", button_pressed)
-	undo_redo.add_undo_method(self, "toggle_ui", toggle)
+	undo_redo.add_undo_method(self, "toggle_ui", current_change_ui.change_to_default)
 	undo_redo.commit_action()
-	toggle = button_pressed
 
 
 func toggle_ui(button_pressed: bool) -> void:
@@ -35,21 +32,18 @@ func toggle_ui(button_pressed: bool) -> void:
 	is_changed()
 
 
-func _on_UIDragTargetLabel_value_dragged(value: PackedScene) -> void:
-	print(value)
+func _on_ui_drag_target_label_value_dragged(value: PackedScene) -> void:
 	undo_redo.create_action("drag a new UI scene")
 	undo_redo.add_do_method(self, "change_ui_scene", value)
-	undo_redo.add_undo_method(self, "change_ui_scene", current_ui_scene)
+	undo_redo.add_undo_method(self, "change_ui_scene", current_change_ui.next_UI)
 	undo_redo.commit_action()
-	current_ui_scene = value
 
 
-func _on_ClearButton_pressed() -> void:
+func _on_clear_button_pressed() -> void:
 	undo_redo.create_action("drag a new UI scene")
-	undo_redo.add_do_method(self, "change_ui_scene", null)
-	undo_redo.add_undo_method(self, "change_ui_scene", current_ui_scene)
+	undo_redo.add_do_method(self, "change_ui_scene")
+	undo_redo.add_undo_method(self, "change_ui_scene", current_change_ui.next_UI)
 	undo_redo.commit_action()
-	current_ui_scene = null
 
 
 func change_ui_scene(new_ui: PackedScene = null) -> void:

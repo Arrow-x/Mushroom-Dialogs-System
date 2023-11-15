@@ -1,27 +1,34 @@
-tool
+@tool
 extends Command
 class_name SayCommand
 
-export(Resource) var character: Resource
-export(String, MULTILINE) var say: String
-export var portrait_id: String
-export var portrait: StreamTexture
-export(String, "Left", "Right", "Center") var por_pos: String = "Right"
+@export var character: Resource
+@export_multiline var say: String
+@export var portrait_id: String
+@export var portrait: CompressedTexture2D
+@export_enum("Left", "Right", "Center") var por_pos: String = "Right"
 
-export var append_text: bool = false
+@export var append_text: bool = false
 
-export var is_cond: bool = false
+@export var is_cond: bool = false
 
-export(String) var required_node
-export var required_var: String
-export var check_val: String
-export(String) var condition_type = "=="
+@export var required_node: String
+@export var required_var: String
+@export var check_val: String
+@export var condition_type: String = "=="
 
 
 func preview() -> String:
-	var prev: String = String("Say: " + say)
+	var prev: String
+	var prev_length := 60
+
+	if say.length() < prev_length:
+		prev = str("Say: " + say)
+	else:
+		prev = str("Say: " + say.left(prev_length) + "... ")
+
 	if character != null:
-		prev = String(prev + " by: " + character.name)
+		prev = str(prev + " by: " + character.name)
 
 	return prev
 

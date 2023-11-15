@@ -1,40 +1,30 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://ca4mhqtis68pb"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ForkControl.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ForkControl.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://dnwd4iberh8eq" path="res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn" id="2_x1dho"]
 
-[node name="Control" type="Control"]
+[node name="ScrollContainer" type="ScrollContainer" node_paths=PackedStringArray("choices_container", "add_choice_button")]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
+script = ExtResource("1")
+choices_container = NodePath("ChoicesContainer")
+add_choice_button = NodePath("ChoicesContainer/InfoBar/AddChoiceButton")
+i_choice_control = ExtResource("2_x1dho")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ChoicesContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_right = 1024.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="InfoBar" type="HBoxContainer" parent="ScrollContainer/ChoicesContainer"]
-margin_right = 1024.0
-margin_bottom = 20.0
-
-[node name="Control" type="Control" parent="ScrollContainer/ChoicesContainer/InfoBar"]
-margin_right = 937.0
-margin_bottom = 20.0
+[node name="ChoicesContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AddChoiceButton" type="Button" parent="ScrollContainer/ChoicesContainer/InfoBar"]
-margin_left = 941.0
-margin_right = 1024.0
-margin_bottom = 20.0
+[node name="InfoBar" type="HBoxContainer" parent="ChoicesContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="ChoicesContainer/InfoBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AddChoiceButton" type="Button" parent="ChoicesContainer/InfoBar"]
+layout_mode = 2
 text = "Add choice"
 
-[connection signal="pressed" from="ScrollContainer/ChoicesContainer/InfoBar/AddChoiceButton" to="." method="_on_AddChoiceButton_pressed"]
+[connection signal="pressed" from="ChoicesContainer/InfoBar/AddChoiceButton" to="." method="_on_add_choice_button_pressed"]

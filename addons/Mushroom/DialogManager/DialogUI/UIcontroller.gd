@@ -2,42 +2,24 @@ extends Node
 
 var portraits: Dictionary
 
-export(NodePath) var _say_pannel
-export(NodePath) var _say_text
-export(NodePath) var _say_name
-export(NodePath) var _next_button
-export(NodePath) var _choice_container
-export(NodePath) var _right_portrait
-export(NodePath) var _center_portrait
-export(NodePath) var _left_portrait
+@export var say_pannel: Control
+@export var say_text: Control
+@export var say_name: Control
+@export var next_button: Control
+@export var choice_container: Control
+@export var right_portrait: Control
+@export var center_portrait: Control
+@export var left_portrait: Control
 
-var say_pannel
-var say_text
-var say_name
-var next_button
-var choice_container
-var right_portrait
-var center_portrait
-var left_portrait
-
-var is_tweening = false
+var is_tweening := false
 
 
 func _ready():
-	say_pannel = get_node(_say_pannel)
-	say_text = get_node(_say_text)
-	say_name = get_node(_say_name)
-	next_button = get_node(_next_button)
-	choice_container = get_node(_choice_container)
-	right_portrait = get_node(_right_portrait)
-	center_portrait = get_node(_center_portrait)
-	left_portrait = get_node(_left_portrait)
-
-	next_button.connect("pressed", DialogManagerNode, "advance")
+	next_button.pressed.connect(DialogManagerNode.advance)
 	say_text.text = ""
 
-	say_text.connect("message_done", self, "_on_SayText_message_done")
-	say_text.connect("message_start", self, "_on_SayText_message_start")
+	say_text.message_done.connect(_on_SayText_message_done)
+	say_text.message_start.connect(_on_SayText_message_start)
 
 
 func hide_say() -> void:
@@ -66,7 +48,7 @@ func show_choice() -> void:
 		choice_container.visible = true
 
 
-func add_portrait(portrait: StreamTexture, por_pos) -> void:
+func add_portrait(portrait: CompressedTexture2D, por_pos) -> void:
 	match por_pos:
 		"Right":
 			right_portrait.texture = portrait
@@ -79,7 +61,7 @@ func add_portrait(portrait: StreamTexture, por_pos) -> void:
 			center_portrait.visible = true
 
 
-func add_text(got_text, got_name, append = false) -> void:
+func add_text(got_text: String, got_name: String, append = false) -> void:
 	say_text.send_message(got_text, append)
 	say_name.text = got_name
 
@@ -88,7 +70,7 @@ func add_choice(block, id, index) -> void:
 	var s = Button.new()
 	s.text = block.text
 	choice_container.add_child(s)
-	s.connect("pressed", DialogManagerNode, "_on_make_choice", [id, index])
+	s.pressed.connect(DialogManagerNode._on_make_choice.bind(id, index))
 
 
 func _on_SayText_message_done():

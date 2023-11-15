@@ -1,8 +1,12 @@
-tool
+@tool
 extends HSplitContainer
 
+@export var graph_edit: GraphEdit
+@export var add_block_button: Button
+@export var command_tree: Tree
+
 var flowchart: FlowChart
-var flow_tabs: Tabs
+var flow_tabs: TabBar
 
 var modified := false
 
@@ -16,24 +20,16 @@ func check_for_duplicates(name) -> bool:
 	return false
 
 
-func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
+func set_flowchart(chart, sent_undo_redo: EditorUndoRedoManager) -> void:
 	if chart is FlowChart:
 		flowchart = chart
-		var graph_edit: GraphEdit = get_node("GraphContainer/GraphEdit")
-		$GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton.connect(
-			"button_down", graph_edit, "_on_AddBlockButton_pressed"
-		)
-		graph_edit.connect(
-			"g_node_clicked",
-			get_node("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"),
-			"initeate_Tree_from_Block"
-		)
-		graph_edit.connect("flow_changed", self, "changed_flowchart")
+
+		add_block_button.button_down.connect(graph_edit.on_add_block_button_pressed)
+
+		graph_edit.g_node_clicked.connect(command_tree.initeate_tree_from_block)
+		graph_edit.flow_changed.connect(changed_flowchart)
 		graph_edit.undo_redo = sent_undo_redo
 
-		var command_tree: Tree = get_node(
-			"InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"
-		)
 		command_tree.full_clear()
 		command_tree.undo_redo = sent_undo_redo
 		command_tree.graph_edit = graph_edit
@@ -43,14 +39,17 @@ func set_flowchart(chart, sent_undo_redo: UndoRedo) -> void:
 
 
 func check_flowchart_path_before_save() -> void:
+	if flowchart == null:
+		return
+
 	if flowchart.resource_path == "":
-		flow_tabs.set_tab_title(get_position_in_parent(), String(name + "(*)"))
+		flow_tabs.set_tab_title(get_index(), String(name + "(*)"))
 		var _i: FileDialog = FileDialog.new()
 		_i.resizable = true
 		_i.set_size(Vector2(800, 500))
 		_i.get_line_edit().set_text(String(name.trim_suffix("(*)") + ".tres"))
 		_i.get_line_edit().select(0, 12)
-		_i.connect("file_selected", self, "save_flowchart_to_disc", [true])
+		_i.file_selected.connect(save_flowchart_to_disc.bind(true))
 		add_child(_i)
 		_i.popup_centered()
 		return
@@ -59,16 +58,16 @@ func check_flowchart_path_before_save() -> void:
 
 
 func save_flowchart_to_disc(path: String, overwrite := false) -> void:
-	ResourceSaver.save(path, flowchart)
+	ResourceSaver.save(flowchart, path)
 	if overwrite == true:
 		flowchart.set_path(path)
 
-	flow_tabs.set_tab_title(get_position_in_parent(), flowchart.get_name())
+	flow_tabs.set_tab_title(get_index(), flowchart.get_flowchart_name())
 	modified = false
 	emit_signal("done_saving")
 
 
 func changed_flowchart() -> void:
 	if name.findn("(*)") == -1:
-		flow_tabs.set_tab_title(get_position_in_parent(), String(name + "(*)"))
+		flow_tabs.set_tab_title(get_index(), str(name + "(*)"))
 		modified = true

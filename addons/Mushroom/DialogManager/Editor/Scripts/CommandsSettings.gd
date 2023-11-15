@@ -1,7 +1,7 @@
-tool
+@tool
 extends Panel
 
-var _currnet_title: String setget change_title
+var _currnet_title: String: set = change_title
 
 
 func change_title(new_value):

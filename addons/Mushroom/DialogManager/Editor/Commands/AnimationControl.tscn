@@ -1,125 +1,97 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://dy1fqsaty2u30"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/AnimationControl.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/AnimationControl.gd" id="1"]
 
-[node name="Control" type="Control"]
+[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("anim_path_ctrl", "anim_name_ctrl", "blend_ctrl", "anim_type_ctrl", "speed_ctrl", "from_end_ctrl")]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
+script = ExtResource("1")
+anim_path_ctrl = NodePath("PathHBoxContainer/PathLineEdit")
+anim_name_ctrl = NodePath("ANameHBoxContainer/NameLineEdit")
+blend_ctrl = NodePath("BlendHBoxContainer/BlendLineEdit")
+anim_type_ctrl = NodePath("TypeHBoxContainer/TypeMenu")
+speed_ctrl = NodePath("SpeedHBoxContainer/SpeedLineEdit")
+from_end_ctrl = NodePath("FromEndHBoxContainer/FromEndCheck")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="PathHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 
-[node name="PathHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 24.0
+[node name="Label" type="Label" parent="PathHBoxContainer"]
+layout_mode = 2
+text = "Path3D: "
 
-[node name="Label" type="Label" parent="VBoxContainer/PathHBoxContainer"]
-margin_top = 5.0
-margin_right = 36.0
-margin_bottom = 19.0
-text = "Path: "
-
-[node name="PathLineEdit" type="LineEdit" parent="VBoxContainer/PathHBoxContainer"]
-margin_left = 40.0
-margin_right = 1024.0
-margin_bottom = 24.0
+[node name="PathLineEdit" type="LineEdit" parent="PathHBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ANameHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 28.0
-margin_right = 1024.0
-margin_bottom = 52.0
+[node name="ANameHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/ANameHBoxContainer"]
-margin_top = 5.0
-margin_right = 46.0
-margin_bottom = 19.0
+[node name="Label" type="Label" parent="ANameHBoxContainer"]
+layout_mode = 2
 text = "Name: "
 
-[node name="NameLineEdit" type="LineEdit" parent="VBoxContainer/ANameHBoxContainer"]
-margin_left = 50.0
-margin_right = 1024.0
-margin_bottom = 24.0
+[node name="NameLineEdit" type="LineEdit" parent="ANameHBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BlendHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 56.0
-margin_right = 1024.0
-margin_bottom = 80.0
+[node name="BlendHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/BlendHBoxContainer"]
-margin_top = 5.0
-margin_right = 45.0
-margin_bottom = 19.0
+[node name="Label" type="Label" parent="BlendHBoxContainer"]
+layout_mode = 2
 text = "Blend: "
 
-[node name="BlendLineEdit" type="SpinBox" parent="VBoxContainer/BlendHBoxContainer"]
-margin_left = 49.0
-margin_right = 1024.0
-margin_bottom = 24.0
+[node name="BlendLineEdit" type="SpinBox" parent="BlendHBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 step = 0.1
 page = 10.0
 
-[node name="SpeedHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 84.0
-margin_right = 1024.0
-margin_bottom = 108.0
+[node name="SpeedHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/SpeedHBoxContainer"]
-margin_top = 5.0
-margin_right = 51.0
-margin_bottom = 19.0
+[node name="Label" type="Label" parent="SpeedHBoxContainer"]
+layout_mode = 2
 text = "Speed : "
 
-[node name="SpeedLineEdit" type="SpinBox" parent="VBoxContainer/SpeedHBoxContainer"]
-margin_left = 55.0
-margin_right = 1024.0
-margin_bottom = 24.0
+[node name="SpeedLineEdit" type="SpinBox" parent="SpeedHBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 step = 0.1
 page = 10.0
 
-[node name="FromEndHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 112.0
-margin_right = 1024.0
-margin_bottom = 152.0
+[node name="FromEndHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/FromEndHBoxContainer"]
-margin_top = 13.0
-margin_right = 72.0
-margin_bottom = 27.0
+[node name="Label" type="Label" parent="FromEndHBoxContainer"]
+layout_mode = 2
 text = "From End : "
 
-[node name="FromEndCheck" type="CheckButton" parent="VBoxContainer/FromEndHBoxContainer"]
-margin_left = 76.0
-margin_right = 1024.0
-margin_bottom = 40.0
+[node name="FromEndCheck" type="CheckButton" parent="FromEndHBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TypeHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 156.0
-margin_right = 1024.0
-margin_bottom = 176.0
+[node name="TypeHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/TypeHBoxContainer"]
-margin_top = 3.0
-margin_right = 108.0
-margin_bottom = 17.0
+[node name="Label" type="Label" parent="TypeHBoxContainer"]
+layout_mode = 2
 text = "Animation Type: "
 
-[node name="TypeMenu" type="MenuButton" parent="VBoxContainer/TypeHBoxContainer"]
-margin_left = 112.0
-margin_right = 1024.0
-margin_bottom = 20.0
+[node name="TypeMenu" type="MenuButton" parent="TypeHBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Set Animation Type"
-items = [ "Wait", null, 0, false, false, 0, 0, null, "", false, "Continue", null, 0, false, false, 1, 0, null, "", false ]
+item_count = 2
+popup/item_0/text = "wait"
+popup/item_0/id = 0
+popup/item_1/text = "continue"
+popup/item_1/id = 1
 
-[connection signal="text_changed" from="VBoxContainer/PathHBoxContainer/PathLineEdit" to="." method="_on_PathLineEdit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/ANameHBoxContainer/NameLineEdit" to="." method="_on_NameLineEdit_text_changed"]
-[connection signal="value_changed" from="VBoxContainer/BlendHBoxContainer/BlendLineEdit" to="." method="_on_BlendLineEdit_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/SpeedHBoxContainer/SpeedLineEdit" to="." method="_on_SpeedLineEdit_value_changed"]
-[connection signal="toggled" from="VBoxContainer/FromEndHBoxContainer/FromEndCheck" to="." method="_on_FromEndCheck_toggled"]
+[connection signal="text_changed" from="PathHBoxContainer/PathLineEdit" to="." method="_on_path_lineedit_text_changed"]
+[connection signal="text_changed" from="ANameHBoxContainer/NameLineEdit" to="." method="_on_name_lineedit_text_changed"]
+[connection signal="value_changed" from="BlendHBoxContainer/BlendLineEdit" to="." method="_on_blend_lineedit_value_changed"]
+[connection signal="value_changed" from="SpeedHBoxContainer/SpeedLineEdit" to="." method="_on_speed_lineedit_value_changed"]
+[connection signal="toggled" from="FromEndHBoxContainer/FromEndCheck" to="." method="toggle_from_end"]

@@ -1,5 +1,10 @@
-tool
+@tool
 extends Control
+
+@export var req_node_input: LineEdit
+@export var req_var_input: LineEdit
+@export var check_val_input: LineEdit
+@export var check_type: MenuButton
 
 var current_condition: ConditionCommand
 
@@ -7,34 +12,34 @@ var current_condition: ConditionCommand
 func set_up(cc: ConditionCommand) -> void:
 	current_condition = cc
 
-	var check_type_popup: PopupMenu = get_node("ReqVar/CheckType").get_popup()
-	check_type_popup.connect("id_pressed", self, "_on_CheckTypePopup", [check_type_popup])
+	var check_type_popup: PopupMenu = check_type.get_popup()
+	check_type_popup.id_pressed.connect(_on_check_type_popup.bind(check_type_popup))
 
-	get_node("ReqNode/ReqNodeInput").text = current_condition.required_node
-	get_node("ReqVar/ReqVarInput").text = current_condition.required_var
-	get_node("HBoxContainer/CheckValInput").text = current_condition.check_val
-	get_node("ReqVar/CheckType").text = current_condition.condition_type
+	req_node_input.text = current_condition.required_node
+	req_var_input.text = current_condition.required_var
+	check_val_input.text = current_condition.check_val
+	check_type.text = current_condition.condition_type
 
 
-func _on_CheckValInput_text_changed(new_text: String) -> void:
+func _on_check_val_input_text_changed(new_text: String) -> void:
 	current_condition.check_val = new_text
 	is_changed()
 
 
-func _on_ReqVarInput_text_changed(new_text: String) -> void:
+func _on_req_var_input_text_changed(new_text: String) -> void:
 	current_condition.required_var = new_text
 	is_changed()
 
 
-func _on_ReqNodeInput_text_changed(new_text: String) -> void:
+func _on_req_node_input_text_changed(new_text: String) -> void:
 	current_condition.required_node = new_text
 	is_changed()
 
 
-func _on_CheckTypePopup(id: int, popup: PopupMenu) -> void:
+func _on_check_type_popup(id: int, popup: PopupMenu) -> void:
 	var pp_text: String = popup.get_item_text(id)
 	current_condition.condition_type = pp_text
-	get_node("ReqVar/CheckType").text = pp_text
+	check_type.text = pp_text
 	is_changed()
 
 
@@ -43,4 +48,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_condition.emit_signal("changed")
+	current_condition.changed.emit()

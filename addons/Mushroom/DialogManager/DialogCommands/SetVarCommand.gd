@@ -1,14 +1,14 @@
-tool
+@tool
 extends Command
 class_name SetVarCommand
 
-export(String) var var_path: String
-export(String) var var_name: String
-export(String) var var_value
+@export var var_path: String
+@export var var_name: String
+@export var var_value: String
 
 
 func preview() -> String:
-	return String(var_path + "." + var_name + "= " + String(var_value))
+	return str(var_path + "." + var_name + "= " + str(var_value))
 
 
 func get_icon() -> Resource:

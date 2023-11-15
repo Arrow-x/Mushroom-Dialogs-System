@@ -1,64 +1,52 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://be32jycsbxckh"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ChangeUIControl.gd" type="Script" id=1]
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/Dragger.gd" type="Script" id=2]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ChangeUIControl.gd" id="1"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/Dragger.gd" id="2"]
 
-[node name="ChangeUIControl" type="VBoxContainer"]
+[node name="ChangeUIControl" type="VBoxContainer" node_paths=PackedStringArray("default_check", "ui_drag_target", "ui_drag_container")]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
+script = ExtResource("1")
+default_check = NodePath("HBoxContainer/IsDefaultCheckButton")
+ui_drag_target = NodePath("UIHBoxContainer/HBoxContainer/UIDragTargetLabel")
+ui_drag_container = NodePath("UIHBoxContainer")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 40.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="HBoxContainer"]
-margin_top = 13.0
-margin_right = 117.0
-margin_bottom = 27.0
+layout_mode = 2
 text = "Change to Default:"
 
 [node name="IsDefaultCheckButton" type="CheckButton" parent="HBoxContainer"]
-margin_left = 121.0
-margin_right = 1024.0
-margin_bottom = 40.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="UIHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 44.0
-margin_right = 1024.0
-margin_bottom = 64.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="UIHBoxContainer"]
-margin_top = 3.0
-margin_right = 114.0
-margin_bottom = 17.0
+layout_mode = 2
 text = "UI packed scene: "
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UIHBoxContainer"]
-margin_left = 118.0
-margin_right = 1024.0
-margin_bottom = 20.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="UIDragTargetLabel" type="Label" parent="UIHBoxContainer/HBoxContainer"]
-margin_top = 3.0
-margin_right = 883.0
-margin_bottom = 17.0
-mouse_filter = 0
+layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 0
 text = "..."
-align = 1
-script = ExtResource( 2 )
+script = ExtResource("2")
 type = "PackedScene"
 extension = "tscn"
 
 [node name="ClearButton" type="Button" parent="UIHBoxContainer/HBoxContainer"]
-margin_left = 887.0
-margin_right = 906.0
-margin_bottom = 20.0
+layout_mode = 2
 text = "c"
 
-[connection signal="toggled" from="HBoxContainer/IsDefaultCheckButton" to="." method="_on_IsDefaultCheckButton_toggled"]
-[connection signal="value_dragged" from="UIHBoxContainer/HBoxContainer/UIDragTargetLabel" to="." method="_on_UIDragTargetLabel_value_dragged"]
-[connection signal="pressed" from="UIHBoxContainer/HBoxContainer/ClearButton" to="." method="_on_ClearButton_pressed"]
+[connection signal="toggled" from="HBoxContainer/IsDefaultCheckButton" to="." method="_on_is_default_checkbutton_toggled"]
+[connection signal="value_dragged" from="UIHBoxContainer/HBoxContainer/UIDragTargetLabel" to="." method="_on_ui_dragtarget_label_value_dragged"]
+[connection signal="pressed" from="UIHBoxContainer/HBoxContainer/ClearButton" to="." method="_on_clear_button_pressed"]

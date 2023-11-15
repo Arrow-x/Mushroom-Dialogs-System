@@ -1,10 +1,10 @@
-tool
+@tool
 extends Command
 class_name JumpCommand
 
-export var jump_block: Resource
-export var jump_index: int = 0
-export var global: bool = false
+@export var jump_block: Resource
+@export var jump_index: int = 0
+@export var global: bool = false
 
 
 func get_block_name() -> String:
@@ -16,9 +16,9 @@ func get_block_name() -> String:
 
 func preview() -> String:
 	if global:
-		return String("Jump to: " + get_block_name() + " at: " + String(jump_index))
+		return str("Jump to: " + get_block_name() + " at: " + str(jump_index))
 	else:
-		return String("Jump local index: " + String(jump_index))
+		return str("Jump local index: " + str(jump_index))
 
 
 func get_icon() -> Resource:

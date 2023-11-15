@@ -1,64 +1,52 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://doakmwk8exdsy"]
 
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/JumpControl.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/JumpControl.gd" id="1"]
 
-[node name="Control" type="VBoxContainer"]
+[node name="Control" type="VBoxContainer" node_paths=PackedStringArray("index_control", "global_control", "chose_block_control", "block_selection_cotrol")]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
+script = ExtResource("1")
+index_control = NodePath("BlockHBoxContainer/SpinBox")
+global_control = NodePath("GlobalHBoxContainer/CheckButton")
+chose_block_control = NodePath("BlockHBoxContainer2")
+block_selection_cotrol = NodePath("BlockHBoxContainer2/MenuButton")
 
 [node name="BlockHBoxContainer" type="HBoxContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 24.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="BlockHBoxContainer"]
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 19.0
+layout_mode = 2
 text = "Index:"
 
 [node name="SpinBox" type="SpinBox" parent="BlockHBoxContainer"]
-margin_left = 44.0
-margin_right = 1024.0
-margin_bottom = 24.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="GlobalHBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 28.0
-margin_right = 1024.0
-margin_bottom = 68.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="GlobalHBoxContainer"]
-margin_top = 13.0
-margin_right = 45.0
-margin_bottom = 27.0
+layout_mode = 2
 text = "Global:"
 
 [node name="CheckButton" type="CheckButton" parent="GlobalHBoxContainer"]
-margin_left = 49.0
-margin_right = 1024.0
-margin_bottom = 40.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="BlockHBoxContainer2" type="HBoxContainer" parent="."]
 visible = false
-margin_top = 72.0
-margin_right = 1024.0
-margin_bottom = 92.0
+layout_mode = 2
 
 [node name="Label2" type="Label" parent="BlockHBoxContainer2"]
-margin_top = 3.0
-margin_right = 34.0
-margin_bottom = 17.0
+layout_mode = 2
 text = "Black"
 
 [node name="MenuButton" type="MenuButton" parent="BlockHBoxContainer2"]
-margin_left = 38.0
-margin_right = 1024.0
-margin_bottom = 20.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Choose a block"
 
-[connection signal="value_changed" from="BlockHBoxContainer/SpinBox" to="." method="_on_SpinBox_value_changed"]
-[connection signal="toggled" from="GlobalHBoxContainer/CheckButton" to="." method="_on_CheckButton_toggled"]
-[connection signal="about_to_show" from="BlockHBoxContainer2/MenuButton" to="." method="_on_MenuButton_about_to_show"]
+[connection signal="value_changed" from="BlockHBoxContainer/SpinBox" to="." method="_on_spin_box_value_changed"]
+[connection signal="toggled" from="GlobalHBoxContainer/CheckButton" to="." method="_on_check_button_toggled"]
+[connection signal="about_to_popup" from="BlockHBoxContainer2/MenuButton" to="." method="_on_menu_button_about_to_show"]

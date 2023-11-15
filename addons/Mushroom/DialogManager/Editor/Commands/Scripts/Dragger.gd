@@ -1,12 +1,13 @@
-tool
+@tool
 extends Control
 
-export var type: String
-export var extension: String
+@export var type: String
+@export var extension: String
+
 signal value_dragged(value)
 
 
-func can_drop_data(position: Vector2, data) -> bool:
+func _can_drop_data(position: Vector2, data) -> bool:
 	if not data is Dictionary or not "type" in data:
 		print("is not Dict")
 		return false
@@ -31,6 +32,6 @@ func can_drop_data(position: Vector2, data) -> bool:
 	return true
 
 
-func drop_data(position: Vector2, data) -> void:
+func _drop_data(position: Vector2, data) -> void:
 	print("loaded")
-	emit_signal("value_dragged", load(data["files"][0]))
+	value_dragged.emit(load(data["files"][0]))

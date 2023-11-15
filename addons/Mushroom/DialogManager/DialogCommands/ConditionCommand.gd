@@ -1,13 +1,13 @@
-tool
+@tool
 extends Command
 class_name ConditionCommand
 
-export var condition_block: Resource
+@export var condition_block: Resource
 
-export(String) var required_node
-export var required_var: String
-export(String) var check_val
-export(String) var condition_type = "=="
+@export var required_node: String
+@export var required_var: String
+@export var check_val: String
+@export var condition_type: String = "=="
 
 
 func _init():
@@ -15,7 +15,7 @@ func _init():
 
 
 func preview() -> String:
-	return String("if " + required_var + " " + condition_type + " " + check_val)
+	return str("if " + required_var + " " + condition_type + " " + check_val)
 
 
 func get_icon() -> Resource:

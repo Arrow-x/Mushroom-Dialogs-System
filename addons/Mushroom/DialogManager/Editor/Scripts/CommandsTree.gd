@@ -1,33 +1,35 @@
-tool
+@tool
 extends Tree
 
-onready var current_block_label: Label = get_node(
-	"../inspectorHeader/inspectorHeaderHBoxContainer/CurrentBlock"
-)
-onready var commands_settings: Panel = get_node("../../CommandsSettings")
+@export var current_block_label: Label
+@export var commands_settings: Panel
+@export var add_rmb_pop: PopupMenu
+@export var rmb_pop: PopupMenu
 
 var flowchart_tab: Control
 var current_block: Block
-var undo_redo: UndoRedo
+var undo_redo: EditorUndoRedoManager
 var graph_edit: GraphEdit
 
 var prev_selected_Command: Command
 
-signal moved(item, to_item, shift)
 enum resault { success = 1, not_found = -2 }
+
+signal moved(item, to_item, shift)
 
 
 func _ready():
-	connect("button_pressed", self, "_on_TreeItem_x_button_pressed")
-	var rmb_pop = get_node("CommandRmbPopup/AddCommandRmbPopupMenu")
-	rmb_pop.connect("index_pressed", self, "_on_add_command", [rmb_pop, true])
-	connect("moved", self, "_on_move_TreeItem")
+	button_clicked.connect(_on_tree_item_x_button_pressed)
+	add_rmb_pop.index_pressed.connect(_on_add_command.bind(rmb_pop, true))
+	moved.connect(_on_move_tree_item)
 
 
-func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int):
+func _on_tree_item_x_button_pressed(item: TreeItem, _collumn: int, _id: int, mouse_idx: int):
+	if mouse_idx != 1:
+		return
 	var cmd: Command = item.get_meta("command")
 	var parent_command: Command = null
-	var idx: int = find_TreeItem(item)
+	var idx: int = find_tree_item(item)
 	var parent: TreeItem = null
 
 	if item.get_parent().has_meta("command"):
@@ -43,7 +45,7 @@ func _on_TreeItem_x_button_pressed(item: TreeItem, _collumn: int, _id: int):
 	undo_redo.commit_action()
 
 
-func initeate_Tree_from_Block(meta: Block) -> void:
+func initeate_tree_from_block(meta: Block) -> void:
 	if meta == current_block or meta == null:
 		return
 	full_clear()
@@ -55,7 +57,7 @@ func initeate_Tree_from_Block(meta: Block) -> void:
 		if commands_settings.get_child(0) != null:
 			commands_settings.get_child(0).free()
 
-	create_Tree_from_Block(meta)
+	create_tree_from_block(meta)
 
 
 func full_clear() -> void:
@@ -84,7 +86,7 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 		else:
 			var selec_p := get_selected().get_parent()
 			if selec_p == get_root():
-				idx = find_TreeItem(get_selected()) + 1
+				idx = find_tree_item(get_selected()) + 1
 			else:
 				idx = selec_p.get_meta("command").condition_block.commands.find(selec_m) + 1
 				p = selec_p.get_meta("command")
@@ -110,11 +112,13 @@ func add_command_to_block(command: Command, idx: int = -1, parent = null) -> voi
 				prc.append(command)
 			else:
 				prc.insert(idx, command)
+	if command is ForkCommand:
+		current_block.outputs.append(command)
+	create_tree_from_block(current_block)
+	graph_edit.connect_block_outputs(current_block, true)
 
-	create_Tree_from_Block(current_block)
 
-
-func create_TreeItem_from_Command(
+func create_tree_item_from_command(
 	command: Command, idx: int = -1, parent: TreeItem = null
 ) -> TreeItem:
 	var l_parent := parent
@@ -136,27 +140,28 @@ func create_TreeItem_from_Command(
 func delete_command(command: Command, tree: TreeItem = null) -> int:
 	var d_tree: Array
 	var d_block: Block
+	if command is ForkCommand:
+		graph_edit.delete_output(current_block.name, command)
 
 	if tree:
-		d_tree = get_TreeItems(tree)
+		d_tree = tree.get_children()
 		d_block = tree.get_meta("command").condition_block
 	else:
-		d_tree = get_TreeItems(get_root())
+		d_tree = get_root().get_children()
 		d_block = current_block
-	# TODO: if the command is ForkCommand then remove it from block outputs and GraphNode
 	for c in d_tree.size():
 		var d_c = d_tree[c]
 		if d_c.get_meta("command") == command:
 			d_c.free()
-			d_block.commands.remove(c)
+			d_block.commands.remove_at(c)
 			free_Command_editor(command)
-			create_Tree_from_Block(current_block)
+			create_tree_from_block(current_block)
 			return resault.success
 		elif d_c.get_meta("command") is ConditionCommand:
 			var b = delete_command(command, d_c)
 			if b != resault.not_found:
 				free_Command_editor(command)
-				create_Tree_from_Block(current_block)
+				create_tree_from_block(current_block)
 				return resault.success
 	return resault.not_found
 
@@ -167,7 +172,7 @@ func free_Command_editor(command: Command) -> void:
 			c_s.queue_free()
 
 
-func get_drag_data(_position: Vector2) -> TreeItem:
+func _get_drag_data(_position: Vector2):
 	var preview := Label.new()
 	preview.text = get_selected().get_text(0)
 
@@ -176,7 +181,7 @@ func get_drag_data(_position: Vector2) -> TreeItem:
 	return get_selected()
 
 
-func can_drop_data(position: Vector2, data) -> bool:
+func _can_drop_data(position: Vector2, data) -> bool:
 	if not data is TreeItem:
 		return false
 	var to_item := get_item_at_position(position)
@@ -188,15 +193,15 @@ func can_drop_data(position: Vector2, data) -> bool:
 	return true
 
 
-func drop_data(position: Vector2, item: TreeItem) -> void:  # end drag
+func _drop_data(position: Vector2, item) -> void:
 	var to_item := get_item_at_position(position)
 	var shift := get_drop_section_at_position(position)
 	# shift == 0 if dropping on item, -1, +1 if in between
-	emit_signal("moved", item, to_item, shift)
+	moved.emit(item, to_item, shift)
 
 
-func _on_move_TreeItem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
-	var item_idx: int = find_TreeItem(item)
+func _on_move_tree_item(item: TreeItem, to_item: TreeItem, shift: int) -> void:
+	var item_idx: int = find_tree_item(item)
 	var parent_item: TreeItem = item.get_parent() if item != null else get_root()
 	var c_p_to_item: Array = (
 		current_block.commands
@@ -210,16 +215,16 @@ func _on_move_TreeItem(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 			return
 
 	undo_redo.create_action("drag command")
-	undo_redo.add_do_method(self, "move_TreeItem", item, to_item, shift)
+	undo_redo.add_do_method(self, "move_tree_item", item, to_item, shift)
 	undo_redo.add_undo_method(
-		self, "undo_move_TreeItem", item.get_meta("command"), c_p_to_item, item_idx
+		self, "undo_move_tree_item", item.get_meta("command"), c_p_to_item, item_idx
 	)
 	undo_redo.commit_action()
 
 
-func move_TreeItem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) -> void:
-	var to_item_idx: int = find_TreeItem(to_item)
-	var item_idx: int = find_TreeItem(item)
+func move_tree_item(item: TreeItem, to_item: TreeItem = null, shift: int = -100) -> void:
+	var to_item_idx: int = find_tree_item(to_item)
+	var item_idx: int = find_tree_item(item)
 	var c_item := item.get_meta("command") as Command
 	var c_to_item: Command = to_item.get_meta("command") if to_item != null else null
 	var p_to_item: TreeItem = to_item.get_parent() if to_item != null else get_root()
@@ -255,169 +260,179 @@ func move_TreeItem(item: TreeItem, to_item: TreeItem = null, shift: int = -100) 
 						item_idx = item_idx + 1
 
 	if item.get_parent() == get_root():
-		current_block.commands.remove(item_idx)
+		current_block.commands.remove_at(item_idx)
 	else:
-		item.get_parent().get_meta("command").condition_block.commands.remove(item_idx)
+		item.get_parent().get_meta("command").condition_block.commands.remove_at(item_idx)
 
-	create_Tree_from_Block(current_block)
+	create_tree_from_block(current_block)
 
 
-func undo_move_TreeItem(og_item_command: Command, og_parent_commands: Array, og_idx: int):
-	var to_item := get_TreeItem_from_Command(og_item_command)
+func undo_move_tree_item(og_item_command: Command, og_parent_commands: Array, og_idx: int):
+	var to_item := get_tree_item_from_command(og_item_command)
 	var p_to_item := to_item.get_parent()
 	var c_p_to_item: Command = (
-		p_to_item.get_meta("command")
-		if p_to_item.has_meta("command")
-		else null
+		p_to_item.get_meta("command") if p_to_item.has_meta("command") else null
 	)
-	var item_idx := find_TreeItem(to_item)
+	var item_idx := find_tree_item(to_item)
 
 	if item_idx == resault.not_found:
 		push_error("can't find it")
 		return
 	if to_item == null or p_to_item == get_root():
-		current_block.commands.remove(item_idx)
+		current_block.commands.remove_at(item_idx)
 	elif c_p_to_item is ConditionCommand:
-		c_p_to_item.condition_block.commands.remove(item_idx)
+		c_p_to_item.condition_block.commands.remove_at(item_idx)
 	og_parent_commands.insert(og_idx, og_item_command)
-	create_Tree_from_Block(current_block)
+	create_tree_from_block(current_block)
 
 
-func get_TreeItems(parent: TreeItem) -> Array:
-	var item = parent.get_children()
-	var children = []
-	while item:
-		children.append(item)
-		item = item.get_next()
-	return children
-
-
-func find_TreeItem(item: TreeItem, parent: TreeItem = null) -> int:
+func find_tree_item(item: TreeItem, parent: TreeItem = null) -> int:
 	var treeitems: Array
 	if item == null:
 		return resault.not_found
 	if parent == null:
-		treeitems = get_TreeItems(get_root())
+		treeitems = get_root().get_children()
 	else:
-		treeitems = get_TreeItems(parent)
+		treeitems = parent.get_children()
 
 	for i in treeitems.size():
 		if treeitems[i] == item:
 			return i
 		elif treeitems[i].get_meta("command") is ConditionCommand:
-			var r: int = find_TreeItem(item, treeitems[i])
+			var r: int = find_tree_item(item, treeitems[i])
 			if r != resault.not_found:
 				return r
 	return resault.not_found
 
 
-func get_TreeItem_from_Command(command: Command, parent: TreeItem = null) -> TreeItem:
+func get_tree_item_from_command(command: Command, parent: TreeItem = null) -> TreeItem:
 	var tree: Array
 	if parent == null:
-		tree = get_TreeItems(get_root())
+		tree = get_root().get_children()
 	else:
-		tree = get_TreeItems(parent)
+		tree = parent.get_children()
 	for t in tree:
 		var t_cmd: Command = t.get_meta("command")
 		if t_cmd == command:
 			return t
 		elif t_cmd is ConditionCommand:
-			var s := get_TreeItem_from_Command(command, t)
+			var s := get_tree_item_from_command(command, t)
 			if s != null:
 				return s
 	return null
 
 
-func create_Tree_from_Block(block: Block, parent: TreeItem = null) -> void:
+func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:
 	if parent == null:
 		self.clear()
 	for i in block.commands:
-		var created_item: TreeItem = create_TreeItem_from_Command(i, -1, parent)
+		var created_item: TreeItem = create_tree_item_from_command(i, -1, parent)
 		if i is ConditionCommand:
-			create_Tree_from_Block(i.condition_block, created_item)
+			create_tree_from_block(i.condition_block, created_item)
 
 
-func _on_TreeItem_double_clicked() -> void:
+func _on_tree_item_double_clicked() -> void:
 	var sel_c: Command = get_selected().get_meta("command")
 	undo_redo.create_action("selecting a command")
-	undo_redo.add_do_method(self, "create_Command_editor", sel_c)
-	undo_redo.add_undo_method(self, "create_Command_editor", prev_selected_Command)
+	undo_redo.add_do_method(self, "create_command_editor", sel_c)
+	undo_redo.add_undo_method(self, "create_command_editor", prev_selected_Command)
 	undo_redo.commit_action()
 
 	prev_selected_Command = sel_c
 
 
-func create_Command_editor(cmd: Command = null) -> void:
-	if cmd == null:
-		push_error("can't find TreeItem")
+func create_command_editor(current_item = null) -> void:
+	# NOTE: typing current_item as Command will run get_class() on it and not the inhearted type
+	deselect_all()
+
+	if current_item == null:
 		return
-	var item := get_TreeItem_from_Command(cmd)
+
+	var item := get_tree_item_from_command(current_item)
 	if item == null:
-		for c in commands_settings.get_children():
-			c.queue_free()
 		return
 
-	var current_item = item.get_meta("command")
+	set_selected(item, 0)
+	ensure_cursor_is_visible()
 
-	for c in get_TreeItems(get_root()):
-		c.deselect(0)
+	if !current_item.changed.is_connected(create_tree_from_block):
+		current_item.changed.connect(create_tree_from_block.bind(current_block))
 
-	item.select(0)
+	for c in commands_settings.get_children():
+		c.queue_free()
 
-	if current_item != null:
-		if !current_item.is_connected("changed", self, "create_Tree_from_Block"):
-			current_item.connect("changed", self, "create_Tree_from_Block", [current_block])
-		if commands_settings.get_child_count() != 0:
-			if commands_settings.get_child(0) != null:
-				commands_settings.get_child(0).free()
+	var control
+	match current_item.get_class():
+		"SayCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
 
-		var control: Control
-		match current_item.get_class():
-			"SayCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn").instance()
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
+		"ForkCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, flowchart_tab, current_block, undo_redo, graph_edit)
 
-			"ForkCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn").instance()
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, flowchart_tab, current_block, undo_redo, graph_edit)
+		"ConditionCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item)
 
-			"ConditionCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn").instance()
-				commands_settings.add_child(control, true)
-				control.set_up(current_item)
+		"SetVarCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/SetVar.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item)
 
-			"SetVarCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SetVar.tscn").instance()
-				commands_settings.add_child(control, true)
-				control.set_up(current_item)
+		"AnimationCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo)
 
-			"AnimationCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.tscn").instance()
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, undo_redo)
+		"JumpCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/JumpControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
 
-			"JumpCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/JumpControl.tscn").instance()
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, undo_redo, flowchart_tab.flowchart)
+		"SoundCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo)
 
-			"SoundCommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn").instance()
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, undo_redo)
-
-			"ChangeUICommand":
-				control = load("res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.tscn").instance()
-				commands_settings.add_child(control, true)
-				control.set_up(current_item, undo_redo)
-			_:
-				return
+		"ChangeUICommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo)
+		_:
+			return
 
 
-func _on_TreeItem_rmb_selected(position: Vector2) -> void:
-	var pop: PopupMenu = get_node("CommandRmbPopup")
-	pop.set_up()
+func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> void:
+	if mouse_button_index != 2:
+		return
+	rmb_pop.set_up()
 	var gmp := get_global_mouse_position()
-	pop.popup(Rect2(gmp.x, gmp.y, pop.rect_size.x, pop.rect_size.y))
+	rmb_pop.popup(Rect2(gmp.x, gmp.y, rmb_pop.size.x, rmb_pop.size.y))
