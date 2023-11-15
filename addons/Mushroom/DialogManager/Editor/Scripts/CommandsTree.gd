@@ -214,6 +214,8 @@ func _on_move_tree_item(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 			push_error("can't dragge into self")
 			return
 
+	# BUG: saving the TreeItem in the Undo stack that will be deleted and recreated
+	#      should remake the system to track the Command in the metadata instead
 	undo_redo.create_action("drag command")
 	undo_redo.add_do_method(self, "move_tree_item", item, to_item, shift)
 	undo_redo.add_undo_method(

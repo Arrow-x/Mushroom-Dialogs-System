@@ -12,7 +12,7 @@ class_name AnimationCommand
 
 
 func preview() -> String:
-	return String(
+	return str(
 		(
 			"Animate: "
 			+ str(animation_path)
