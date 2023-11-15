@@ -38,7 +38,7 @@ func add_choice_contol(c: Choice = null, idx: int = -1) -> void:
 	else:
 		n_c = c
 		current_fork.choices.append(n_c)
-	create_choice_controle(n_c, idx)
+	create_choice_control(n_c, idx)
 	update_block_in_graph(current_block)
 
 
@@ -65,7 +65,7 @@ func set_up(
 
 	if f.choices != null:
 		for i in f.choices:
-			create_choice_controle(i)
+			create_choice_control(i)
 
 
 func update_block_in_graph(sender: Block) -> void:
@@ -73,7 +73,7 @@ func update_block_in_graph(sender: Block) -> void:
 	is_changed()
 
 
-func create_choice_controle(choice: Choice, idx: int = -1) -> void:
+func create_choice_control(choice: Choice, idx: int = -1) -> void:
 	var choice_control: Control = i_choice_control.instantiate()
 
 	choice_control.conncting.connect(update_block_in_graph.bind(current_block))
