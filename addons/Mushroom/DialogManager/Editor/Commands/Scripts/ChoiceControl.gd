@@ -29,7 +29,7 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager) -> void:
 		next_block_menu.text = c.next_block
 	next_index_text.value = c.next_index
 
-	var check_type_popup: PopupMenu = get_node("CondVBoxContainer/ReqVar/CheckType").get_popup()
+	var check_type_popup: PopupMenu = check_type.get_popup()
 	check_type_popup.id_pressed.connect(_on_checktype_popup.bind(check_type_popup))
 
 	is_cond.button_pressed = c.is_cond
@@ -40,7 +40,7 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager) -> void:
 
 
 func _on_delete_choice_pressed() -> void:
-	emit_signal("removing_choice", self)
+	removing_choice.emit(self)
 	conncting.emit()
 
 
@@ -76,7 +76,7 @@ func do_change_next_block(next_block_name: String = "") -> void:
 func _on_checktype_popup(id: int, popup: PopupMenu) -> void:
 	var pp_text: String = popup.get_item_text(id)
 	current_choice.condition_type = pp_text
-	get_node("CondVBoxContainer/ReqVar/CheckType").text = pp_text
+	check_type.text = pp_text
 	conncting.emit()
 
 
