@@ -10,8 +10,7 @@ config_version=5
 
 [application]
 
-config/name="MushroomDialogSystem"
-config/features=PackedStringArray("4.1")
+config/features=PackedStringArray("4.2")
 config/icon="res://icon.png"
 
 [autoload]

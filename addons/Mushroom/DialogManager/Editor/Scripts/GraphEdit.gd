@@ -28,7 +28,6 @@ func on_add_block_button_pressed() -> void:
 
 func on_new_text_confirm(new_title: String) -> void:
 	if flowchart_tab.check_for_duplicates(new_title) == true or new_title == "":
-		# BUG: Making child transient exclusive, but parent has another exclusive child
 		push_error("The Title is a duplicate!")
 		on_add_block_button_pressed()
 		return
@@ -82,8 +81,10 @@ func create_graph_node_from_block(title: String, offset = null, in_block: Block 
 	if title == "first_block":
 		graph_nodes["first_block"].set_modulate(Color("#f8ac52"))
 		flowchart.first_block = flowchart.blocks["first_block"].block
-		node.show_close = false
 		node.selected = true
+		return
+
+	node.add_close_button()
 
 
 func close_node(d_node: String) -> void:

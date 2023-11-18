@@ -18,8 +18,13 @@ func _ready() -> void:
 	if !dragged.is_connected(_on_GraphNode_dragged):
 		dragged.connect(_on_GraphNode_dragged)
 
-	if !close_request.is_connected(_on_GraphNode_closed):
-		close_request.connect(_on_GraphNode_closed)
+
+func add_close_button() -> void:
+	var button := Button.new()
+	button.text = "x"
+	button.flat = true
+	get_titlebar_hbox().add_child(button)
+	button.pressed.connect(func(): node_closed.emit(self))
 
 
 func delete_inputs(fork: ForkCommand) -> void:
@@ -96,7 +101,3 @@ func _on_GraphNode_raise_request() -> void:
 
 func _on_GraphNode_dragged(from, too) -> void:
 	dragging.emit(from, too, self.title)
-
-
-func _on_GraphNode_closed() -> void:
-	node_closed.emit(self)

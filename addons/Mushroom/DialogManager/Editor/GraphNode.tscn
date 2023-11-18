@@ -3,12 +3,10 @@
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/GraphNode.gd" id="1_fjmtd"]
 
 [node name="GraphNode" type="GraphNode"]
-modulate = Color(0.964706, 0.956863, 0.956863, 1)
 offset_left = 8.0
 offset_top = 7.0
 offset_right = 113.0
 offset_bottom = 70.0
 mouse_filter = 1
 title = "First Block"
-show_close = true
 script = ExtResource("1_fjmtd")
