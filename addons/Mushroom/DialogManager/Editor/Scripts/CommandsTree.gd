@@ -363,7 +363,7 @@ func create_command_editor(current_item = null) -> void:
 	for c in commands_settings.get_children():
 		c.queue_free()
 
-	var control
+	var control: Control
 	match current_item.get_class():
 		"SayCommand":
 			control = (

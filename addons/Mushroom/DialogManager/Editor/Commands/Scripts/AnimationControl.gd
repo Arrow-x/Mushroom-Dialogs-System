@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends Control
 
 @export var anim_path_ctrl: LineEdit
 @export var anim_name_ctrl: LineEdit

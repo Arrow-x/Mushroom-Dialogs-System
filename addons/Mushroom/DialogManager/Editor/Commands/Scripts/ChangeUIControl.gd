@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends Control
 
 @export var default_check: CheckButton
 @export var ui_drag_target: Label

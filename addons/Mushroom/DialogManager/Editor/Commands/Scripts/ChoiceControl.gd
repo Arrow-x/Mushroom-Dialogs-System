@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends Control
 
 @export var choice_text: LineEdit
 @export var next_block_menu: MenuButton
