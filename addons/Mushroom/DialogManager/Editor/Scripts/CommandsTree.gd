@@ -344,18 +344,13 @@ func _on_tree_item_double_clicked() -> void:
 
 
 func create_command_editor(current_item = null) -> void:
-	# NOTE: typing current_item as Command will run get_class() on it and not the inhearted type
+	# NOTE: typing current_item as Command will run get_class() on it and not on any
+	# of the inhearted types
+
 	deselect_all()
 
 	if current_item == null:
 		return
-
-	var item := get_tree_item_from_command(current_item)
-	if item == null:
-		return
-
-	set_selected(item, 0)
-	ensure_cursor_is_visible()
 
 	if !current_item.changed.is_connected(create_tree_from_block):
 		current_item.changed.connect(create_tree_from_block.bind(current_block))
@@ -430,6 +425,12 @@ func create_command_editor(current_item = null) -> void:
 			control.set_up(current_item, undo_redo)
 		_:
 			return
+
+	var item := get_tree_item_from_command(current_item)
+	if item == null:
+		return
+	set_selected(item, 0)
+	ensure_cursor_is_visible()
 
 
 func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> void:
