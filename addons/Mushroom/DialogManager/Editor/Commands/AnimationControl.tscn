@@ -94,4 +94,4 @@ popup/item_1/id = 1
 [connection signal="text_changed" from="ANameHBoxContainer/NameLineEdit" to="." method="_on_name_lineedit_text_changed"]
 [connection signal="value_changed" from="BlendHBoxContainer/BlendLineEdit" to="." method="_on_blend_lineedit_value_changed"]
 [connection signal="value_changed" from="SpeedHBoxContainer/SpeedLineEdit" to="." method="_on_speed_lineedit_value_changed"]
-[connection signal="toggled" from="FromEndHBoxContainer/FromEndCheck" to="." method="toggle_from_end"]
+[connection signal="toggled" from="FromEndHBoxContainer/FromEndCheck" to="." method="_on_from_endcheck_toggled"]

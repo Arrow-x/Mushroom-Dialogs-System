@@ -11,8 +11,6 @@ extends Control
 var animation_cmd: AnimationCommand
 var undo_redo: EditorUndoRedoManager
 
-var current_from_end: bool
-
 
 func set_up(a_cmd: AnimationCommand, u_r: EditorUndoRedoManager) -> void:
 	animation_cmd = a_cmd
@@ -49,9 +47,8 @@ func _on_blend_lineedit_value_changed(value: float) -> void:
 func _on_from_endcheck_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle from_end")
 	undo_redo.add_do_method(self, "toggle_from_end", button_pressed)
-	undo_redo.add_undo_method(self, "toggle_from_end", current_from_end)
+	undo_redo.add_undo_method(self, "toggle_from_end", animation_cmd.from_end)
 	undo_redo.commit_action()
-	current_from_end = button_pressed
 
 
 func toggle_from_end(button_pressed: bool) -> void:
