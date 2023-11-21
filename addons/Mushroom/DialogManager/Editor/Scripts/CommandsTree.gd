@@ -21,7 +21,7 @@ signal moved(item, to_item, shift)
 func _ready():
 	button_clicked.connect(_on_tree_item_x_button_pressed)
 	add_rmb_pop.index_pressed.connect(_on_add_command.bind(rmb_pop, true))
-	moved.connect(_on_move_tree_item)
+	moved.connect(_on_moved)
 
 
 func _on_tree_item_x_button_pressed(item: TreeItem, _collumn: int, _id: int, mouse_idx: int):
@@ -200,64 +200,67 @@ func _drop_data(position: Vector2, item) -> void:
 	moved.emit(item, to_item, shift)
 
 
-func _on_move_tree_item(item: TreeItem, to_item: TreeItem, shift: int) -> void:
+func _on_moved(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 	var item_idx: int = find_tree_item(item)
-	var parent_item: TreeItem = item.get_parent() if item != null else get_root()
-	var c_p_to_item: Array = (
-		current_block.commands
-		if parent_item == get_root()
-		else parent_item.get_meta("command").condition_block.commands
-	)
+	if item_idx == resault.not_found:
+		push_error("can't find dragged TreeItem")
+		return
 
-	if not to_item == null:
+	if to_item != null:
 		if to_item.get_parent() == item:
 			push_error("can't dragge into self")
 			return
 
-	# BUG: saving the TreeItem in the Undo stack that will be deleted and recreated
-	#      should remake the system to track the Command in the metadata instead
+	var parent_item: TreeItem = item.get_parent() if item != null else get_root()
+	var to_item_parent_commands: Array = (
+		current_block.commands
+		if parent_item == get_root()
+		else parent_item.get_meta("command").condition_block.commands
+	)
+	var item_command := item.get_meta("command") as Command
+	var to_item_command := to_item.get_meta("command") as Command if to_item != null else null
+
 	undo_redo.create_action("drag command")
-	undo_redo.add_do_method(self, "move_tree_item", item, to_item, shift)
+	undo_redo.add_do_method(self, "move_tree_item", item_command, item_idx, to_item_command, shift)
 	undo_redo.add_undo_method(
-		self, "undo_move_tree_item", item.get_meta("command"), c_p_to_item, item_idx
+		self, "undo_move_tree_item", item.get_meta("command"), to_item_parent_commands, item_idx
 	)
 	undo_redo.commit_action()
 
 
-func move_tree_item(item: TreeItem, to_item: TreeItem = null, shift: int = -100) -> void:
+func move_tree_item(
+	item_command: Command, item_idx: int, to_item_command: Command = null, shift: int = -100
+) -> void:
+	var item := get_tree_item_from_command(item_command)
+	var to_item := get_tree_item_from_command(to_item_command)
 	var to_item_idx: int = find_tree_item(to_item)
-	var item_idx: int = find_tree_item(item)
-	var c_item := item.get_meta("command") as Command
-	var c_to_item: Command = to_item.get_meta("command") if to_item != null else null
-	var p_to_item: TreeItem = to_item.get_parent() if to_item != null else get_root()
-	var c_p_to_item: Array = (
+	var to_itme_parent: TreeItem = to_item.get_parent() if to_item != null else get_root()
+	var to_item_parent_commands: Array = (
 		current_block.commands
-		if p_to_item == get_root()
-		else p_to_item.get_meta("command").condition_block.commands
+		if to_itme_parent == get_root()
+		else to_itme_parent.get_meta("command").condition_block.commands
 	)
-	if item_idx == resault.not_found:
-		return
 
 	match shift:
 		-1:
-			c_p_to_item.insert(to_item_idx, c_item)
+			to_item_parent_commands.insert(to_item_idx, item_command)
 		0:
-			c_to_item.condition_block.commands.append(c_item)
+			to_item_command.condition_block.commands.append(item_command)
 		1:
-			if c_to_item is ConditionCommand:
-				c_to_item.condition_block.commands.insert(0, c_item)
+			if to_item_command is ConditionCommand:
+				to_item_command.condition_block.commands.insert(0, item_command)
 			else:
-				if to_item_idx + 1 > c_p_to_item.size():
-					c_p_to_item.append(c_item)
+				if to_item_idx + 1 > to_item_parent_commands.size():
+					to_item_parent_commands.append(item_command)
 				else:
-					c_p_to_item.insert(to_item_idx + 1, c_item)
+					to_item_parent_commands.insert(to_item_idx + 1, item_command)
 		-100:
-			c_p_to_item.append(c_item)
+			to_item_parent_commands.append(item_command)
 
-	if not to_item_idx == resault.not_found:
-		if not shift == 0:
-			if item.get_parent() == p_to_item:
-				if not shift == 1 and not c_to_item is ConditionCommand:
+	if to_item_idx != resault.not_found:
+		if shift != 0 or shift != 1:
+			if item.get_parent() == to_itme_parent:
+				if not to_item_command is ConditionCommand:
 					if item_idx > to_item_idx:
 						item_idx = item_idx + 1
 
@@ -271,19 +274,20 @@ func move_tree_item(item: TreeItem, to_item: TreeItem = null, shift: int = -100)
 
 func undo_move_tree_item(og_item_command: Command, og_parent_commands: Array, og_idx: int):
 	var to_item := get_tree_item_from_command(og_item_command)
-	var p_to_item := to_item.get_parent()
-	var c_p_to_item: Command = (
-		p_to_item.get_meta("command") if p_to_item.has_meta("command") else null
-	)
 	var item_idx := find_tree_item(to_item)
-
 	if item_idx == resault.not_found:
 		push_error("can't find it")
 		return
-	if to_item == null or p_to_item == get_root():
+	var to_item_parent := to_item.get_parent()
+	var to_item_parent_commands: Command = (
+		to_item_parent.get_meta("command") if to_item_parent.has_meta("command") else null
+	)
+
+	if to_item == null or to_item_parent == get_root():
 		current_block.commands.remove_at(item_idx)
-	elif c_p_to_item is ConditionCommand:
-		c_p_to_item.condition_block.commands.remove_at(item_idx)
+	elif to_item_parent_commands is ConditionCommand:
+		to_item_parent_commands.condition_block.commands.remove_at(item_idx)
+
 	og_parent_commands.insert(og_idx, og_item_command)
 	create_tree_from_block(current_block)
 
@@ -309,6 +313,8 @@ func find_tree_item(item: TreeItem, parent: TreeItem = null) -> int:
 
 func get_tree_item_from_command(command: Command, parent: TreeItem = null) -> TreeItem:
 	var tree: Array
+	if command == null:
+		return null
 	if parent == null:
 		tree = get_root().get_children()
 	else:
