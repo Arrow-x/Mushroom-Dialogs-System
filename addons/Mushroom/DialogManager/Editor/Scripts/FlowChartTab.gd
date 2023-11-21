@@ -26,7 +26,7 @@ func set_flowchart(chart, sent_undo_redo: EditorUndoRedoManager) -> void:
 
 		add_block_button.button_down.connect(graph_edit.on_add_block_button_pressed)
 
-		graph_edit.g_node_clicked.connect(command_tree.initeate_tree_from_block)
+		graph_edit.g_node_clicked.connect(command_tree.initiate_tree_from_block)
 		graph_edit.flow_changed.connect(changed_flowchart)
 		graph_edit.undo_redo = sent_undo_redo
 

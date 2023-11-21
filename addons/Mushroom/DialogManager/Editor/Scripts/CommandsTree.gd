@@ -45,7 +45,7 @@ func _on_tree_item_x_button_pressed(item: TreeItem, _collumn: int, _id: int, mou
 	undo_redo.commit_action()
 
 
-func initeate_tree_from_block(meta: Block) -> void:
+func initiate_tree_from_block(meta: Block) -> void:
 	if meta == current_block or meta == null:
 		return
 	full_clear()
@@ -53,9 +53,8 @@ func initeate_tree_from_block(meta: Block) -> void:
 	current_block = meta
 	current_block_label.text = "current block: " + meta.name
 
-	if commands_settings.get_child_count() != 0:
-		if commands_settings.get_child(0) != null:
-			commands_settings.get_child(0).free()
+	for c in commands_settings.get_children():
+		c.queue_free()
 
 	create_tree_from_block(meta)
 
@@ -363,7 +362,6 @@ func create_command_editor(current_item = null) -> void:
 
 	for c in commands_settings.get_children():
 		c.queue_free()
-
 	var control: Control
 	match current_item.get_class():
 		"SayCommand":
