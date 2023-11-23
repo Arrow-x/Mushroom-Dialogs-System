@@ -48,10 +48,8 @@ func _on_clear_button_pressed() -> void:
 
 func change_ui_scene(new_ui: PackedScene = null) -> void:
 	current_change_ui.next_UI = new_ui
-	if new_ui != null:
-		ui_drag_target.text = new_ui.resource_path.get_file()
-	else:
-		ui_drag_target.text = "..."
+	ui_drag_target.text = new_ui.resource_path.get_file() if new_ui != null else "..."
+	is_changed()
 
 
 func get_command() -> Command:
@@ -59,4 +57,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_change_ui.emit_signal("changed")
+	current_change_ui.changed.emit()

@@ -69,4 +69,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	animation_cmd.emit_signal("changed")
+	animation_cmd.changed.emit()

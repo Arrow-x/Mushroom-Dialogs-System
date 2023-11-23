@@ -14,6 +14,22 @@ var graph: GraphEdit
 signal adding_choice
 
 
+func set_up(
+	f: ForkCommand, flowcharttab: Control, cb: Block, ur: EditorUndoRedoManager, ge: GraphEdit
+) -> void:
+	current_fork = f
+	fc = flowcharttab.flowchart
+	graph = ge
+	current_block = cb
+	undo_redo = ur
+
+	current_fork.origin_block = current_block.name
+
+	if f.choices != null:
+		for i in f.choices:
+			create_choice_control(i)
+
+
 func _on_add_choice_button_pressed() -> void:
 	undo_redo.create_action("adding_choice")
 	undo_redo.add_do_method(self, "add_choice_contol")
@@ -52,22 +68,6 @@ func free_choice_control(choice: Control = null) -> void:
 	update_block_in_graph(current_block)
 
 
-func set_up(
-	f: ForkCommand, flowcharttab: Control, cb: Block, ur: EditorUndoRedoManager, ge: GraphEdit
-) -> void:
-	current_fork = f
-	fc = flowcharttab.flowchart
-	graph = ge
-	current_block = cb
-	undo_redo = ur
-
-	current_fork.origin_block = current_block.name
-
-	if f.choices != null:
-		for i in f.choices:
-			create_choice_control(i)
-
-
 func update_block_in_graph(sender: Block) -> void:
 	graph.update_block_flow(sender, current_fork, true)
 	is_changed()
@@ -84,6 +84,7 @@ func create_choice_control(choice: Choice, idx: int = -1) -> void:
 	choice_control.set_up(choice, fc, undo_redo)
 	if !choice.changed.is_connected(is_changed):
 		choice.changed.connect(is_changed)
+	is_changed()
 
 
 func get_command() -> Command:
