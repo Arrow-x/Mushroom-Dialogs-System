@@ -16,7 +16,7 @@ func set_up(jump: JumpCommand, u_r: EditorUndoRedoManager, fl: FlowChart) -> voi
 	current_jump = jump
 	undo_redo = u_r
 	index_control.value = jump.jump_index
-	global_control.button_pressed = jump.global
+	global_control.set_pressed_no_signal(jump.global)
 	block_selection_cotrol.text = jump.get_block_name()
 	show_block_menu(jump.global)
 
@@ -34,7 +34,7 @@ func _on_check_button_toggled(button_pressed: bool) -> void:
 
 
 func show_block_menu(toggle: bool) -> void:
-	global_control.button_pressed = toggle
+	global_control.set_pressed_no_signal(toggle)
 	current_jump.global = toggle
 	chose_block_control.visible = toggle
 	is_changed()

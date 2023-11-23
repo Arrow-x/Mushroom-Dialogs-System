@@ -12,7 +12,7 @@ var undo_redo: EditorUndoRedoManager
 func set_up(cmd: ChangeUICommand, u_r: EditorUndoRedoManager) -> void:
 	current_change_ui = cmd
 	undo_redo = u_r
-	default_check.button_pressed = current_change_ui.change_to_default
+	default_check.set_pressed_no_signal(current_change_ui.change_to_default)
 	change_ui_scene(current_change_ui.next_UI)
 
 

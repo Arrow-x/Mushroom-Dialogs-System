@@ -36,7 +36,7 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart) -> void:
 	if c_s.portrait_id != "":
 		portraits_menu.text = c_s.portrait_id
 	say_text_edit.text = c_s.say
-	is_cond.button_pressed = c_s.is_cond
+	is_cond.set_pressed_no_signal(c_s.is_cond)
 	req_node.text = c_s.required_node
 	req_var.text = c_s.required_var
 	req_val.text = c_s.check_val
@@ -156,7 +156,7 @@ func _on_is_cond_check_box_toggled(button_pressed: bool) -> void:
 
 
 func show_condition_toggle(button_pressed: bool) -> void:
-	is_cond.button_pressed = button_pressed
+	is_cond.set_pressed_no_signal(button_pressed)
 	cond_box.visible = button_pressed
 	current_say.is_cond = button_pressed
 	is_changed()

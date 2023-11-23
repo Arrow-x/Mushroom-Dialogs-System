@@ -21,7 +21,7 @@ func set_up(a_cmd: AnimationCommand, u_r: EditorUndoRedoManager) -> void:
 	anim_name_ctrl.text = animation_cmd.animation_name
 	blend_ctrl.value = animation_cmd.custom_blend
 	speed_ctrl.value = animation_cmd.custom_speed
-	from_end_ctrl.button_pressed = animation_cmd.from_end
+	from_end_ctrl.set_pressed_no_signal(animation_cmd.from_end)
 
 
 func _on_path_lineedit_text_changed(new_text: String) -> void:
@@ -52,7 +52,7 @@ func _on_from_endcheck_toggled(button_pressed: bool) -> void:
 
 
 func toggle_from_end(button_pressed: bool) -> void:
-	from_end_ctrl.button_pressed = button_pressed
+	from_end_ctrl.set_pressed_no_signal(button_pressed)
 	animation_cmd.from_end = button_pressed
 	is_changed()
 

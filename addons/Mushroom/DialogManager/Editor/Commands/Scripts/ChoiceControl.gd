@@ -32,7 +32,7 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager) -> void:
 	var check_type_popup: PopupMenu = check_type.get_popup()
 	check_type_popup.id_pressed.connect(_on_checktype_popup.bind(check_type_popup))
 
-	is_cond.button_pressed = c.is_cond
+	is_cond.set_pressed_no_signal(c.is_cond)
 	req_node.text = c.required_node
 	req_var.text = c.required_var
 	req_val.text = c.check_val
@@ -108,7 +108,7 @@ func _on_is_cond_checkbox_toggled(button_pressed: bool) -> void:
 
 
 func show_condition_toggle(button_pressed: bool) -> void:
-	is_cond.button_pressed = button_pressed
+	is_cond.set_pressed_no_signal(button_pressed)
 	cond_box.visible = button_pressed
 	current_choice.is_cond = button_pressed
 	conncting.emit()
