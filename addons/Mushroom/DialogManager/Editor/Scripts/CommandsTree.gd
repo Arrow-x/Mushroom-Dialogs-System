@@ -426,7 +426,7 @@ func create_command_editor(current_item = null) -> void:
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
-			control.set_up(current_item, undo_redo)
+			control.set_up(current_item, undo_redo, self)
 		_:
 			return
 
@@ -443,3 +443,9 @@ func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> v
 	rmb_pop.set_up()
 	var gmp := get_global_mouse_position()
 	rmb_pop.popup(Rect2(gmp.x, gmp.y, rmb_pop.size.x, rmb_pop.size.y))
+
+
+func command_undo_redo_caller(undo_redo_method: StringName, args: Array = []) -> void:
+	var cmd_settings := commands_settings.get_child(0)
+	if cmd_settings:
+		cmd_settings.callv(undo_redo_method, args)
