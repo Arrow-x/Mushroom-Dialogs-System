@@ -92,12 +92,12 @@ func update_block_in_graph(sender: Block) -> void:
 func create_choice_control(choice: Choice, idx: int = -1) -> void:
 	var choice_control: Control = i_choice_control.instantiate()
 
-	choice_control.conncting.connect(update_block_in_graph.bind(current_block))
+	choice_control.connecting.connect(update_block_in_graph.bind(current_block))
 	choice_control.removing_choice.connect(removing_choice_action)
 	choices_container.add_child(choice_control)
 	if idx != -1:
 		choices_container.move_child(choice_control, idx)
-	choice_control.set_up(choice, flowchart, undo_redo)
+	choice_control.set_up(choice, flowchart, undo_redo, commands_tree)
 	if !choice.changed.is_connected(is_changed):
 		choice.changed.connect(is_changed)
 	is_changed()

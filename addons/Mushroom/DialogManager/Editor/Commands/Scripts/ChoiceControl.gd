@@ -15,16 +15,18 @@ extends Control
 var current_choice: Choice
 var flowchart: FlowChart
 var undo_redo: EditorUndoRedoManager
+var commands_tree: Tree
 
-signal conncting
+signal connecting
 signal removing_choice
 
 
-func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager) -> void:
+func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_tree: Tree) -> void:
 	flowchart = fct
 	current_choice = c
 	choice_text.text = c.text
 	undo_redo = u
+	commands_tree = cmd_tree
 	if c.next_block != null:
 		next_block_menu.text = c.next_block
 	next_index_text.value = c.next_index
@@ -41,12 +43,12 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager) -> void:
 
 func _on_delete_choice_pressed() -> void:
 	removing_choice.emit(self)
-	conncting.emit()
+	connecting.emit()
 
 
 func _on_next_index_value_changed(value: float) -> void:
 	current_choice.next_index = int(value)
-	conncting.emit()
+	connecting.emit()
 
 
 func _on_next_blocklist_about_to_show() -> void:
@@ -59,51 +61,75 @@ func _on_next_blocklist_about_to_show() -> void:
 
 
 func change_next_bloc(index, m: PopupMenu) -> void:
-	var n_block_name := m.get_item_text(index)
-	var p_block_name := current_choice.next_block
+	var next_block_name := m.get_item_text(index)
+	var current_next_block_name := current_choice.next_block
 	undo_redo.create_action("change next block")
-	undo_redo.add_do_method(self, "do_change_next_block", n_block_name)
-	undo_redo.add_undo_method(self, "do_change_next_block", p_block_name)
+	undo_redo.add_do_method(
+		commands_tree,
+		"command_undo_redo_caller",
+		"change_next_block",
+		[next_block_name],
+		current_choice
+	)
+	undo_redo.add_undo_method(
+		commands_tree,
+		"command_undo_redo_caller",
+		"change_next_block",
+		[current_next_block_name],
+		current_choice
+	)
 	undo_redo.commit_action()
 
 
-func do_change_next_block(next_block_name: String = "") -> void:
+func change_next_block(next_block_name: String = "") -> void:
 	current_choice.next_block = next_block_name
 	next_block_menu.text = next_block_name
-	conncting.emit()
+	connecting.emit()
 
 
 func _on_checktype_popup(id: int, popup: PopupMenu) -> void:
 	var pp_text: String = popup.get_item_text(id)
 	current_choice.condition_type = pp_text
 	check_type.text = pp_text
-	conncting.emit()
+	connecting.emit()
 
 
 func _on_choicetext_text_changed(new_text: String) -> void:
 	current_choice.text = new_text
-	conncting.emit()
+	connecting.emit()
 
 
 func _on_check_val_input_text_changed(new_text: String) -> void:
 	current_choice.check_val = new_text
-	conncting.emit()
+	connecting.emit()
 
 
 func _on_req_var_input_text_changed(new_text: String) -> void:
 	current_choice.required_var = new_text
-	conncting.emit()
+	connecting.emit()
 
 
 func _on_req_node_input_text_changed(new_text: String) -> void:
 	current_choice.required_node = new_text
-	conncting.emit()
+	connecting.emit()
 
 
 func _on_is_cond_checkbox_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle condition")
-	undo_redo.add_do_method(self, "show_condition_toggle", button_pressed)
-	undo_redo.add_undo_method(self, "show_condition_toggle", current_choice.is_cond)
+	undo_redo.add_do_method(
+		commands_tree,
+		"command_undo_redo_caller",
+		"show_condition_toggle",
+		[button_pressed],
+		current_choice
+	)
+	undo_redo.add_undo_method(
+		commands_tree,
+		"command_undo_redo_caller",
+		"show_condition_toggle",
+		[current_choice.is_cond],
+		current_choice
+	)
 	undo_redo.commit_action()
 
 
@@ -111,7 +137,7 @@ func show_condition_toggle(button_pressed: bool) -> void:
 	is_cond.set_pressed_no_signal(button_pressed)
 	cond_box.visible = button_pressed
 	current_choice.is_cond = button_pressed
-	conncting.emit()
+	connecting.emit()
 
 
 func get_choice() -> Choice:

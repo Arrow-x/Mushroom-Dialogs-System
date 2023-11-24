@@ -447,7 +447,21 @@ func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> v
 	rmb_pop.popup(Rect2(gmp.x, gmp.y, rmb_pop.size.x, rmb_pop.size.y))
 
 
-func command_undo_redo_caller(undo_redo_method: StringName, args: Array = []) -> void:
-	var cmd_settings := commands_settings.get_child(0)
-	if cmd_settings:
-		cmd_settings.callv(undo_redo_method, args)
+func command_undo_redo_caller(undo_redo_method: StringName, args: Array = [], obj = null) -> void:
+	var object
+	if obj != null:
+		if obj is Choice:
+			for c in commands_settings.get_child(0).choices_container.get_children():
+				if not c.has_method("get_choice"):
+					continue
+				if c.get_choice() == obj:
+					object = c
+					break
+		else:
+			object = obj
+	else:
+		object = commands_settings.get_child(0)
+
+	if object:
+		if object.has_method(undo_redo_method):
+			object.callv(undo_redo_method, args)
