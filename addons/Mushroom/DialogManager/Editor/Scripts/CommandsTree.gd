@@ -378,7 +378,9 @@ func create_command_editor(current_item = null) -> void:
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
-			control.set_up(current_item, flowchart_tab, current_block, undo_redo, graph_edit)
+			control.set_up(
+				current_item, undo_redo, flowchart_tab.flowchart, current_block, graph_edit, self
+			)
 
 		"ConditionCommand":
 			control = (

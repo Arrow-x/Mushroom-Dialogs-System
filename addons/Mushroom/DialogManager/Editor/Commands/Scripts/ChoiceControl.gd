@@ -112,3 +112,7 @@ func show_condition_toggle(button_pressed: bool) -> void:
 	cond_box.visible = button_pressed
 	current_choice.is_cond = button_pressed
 	conncting.emit()
+
+
+func get_choice() -> Choice:
+	return current_choice
