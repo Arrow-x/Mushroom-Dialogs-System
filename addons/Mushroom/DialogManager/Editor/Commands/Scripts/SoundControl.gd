@@ -10,13 +10,15 @@ extends Control
 
 var current_sound: SoundCommand
 var undo_redo: EditorUndoRedoManager
+var commands_tree: Tree
 var default_stream_text := "..."
 var default_effect_text := "..."
 
 
-func set_up(cmd: SoundCommand, u_r: EditorUndoRedoManager) -> void:
+func set_up(cmd: SoundCommand, u_r: EditorUndoRedoManager, cmd_tree: Tree) -> void:
 	current_sound = cmd
 	undo_redo = u_r
+	commands_tree = cmd_tree
 	stream.text = (
 		current_sound.stream.resource_path.get_file()
 		if current_sound.stream != null
@@ -31,22 +33,26 @@ func set_up(cmd: SoundCommand, u_r: EditorUndoRedoManager) -> void:
 		else default_effect_text
 	)
 	var mix_menu_pop: Popup = mix_menu.get_popup()
-	if !mix_menu_pop.is_connected("id_pressed", Callable(self, "_on_mix_menu_id_pressed")):
+	if !mix_menu_pop.id_pressed.is_connected(_on_mix_menu_id_pressed):
 		mix_menu_pop.id_pressed.connect(_on_mix_menu_id_pressed.bind(mix_menu_pop))
 	mix_menu.text = mix_menu_pop.get_item_text(current_sound.mix_target)
 
 
 func _on_clean_stream_pressed() -> void:
 	undo_redo.create_action("clear stream")
-	undo_redo.add_do_method(self, "add_stream", null)
-	undo_redo.add_undo_method(self, "add_stream", current_sound.stream)
+	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "add_stream", [null])
+	undo_redo.add_undo_method(
+		commands_tree, "command_undo_redo_caller", "add_stream", [current_sound.stream]
+	)
 	undo_redo.commit_action()
 
 
 func _on_stream_value_dragged(data: AudioStream) -> void:
 	undo_redo.create_action("drag in stream")
-	undo_redo.add_do_method(self, "add_stream", data)
-	undo_redo.add_undo_method(self, "add_stream", current_sound.stream)
+	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "add_stream", [data])
+	undo_redo.add_undo_method(
+		commands_tree, "command_undo_redo_caller", "add_stream", [current_sound.stream]
+	)
 	undo_redo.commit_action()
 
 
@@ -71,15 +77,19 @@ func _on_pitch_value_changed(value: float) -> void:
 
 func _on_clean_effect_pressed() -> void:
 	undo_redo.create_action("clear effect")
-	undo_redo.add_do_method(self, "add_effect")
-	undo_redo.add_undo_method(self, "add_effect", current_sound.effect)
+	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "add_effect")
+	undo_redo.add_undo_method(
+		commands_tree, "command_undo_redo_caller", "add_effect", [current_sound.effect]
+	)
 	undo_redo.commit_action()
 
 
 func _on_effect_value_dragged(data: AudioEffect) -> void:
 	undo_redo.create_action("drag in effect")
-	undo_redo.add_do_method(self, "add_effect", data)
-	undo_redo.add_undo_method(self, "add_effect", current_sound.effect)
+	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "add_effect", [data])
+	undo_redo.add_undo_method(
+		commands_tree, "command_undo_redo_caller", "add_effect", [current_sound.effect]
+	)
 	undo_redo.commit_action()
 
 
@@ -98,15 +108,24 @@ func _on_bus_line_edit_text_changed(new_text: String) -> void:
 
 
 func _on_mix_menu_id_pressed(id: int, mix_menu_pop: Popup) -> void:
+	var next_mix_menu_text: String = mix_menu_pop.get_item_text(id)
+	var prev_mix_menu_text: String = mix_menu_pop.get_item_text(current_sound.mix_target)
 	undo_redo.create_action("select mix target")
-	undo_redo.add_do_method(self, "select_mix", id, mix_menu_pop)
-	undo_redo.add_undo_method(self, "select_mix", current_sound.mix_target, mix_menu_pop)
+	undo_redo.add_do_method(
+		commands_tree, "command_undo_redo_caller", "select_mix", [id, next_mix_menu_text]
+	)
+	undo_redo.add_undo_method(
+		commands_tree,
+		"command_undo_redo_caller",
+		"select_mix",
+		[current_sound.mix_target, prev_mix_menu_text]
+	)
 	undo_redo.commit_action()
 
 
-func select_mix(id: int, mix_menu_pop: Popup) -> void:
+func select_mix(id: int, mix_menu_text: String) -> void:
 	current_sound.mix_target = id
-	mix_menu.text = mix_menu_pop.get_item_text(id)
+	mix_menu.text = mix_menu_text
 	is_changed()
 
 

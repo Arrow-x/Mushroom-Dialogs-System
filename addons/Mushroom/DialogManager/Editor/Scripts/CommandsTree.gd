@@ -420,7 +420,7 @@ func create_command_editor(current_item = null) -> void:
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
-			control.set_up(current_item, undo_redo)
+			control.set_up(current_item, undo_redo, self)
 
 		"ChangeUICommand":
 			control = (
