@@ -5,6 +5,7 @@ extends Tree
 @export var commands_settings: Panel
 @export var add_rmb_pop: PopupMenu
 @export var rmb_pop: PopupMenu
+@export var rename_button: Button
 
 var flowchart_tab: Control
 var current_block: Block
@@ -51,7 +52,11 @@ func initiate_tree_from_block(meta: Block) -> void:
 	full_clear()
 	commands_settings._currnet_title = meta.name
 	current_block = meta
-	current_block_label.text = "current block: " + meta.name
+	current_block_label.text = meta.name
+	if meta.name == "first_block":
+		rename_button.disabled = true
+	else:
+		rename_button.disabled = false
 
 	for c in commands_settings.get_children():
 		c.queue_free()

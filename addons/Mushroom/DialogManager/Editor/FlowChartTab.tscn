@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dr44rkqgqfyrq" path="res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn" id="8_mcj0f"]
 [ext_resource type="PackedScene" uid="uid://b57ggihn01qk0" path="res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn" id="9_adxui"]
 
-[node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree")]
+[node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree", "current_block_name")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -20,6 +20,8 @@ script = ExtResource("3")
 graph_edit = NodePath("GraphContainer/GraphEdit")
 add_block_button = NodePath("GraphContainer/GraphHeader/GraphHeaderContainer/AddBlockButton")
 command_tree = NodePath("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree")
+enter_name_scene = ExtResource("8_mcj0f")
+current_block_name = NodePath("InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/HBoxContainer/CurrentBlock")
 
 [node name="InspectorTabContainer" type="TabContainer" parent="."]
 layout_mode = 2
@@ -32,30 +34,35 @@ layout_mode = 2
 [node name="InspectorVContainer" type="VBoxContainer" parent="InspectorTabContainer/Block Settings"]
 layout_mode = 2
 
-[node name="inspectorHeader" type="Panel" parent="InspectorTabContainer/Block Settings/InspectorVContainer"]
-custom_minimum_size = Vector2(0, 30)
+[node name="TreeHeaderVboxContainer" type="VBoxContainer" parent="InspectorTabContainer/Block Settings/InspectorVContainer"]
 layout_mode = 2
 
-[node name="inspectorHeaderHBoxContainer" type="HBoxContainer" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -1.0
+[node name="HBoxContainer" type="HBoxContainer" parent="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer"]
+layout_mode = 2
 
-[node name="AddCommandMenuButton" type="MenuButton" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
+[node name="Label" type="Label" parent="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Current Block: "
+
+[node name="CurrentBlock" type="Label" parent="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RenameButton" type="Button" parent="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/HBoxContainer"]
+layout_mode = 2
+disabled = true
+text = "R"
+
+[node name="inspectorHeaderHBoxContainer" type="HBoxContainer" parent="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer"]
+layout_mode = 2
+
+[node name="AddCommandMenuButton" type="MenuButton" parent="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/inspectorHeaderHBoxContainer"]
 layout_mode = 2
 text = "Add Command"
+flat = false
 script = ExtResource("2_4yys5")
 
-[node name="spacer" type="Control" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CurrentBlock" type="Label" parent="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CommandsTree" type="Tree" parent="InspectorTabContainer/Block Settings/InspectorVContainer" node_paths=PackedStringArray("current_block_label", "commands_settings", "add_rmb_pop", "rmb_pop")]
+[node name="CommandsTree" type="Tree" parent="InspectorTabContainer/Block Settings/InspectorVContainer" node_paths=PackedStringArray("current_block_label", "commands_settings", "add_rmb_pop", "rmb_pop", "rename_button")]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -64,10 +71,11 @@ allow_rmb_select = true
 hide_root = true
 select_mode = 2
 script = ExtResource("2")
-current_block_label = NodePath("../inspectorHeader/inspectorHeaderHBoxContainer/CurrentBlock")
+current_block_label = NodePath("../TreeHeaderVboxContainer/HBoxContainer/CurrentBlock")
 commands_settings = NodePath("../../CommandsSettings")
 add_rmb_pop = NodePath("CommandRmbPopup/AddCommandRmbPopupMenu")
 rmb_pop = NodePath("CommandRmbPopup")
+rename_button = NodePath("../TreeHeaderVboxContainer/HBoxContainer/RenameButton")
 
 [node name="CommandRmbPopup" type="PopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"]
 script = ExtResource("6")
@@ -124,7 +132,8 @@ i_graph_node = ExtResource("9_adxui")
 flowchart_tab = NodePath("../..")
 command_tree = NodePath("../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree")
 
-[connection signal="about_to_popup" from="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommandMenuButton" to="InspectorTabContainer/Block Settings/InspectorVContainer/inspectorHeader/inspectorHeaderHBoxContainer/AddCommandMenuButton" method="_on_about_to_popup"]
+[connection signal="pressed" from="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/HBoxContainer/RenameButton" to="." method="_on_rename_button_pressed"]
+[connection signal="about_to_popup" from="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/inspectorHeaderHBoxContainer/AddCommandMenuButton" to="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/inspectorHeaderHBoxContainer/AddCommandMenuButton" method="_on_about_to_popup"]
 [connection signal="item_activated" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_tree_item_double_clicked"]
 [connection signal="item_mouse_selected" from="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" to="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree" method="_on_tree_item_rmb_selected"]
 [connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/SaveButton" to="." method="check_flowchart_path_before_save"]
