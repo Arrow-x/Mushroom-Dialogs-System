@@ -20,22 +20,21 @@ func check_for_duplicates(name) -> bool:
 	return false
 
 
-func set_flowchart(chart, sent_undo_redo: EditorUndoRedoManager) -> void:
-	if chart is FlowChart:
-		flowchart = chart
+func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager) -> void:
+	flowchart = chart
 
-		add_block_button.button_down.connect(graph_edit.on_add_block_button_pressed)
+	add_block_button.button_down.connect(graph_edit.on_add_block_button_pressed)
 
-		graph_edit.g_node_clicked.connect(command_tree.initiate_tree_from_block)
-		graph_edit.flow_changed.connect(changed_flowchart)
-		graph_edit.undo_redo = sent_undo_redo
+	graph_edit.g_node_clicked.connect(command_tree.initiate_tree_from_block)
+	graph_edit.flow_changed.connect(changed_flowchart)
+	graph_edit.undo_redo = sent_undo_redo
 
-		command_tree.full_clear()
-		command_tree.undo_redo = sent_undo_redo
-		command_tree.graph_edit = graph_edit
-		command_tree.flowchart_tab = self
+	command_tree.full_clear()
+	command_tree.undo_redo = sent_undo_redo
+	command_tree.graph_edit = graph_edit
+	command_tree.flowchart_tab = self
 
-		graph_edit.sync_flowchart_graph(flowchart)
+	graph_edit.sync_flowchart_graph(flowchart)
 
 
 func check_flowchart_path_before_save() -> void:
@@ -64,7 +63,7 @@ func save_flowchart_to_disc(path: String, overwrite := false) -> void:
 
 	flow_tabs.set_tab_title(get_index(), flowchart.get_flowchart_name())
 	modified = false
-	emit_signal("done_saving")
+	done_saving.emit()
 
 
 func changed_flowchart() -> void:

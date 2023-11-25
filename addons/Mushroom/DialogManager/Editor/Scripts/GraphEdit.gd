@@ -237,7 +237,7 @@ func on_graph_node_clicked(node: GraphNode) -> void:
 
 
 func send_block_to_tree(node: String) -> void:
-	emit_signal("g_node_clicked", flowchart.get_block(node))
+	g_node_clicked.emit(flowchart.get_block(node))
 	set_selected(graph_nodes[node])
 
 
@@ -246,7 +246,7 @@ func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title
 	undo_redo.add_do_method(self, "set_node_offset", node_title, finished_offset)
 	undo_redo.add_undo_method(self, "set_node_offset", node_title, start_offset)
 	undo_redo.commit_action()
-	emit_signal("flow_changed")
+	flow_changed.emit()
 
 
 func set_node_offset(title: String, offset: Vector2) -> void:
