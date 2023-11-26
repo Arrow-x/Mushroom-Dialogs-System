@@ -1,0 +1,118 @@
+[gd_scene load_steps=2 format=3 uid="uid://7hkgqixxw3bw"]
+
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/ConditionEditor.gd" id="1_swf1l"]
+
+[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "sequence_container", "check_type", "req_node", "req_var", "req_val")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_swf1l")
+sequencer_check = NodePath("CondVBoxContainer/SequenceContainer/HBoxContainer/CheckButton")
+sequence_container = NodePath("CondVBoxContainer/SequenceContainer")
+check_type = NodePath("CondVBoxContainer/ReqVal/CheckType")
+req_node = NodePath("CondVBoxContainer/ReqNode/ReqNodeInput")
+req_var = NodePath("CondVBoxContainer/ReqVar/ReqVarInput")
+req_val = NodePath("CondVBoxContainer/ReqVal/CheckValInput")
+
+[node name="CondVBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="SequenceContainer" type="VBoxContainer" parent="CondVBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CondVBoxContainer/SequenceContainer"]
+layout_mode = 2
+
+[node name="CheckButton" type="CheckButton" parent="CondVBoxContainer/SequenceContainer/HBoxContainer"]
+layout_mode = 2
+text = "or"
+
+[node name="Control2" type="Control" parent="CondVBoxContainer/SequenceContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Seperator2" type="Panel" parent="CondVBoxContainer/SequenceContainer"]
+modulate = Color(0, 0, 0, 1)
+custom_minimum_size = Vector2(0, 2.61)
+layout_mode = 2
+
+[node name="ReqNode" type="HBoxContainer" parent="CondVBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CondVBoxContainer/ReqNode"]
+layout_mode = 2
+text = "Required Node:"
+
+[node name="ReqNodeInput" type="LineEdit" parent="CondVBoxContainer/ReqNode"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ReqVar" type="HBoxContainer" parent="CondVBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CondVBoxContainer/ReqVar"]
+layout_mode = 2
+text = "Required Variable:"
+
+[node name="ReqVarInput" type="LineEdit" parent="CondVBoxContainer/ReqVar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ReqVal" type="HBoxContainer" parent="CondVBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="CondVBoxContainer/ReqVal"]
+layout_mode = 2
+text = "Value:"
+
+[node name="CheckType" type="MenuButton" parent="CondVBoxContainer/ReqVal"]
+layout_mode = 2
+focus_mode = 2
+text = "type:  "
+flat = false
+item_count = 6
+popup/item_0/text = "=="
+popup/item_0/id = 0
+popup/item_1/text = "<"
+popup/item_1/id = 1
+popup/item_2/text = ">"
+popup/item_2/id = 2
+popup/item_3/text = "<="
+popup/item_3/id = 3
+popup/item_4/text = ">="
+popup/item_4/id = 4
+popup/item_5/text = "!="
+popup/item_5/id = 5
+
+[node name="CheckValInput" type="LineEdit" parent="CondVBoxContainer/ReqVal"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CondVBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CondVBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Control" type="Control" parent="CondVBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Seperator3" type="Panel" parent="CondVBoxContainer/HBoxContainer/VBoxContainer"]
+modulate = Color(0, 0, 0, 1)
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="CondVBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "x"
+
+[connection signal="toggled" from="CondVBoxContainer/SequenceContainer/HBoxContainer/CheckButton" to="." method="_on_check_button_toggled"]
+[connection signal="text_changed" from="CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_req_node_input_text_changed"]
+[connection signal="text_changed" from="CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_req_var_input_text_changed"]
+[connection signal="text_changed" from="CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_check_val_input_text_changed"]
+[connection signal="pressed" from="CondVBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]

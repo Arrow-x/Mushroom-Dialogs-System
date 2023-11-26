@@ -462,6 +462,13 @@ func command_undo_redo_caller(undo_redo_method: StringName, args: Array = [], ob
 				if c.get_choice() == obj:
 					object = c
 					break
+		elif obj is ConditionResource:
+			for c in commands_settings.get_child(0).cond_editors_container.get_children():
+				if not c.has_method("get_conditional"):
+					continue
+				if c.get_conditional() == obj:
+					object = c
+					break
 		else:
 			object = obj
 	else:
