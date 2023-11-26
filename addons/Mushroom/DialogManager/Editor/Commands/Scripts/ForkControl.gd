@@ -1,7 +1,6 @@
 @tool
 extends Control
 
-@export var choices_container: VBoxContainer
 @export var add_choice_button: Button
 @export var i_choice_control: PackedScene
 
@@ -73,10 +72,10 @@ func add_choice_contol(c: Choice = null, idx: int = -1) -> void:
 func free_choice_control(choice: Choice = null) -> void:
 	if choice == null:
 		current_fork.choices.resize(current_fork.choices.size() - 1)
-		choices_container.get_children()[-1].queue_free()
+		get_children()[-1].queue_free()
 	else:
 		current_fork.choices.erase(choice)
-		for c in choices_container.get_children():
+		for c in get_children():
 			if not c.has_method("get_choice"):
 				continue
 			if c.get_choice() == choice:
@@ -94,9 +93,9 @@ func create_choice_control(choice: Choice, idx: int = -1) -> void:
 
 	choice_control.connecting.connect(update_block_in_graph.bind(current_block))
 	choice_control.removing_choice.connect(removing_choice_action)
-	choices_container.add_child(choice_control)
+	add_child(choice_control)
 	if idx != -1:
-		choices_container.move_child(choice_control, idx)
+		move_child(choice_control, idx)
 	choice_control.set_up(choice, flowchart, undo_redo, commands_tree)
 	if !choice.changed.is_connected(is_changed):
 		choice.changed.connect(is_changed)

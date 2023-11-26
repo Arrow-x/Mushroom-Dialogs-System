@@ -1,185 +1,136 @@
-[gd_scene load_steps=2 format=3 uid="uid://b5sqw3b74f83e"]
+[gd_scene load_steps=3 format=3 uid="uid://b5sqw3b74f83e"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/SayControl.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://7hkgqixxw3bw" path="res://addons/Mushroom/DialogManager/Editor/ConditionEditor.tscn" id="2_t3r3n"]
 
-[node name="Control" type="Control" node_paths=PackedStringArray("character_menu", "portraits_menu", "portraits_pos_menu", "say_text_edit", "v_slit", "is_cond", "cond_box", "req_node", "req_var", "req_val", "check_type", "append_check")]
-layout_mode = 3
+[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("character_menu", "portraits_menu", "portraits_pos_menu", "say_text_edit", "v_slit", "is_cond", "cond_box", "cond_editors_container", "append_check")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1")
-character_menu = NodePath("VBoxContainer/CharacterHBoxContainer/CharacterMenuButton")
-portraits_menu = NodePath("VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton")
-portraits_pos_menu = NodePath("VBoxContainer/VSplitContainer/VBoxContainer/PortraitPositionHBoxContainer/PortraitPositionMenuButton")
-say_text_edit = NodePath("VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit")
-v_slit = NodePath("VBoxContainer/VSplitContainer")
-is_cond = NodePath("VBoxContainer/IsCondCheckBox")
-cond_box = NodePath("VBoxContainer/CondVBoxContainer")
-req_node = NodePath("VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput")
-req_var = NodePath("VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput")
-req_val = NodePath("VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput")
-check_type = NodePath("VBoxContainer/CondVBoxContainer/ReqVal/CheckType")
-append_check = NodePath("VBoxContainer/AppendHBoxContainer/AppendCheckBox")
+character_menu = NodePath("CharacterHBoxContainer/CharacterMenuButton")
+portraits_menu = NodePath("VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton")
+portraits_pos_menu = NodePath("VSplitContainer/VBoxContainer/PortraitPositionHBoxContainer/PortraitPositionMenuButton")
+say_text_edit = NodePath("VSplitContainer/SayHBoxContainer/TextEdit")
+v_slit = NodePath("VSplitContainer")
+is_cond = NodePath("IsCondCheckBox")
+cond_box = NodePath("CondVBoxContainer")
+cond_editors_container = NodePath("CondVBoxContainer/CondEditorsContainer")
+append_check = NodePath("AppendHBoxContainer/AppendCheckBox")
+conditional_editor_scene = ExtResource("2_t3r3n")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
+layout_mode = 2
 
-[node name="IsCondCheckBox" type="CheckButton" parent="VBoxContainer"]
+[node name="IsCondCheckBox" type="CheckButton" parent="."]
 layout_mode = 2
 text = "Conditional Command"
 
-[node name="CondVBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="CondVBoxContainer" type="VBoxContainer" parent="."]
 visible = false
 layout_mode = 2
 
-[node name="ReqNode" type="HBoxContainer" parent="VBoxContainer/CondVBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/CondVBoxContainer/ReqNode"]
-layout_mode = 2
-text = "Required Node:"
-
-[node name="ReqNodeInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqNode"]
+[node name="CondEditorsContainer" type="VBoxContainer" parent="CondVBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="ReqVar" type="HBoxContainer" parent="VBoxContainer/CondVBoxContainer"]
+[node name="AddConditionalButton" type="Button" parent="CondVBoxContainer"]
+layout_mode = 2
+text = "add condition"
+
+[node name="AppendHBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
-layout_mode = 2
-text = "Required Variable:"
-
-[node name="ReqVarInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVar"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ReqVal" type="HBoxContainer" parent="VBoxContainer/CondVBoxContainer"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
-layout_mode = 2
-text = "Value:"
-
-[node name="CheckType" type="MenuButton" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
-layout_mode = 2
-focus_mode = 2
-text = "type:  "
-item_count = 6
-popup/item_0/text = "=="
-popup/item_0/id = 0
-popup/item_1/text = "<"
-popup/item_1/id = 1
-popup/item_2/text = ">"
-popup/item_2/id = 2
-popup/item_3/text = "<="
-popup/item_3/id = 3
-popup/item_4/text = ">="
-popup/item_4/id = 4
-popup/item_5/text = "!="
-popup/item_5/id = 5
-
-[node name="CheckValInput" type="LineEdit" parent="VBoxContainer/CondVBoxContainer/ReqVal"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Seperator" type="Panel" parent="VBoxContainer/CondVBoxContainer"]
-modulate = Color(0, 0, 0, 1)
-custom_minimum_size = Vector2(0, 2.61)
-layout_mode = 2
-
-[node name="AppendHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/AppendHBoxContainer"]
+[node name="Label" type="Label" parent="AppendHBoxContainer"]
 layout_mode = 2
 text = "Append: "
 
-[node name="AppendCheckBox" type="CheckBox" parent="VBoxContainer/AppendHBoxContainer"]
+[node name="AppendCheckBox" type="CheckBox" parent="AppendHBoxContainer"]
 layout_mode = 2
 
-[node name="CharacterHBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="CharacterHBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="CharacterLabel" type="Label" parent="VBoxContainer/CharacterHBoxContainer"]
+[node name="CharacterLabel" type="Label" parent="CharacterHBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Character : "
 
-[node name="CharacterMenuButton" type="MenuButton" parent="VBoxContainer/CharacterHBoxContainer"]
+[node name="CharacterMenuButton" type="MenuButton" parent="CharacterHBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "select a charcter"
 
-[node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer"]
+[node name="VSplitContainer" type="VSplitContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SayHBoxContainer" type="HBoxContainer" parent="VBoxContainer/VSplitContainer"]
+[node name="SayHBoxContainer" type="HBoxContainer" parent="VSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VSplitContainer/SayHBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VSplitContainer/SayHBoxContainer"]
 layout_mode = 2
 
-[node name="SayLabel" type="Label" parent="VBoxContainer/VSplitContainer/SayHBoxContainer/VBoxContainer"]
+[node name="SayLabel" type="Label" parent="VSplitContainer/SayHBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
 text = "Say Text"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VSplitContainer/SayHBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VSplitContainer/SayHBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Control2" type="Control" parent="VBoxContainer/VSplitContainer/SayHBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Control2" type="Control" parent="VSplitContainer/SayHBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="WrapButton" type="Button" parent="VBoxContainer/VSplitContainer/SayHBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="WrapButton" type="Button" parent="VSplitContainer/SayHBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "W"
 
-[node name="Control" type="Control" parent="VBoxContainer/VSplitContainer/SayHBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="VSplitContainer/SayHBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TextEdit" type="TextEdit" parent="VBoxContainer/VSplitContainer/SayHBoxContainer"]
+[node name="TextEdit" type="TextEdit" parent="VSplitContainer/SayHBoxContainer"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_smooth = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VSplitContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VSplitContainer"]
 layout_mode = 2
 
-[node name="PortraitHBoxContainer" type="HBoxContainer" parent="VBoxContainer/VSplitContainer/VBoxContainer"]
+[node name="PortraitHBoxContainer" type="HBoxContainer" parent="VSplitContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="PortraitLabel" type="Label" parent="VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer"]
+[node name="PortraitLabel" type="Label" parent="VSplitContainer/VBoxContainer/PortraitHBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Portrait :"
 
-[node name="PortraitMenuButton" type="MenuButton" parent="VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer"]
+[node name="PortraitMenuButton" type="MenuButton" parent="VSplitContainer/VBoxContainer/PortraitHBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Select a Portrait"
 
-[node name="PortraitPositionHBoxContainer" type="HBoxContainer" parent="VBoxContainer/VSplitContainer/VBoxContainer"]
+[node name="PortraitPositionHBoxContainer" type="HBoxContainer" parent="VSplitContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="PortraitPositionLabel" type="Label" parent="VBoxContainer/VSplitContainer/VBoxContainer/PortraitPositionHBoxContainer"]
+[node name="PortraitPositionLabel" type="Label" parent="VSplitContainer/VBoxContainer/PortraitPositionHBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Portrait 
 Position :"
 
-[node name="PortraitPositionMenuButton" type="MenuButton" parent="VBoxContainer/VSplitContainer/VBoxContainer/PortraitPositionHBoxContainer"]
+[node name="PortraitPositionMenuButton" type="MenuButton" parent="VSplitContainer/VBoxContainer/PortraitPositionHBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Choose a Posititon"
@@ -191,12 +142,10 @@ popup/item_1/id = 1
 popup/item_2/text = "Center"
 popup/item_2/id = 2
 
-[connection signal="toggled" from="VBoxContainer/IsCondCheckBox" to="." method="_on_is_cond_check_box_toggled"]
-[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_req_node_input_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_req_var_input_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_check_val_input_text_changed"]
-[connection signal="toggled" from="VBoxContainer/AppendHBoxContainer/AppendCheckBox" to="." method="_on_append_check_box_toggled"]
-[connection signal="about_to_popup" from="VBoxContainer/CharacterHBoxContainer/CharacterMenuButton" to="." method="_on_character_menu_button_about_to_show"]
-[connection signal="pressed" from="VBoxContainer/VSplitContainer/SayHBoxContainer/VBoxContainer/HBoxContainer/WrapButton" to="." method="_on_wrap_button_pressed"]
-[connection signal="text_changed" from="VBoxContainer/VSplitContainer/SayHBoxContainer/TextEdit" to="." method="_on_text_edit_text_changed"]
-[connection signal="about_to_popup" from="VBoxContainer/VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton" to="." method="_on_portrait_menu_button_about_to_show"]
+[connection signal="toggled" from="IsCondCheckBox" to="." method="_on_is_cond_check_box_toggled"]
+[connection signal="pressed" from="CondVBoxContainer/AddConditionalButton" to="." method="_on_add_conditional_button_pressed"]
+[connection signal="toggled" from="AppendHBoxContainer/AppendCheckBox" to="." method="_on_append_check_box_toggled"]
+[connection signal="about_to_popup" from="CharacterHBoxContainer/CharacterMenuButton" to="." method="_on_character_menu_button_about_to_show"]
+[connection signal="pressed" from="VSplitContainer/SayHBoxContainer/VBoxContainer/HBoxContainer/WrapButton" to="." method="_on_wrap_button_pressed"]
+[connection signal="text_changed" from="VSplitContainer/SayHBoxContainer/TextEdit" to="." method="_on_text_edit_text_changed"]
+[connection signal="about_to_popup" from="VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton" to="." method="_on_portrait_menu_button_about_to_show"]

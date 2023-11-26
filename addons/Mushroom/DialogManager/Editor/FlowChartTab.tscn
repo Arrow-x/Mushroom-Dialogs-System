@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://bdwysurgi6vsh"]
+[gd_scene load_steps=9 format=3 uid="uid://bdwysurgi6vsh"]
 
 [ext_resource type="PackedScene" path="res://addons/Mushroom/DialogManager/Editor/AddCommnadPopupMenu.tscn" id="1"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandsTree.gd" id="2"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/AddCommandMenuButton.gd" id="2_4yys5"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/FlowChartTab.gd" id="3"]
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandsSettings.gd" id="5"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandRmbPopup.gd" id="6"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/GraphEdit.gd" id="7"]
 [ext_resource type="PackedScene" uid="uid://dr44rkqgqfyrq" path="res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn" id="8_mcj0f"]
@@ -72,7 +71,7 @@ hide_root = true
 select_mode = 2
 script = ExtResource("2")
 current_block_label = NodePath("../TreeHeaderVboxContainer/HBoxContainer/CurrentBlock")
-commands_settings = NodePath("../../CommandsSettings")
+commands_settings = NodePath("../../CommandEditorsContianer")
 add_rmb_pop = NodePath("CommandRmbPopup/AddCommandRmbPopupMenu")
 rmb_pop = NodePath("CommandRmbPopup")
 rename_button = NodePath("../TreeHeaderVboxContainer/HBoxContainer/RenameButton")
@@ -82,11 +81,8 @@ script = ExtResource("6")
 
 [node name="AddCommandRmbPopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree/CommandRmbPopup" instance=ExtResource("1")]
 
-[node name="CommandsSettings" type="Panel" parent="InspectorTabContainer/Block Settings"]
+[node name="CommandEditorsContianer" type="ScrollContainer" parent="InspectorTabContainer/Block Settings"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("5")
 
 [node name="FlowChartSettings" type="PanelContainer" parent="InspectorTabContainer"]
 visible = false

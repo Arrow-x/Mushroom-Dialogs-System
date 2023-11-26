@@ -2,7 +2,7 @@
 extends Tree
 
 @export var current_block_label: Label
-@export var commands_settings: Panel
+@export var commands_settings: Container
 @export var add_rmb_pop: PopupMenu
 @export var rmb_pop: PopupMenu
 @export var rename_button: Button
@@ -50,7 +50,6 @@ func initiate_tree_from_block(meta: Block) -> void:
 	if meta == current_block or meta == null:
 		return
 	full_clear()
-	commands_settings._currnet_title = meta.name
 	current_block = meta
 	current_block_label.text = meta.name
 	if meta.name == "first_block":
@@ -66,8 +65,6 @@ func initiate_tree_from_block(meta: Block) -> void:
 
 func full_clear() -> void:
 	self.clear()
-	if commands_settings:
-		commands_settings._currnet_title = ""
 	current_block = null
 	if current_block_label:
 		current_block_label.text = ""
