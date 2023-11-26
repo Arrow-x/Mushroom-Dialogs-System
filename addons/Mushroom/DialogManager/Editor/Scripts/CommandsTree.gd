@@ -337,6 +337,8 @@ func get_tree_item_from_command(command: Command, parent: TreeItem = null) -> Tr
 func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:
 	if parent == null:
 		self.clear()
+	if block.commands == null:
+		return
 	for i in block.commands:
 		var created_item: TreeItem = create_tree_item_from_command(i, -1, parent)
 		if i is ConditionCommand:
