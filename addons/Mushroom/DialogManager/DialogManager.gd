@@ -100,20 +100,12 @@ func execute_dialog() -> void:
 			advance()
 
 		"AnimationCommand":
-			var a = get_node(cbi.animation_path)
+			var a := get_node(cbi.animation_path)
 			a.play(cbi.animation_name, cbi.custom_blend, cbi.custom_speed, cbi.from_end)
-			match cbi.anim_type:
-				"wait":
-					while (
-						await get_node(cbi.animation_path).animation_finished
-						!= cbi.animation_name
-					):
-						pass
-					indexer = indexer + 1
-					advance()
-				"continue":
-					indexer = indexer + 1
-					advance()
+			if cbi.anim_type == "wait":
+				await a.animation_finished == cbi.animation_name
+			indexer = indexer + 1
+			advance()
 
 		"SetVarCommand":
 			if cbi.var_path.is_rel_path():
