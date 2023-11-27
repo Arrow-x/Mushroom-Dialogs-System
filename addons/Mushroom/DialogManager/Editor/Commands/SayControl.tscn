@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b5sqw3b74f83e"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/SayControl.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://7hkgqixxw3bw" path="res://addons/Mushroom/DialogManager/Editor/ConditionEditor.tscn" id="2_t3r3n"]
+[ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/ConditionContainer.tscn" id="2_p1tgx"]
 
 [node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("character_menu", "portraits_menu", "portraits_pos_menu", "say_text_edit", "v_slit", "is_cond", "cond_box", "cond_editors_container", "append_check")]
 anchors_preset = 15
@@ -21,7 +21,6 @@ is_cond = NodePath("IsCondCheckBox")
 cond_box = NodePath("CondVBoxContainer")
 cond_editors_container = NodePath("CondVBoxContainer/CondEditorsContainer")
 append_check = NodePath("AppendHBoxContainer/AppendCheckBox")
-conditional_editor_scene = ExtResource("2_t3r3n")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -30,18 +29,8 @@ layout_mode = 2
 layout_mode = 2
 text = "Conditional Command"
 
-[node name="CondVBoxContainer" type="VBoxContainer" parent="."]
-visible = false
+[node name="CondVBoxContainer" parent="." instance=ExtResource("2_p1tgx")]
 layout_mode = 2
-
-[node name="CondEditorsContainer" type="VBoxContainer" parent="CondVBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="AddConditionalButton" type="Button" parent="CondVBoxContainer"]
-layout_mode = 2
-text = "add condition"
 
 [node name="AppendHBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -143,9 +132,10 @@ popup/item_2/text = "Center"
 popup/item_2/id = 2
 
 [connection signal="toggled" from="IsCondCheckBox" to="." method="_on_is_cond_check_box_toggled"]
-[connection signal="pressed" from="CondVBoxContainer/AddConditionalButton" to="." method="_on_add_conditional_button_pressed"]
 [connection signal="toggled" from="AppendHBoxContainer/AppendCheckBox" to="." method="_on_append_check_box_toggled"]
 [connection signal="about_to_popup" from="CharacterHBoxContainer/CharacterMenuButton" to="." method="_on_character_menu_button_about_to_show"]
 [connection signal="pressed" from="VSplitContainer/SayHBoxContainer/VBoxContainer/HBoxContainer/WrapButton" to="." method="_on_wrap_button_pressed"]
 [connection signal="text_changed" from="VSplitContainer/SayHBoxContainer/TextEdit" to="." method="_on_text_edit_text_changed"]
 [connection signal="about_to_popup" from="VSplitContainer/VBoxContainer/PortraitHBoxContainer/PortraitMenuButton" to="." method="_on_portrait_menu_button_about_to_show"]
+
+[editable path="CondVBoxContainer"]

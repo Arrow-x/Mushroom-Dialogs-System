@@ -10,7 +10,6 @@ extends Control
 @export var cond_box: VBoxContainer
 @export var cond_editors_container: VBoxContainer
 @export var append_check: CheckBox
-@export var conditional_editor_scene: PackedScene
 
 var current_say: SayCommand
 var undo_redo: EditorUndoRedoManager
@@ -35,71 +34,12 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree
 	say_text_edit.text = c_s.say
 	append_check.button_pressed = c_s.append_text
 	portraits_pos_menu.text = c_s.por_pos
+	cond_box.set_up(current_say, undo_redo, commands_tree)
 	is_cond.set_pressed_no_signal(c_s.is_cond)
 	if is_cond.button_pressed == true:
-		build_current_say_conditional_editors(c_s.conditionals)
+		cond_box.visible = true
 
 	set_say_box_hight()
-
-
-func _on_add_conditional_button_pressed() -> void:
-	var new_cond := ConditionResource.new()
-	undo_redo.create_action("add a conditional")
-	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "add_conditional", [new_cond]
-	)
-	undo_redo.add_undo_method(
-		commands_tree, "command_undo_redo_caller", "remove_conditional", [new_cond]
-	)
-	undo_redo.commit_action()
-
-
-func _on_conditional_close_button_pressed(conditional: ConditionResource) -> void:
-	undo_redo.create_action("remove conditional")
-	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "remove_conditional", [conditional]
-	)
-	undo_redo.add_undo_method(
-		commands_tree,
-		"command_undo_redo_caller",
-		"add_conditional",
-		[conditional, current_say.conditionals.find(conditional)]
-	)
-	undo_redo.commit_action()
-
-
-func create_conditional_editor(conditional: ConditionResource) -> void:
-	var cond_editor: Control = conditional_editor_scene.instantiate()
-	cond_editor.set_up(conditional, undo_redo, commands_tree)
-	if cond_editors_container.get_child_count() == 0:
-		cond_editor.sequence_container.visible = false
-	cond_editors_container.add_child(cond_editor, true)
-	cond_editor.close_pressed.connect(_on_conditional_close_button_pressed)
-
-
-func add_conditional(conditional: ConditionResource = null, idx := -1) -> void:
-	if idx == -1:
-		current_say.conditionals.append(conditional)
-	else:
-		current_say.conditionals.insert(idx, conditional)
-	build_current_say_conditional_editors(current_say.conditionals)
-
-
-func build_current_say_conditional_editors(conditionals: Array[ConditionResource]) -> void:
-	cond_box.visible = true
-	for e in cond_editors_container.get_children():
-		e.queue_free()
-	await get_tree().create_timer(0.001).timeout
-	current_say.conditionals = conditionals
-	for c in current_say.conditionals:
-		create_conditional_editor(c)
-
-
-func remove_conditional(conditional: ConditionResource) -> void:
-	for e in cond_editors_container.get_children():
-		if e.get_conditional() == conditional:
-			current_say.conditionals.erase(e.get_conditional())
-			build_current_say_conditional_editors(current_say.conditionals)
 
 
 func set_say_box_hight() -> void:
