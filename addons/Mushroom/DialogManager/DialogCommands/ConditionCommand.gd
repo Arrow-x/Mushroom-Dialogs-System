@@ -3,19 +3,17 @@ extends Command
 class_name ConditionCommand
 
 @export var condition_block: Resource
-
-@export var required_node: String
-@export var required_var: String
-@export var check_val: String
-@export var condition_type: String = "=="
+@export var conditionals: Array[ConditionResource]
 
 
 func _init():
 	condition_block = Block.new()
+	conditionals.append(ConditionResource.new())
 
 
 func preview() -> String:
-	return str("if " + required_var + " " + condition_type + " " + check_val)
+	# return str("if " + required_var + " " + condition_type + " " + check_val)
+	return "if command"
 
 
 func get_icon() -> Resource:
