@@ -8,11 +8,9 @@ extends Control
 @export var v_slit: VSplitContainer
 @export var is_cond: CheckButton
 @export var cond_box: VBoxContainer
-@export var req_node: LineEdit
-@export var req_var: LineEdit
-@export var req_val: LineEdit
-@export var check_type: MenuButton
+@export var cond_editors_container: VBoxContainer
 @export var append_check: CheckBox
+@export var conditional_editor_scene: PackedScene
 
 var current_say: SayCommand
 var undo_redo: EditorUndoRedoManager
@@ -26,8 +24,6 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree
 	current_flowchart = fl
 	commands_tree = cmd_tree
 
-	var check_type_popup: PopupMenu = check_type.get_popup()
-	check_type_popup.id_pressed.connect(_on_checktype_popup.bind(check_type_popup))
 	character_menu.get_popup().id_pressed.connect(_on_character_selected)
 	portraits_menu.get_popup().id_pressed.connect(_on_portrait_selected)
 	portraits_pos_menu.get_popup().id_pressed.connect(_on_portrait_pos_selected)
@@ -37,15 +33,73 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree
 	if c_s.portrait_id != "":
 		portraits_menu.text = c_s.portrait_id
 	say_text_edit.text = c_s.say
-	is_cond.set_pressed_no_signal(c_s.is_cond)
-	req_node.text = c_s.required_node
-	req_var.text = c_s.required_var
-	req_val.text = c_s.check_val
-	check_type.text = c_s.condition_type
 	append_check.button_pressed = c_s.append_text
 	portraits_pos_menu.text = c_s.por_pos
+	is_cond.set_pressed_no_signal(c_s.is_cond)
+	if is_cond.button_pressed == true:
+		build_current_say_conditional_editors(c_s.conditionals)
 
 	set_say_box_hight()
+
+
+func _on_add_conditional_button_pressed() -> void:
+	var new_cond := ConditionResource.new()
+	undo_redo.create_action("add a conditional")
+	undo_redo.add_do_method(
+		commands_tree, "command_undo_redo_caller", "add_conditional", [new_cond]
+	)
+	undo_redo.add_undo_method(
+		commands_tree, "command_undo_redo_caller", "remove_conditional", [new_cond]
+	)
+	undo_redo.commit_action()
+
+
+func _on_conditional_close_button_pressed(conditional: ConditionResource) -> void:
+	undo_redo.create_action("remove conditional")
+	undo_redo.add_do_method(
+		commands_tree, "command_undo_redo_caller", "remove_conditional", [conditional]
+	)
+	undo_redo.add_undo_method(
+		commands_tree,
+		"command_undo_redo_caller",
+		"add_conditional",
+		[conditional, current_say.conditionals.find(conditional)]
+	)
+	undo_redo.commit_action()
+
+
+func create_conditional_editor(conditional: ConditionResource) -> void:
+	var cond_editor: Control = conditional_editor_scene.instantiate()
+	cond_editor.set_up(conditional, undo_redo, commands_tree)
+	if cond_editors_container.get_child_count() == 0:
+		cond_editor.sequence_container.visible = false
+	cond_editors_container.add_child(cond_editor, true)
+	cond_editor.close_pressed.connect(_on_conditional_close_button_pressed)
+
+
+func add_conditional(conditional: ConditionResource = null, idx := -1) -> void:
+	if idx == -1:
+		current_say.conditionals.append(conditional)
+	else:
+		current_say.conditionals.insert(idx, conditional)
+	build_current_say_conditional_editors(current_say.conditionals)
+
+
+func build_current_say_conditional_editors(conditionals: Array[ConditionResource]) -> void:
+	cond_box.visible = true
+	for e in cond_editors_container.get_children():
+		e.queue_free()
+	await get_tree().create_timer(0.001).timeout
+	current_say.conditionals = conditionals
+	for c in current_say.conditionals:
+		create_conditional_editor(c)
+
+
+func remove_conditional(conditional: ConditionResource) -> void:
+	for e in cond_editors_container.get_children():
+		if e.get_conditional() == conditional:
+			current_say.conditionals.erase(e.get_conditional())
+			build_current_say_conditional_editors(current_say.conditionals)
 
 
 func set_say_box_hight() -> void:
@@ -137,28 +191,6 @@ func _on_portrait_menu_button_about_to_show() -> void:
 		pop.add_item(c)
 
 
-func _on_checktype_popup(id: int, popup: PopupMenu) -> void:
-	var pp_text: String = popup.get_item_text(id)
-	current_say.condition_type = pp_text
-	check_type.text = pp_text
-	is_changed()
-
-
-func _on_check_val_input_text_changed(new_text: String) -> void:
-	current_say.check_val = new_text
-	is_changed()
-
-
-func _on_req_var_input_text_changed(new_text: String) -> void:
-	current_say.required_var = new_text
-	is_changed()
-
-
-func _on_req_node_input_text_changed(new_text: String) -> void:
-	current_say.required_node = new_text
-	is_changed()
-
-
 func _on_is_cond_check_box_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle condition")
 	undo_redo.add_do_method(
@@ -182,14 +214,6 @@ func _on_append_check_box_toggled(button_pressed: bool) -> void:
 	is_changed()
 
 
-func get_command() -> Command:
-	return current_say
-
-
-func is_changed() -> void:
-	current_say.changed.emit()
-
-
 func _on_wrap_button_pressed() -> void:
 	undo_redo.create_action("Set Say Text Wrap preview")
 	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "set_say_text_wrap")
@@ -199,3 +223,11 @@ func _on_wrap_button_pressed() -> void:
 
 func set_say_text_wrap():
 	say_text_edit.wrap_mode = 1 - say_text_edit.wrap_mode
+
+
+func get_command() -> Command:
+	return current_say
+
+
+func is_changed() -> void:
+	current_say.changed.emit()

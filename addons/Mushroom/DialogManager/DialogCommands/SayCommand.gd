@@ -7,15 +7,9 @@ class_name SayCommand
 @export var portrait_id: String
 @export var portrait: CompressedTexture2D
 @export_enum("Left", "Right", "Center") var por_pos: String = "Right"
-
 @export var append_text: bool = false
-
 @export var is_cond: bool = false
-
-@export var required_node: String
-@export var required_var: String
-@export var check_val: String
-@export var condition_type: String = "=="
+@export var conditionals: Array[ConditionResource]
 
 
 func preview() -> String:
