@@ -5,7 +5,7 @@ extends Node
 @onready var indexer: int = 0
 @onready var audio_player: AudioStreamPlayer = $AudioStreamPlayer
 
-var current_flowchart  #The whole flowchart thing is unnessery unitil we make an editor
+var current_flowchart: FlowChart
 var current_block: Block
 var current_choices: Array
 var UI
@@ -50,10 +50,7 @@ func execute_dialog() -> void:
 	match cbi.get_class():
 		"SayCommand":
 			if cbi.is_cond:
-				if (
-					calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type)
-					== false
-				):
+				if parse_conditionals(cbi.conditionals) == false:
 					indexer = indexer + 1
 					advance()
 					return
@@ -70,10 +67,7 @@ func execute_dialog() -> void:
 			for choice_idx in cbi.choices.size():
 				var ci: Choice = cbi.choices[choice_idx]
 				if ci.is_cond:
-					if (
-						calc_var(ci.required_node, ci.required_var, ci.check_val, ci.condition_type)
-						== false
-					):
+					if parse_conditionals(ci.conditionals) == false:
 						continue
 				current_choices.append(current_flowchart.get_block(ci.next_block))
 				UI.add_choice(ci, choice_idx, ci.next_index)
@@ -86,10 +80,7 @@ func execute_dialog() -> void:
 			advance()
 
 		"ConditionCommand":
-			if (
-				calc_var(cbi.required_node, cbi.required_var, cbi.check_val, cbi.condition_type)
-				== true
-			):
+			if parse_conditionals(cbi.conditionals) == false:
 				cbi.condition_block._next_block = current_block
 				cbi.condition_block._next_indexer = indexer + 1
 				indexer = 0
@@ -149,35 +140,77 @@ func execute_dialog() -> void:
 				advance()
 
 
-func calc_var(req_node: NodePath, req_var: String, chek_val, type_cond: String) -> bool:
-	var val_container = get_node(String(req_node).insert(0, "/root/")).get(req_var)
+func parse_conditionals(conditionals: Array[ConditionResource]) -> bool:
+	for c_idx in conditionals.size():
+		var resault := calc_var(
+			conditionals[c_idx].required_node,
+			conditionals[c_idx].required_var,
+			conditionals[c_idx].check_val,
+			conditionals[c_idx].check_type,
+			conditionals[c_idx].condition_type
+		)
+		if c_idx + 1 > conditionals.size() - 1:
+			return resault
+		if resault == true:
+			if conditionals[c_idx + 1].is_and == true:
+				continue
+			else:
+				return true
+		elif resault == false:
+			if conditionals[c_idx + 1].is_and == false:
+				continue
+			else:
+				return false
+	return false
+
+
+func calc_var(
+	req_node: String, req_var: String, chek_val, check_type: String, type_cond: String
+) -> bool:
+	var val_container = get_node(str(req_node).insert(0, "/root/")).get(req_var)
+
 	if val_container == null:
 		push_error("calc_var couldn't get the node")
 		return false
 
+	var typed_check_val
+	match check_type:
+		"int":
+			typed_check_val = chek_val as int
+		"float":
+			typed_check_val = chek_val as float
+		"String":
+			typed_check_val = chek_val as String
+		"bool":
+			match chek_val.to_lower():
+				"True", "TRUE", "true", "1":
+					typed_check_val = true as bool
+				"False", "FALSE", "false", "0":
+					typed_check_val = false as bool
+
 	match type_cond:
 		">=":
-			if chek_val >= val_container:
+			if typed_check_val >= val_container:
 				return true
 
 		"<=":
-			if chek_val <= val_container:
+			if typed_check_val <= val_container:
 				return true
 
 		">":
-			if chek_val > val_container:
+			if typed_check_val > val_container:
 				return true
 
 		"<":
-			if chek_val < val_container:
+			if typed_check_val < val_container:
 				return true
 
 		"==":
-			if chek_val == val_container:
+			if typed_check_val == val_container:
 				return true
 
 		"!=":
-			if chek_val != val_container:
+			if typed_check_val != val_container:
 				return true
 
 	return false
