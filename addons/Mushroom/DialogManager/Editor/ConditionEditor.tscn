@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/ConditionEditor.gd" id="1_swf1l"]
 
-[node name="ConditionEditor" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "sequence_container", "check_type", "req_node", "req_var", "req_val")]
+[node name="ConditionEditor" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "sequence_container", "check_operation", "check_type", "req_node", "req_var", "req_val")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,6 +11,7 @@ grow_vertical = 2
 script = ExtResource("1_swf1l")
 sequencer_check = NodePath("CondVBoxContainer/HBoxContainer/SequenceContainer/HBoxContainer/CheckButton")
 sequence_container = NodePath("CondVBoxContainer/HBoxContainer/SequenceContainer")
+check_operation = NodePath("CondVBoxContainer/ReqVal/CheckOperation")
 check_type = NodePath("CondVBoxContainer/ReqVal/CheckType")
 req_node = NodePath("CondVBoxContainer/ReqNode/ReqNodeInput")
 req_var = NodePath("CondVBoxContainer/ReqVar/ReqVarInput")
@@ -74,7 +75,7 @@ layout_mode = 2
 layout_mode = 2
 text = "Value:"
 
-[node name="CheckType" type="MenuButton" parent="CondVBoxContainer/ReqVal"]
+[node name="CheckOperation" type="MenuButton" parent="CondVBoxContainer/ReqVal"]
 layout_mode = 2
 focus_mode = 2
 text = "type:  "
@@ -92,6 +93,21 @@ popup/item_4/text = ">="
 popup/item_4/id = 4
 popup/item_5/text = "!="
 popup/item_5/id = 5
+
+[node name="CheckType" type="MenuButton" parent="CondVBoxContainer/ReqVal"]
+layout_mode = 2
+focus_mode = 2
+text = "type:  "
+flat = false
+item_count = 4
+popup/item_0/text = "int"
+popup/item_0/id = 0
+popup/item_1/text = "float"
+popup/item_1/id = 1
+popup/item_2/text = "bool"
+popup/item_2/id = 2
+popup/item_3/text = "String"
+popup/item_3/id = 3
 
 [node name="CheckValInput" type="LineEdit" parent="CondVBoxContainer/ReqVal"]
 layout_mode = 2
