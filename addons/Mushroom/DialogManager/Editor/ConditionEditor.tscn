@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/ConditionEditor.gd" id="1_swf1l"]
 
-[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "sequence_container", "check_type", "req_node", "req_var", "req_val")]
+[node name="ConditionEditor" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "sequence_container", "check_type", "req_node", "req_var", "req_val")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

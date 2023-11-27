@@ -452,6 +452,7 @@ func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> v
 
 
 func command_undo_redo_caller(undo_redo_method: StringName, args: Array = [], obj = null) -> void:
+	# HACK: damn this function is a mess!
 	var object
 	if obj != null:
 		if obj is Choice:
@@ -472,13 +473,20 @@ func command_undo_redo_caller(undo_redo_method: StringName, args: Array = [], ob
 				condition_editors = (
 					commands_settings.get_child(0).cond_editors_container.get_children()
 				)
+				if (
+					condition_editors != []
+					and undo_redo_method != "remove_conditional"
+					and undo_redo_method != "add_conditional"
+				):
+					for c in condition_editors:
+						if not c.has_method("get_conditional"):
+							continue
+						if c.get_conditional() == obj:
+							object = c
+							break
+				else:
+					object = commands_settings.get_child(0).cond_box
 
-			for c in condition_editors:
-				if not c.has_method("get_conditional"):
-					continue
-				if c.get_conditional() == obj:
-					object = c
-					break
 		else:
 			object = obj
 	else:

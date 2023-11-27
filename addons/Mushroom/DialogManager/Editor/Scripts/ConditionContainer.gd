@@ -20,10 +20,10 @@ func _on_add_conditional_button_pressed() -> void:
 	var new_cond := ConditionResource.new()
 	undo_redo.create_action("add a conditional")
 	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "add_conditional", [new_cond], self
+		commands_tree, "command_undo_redo_caller", "add_conditional", [new_cond], new_cond
 	)
 	undo_redo.add_undo_method(
-		commands_tree, "command_undo_redo_caller", "remove_conditional", [new_cond], self
+		commands_tree, "command_undo_redo_caller", "remove_conditional", [new_cond], new_cond
 	)
 	undo_redo.commit_action()
 
@@ -31,14 +31,14 @@ func _on_add_conditional_button_pressed() -> void:
 func _on_conditional_close_button_pressed(conditional: ConditionResource) -> void:
 	undo_redo.create_action("remove conditional")
 	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "remove_conditional", [conditional], self
+		commands_tree, "command_undo_redo_caller", "remove_conditional", [conditional], conditional
 	)
 	undo_redo.add_undo_method(
 		commands_tree,
 		"command_undo_redo_caller",
 		"add_conditional",
 		[conditional, current_command.conditionals.find(conditional)],
-		self
+		conditional
 	)
 	undo_redo.commit_action()
 
