@@ -455,14 +455,25 @@ func command_undo_redo_caller(undo_redo_method: StringName, args: Array = [], ob
 	var object
 	if obj != null:
 		if obj is Choice:
-			for c in commands_settings.get_child(0).choices_container.get_children():
+			for c in commands_settings.get_child(0).get_children():
 				if not c.has_method("get_choice"):
 					continue
 				if c.get_choice() == obj:
 					object = c
 					break
 		elif obj is ConditionResource:
-			for c in commands_settings.get_child(0).cond_editors_container.get_children():
+			var condition_editors: Array
+			if commands_settings.get_child(0).get_command() is ForkCommand:
+				for c in commands_settings.get_child(0).get_children():
+					if not c.has_method("get_choice"):
+						continue
+					condition_editors.append_array(c.cond_editors_container.get_children())
+			else:
+				condition_editors = (
+					commands_settings.get_child(0).cond_editors_container.get_children()
+				)
+
+			for c in condition_editors:
 				if not c.has_method("get_conditional"):
 					continue
 				if c.get_conditional() == obj:

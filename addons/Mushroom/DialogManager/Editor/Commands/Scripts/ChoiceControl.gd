@@ -7,10 +7,7 @@ extends Control
 @export var delete_choice: Button
 @export var is_cond: CheckButton
 @export var cond_box: VBoxContainer
-@export var req_node: LineEdit
-@export var req_var: LineEdit
-@export var req_val: LineEdit
-@export var check_type: MenuButton
+@export var cond_editors_container: VBoxContainer
 
 var current_choice: Choice
 var flowchart: FlowChart
@@ -31,14 +28,10 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_tree: Tree)
 		next_block_menu.text = c.next_block
 	next_index_text.value = c.next_index
 
-	var check_type_popup: PopupMenu = check_type.get_popup()
-	check_type_popup.id_pressed.connect(_on_checktype_popup.bind(check_type_popup))
-
+	cond_box.set_up(current_choice, undo_redo, commands_tree)
 	is_cond.set_pressed_no_signal(c.is_cond)
-	req_node.text = c.required_node
-	req_var.text = c.required_var
-	req_val.text = c.check_val
-	check_type.text = c.condition_type
+	if is_cond.button_pressed == true:
+		cond_box.visible = true
 
 
 func _on_delete_choice_pressed() -> void:
@@ -87,30 +80,8 @@ func change_next_block(next_block_name: String = "") -> void:
 	connecting.emit()
 
 
-func _on_checktype_popup(id: int, popup: PopupMenu) -> void:
-	var pp_text: String = popup.get_item_text(id)
-	current_choice.condition_type = pp_text
-	check_type.text = pp_text
-	connecting.emit()
-
-
 func _on_choicetext_text_changed(new_text: String) -> void:
 	current_choice.text = new_text
-	connecting.emit()
-
-
-func _on_check_val_input_text_changed(new_text: String) -> void:
-	current_choice.check_val = new_text
-	connecting.emit()
-
-
-func _on_req_var_input_text_changed(new_text: String) -> void:
-	current_choice.required_var = new_text
-	connecting.emit()
-
-
-func _on_req_node_input_text_changed(new_text: String) -> void:
-	current_choice.required_node = new_text
 	connecting.emit()
 
 

@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://dnwd4iberh8eq"]
+[gd_scene load_steps=3 format=3 uid="uid://dnwd4iberh8eq"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ChoiceControl.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/ConditionContainer.tscn" id="2_fvplh"]
 
-[node name="Control" type="VBoxContainer" node_paths=PackedStringArray("choice_text", "next_block_menu", "next_index_text", "delete_choice", "is_cond", "cond_box", "req_node", "req_var", "req_val", "check_type")]
+[node name="Control" type="VBoxContainer" node_paths=PackedStringArray("choice_text", "next_block_menu", "next_index_text", "delete_choice", "is_cond", "cond_box", "cond_editors_container")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,10 +16,7 @@ next_index_text = NodePath("HBoxContainer3/NextIndex")
 delete_choice = NodePath("HBoxContainer3/DeleteChoice")
 is_cond = NodePath("IsCondCheckBox")
 cond_box = NodePath("CondVBoxContainer")
-req_node = NodePath("CondVBoxContainer/ReqNode/ReqNodeInput")
-req_var = NodePath("CondVBoxContainer/ReqVar/ReqVarInput")
-req_val = NodePath("CondVBoxContainer/ReqVal/CheckValInput")
-check_type = NodePath("CondVBoxContainer/ReqVar/CheckType")
+cond_editors_container = NodePath("CondVBoxContainer/CondEditorsContainer")
 
 [node name="Panel2" type="Panel" parent="."]
 modulate = Color(0, 0.6, 1, 1)
@@ -29,64 +27,7 @@ layout_mode = 2
 layout_mode = 2
 text = "Conditional Command"
 
-[node name="CondVBoxContainer" type="VBoxContainer" parent="."]
-visible = false
-layout_mode = 2
-
-[node name="ReqNode" type="HBoxContainer" parent="CondVBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="CondVBoxContainer/ReqNode"]
-layout_mode = 2
-text = "Required Node:"
-
-[node name="ReqNodeInput" type="LineEdit" parent="CondVBoxContainer/ReqNode"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ReqVar" type="HBoxContainer" parent="CondVBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="CondVBoxContainer/ReqVar"]
-layout_mode = 2
-text = "Required Variable:"
-
-[node name="CheckType" type="MenuButton" parent="CondVBoxContainer/ReqVar"]
-layout_mode = 2
-focus_mode = 2
-text = "type:  "
-item_count = 6
-popup/item_0/text = "=="
-popup/item_0/id = 0
-popup/item_1/text = "<"
-popup/item_1/id = 1
-popup/item_2/text = ">"
-popup/item_2/id = 2
-popup/item_3/text = "<="
-popup/item_3/id = 3
-popup/item_4/text = ">="
-popup/item_4/id = 4
-popup/item_5/text = "!="
-popup/item_5/id = 5
-
-[node name="ReqVarInput" type="LineEdit" parent="CondVBoxContainer/ReqVar"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ReqVal" type="HBoxContainer" parent="CondVBoxContainer"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="CondVBoxContainer/ReqVal"]
-layout_mode = 2
-text = "Value:"
-
-[node name="CheckValInput" type="LineEdit" parent="CondVBoxContainer/ReqVal"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Seperator" type="Panel" parent="CondVBoxContainer"]
-modulate = Color(0, 0, 0, 1)
-custom_minimum_size = Vector2(0, 2.61)
+[node name="CondVBoxContainer" parent="." instance=ExtResource("2_fvplh")]
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -130,10 +71,9 @@ layout_mode = 2
 text = "X"
 
 [connection signal="toggled" from="IsCondCheckBox" to="." method="_on_is_cond_checkbox_toggled"]
-[connection signal="text_changed" from="CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_req_node_input_text_changed"]
-[connection signal="text_changed" from="CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_req_var_input_text_changed"]
-[connection signal="text_changed" from="CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_check_val_input_text_changed"]
 [connection signal="text_changed" from="HBoxContainer/ChoiceText" to="." method="_on_choicetext_text_changed"]
 [connection signal="about_to_popup" from="HBoxContainer2/NextBlockList" to="." method="_on_next_blocklist_about_to_show"]
 [connection signal="value_changed" from="HBoxContainer3/NextIndex" to="." method="_on_next_index_value_changed"]
 [connection signal="pressed" from="HBoxContainer3/DeleteChoice" to="." method="_on_delete_choice_pressed"]
+
+[editable path="CondVBoxContainer"]

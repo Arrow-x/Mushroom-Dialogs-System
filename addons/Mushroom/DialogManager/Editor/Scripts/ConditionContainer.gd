@@ -4,12 +4,12 @@ extends VBoxContainer
 @export var conditional_editor_scene: PackedScene
 @export var cond_editors_container: Container
 
-var current_command: Command
+var current_command
 var undo_redo: EditorUndoRedoManager
 var commands_tree: Tree
 
 
-func set_up(cmd: Command, u_r: EditorUndoRedoManager, cmd_tree: Tree) -> void:
+func set_up(cmd, u_r: EditorUndoRedoManager, cmd_tree: Tree) -> void:
 	current_command = cmd
 	undo_redo = u_r
 	commands_tree = cmd_tree
