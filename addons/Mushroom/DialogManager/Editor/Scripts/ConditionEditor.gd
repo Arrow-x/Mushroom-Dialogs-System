@@ -12,6 +12,8 @@ var current_conditional: ConditionResource
 var undo_redo: EditorUndoRedoManager
 var commands_tree: Tree
 
+signal close_pressed
+
 
 func set_up(conditional: ConditionResource, u_r: EditorUndoRedoManager, tree: Tree) -> void:
 	current_conditional = conditional
@@ -94,7 +96,7 @@ func _on_req_node_input_text_changed(new_text: String) -> void:
 
 
 func _on_close_button_pressed() -> void:
-	pass  # Replace with function body.
+	close_pressed.emit(current_conditional)
 
 
 func get_conditional() -> ConditionResource:

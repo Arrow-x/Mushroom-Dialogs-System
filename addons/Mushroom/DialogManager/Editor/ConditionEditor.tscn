@@ -9,8 +9,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_swf1l")
-sequencer_check = NodePath("CondVBoxContainer/SequenceContainer/HBoxContainer/CheckButton")
-sequence_container = NodePath("CondVBoxContainer/SequenceContainer")
+sequencer_check = NodePath("CondVBoxContainer/HBoxContainer/SequenceContainer/HBoxContainer/CheckButton")
+sequence_container = NodePath("CondVBoxContainer/HBoxContainer/SequenceContainer")
 check_type = NodePath("CondVBoxContainer/ReqVal/CheckType")
 req_node = NodePath("CondVBoxContainer/ReqNode/ReqNodeInput")
 req_var = NodePath("CondVBoxContainer/ReqVar/ReqVarInput")
@@ -19,21 +19,28 @@ req_val = NodePath("CondVBoxContainer/ReqVal/CheckValInput")
 [node name="CondVBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="SequenceContainer" type="VBoxContainer" parent="CondVBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CondVBoxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CondVBoxContainer/SequenceContainer"]
+[node name="SequenceContainer" type="VBoxContainer" parent="CondVBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="CheckButton" type="CheckButton" parent="CondVBoxContainer/SequenceContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CondVBoxContainer/HBoxContainer/SequenceContainer"]
+layout_mode = 2
+
+[node name="CheckButton" type="CheckButton" parent="CondVBoxContainer/HBoxContainer/SequenceContainer/HBoxContainer"]
 layout_mode = 2
 text = "or"
 
-[node name="Control2" type="Control" parent="CondVBoxContainer/SequenceContainer/HBoxContainer"]
+[node name="Control2" type="Control" parent="CondVBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Seperator2" type="Panel" parent="CondVBoxContainer/SequenceContainer"]
+[node name="CloseButton" type="Button" parent="CondVBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "x"
+
+[node name="Seperator2" type="Panel" parent="CondVBoxContainer"]
 modulate = Color(0, 0, 0, 1)
 custom_minimum_size = Vector2(0, 2.61)
 layout_mode = 2
@@ -90,29 +97,14 @@ popup/item_5/id = 5
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CondVBoxContainer"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CondVBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Control" type="Control" parent="CondVBoxContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Seperator3" type="Panel" parent="CondVBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="Seperator3" type="Panel" parent="CondVBoxContainer"]
 modulate = Color(0, 0, 0, 1)
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CloseButton" type="Button" parent="CondVBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "x"
-
-[connection signal="toggled" from="CondVBoxContainer/SequenceContainer/HBoxContainer/CheckButton" to="." method="_on_check_button_toggled"]
+[connection signal="toggled" from="CondVBoxContainer/HBoxContainer/SequenceContainer/HBoxContainer/CheckButton" to="." method="_on_check_button_toggled"]
+[connection signal="pressed" from="CondVBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="text_changed" from="CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_req_node_input_text_changed"]
 [connection signal="text_changed" from="CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_req_var_input_text_changed"]
 [connection signal="text_changed" from="CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_check_val_input_text_changed"]
-[connection signal="pressed" from="CondVBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
