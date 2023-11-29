@@ -49,12 +49,12 @@ func execute_dialog() -> void:
 
 	match cbi.get_class():
 		"SayCommand":
+			UI.hide_say()
 			if cbi.is_cond:
 				if parse_conditionals(cbi.conditionals) == false:
 					indexer = indexer + 1
 					advance()
 					return
-			UI.hide_say()
 			UI.add_text(cbi.say, cbi.character.name, cbi.append_text)
 			UI.add_portrait(cbi.portrait, cbi.por_pos)
 			UI.show_say()
@@ -192,7 +192,7 @@ func calc_var(
 	chek_val: String,
 	type_cond: String
 ) -> bool:
-	var val_node = get_node(str(req_node).insert(0, "/root/"))
+	var val_node = get_node(req_node.insert(0, "/root/"))
 	var val_container
 	if is_prop == true:
 		val_container = val_node.get(req_var_or_func)
