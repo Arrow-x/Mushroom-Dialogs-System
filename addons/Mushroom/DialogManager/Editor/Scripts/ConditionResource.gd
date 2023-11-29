@@ -7,3 +7,5 @@ class_name ConditionResource
 @export var check_val: String  # TODO: this so annoyung
 @export var condition_type: String = "=="
 @export var is_and: bool = true
+@export var is_property: bool = true
+@export var args: String

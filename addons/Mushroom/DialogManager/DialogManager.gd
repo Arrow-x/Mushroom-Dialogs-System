@@ -145,6 +145,8 @@ func parse_conditionals(conditionals: Array[ConditionResource]) -> bool:
 		var resault := calc_var(
 			conditionals[c_idx].required_node,
 			conditionals[c_idx].required_var,
+			conditionals[c_idx].is_property,
+			conditionals[c_idx].args,
 			conditionals[c_idx].check_val,
 			conditionals[c_idx].condition_type
 		)
@@ -164,6 +166,8 @@ func parse_conditionals(conditionals: Array[ConditionResource]) -> bool:
 
 
 func get_type_from_string(value: String):
+	# TODO: parse Array, Vector and Dictionary
+	# TODO: make the last default type
 	var typed_value
 	if value.is_valid_int():
 		typed_value = value.to_int() as int
@@ -180,8 +184,21 @@ func get_type_from_string(value: String):
 	return typed_value
 
 
-func calc_var(req_node: String, req_var: String, chek_val: String, type_cond: String) -> bool:
-	var val_container = get_node(str(req_node).insert(0, "/root/")).get(req_var)
+func calc_var(
+	req_node: String,
+	req_var_or_func: String,
+	is_prop: bool,
+	args: String,
+	chek_val: String,
+	type_cond: String
+) -> bool:
+	var val_node = get_node(str(req_node).insert(0, "/root/"))
+	var val_container
+	if is_prop == true:
+		val_container = val_node.get(req_var_or_func)
+	else:
+		if val_node.has_method(req_var_or_func):
+			val_container = val_node.call(req_var_or_func, get_type_from_string(args))
 
 	if val_container == null:
 		push_error("calc_var couldn't get the node")

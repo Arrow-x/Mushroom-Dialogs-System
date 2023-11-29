@@ -6,7 +6,10 @@ extends VBoxContainer
 @export var check_operation: MenuButton
 @export var req_node: LineEdit
 @export var req_var: LineEdit
+@export var is_prop: CheckButton
+@export var args_inputs: LineEdit
 @export var req_val: LineEdit
+@export var val_or_return_label: Label
 
 var current_conditional: ConditionResource
 var undo_redo: EditorUndoRedoManager
@@ -27,7 +30,9 @@ func set_up(conditional: ConditionResource, u_r: EditorUndoRedoManager, tree: Tr
 	req_var.text = conditional.required_var
 	req_val.text = conditional.check_val
 	check_operation.text = conditional.condition_type
+	args_inputs.text = conditional.args
 	toggle_sequencer(conditional.is_and)
+	toggle_is_prop(conditional.is_property)
 
 
 func _on_check_button_toggled(toggled_on: bool) -> void:
@@ -57,6 +62,44 @@ func toggle_sequencer(toggled_on: bool) -> void:
 		sequencer_check.text = "and"
 	else:
 		sequencer_check.text = "or"
+
+
+func _on_is_property_toggled(toggled_on: bool) -> void:
+	undo_redo.create_action("toggle Property or Function")
+	undo_redo.add_do_method(
+		commands_tree,
+		"command_undo_redo_caller",
+		"toggle_is_prop",
+		[toggled_on],
+		current_conditional
+	)
+	undo_redo.add_undo_method(
+		commands_tree,
+		"command_undo_redo_caller",
+		"toggle_is_prop",
+		[current_conditional.is_and],
+		current_conditional
+	)
+	undo_redo.commit_action()
+	is_changed()
+
+
+func toggle_is_prop(toggled_on: bool) -> void:
+	is_prop.set_pressed_no_signal(toggled_on)
+	current_conditional.is_property = toggled_on
+	if toggled_on == true:
+		is_prop.text = "Required Property:"
+		val_or_return_label.text = "Value: "
+		args_inputs.visible = false
+	else:
+		is_prop.text = "Required Function:"
+		val_or_return_label.text = "Return: "
+		args_inputs.visible = true
+
+
+func _on_args_text_changed(new_text: String) -> void:
+	current_conditional.args = new_text
+	is_changed()
 
 
 func _on_check_operation_popup(id: int, popup: PopupMenu) -> void:

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/ConditionEditor.gd" id="1_swf1l"]
 
-[node name="ConditionEditor" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "sequence_container", "check_operation", "req_node", "req_var", "req_val")]
+[node name="ConditionEditor" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "sequence_container", "check_operation", "req_node", "req_var", "is_prop", "args_inputs", "req_val", "val_or_return_label")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,8 +13,11 @@ sequencer_check = NodePath("CondVBoxContainer/HBoxContainer/SequenceContainer/HB
 sequence_container = NodePath("CondVBoxContainer/HBoxContainer/SequenceContainer")
 check_operation = NodePath("CondVBoxContainer/ReqVal/CheckOperation")
 req_node = NodePath("CondVBoxContainer/ReqNode/ReqNodeInput")
-req_var = NodePath("CondVBoxContainer/ReqVar/ReqVarInput")
+req_var = NodePath("CondVBoxContainer/ReqVar/HSplitContainer/ReqVarInput")
+is_prop = NodePath("CondVBoxContainer/ReqVar/IsProperty")
+args_inputs = NodePath("CondVBoxContainer/ReqVar/HSplitContainer/Args")
 req_val = NodePath("CondVBoxContainer/ReqVal/CheckValInput")
+val_or_return_label = NodePath("CondVBoxContainer/ReqVal/Label2")
 
 [node name="CondVBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -59,11 +62,18 @@ size_flags_horizontal = 3
 [node name="ReqVar" type="HBoxContainer" parent="CondVBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CondVBoxContainer/ReqVar"]
+[node name="IsProperty" type="CheckButton" parent="CondVBoxContainer/ReqVar"]
 layout_mode = 2
-text = "Required Variable:"
 
-[node name="ReqVarInput" type="LineEdit" parent="CondVBoxContainer/ReqVar"]
+[node name="HSplitContainer" type="HSplitContainer" parent="CondVBoxContainer/ReqVar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ReqVarInput" type="LineEdit" parent="CondVBoxContainer/ReqVar/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Args" type="LineEdit" parent="CondVBoxContainer/ReqVar/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -106,5 +116,7 @@ size_flags_horizontal = 3
 [connection signal="toggled" from="CondVBoxContainer/HBoxContainer/SequenceContainer/HBoxContainer/CheckButton" to="." method="_on_check_button_toggled"]
 [connection signal="pressed" from="CondVBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="text_changed" from="CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_req_node_input_text_changed"]
-[connection signal="text_changed" from="CondVBoxContainer/ReqVar/ReqVarInput" to="." method="_on_req_var_input_text_changed"]
+[connection signal="toggled" from="CondVBoxContainer/ReqVar/IsProperty" to="." method="_on_is_property_toggled"]
+[connection signal="text_changed" from="CondVBoxContainer/ReqVar/HSplitContainer/ReqVarInput" to="." method="_on_req_var_input_text_changed"]
+[connection signal="text_changed" from="CondVBoxContainer/ReqVar/HSplitContainer/Args" to="." method="_on_args_text_changed"]
 [connection signal="text_changed" from="CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_check_val_input_text_changed"]
