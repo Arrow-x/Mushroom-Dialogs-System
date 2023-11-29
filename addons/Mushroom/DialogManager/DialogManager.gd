@@ -55,7 +55,9 @@ func execute_dialog() -> void:
 					indexer = indexer + 1
 					advance()
 					return
-			UI.add_text(cbi.say, cbi.character.name, cbi.append_text)
+			UI.add_text(
+				cbi.say, cbi.character.name if cbi.character != null else "", cbi.append_text
+			)
 			UI.add_portrait(cbi.portrait, cbi.por_pos)
 			UI.show_say()
 			indexer = indexer + 1
