@@ -146,7 +146,6 @@ func parse_conditionals(conditionals: Array[ConditionResource]) -> bool:
 			conditionals[c_idx].required_node,
 			conditionals[c_idx].required_var,
 			conditionals[c_idx].check_val,
-			conditionals[c_idx].check_type,
 			conditionals[c_idx].condition_type
 		)
 		if c_idx + 1 > conditionals.size() - 1:
@@ -164,29 +163,31 @@ func parse_conditionals(conditionals: Array[ConditionResource]) -> bool:
 	return false
 
 
-func calc_var(
-	req_node: String, req_var: String, chek_val, check_type: String, type_cond: String
-) -> bool:
+func get_type_from_string(value: String):
+	var typed_value
+	if value.is_valid_int():
+		typed_value = value.to_int() as int
+	elif value.is_valid_float():
+		typed_value = value.to_float() as float
+	elif value.to_lower() == "true":
+		typed_value = true as bool
+	elif value.to_lower() == "false":
+		typed_value = false as bool
+	elif value.begins_with('"') or value.begins_with("'"):
+		if value.ends_with('"') or value.ends_with("'"):
+			var first := value.erase(0, 1)
+			typed_value = first.erase(first.length() - 1, 1) as String
+	return typed_value
+
+
+func calc_var(req_node: String, req_var: String, chek_val: String, type_cond: String) -> bool:
 	var val_container = get_node(str(req_node).insert(0, "/root/")).get(req_var)
 
 	if val_container == null:
 		push_error("calc_var couldn't get the node")
 		return false
 
-	var typed_check_val
-	match check_type:
-		"int":
-			typed_check_val = chek_val as int
-		"float":
-			typed_check_val = chek_val as float
-		"String":
-			typed_check_val = chek_val as String
-		"bool":
-			match chek_val.to_lower():
-				"True", "TRUE", "true", "1":
-					typed_check_val = true as bool
-				"False", "FALSE", "false", "0":
-					typed_check_val = false as bool
+	var typed_check_val = get_type_from_string(chek_val)
 
 	match type_cond:
 		">=":

@@ -4,7 +4,6 @@ extends VBoxContainer
 @export var sequencer_check: CheckButton
 @export var sequence_container: VBoxContainer
 @export var check_operation: MenuButton
-@export var check_type: MenuButton
 @export var req_node: LineEdit
 @export var req_var: LineEdit
 @export var req_val: LineEdit
@@ -24,14 +23,10 @@ func set_up(conditional: ConditionResource, u_r: EditorUndoRedoManager, tree: Tr
 	var check_op_popup: PopupMenu = check_operation.get_popup()
 	check_op_popup.id_pressed.connect(_on_check_operation_popup.bind(check_op_popup))
 
-	var check_type_popup: PopupMenu = check_type.get_popup()
-	check_type_popup.id_pressed.connect(_on_check_type_popup.bind(check_type_popup))
-
 	req_node.text = conditional.required_node
 	req_var.text = conditional.required_var
 	req_val.text = conditional.check_val
 	check_operation.text = conditional.condition_type
-	check_type.text = conditional.check_type
 	toggle_sequencer(conditional.is_and)
 
 
@@ -87,28 +82,6 @@ func _on_check_operation_popup(id: int, popup: PopupMenu) -> void:
 func set_check_operation(pp_text: String) -> void:
 	current_conditional.condition_type = pp_text
 	check_operation.text = pp_text
-	is_changed()
-
-
-func _on_check_type_popup(id: int, popup: PopupMenu) -> void:
-	var pp_text: String = popup.get_item_text(id)
-	undo_redo.create_action("set check type")
-	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "set_check_type", [pp_text], current_conditional
-	)
-	undo_redo.add_undo_method(
-		commands_tree,
-		"command_undo_redo_caller",
-		"set_check_type",
-		[current_conditional.condition_type],
-		current_conditional
-	)
-	undo_redo.commit_action()
-
-
-func set_check_type(pp_text: String) -> void:
-	current_conditional.check_type = pp_text
-	check_type.text = pp_text
 	is_changed()
 
 
