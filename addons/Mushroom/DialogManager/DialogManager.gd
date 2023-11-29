@@ -9,7 +9,7 @@ var current_flowchart: FlowChart
 var current_block: Block
 var current_choices: Array
 var UI
-var is_ON: bool = false
+var is_ON: bool
 var cbi
 
 var _skipped: bool = false
@@ -248,8 +248,8 @@ func send_flowchart(dblock: FlowChart) -> void:
 		indexer = 0
 		UI = UI_pc.instantiate()
 		add_child(UI)
-		execute_dialog()
 		is_ON = true
+		execute_dialog()
 	#print("The Dialog Mangaer Is running")
 
 
@@ -264,7 +264,7 @@ func end_dialog() -> void:
 
 
 func advance() -> void:
-	if !is_ON:
+	if is_ON == false:
 		return
 
 	if UI.is_tweening:
