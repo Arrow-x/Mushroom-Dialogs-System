@@ -3,8 +3,7 @@ extends Tree
 
 @export var current_block_label: Label
 @export var commands_settings: Container
-@export var add_rmb_pop: PopupMenu
-@export var rmb_pop: PopupMenu
+@export var general_rmb_menu: PopupMenu
 @export var rename_button: Button
 
 var flowchart_tab: Control
@@ -21,11 +20,15 @@ signal moved(item, to_item, shift)
 
 func _ready():
 	button_clicked.connect(_on_tree_item_x_button_pressed)
-	add_rmb_pop.index_pressed.connect(_on_add_command.bind(rmb_pop, true))
+	general_rmb_menu.add_index_pressed.connect(_on_add_command.bind(true))
+	general_rmb_menu.index_pressed.connect(func(idx: int)-> void: 
+		if general_rmb_menu.get_item_text(idx) == "delete": 
+			_on_tree_item_x_button_pressed(get_selected(),0,1,1))
+
 	moved.connect(_on_moved)
 
 
-func _on_tree_item_x_button_pressed(item: TreeItem, _collumn: int, _id: int, mouse_idx: int):
+func _on_tree_item_x_button_pressed(item: TreeItem, _collumn: int, _id: int, mouse_idx: int) -> void:
 	if mouse_idx != 1:
 		return
 	var cmd: Command = item.get_meta("command")
@@ -446,9 +449,9 @@ func create_command_editor(current_item = null) -> void:
 func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index != 2:
 		return
-	rmb_pop.set_up()
+	general_rmb_menu.set_up()
 	var gmp := get_global_mouse_position()
-	rmb_pop.popup(Rect2(gmp.x, gmp.y, rmb_pop.size.x, rmb_pop.size.y))
+	general_rmb_menu.popup(Rect2(gmp.x, gmp.y, general_rmb_menu.size.x, general_rmb_menu.size.y))
 
 
 func command_undo_redo_caller(undo_redo_method: StringName, args: Array = [], obj = null) -> void:

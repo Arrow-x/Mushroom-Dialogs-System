@@ -32,11 +32,4 @@ func ready_commands():
 
 func popit(button: Button) -> void:
 	ready_commands()
-	popup(
-		Rect2(
-			button.global_position.x,
-			button.global_position.y + button.size.y,
-			size.x,
-			size.y
-		)
-	)
+	popup(Rect2(button.global_position.x, button.global_position.y + button.size.y, size.x, size.y))

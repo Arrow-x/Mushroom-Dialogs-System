@@ -2,12 +2,50 @@
 
 [ext_resource type="PackedScene" path="res://addons/Mushroom/DialogManager/Editor/AddCommnadPopupMenu.tscn" id="1"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandsTree.gd" id="2"]
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/AddCommandMenuButton.gd" id="2_4yys5"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/FlowChartTab.gd" id="3"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandRmbPopup.gd" id="6"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/GraphEdit.gd" id="7"]
 [ext_resource type="PackedScene" uid="uid://dr44rkqgqfyrq" path="res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn" id="8_mcj0f"]
 [ext_resource type="PackedScene" uid="uid://b57ggihn01qk0" path="res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn" id="9_adxui"]
+
+[sub_resource type="GDScript" id="GDScript_2dytf"]
+script/source = "@tool
+extends MenuButton
+
+var popup := get_popup()
+
+
+func _ready():
+	popup.id_pressed.connect(get_node(\"../../../CommandsTree\")._on_add_command.bind(popup))
+
+
+func _on_about_to_popup() -> void:
+	popup.clear()
+
+	popup.add_item(\"Say\", 0)
+	popup.set_item_metadata(0, SayCommand.new())
+
+	popup.add_item(\"Animation\", 1)
+	popup.set_item_metadata(1, AnimationCommand.new())
+
+	popup.add_item(\"Fork\", 2)
+	popup.set_item_metadata(2, ForkCommand.new())
+
+	popup.add_item(\"Conditional\", 3)
+	popup.set_item_metadata(3, ConditionCommand.new())
+
+	popup.add_item(\"Jump\", 4)
+	popup.set_item_metadata(4, JumpCommand.new())
+
+	popup.add_item(\"Set Variable\", 5)
+	popup.set_item_metadata(5, SetVarCommand.new())
+
+	popup.add_item(\"Play Sound\", 6)
+	popup.set_item_metadata(6, SoundCommand.new())
+
+	popup.add_item(\"Change UI\", 7)
+	popup.set_item_metadata(7, ChangeUICommand.new())
+"
 
 [node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree", "current_block_name")]
 anchors_preset = 15
@@ -59,9 +97,9 @@ layout_mode = 2
 layout_mode = 2
 text = "Add Command"
 flat = false
-script = ExtResource("2_4yys5")
+script = SubResource("GDScript_2dytf")
 
-[node name="CommandsTree" type="Tree" parent="InspectorTabContainer/Block Settings/InspectorVContainer" node_paths=PackedStringArray("current_block_label", "commands_settings", "add_rmb_pop", "rmb_pop", "rename_button")]
+[node name="CommandsTree" type="Tree" parent="InspectorTabContainer/Block Settings/InspectorVContainer" node_paths=PackedStringArray("current_block_label", "commands_settings", "general_rmb_menu", "rename_button")]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -72,14 +110,13 @@ select_mode = 2
 script = ExtResource("2")
 current_block_label = NodePath("../TreeHeaderVboxContainer/HBoxContainer/CurrentBlock")
 commands_settings = NodePath("../../CommandEditorsContianer")
-add_rmb_pop = NodePath("CommandRmbPopup/AddCommandRmbPopupMenu")
-rmb_pop = NodePath("CommandRmbPopup")
+general_rmb_menu = NodePath("GeneralRMBMenu")
 rename_button = NodePath("../TreeHeaderVboxContainer/HBoxContainer/RenameButton")
 
-[node name="CommandRmbPopup" type="PopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"]
+[node name="GeneralRMBMenu" type="PopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"]
+size = Vector2i(100, 50)
 script = ExtResource("6")
-
-[node name="AddCommandRmbPopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree/CommandRmbPopup" instance=ExtResource("1")]
+i_rmb_add_menu = ExtResource("1")
 
 [node name="CommandEditorsContianer" type="ScrollContainer" parent="InspectorTabContainer/Block Settings"]
 layout_mode = 2
