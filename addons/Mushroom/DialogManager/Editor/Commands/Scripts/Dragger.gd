@@ -12,26 +12,31 @@ func _can_drop_data(position: Vector2, data) -> bool:
 		print("is not Dict")
 		return false
 
-	if not data.type == "files":
-		print("is not files")
-		return false
-
-	if not data.files.size() == 1:
-		print("is not size")
-		return false
-
-	if extension != null:
+	if extension != "":
+		if not data.type == "files":
+			print("is not files")
+			return false
+		if not data.files.size() == 1:
+			print("is not size")
+			return false
 		if not data.files[0].get_extension() == extension:
 			print("is not extension")
 			return false
 
-	if type != null:
-		if not load(data["files"][0]).is_class(type):
-			print("is not type")
-			return false
+	if type != "":
+		if data.has("files"):
+			if not load(data["files"][0]).is_class(type):
+				print("is not type")
+				return false
+		if data.has("nodes"):
+			if not get_node(str(data["nodes"][0])).is_class(type):
+				print("is not type")
+				return false
 	return true
 
 
 func _drop_data(position: Vector2, data) -> void:
-	print("loaded")
-	value_dragged.emit(load(data["files"][0]))
+	if data.has("files"):
+		value_dragged.emit(load(data["files"][0]))
+	if data.has("nodes"):
+		value_dragged.emit(get_node(str(data["nodes"][0])))
