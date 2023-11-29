@@ -29,6 +29,8 @@ func _can_drop_data(position: Vector2, data) -> bool:
 				print("is not type")
 				return false
 		if data.has("nodes"):
+			# TODO: search the currnt opend scene in the editor, and find the dragged data there somehow
+			# Hover this will work find at run time
 			if not get_node(str(data["nodes"][0])).is_class(type):
 				print("is not type")
 				return false
