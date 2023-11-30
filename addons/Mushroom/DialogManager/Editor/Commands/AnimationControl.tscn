@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/AnimationControl.gd" id="1"]
 
-[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("anim_path_ctrl", "anim_name_ctrl", "blend_ctrl", "anim_type_ctrl", "speed_ctrl", "from_end_ctrl")]
+[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("anim_path_ctrl", "anim_name_ctrl", "blend_ctrl", "speed_ctrl", "from_end_ctrl", "wait_check")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -12,9 +12,9 @@ script = ExtResource("1")
 anim_path_ctrl = NodePath("PathHBoxContainer/PathLineEdit")
 anim_name_ctrl = NodePath("ANameHBoxContainer/NameLineEdit")
 blend_ctrl = NodePath("BlendHBoxContainer/BlendLineEdit")
-anim_type_ctrl = NodePath("TypeHBoxContainer/TypeMenu")
 speed_ctrl = NodePath("SpeedHBoxContainer/SpeedLineEdit")
 from_end_ctrl = NodePath("FromEndHBoxContainer/FromEndCheck")
+wait_check = NodePath("TypeHBoxContainer/WaitCheck")
 
 [node name="PathHBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -67,10 +67,6 @@ page = 10.0
 [node name="FromEndHBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="FromEndHBoxContainer"]
-layout_mode = 2
-text = "From End : "
-
 [node name="FromEndCheck" type="CheckButton" parent="FromEndHBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -78,22 +74,13 @@ size_flags_horizontal = 3
 [node name="TypeHBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TypeHBoxContainer"]
-layout_mode = 2
-text = "Animation Type: "
-
-[node name="TypeMenu" type="MenuButton" parent="TypeHBoxContainer"]
+[node name="WaitCheck" type="CheckButton" parent="TypeHBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Set Animation Type"
-item_count = 2
-popup/item_0/text = "wait"
-popup/item_0/id = 0
-popup/item_1/text = "continue"
-popup/item_1/id = 1
 
 [connection signal="text_changed" from="PathHBoxContainer/PathLineEdit" to="." method="_on_path_lineedit_text_changed"]
 [connection signal="text_changed" from="ANameHBoxContainer/NameLineEdit" to="." method="_on_name_lineedit_text_changed"]
 [connection signal="value_changed" from="BlendHBoxContainer/BlendLineEdit" to="." method="_on_blend_lineedit_value_changed"]
 [connection signal="value_changed" from="SpeedHBoxContainer/SpeedLineEdit" to="." method="_on_speed_lineedit_value_changed"]
 [connection signal="toggled" from="FromEndHBoxContainer/FromEndCheck" to="." method="_on_from_endcheck_toggled"]
+[connection signal="toggled" from="TypeHBoxContainer/WaitCheck" to="." method="_on_is_wait_check_toggled"]

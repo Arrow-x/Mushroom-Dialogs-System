@@ -95,7 +95,7 @@ func execute_dialog() -> void:
 		"AnimationCommand":
 			var a := get_node(cbi.animation_path)
 			a.play(cbi.animation_name, cbi.custom_blend, cbi.custom_speed, cbi.from_end)
-			if cbi.anim_type == "wait":
+			if cbi.is_wait == true:
 				await a.animation_finished == cbi.animation_name
 			indexer = indexer + 1
 			advance()

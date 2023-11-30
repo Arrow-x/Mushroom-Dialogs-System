@@ -7,8 +7,7 @@ class_name AnimationCommand
 @export var custom_blend: float = -1
 @export var custom_speed: float = 1.0
 @export var from_end: bool = false
-
-@export_enum("wait", "continue") var anim_type = "Set Animation Type"
+@export var is_wait: bool = true
 
 
 func preview() -> String:
