@@ -32,9 +32,9 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree
 	if c_s.portrait_id != "":
 		portraits_menu.text = c_s.portrait_id
 	say_text_edit.text = c_s.say
-	append_check.button_pressed = c_s.append_text
 	portraits_pos_menu.text = c_s.por_pos
 	cond_box.set_up(current_say, undo_redo, commands_tree)
+	append_check.set_pressed_no_signal(c_s.append_text)
 	is_cond.set_pressed_no_signal(c_s.is_cond)
 	if is_cond.button_pressed == true:
 		cond_box.visible = true
@@ -150,7 +150,15 @@ func show_condition_toggle(button_pressed: bool) -> void:
 
 
 func _on_append_check_box_toggled(button_pressed: bool) -> void:
-	current_say.append_text = button_pressed
+	undo_redo.create_action("Toggle append")
+	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "toggle_append")
+	undo_redo.add_undo_method(commands_tree, "command_undo_redo_caller", "toggle_append")
+	undo_redo.commit_action()
+
+
+func toggle_append() -> void:
+	append_check.set_pressed_no_signal(not current_say.append_text)
+	current_say.append_text = not current_say.append_text
 	is_changed()
 
 
