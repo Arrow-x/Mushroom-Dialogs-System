@@ -61,7 +61,7 @@ func add_portrait(portrait: CompressedTexture2D, por_pos) -> void:
 			center_portrait.visible = true
 
 
-func add_text(got_text: String, got_name: String, append = false) -> void:
+func add_text(got_text: String, got_name: String, append: bool) -> void:
 	say_text.send_message(got_text, append)
 	say_name.text = got_name
 
