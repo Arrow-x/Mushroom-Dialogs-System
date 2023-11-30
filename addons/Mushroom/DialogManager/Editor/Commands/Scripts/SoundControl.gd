@@ -7,6 +7,7 @@ extends Control
 @export var mix_menu: MenuButton
 @export var bus_lineedit: LineEdit
 @export var effect: Label
+@export var wait_check: CheckButton
 
 var current_sound: SoundCommand
 var undo_redo: EditorUndoRedoManager
@@ -36,6 +37,7 @@ func set_up(cmd: SoundCommand, u_r: EditorUndoRedoManager, cmd_tree: Tree) -> vo
 	if !mix_menu_pop.id_pressed.is_connected(_on_mix_menu_id_pressed):
 		mix_menu_pop.id_pressed.connect(_on_mix_menu_id_pressed.bind(mix_menu_pop))
 	mix_menu.text = mix_menu_pop.get_item_text(current_sound.mix_target)
+	toggle_wait(cmd.wait)
 
 
 func _on_clean_stream_pressed() -> void:
@@ -121,6 +123,25 @@ func _on_mix_menu_id_pressed(id: int, mix_menu_pop: Popup) -> void:
 		[current_sound.mix_target, prev_mix_menu_text]
 	)
 	undo_redo.commit_action()
+
+
+func _on_wait_check_toggled(toggled_on: bool) -> void:
+	undo_redo.create_action("toggle wait")
+	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "toggle_wait", [toggled_on])
+	undo_redo.add_undo_method(
+		commands_tree, "command_undo_redo_caller", "toggle_wait", [current_sound.wait]
+	)
+	undo_redo.commit_action()
+
+
+func toggle_wait(toggle: bool) -> void:
+	wait_check.set_pressed_no_signal(toggle)
+	current_sound.wait = toggle
+	if toggle == true:
+		wait_check.text = "Wait"
+	if toggle == false:
+		wait_check.text = "Continue"
+	is_changed()
 
 
 func select_mix(id: int, mix_menu_text: String) -> void:

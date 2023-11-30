@@ -8,6 +8,7 @@ class_name SoundCommand
 @export_enum("Stereo", "Surround", "Center") var mix_target = 0
 @export var bus: String = "Master"
 @export var effect: AudioEffect
+@export var wait: bool = false
 
 
 func preview() -> String:

@@ -12,7 +12,7 @@ var UI
 var is_ON: bool
 var cbi
 
-var _skipped: bool = false
+var audio_skip: bool = false
 
 
 #This is for Debug perpesos but a button to skip the dialog is needed
@@ -133,11 +133,11 @@ func execute_dialog() -> void:
 				audio_player.set_bus(cbi.bus)
 				if cbi.effect != null:
 					AudioServer.add_bus_effect(AudioServer.get_bus_index(cbi.bus), cbi.effect)
-				_skipped = false
 				audio_player.play()
-				await audio_player.finished
-
-			if _skipped == false:
+				if cbi.wait == true:
+					audio_skip = true
+					await audio_player.finished
+				print("should advance")
 				indexer = indexer + 1
 				advance()
 
@@ -302,7 +302,6 @@ func send_flowchart(dblock: FlowChart) -> void:
 		add_child(UI)
 		is_ON = true
 		execute_dialog()
-	#print("The Dialog Mangaer Is running")
 
 
 func end_dialog() -> void:
@@ -324,10 +323,10 @@ func advance() -> void:
 		UI.is_tweening = false
 		return
 
-	if audio_player.playing and !_skipped and not UI.is_tweening:  #To DEBUG
+	if audio_player.playing and audio_skip == true:
 		audio_player.stop()
-		_skipped = true
-		indexer = indexer + 1
+		audio_player.finished.emit()
+		audio_skip = false
+		return
 
-	if not UI.is_tweening and not audio_player.playing:
-		execute_dialog()
+	execute_dialog()
