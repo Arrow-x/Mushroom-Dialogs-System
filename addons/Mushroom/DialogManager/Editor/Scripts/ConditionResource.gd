@@ -9,3 +9,11 @@ class_name ConditionResource
 @export var is_and: bool = true
 @export var is_property: bool = true
 @export var args: String
+
+
+func get_class() -> String:
+	return "ConditionResource"
+
+
+func is_class(c: String) -> bool:
+	return c == "ConditionResource"

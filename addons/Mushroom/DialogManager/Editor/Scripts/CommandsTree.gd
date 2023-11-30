@@ -454,44 +454,42 @@ func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> v
 	general_rmb_menu.popup(Rect2(gmp.x, gmp.y, general_rmb_menu.size.x, general_rmb_menu.size.y))
 
 
-func command_undo_redo_caller(undo_redo_method: StringName, args: Array = [], obj = null) -> void:
-	# HACK: damn this function is a mess!
+func command_undo_redo_caller(undo_redo_method: StringName, args: Array = [], obj = null, is_condition_container:= false) -> void:
 	var object
 	if obj != null:
-		if obj is Choice:
-			for c in commands_settings.get_child(0).get_children():
-				if not c.has_method("get_choice"):
-					continue
-				if c.get_choice() == obj:
-					object = c
-					break
-		elif obj is ConditionResource:
-			var condition_editors: Array
-			if commands_settings.get_child(0).get_command() is ForkCommand:
+		match obj.get_class():
+			"Choice":
 				for c in commands_settings.get_child(0).get_children():
 					if not c.has_method("get_choice"):
 						continue
-					condition_editors.append_array(c.cond_editors_container.get_children())
-			else:
-				condition_editors = (
-					commands_settings.get_child(0).cond_editors_container.get_children()
-				)
-				if (
-					condition_editors != []
-					and undo_redo_method != "remove_conditional"
-					and undo_redo_method != "add_conditional"
-				):
+					if c.get_choice() == obj:
+						if is_condition_container == true:
+							object = c.cond_box
+							break
+						else:
+							object = c
+							break
+			"ConditionResource":
+				var condition_editors: Array
+				if commands_settings.get_child(0).get_command() is ForkCommand:
+					for c in commands_settings.get_child(0).get_children():
+						if not c.has_method("get_choice"):
+							continue
+						condition_editors.append_array(c.cond_editors_container.get_children())
+				else:
+					condition_editors = commands_settings.get_child(0).cond_editors_container.get_children()
+				if condition_editors != []:
 					for c in condition_editors:
 						if not c.has_method("get_conditional"):
 							continue
 						if c.get_conditional() == obj:
 							object = c
 							break
-				else:
+			_:
+				if is_condition_container == true:
 					object = commands_settings.get_child(0).cond_box
-
-		else:
-			object = obj
+				else:
+					object = obj
 	else:
 		object = commands_settings.get_child(0)
 
