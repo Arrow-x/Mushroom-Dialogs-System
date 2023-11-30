@@ -168,22 +168,72 @@ func parse_conditionals(conditionals: Array[ConditionResource]) -> bool:
 
 
 func get_type_from_string(value: String):
-	# TODO: parse Array, Vector and Dictionary
-	# TODO: make the last default type
-	var typed_value
 	if value.is_valid_int():
-		typed_value = value.to_int() as int
+		return value.to_int()
 	elif value.is_valid_float():
-		typed_value = value.to_float() as float
+		return value.to_float()
 	elif value.to_lower() == "true":
-		typed_value = true as bool
+		return true
 	elif value.to_lower() == "false":
-		typed_value = false as bool
-	elif value.begins_with('"') or value.begins_with("'"):
-		if value.ends_with('"') or value.ends_with("'"):
-			var first := value.erase(0, 1)
-			typed_value = first.erase(first.length() - 1, 1) as String
-	return typed_value
+		return false
+	elif value.begins_with("(") and value.ends_with(")"):
+		var first := value.erase(0, 1)
+		value = first.erase(first.length() - 1, 1) as String
+		var value_split := value.split(" ")
+		match value_split.size():
+			2:
+				return Vector2(value_split[0].to_float(), value_split[1].to_float())
+			3:
+				return Vector3(
+					value_split[0].to_float(), value_split[1].to_float(), value_split[2].to_float()
+				)
+			4:
+				return Vector4(
+					value_split[0].to_float(),
+					value_split[1].to_float(),
+					value_split[2].to_float(),
+					value_split[3].to_float()
+				)
+	elif value.begins_with("i(") and value.ends_with(")"):
+		var first := value.erase(0, 2)
+		value = first.erase(first.length() - 1, 1)
+		var value_split := value.split(" ")
+		match value_split.size():
+			2:
+				return Vector2i(value_split[0].to_int(), value_split[1].to_float())
+			3:
+				return Vector3i(
+					value_split[0].to_int(), value_split[1].to_float(), value_split[2].to_float()
+				)
+			4:
+				return Vector4i(
+					value_split[0].to_int(),
+					value_split[1].to_int(),
+					value_split[2].to_int(),
+					value_split[3].to_int()
+				)
+	elif value.begins_with("[") and value.ends_with("]"):
+		var value_split: PackedStringArray = []
+		var first := value.erase(0, 1)
+		value = first.erase(first.length() - 1, 1)
+		var beginnig := value.find("(")
+		if beginnig != -1:
+			var end := value.find(")", beginnig)
+			if end != -1:
+				value_split.append(value.substr(beginnig, end - beginnig))
+
+		value_split.append_array(value.split(","))
+		var typed_value := []
+		for v in value_split:
+			typed_value.append(get_type_from_string(v))
+		return typed_value
+	elif value.begins_with("{") and value.ends_with("}"):
+		#TODO: make the Dictionary parser
+		var first := value.erase(0, 1)
+		value = first.erase(first.length() - 1, 1)
+		var value_split := value.split(",")
+
+	return value
 
 
 func calc_var(
