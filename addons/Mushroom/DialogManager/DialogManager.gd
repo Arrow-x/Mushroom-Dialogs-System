@@ -137,7 +137,6 @@ func execute_dialog() -> void:
 				if cbi.wait == true:
 					audio_skip = true
 					await audio_player.finished
-				print("should advance")
 				indexer = indexer + 1
 				advance()
 
@@ -179,7 +178,7 @@ func get_type_from_string(value: String):
 	elif value.begins_with("(") and value.ends_with(")"):
 		var first := value.erase(0, 1)
 		value = first.erase(first.length() - 1, 1) as String
-		var value_split := value.split(" ")
+		var value_split := value.split(",")
 		match value_split.size():
 			2:
 				return Vector2(value_split[0].to_float(), value_split[1].to_float())
@@ -197,7 +196,7 @@ func get_type_from_string(value: String):
 	elif value.begins_with("i(") and value.ends_with(")"):
 		var first := value.erase(0, 2)
 		value = first.erase(first.length() - 1, 1)
-		var value_split := value.split(" ")
+		var value_split := value.split(",")
 		match value_split.size():
 			2:
 				return Vector2i(value_split[0].to_int(), value_split[1].to_float())
@@ -213,16 +212,9 @@ func get_type_from_string(value: String):
 					value_split[3].to_int()
 				)
 	elif value.begins_with("[") and value.ends_with("]"):
-		var value_split: PackedStringArray = []
 		var first := value.erase(0, 1)
 		value = first.erase(first.length() - 1, 1)
-		var beginnig := value.find("(")
-		if beginnig != -1:
-			var end := value.find(")", beginnig)
-			if end != -1:
-				value_split.append(value.substr(beginnig, end - beginnig))
-
-		value_split.append_array(value.split(","))
+		var value_split := structure_string(value)	
 		var typed_value := []
 		for v in value_split:
 			typed_value.append(get_type_from_string(v))
@@ -234,6 +226,41 @@ func get_type_from_string(value: String):
 		var value_split := value.split(",")
 
 	return value
+
+
+func structure_string(input: String) -> Array:
+	var regexs := [r"\,? ?(i?\(.*?\))", r"\,? ?(i?\[.*?\])", r"\,? ?(i?\{.*?\})"]
+	var resault := []
+	var string := input
+
+	for r: String in regexs:
+		if string == "":
+			break
+		var _resault_left := regex_string(string, r)
+		resault.append_array(_resault_left[0])
+		if _resault_left[1] != "":
+			string = _resault_left[1]
+	if string != "":
+		var raw_splits := string.split(",")
+		var splits := []
+		for s in raw_splits:
+			splits.append(s.dedent())
+		resault.append_array(splits)
+	return resault
+
+
+func regex_string(input: String, in_regex: String) -> Array:
+	var regex := RegEx.new()
+	regex.compile(in_regex)
+	var regex_resault := regex.search_all(input)
+	var resault_array := []
+	var left := ""
+	if regex_resault != []:
+		for r in regex_resault:
+			resault_array.append(r.get_string(1))
+		left = regex.sub(input, "", true)
+
+	return [resault_array, left]
 
 
 func calc_var(
