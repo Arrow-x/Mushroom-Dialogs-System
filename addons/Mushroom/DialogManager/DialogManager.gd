@@ -236,7 +236,7 @@ func structure_string(input: String) -> Array:
 	for r: String in regexs:
 		if string == "":
 			break
-		var _resault_left := regex_string(string, r)
+		var _resault_left := search_and_delete(string, r)
 		resault.append_array(_resault_left[0])
 		if _resault_left[1] != "":
 			string = _resault_left[1]
@@ -248,8 +248,7 @@ func structure_string(input: String) -> Array:
 		resault.append_array(splits)
 	return resault
 
-
-func regex_string(input: String, in_regex: String) -> Array:
+func search_and_delete(input: String, in_regex: String) -> Array:
 	var regex := RegEx.new()
 	regex.compile(in_regex)
 	var regex_resault := regex.search_all(input)
