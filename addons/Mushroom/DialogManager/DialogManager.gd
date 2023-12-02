@@ -61,6 +61,9 @@ func execute_dialog() -> void:
 			UI.add_portrait(cbi.portrait, cbi.por_pos)
 			UI.show_say()
 			indexer = indexer + 1
+			if cbi.follow_through == true:
+				await UI.say_text.message_done
+				advance()
 
 		"ForkCommand":
 			UI.hide_say()

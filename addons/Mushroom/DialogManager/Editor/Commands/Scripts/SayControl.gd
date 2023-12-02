@@ -10,6 +10,7 @@ extends Control
 @export var cond_box: VBoxContainer
 @export var cond_editors_container: VBoxContainer
 @export var append_check: CheckBox
+@export var follow_check: CheckBox
 
 var current_say: SayCommand
 var undo_redo: EditorUndoRedoManager
@@ -35,6 +36,7 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree
 	portraits_pos_menu.text = c_s.por_pos
 	cond_box.set_up(current_say, undo_redo, commands_tree)
 	append_check.set_pressed_no_signal(c_s.append_text)
+	follow_check.set_pressed_no_signal(c_s.follow_through)
 	is_cond.set_pressed_no_signal(c_s.is_cond)
 	if is_cond.button_pressed == true:
 		cond_box.visible = true
@@ -159,6 +161,19 @@ func _on_append_check_box_toggled(button_pressed: bool) -> void:
 func toggle_append() -> void:
 	append_check.set_pressed_no_signal(not current_say.append_text)
 	current_say.append_text = not current_say.append_text
+	is_changed()
+
+
+func _on_through_check_box_toggled(toggled_on: bool) -> void:
+	undo_redo.create_action("Toggle follow")
+	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "toggle_follow")
+	undo_redo.add_undo_method(commands_tree, "command_undo_redo_caller", "toggle_follow")
+	undo_redo.commit_action()
+
+
+func toggle_follow() -> void:
+	follow_check.set_pressed_no_signal(not current_say.follow_through)
+	current_say.follow_through = not current_say.follow_through
 	is_changed()
 
 

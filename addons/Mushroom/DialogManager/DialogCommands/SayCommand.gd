@@ -10,6 +10,7 @@ class_name SayCommand
 @export var append_text: bool = false
 @export var is_cond: bool = false
 @export var conditionals: Array[ConditionResource]
+@export var follow_through: bool = false
 
 
 func preview() -> String:
