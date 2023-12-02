@@ -149,12 +149,19 @@ func get_placeholders(input: String)-> String:
 		for r in regex_resault:
 			resault_array.append(r.get_string(1))
 	var format_dictionary: Dictionary = {}
-	# TODO: some more safty, and the posibility for more nested vals
 	for res: String in resault_array:
-		var split := res.split(".")
-		var val_node := get_node(split[0].insert(0, "/root/"))
-		var val_container := val_node.get(split[1])
-		format_dictionary[res] = val_container
+		if res.contains("."):
+			var split := res.split(".")
+			if split.size() == 2:
+				var val_node := get_node(split[0].insert(0, "/root/"))
+				var val_container := val_node.get(split[1])
+				if val_container:
+					format_dictionary[res] = val_container
+		elif res.begins_with("R|"):
+			var rand := res.erase(0,2).split("|")
+			randomize()
+			format_dictionary[res] = rand[randi_range(0, rand.size() - 1)]
+
 
 	return input.format(format_dictionary)
 
