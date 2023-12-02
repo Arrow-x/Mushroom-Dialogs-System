@@ -66,9 +66,9 @@ func add_text(got_text: String, got_name: String, append: bool) -> void:
 	say_name.text = got_name
 
 
-func add_choice(block, id, index) -> void:
-	var s = Button.new()
-	s.text = block.text
+func add_choice(text: String, id: int, index: int) -> void:
+	var s := Button.new()
+	s.text = text
 	choice_container.add_child(s)
 	s.pressed.connect(DialogManagerNode._on_make_choice.bind(id, index))
 

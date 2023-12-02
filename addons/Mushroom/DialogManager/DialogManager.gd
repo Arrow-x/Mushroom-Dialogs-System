@@ -56,7 +56,7 @@ func execute_dialog() -> void:
 					advance()
 					return
 			UI.add_text(
-				cbi.say, cbi.character.name if cbi.character != null else "", cbi.append_text
+				get_placeholders(cbi.say), cbi.character.name if cbi.character != null else "", cbi.append_text
 			)
 			UI.add_portrait(cbi.portrait, cbi.por_pos)
 			UI.show_say()
@@ -72,7 +72,7 @@ func execute_dialog() -> void:
 					if parse_conditionals(ci.conditionals) == false:
 						continue
 				current_choices.append(current_flowchart.get_block(ci.next_block))
-				UI.add_choice(ci, choice_idx, ci.next_index)
+				UI.add_choice(get_placeholders(ci.text), choice_idx, ci.next_index)
 			UI.show_choice()
 
 		"JumpCommand":
@@ -139,6 +139,25 @@ func execute_dialog() -> void:
 					await audio_player.finished
 				indexer = indexer + 1
 				advance()
+
+func get_placeholders(input: String)-> String:
+	var regex := RegEx.new()
+	regex.compile(r"{(.*?)}")
+	var regex_resault := regex.search_all(input)
+	var resault_array := []
+	if regex_resault:
+		for r in regex_resault:
+			resault_array.append(r.get_string(1))
+	var format_dictionary: Dictionary = {}
+	# TODO: some more safty, and the posibility for more nested vals
+	for res: String in resault_array:
+		var split := res.split(".")
+		var val_node := get_node(split[0].insert(0, "/root/"))
+		var val_container := val_node.get(split[1])
+		format_dictionary[res] = val_container
+
+	return input.format(format_dictionary)
+
 
 
 func parse_conditionals(conditionals: Array[ConditionResource]) -> bool:
@@ -312,7 +331,7 @@ func calc_var(
 	return false
 
 
-func _on_make_choice(id: int, index) -> void:
+func _on_make_choice(id: int, index: int) -> void:
 	current_block = current_choices[id]
 	indexer = index
 	UI.hide_choice()
