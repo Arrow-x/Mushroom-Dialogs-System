@@ -3,7 +3,7 @@ extends Resource
 class_name FlowChart
 
 @export var first_block: Block
-@export var local_vars: Array
+@export var local_vars: Dictionary
 @export var characters: Array[Chararcter]
 @export var blocks: Dictionary
 

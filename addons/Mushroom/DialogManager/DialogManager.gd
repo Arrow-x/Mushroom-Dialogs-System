@@ -101,7 +101,9 @@ func execute_dialog() -> void:
 			advance()
 
 		"SetVarCommand":
-			if cbi.var_path.is_rel_path():
+			if cbi.var_path == "self":
+				current_flowchart.local_vars[cbi.var_name] = cbi.var_value
+			elif cbi.var_path.is_rel_path():
 				var req_node_path := NodePath(cbi.var_path.insert(0, "/root/"))
 				get_node(req_node_path).set(cbi.var_name, cbi.var_value)
 			else:
@@ -153,8 +155,14 @@ func get_placeholders(input: String)-> String:
 		if res.contains("."):
 			var split := res.split(".")
 			if split.size() == 2:
-				var val_node := get_node(split[0].insert(0, "/root/"))
-				var val_container := val_node.get(split[1])
+				var val_node
+				if split[0] == "self":
+					val_node = current_flowchart.local_vars
+				else:
+					val_node = get_node(split[0].insert(0, "/root/"))
+
+				var val_container = val_node.get(split[1])
+
 				if val_container:
 					format_dictionary[res] = val_container
 		elif res.begins_with("R|"):
@@ -296,7 +304,12 @@ func calc_var(
 	chek_val: String,
 	type_cond: String
 ) -> bool:
-	var val_node = get_node(req_node.insert(0, "/root/"))
+	var val_node
+	if req_node == "self":
+		val_node = current_flowchart.local_vars
+	else:
+		val_node = get_node(req_node.insert(0, "/root/"))
+
 	var val_container
 	if is_prop == true:
 		val_container = val_node.get(req_var_or_func)
