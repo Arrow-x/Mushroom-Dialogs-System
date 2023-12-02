@@ -8,7 +8,7 @@ extends Node
 var current_flowchart: FlowChart
 var current_block: Block
 var current_choices: Array
-var UI
+var UI: Control
 var is_ON: bool
 var cbi
 
