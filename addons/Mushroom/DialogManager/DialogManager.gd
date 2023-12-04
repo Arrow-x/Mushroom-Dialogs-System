@@ -257,11 +257,15 @@ func get_type_from_string(value: String):
 			typed_value.append(get_type_from_string(v))
 		return typed_value
 	elif value.begins_with("{") and value.ends_with("}"):
-		#TODO: make the Dictionary parser
-		var first := value.erase(0, 1)
-		value = first.erase(first.length() - 1, 1)
-		var value_split := value.split(",")
-
+		var json := JSON.new()
+		var err := json.parse(value)
+		if err == OK:
+			return json.data
+		else:
+			print("JSON Parse Error: ",
+				json.get_error_message(),
+				" in ", value, " at line ",
+				json.get_error_line())
 	return value
 
 
