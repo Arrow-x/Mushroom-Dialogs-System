@@ -8,10 +8,8 @@ extends GraphEdit
 
 var g_node_posititon := Vector2(40, 40)
 var undo_redo: EditorUndoRedoManager
-
 var flowchart: FlowChart
 var graph_nodes: Dictionary
-
 var current_selected_graph_node: String
 
 signal g_node_clicked
@@ -94,7 +92,7 @@ func close_node(d_node: String) -> void:
 			var deconecting_node: String = c.next_block
 			delete_input(deconecting_node, closed_node_output)
 
-	# Removie the blook commands and the it's editor
+	# Remove the block commands and the it's editor
 	if command_tree.current_block == flowchart.get_block(d_node):
 		command_tree.full_clear()
 		for s in command_tree.commands_settings.get_children():
