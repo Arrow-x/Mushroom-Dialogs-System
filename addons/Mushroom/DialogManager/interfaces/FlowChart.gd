@@ -6,6 +6,7 @@ class_name FlowChart
 @export var local_vars: Dictionary
 @export var characters: Array[Chararcter]
 @export var blocks: Dictionary
+@export var blocks_offset: Dictionary
 
 
 func get_flowchart_name() -> String:
@@ -14,8 +15,8 @@ func get_flowchart_name() -> String:
 
 
 func get_block(b_name: String) -> Block:
-	return blocks[b_name].block
+	return blocks[b_name]
 
 
 func get_block_offset(b_name: String) -> Vector2:
-	return blocks[b_name].offset
+	return blocks_offset[b_name]

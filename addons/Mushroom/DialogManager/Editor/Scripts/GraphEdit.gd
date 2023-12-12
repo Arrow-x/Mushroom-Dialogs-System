@@ -67,7 +67,8 @@ func create_graph_node_from_block(title: String, offset = null, in_block: Block 
 	else:
 		_new_block = in_block
 
-	flowchart.blocks[title] = {block = _new_block, offset = node.position_offset}
+	flowchart.blocks[title] = _new_block
+	flowchart.blocks_offset[title] = node.position_offset
 	node.set_meta("block", _new_block)
 	node.graph_node_meta.connect(on_graph_node_clicked, CONNECT_PERSIST)
 	node.dragging.connect(on_node_dragged, CONNECT_PERSIST)
@@ -79,7 +80,7 @@ func create_graph_node_from_block(title: String, offset = null, in_block: Block 
 
 	if title == "first_block":
 		graph_nodes["first_block"].set_modulate(Color("#f8ac52"))
-		flowchart.first_block = flowchart.blocks["first_block"].block
+		flowchart.first_block = flowchart.blocks["first_block"]
 		node.selected = true
 		return
 
@@ -99,6 +100,7 @@ func close_node(d_node: String) -> void:
 			s.queue_free()
 
 	flowchart.blocks.erase(d_node)
+	flowchart.blocks_offset.erase(d_node)
 	# and then delete the node
 	graph_nodes[d_node].queue_free()
 	graph_nodes.erase(d_node)
@@ -249,4 +251,4 @@ func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title
 
 func set_node_offset(title: String, offset: Vector2) -> void:
 	graph_nodes[title].position_offset = offset
-	flowchart.blocks[title].offset = offset
+	flowchart.blocks_offset[title] = offset
