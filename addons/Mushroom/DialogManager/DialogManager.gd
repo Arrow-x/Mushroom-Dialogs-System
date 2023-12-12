@@ -167,7 +167,7 @@ func get_placeholders(input: String) -> String:
 				else:
 					val_node = get_node(split[0].insert(0, "/root/"))
 
-				var val_container = val_node.get(split[1])
+				var val_container = val_node.get(res.erase(0, split[0].length() + 1))
 
 				if val_container:
 					format_dictionary[res] = val_container
