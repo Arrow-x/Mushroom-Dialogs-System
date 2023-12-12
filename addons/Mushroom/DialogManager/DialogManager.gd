@@ -56,7 +56,9 @@ func execute_dialog() -> void:
 					advance()
 					return
 			UI.add_text(
-				get_placeholders(cbi.say), cbi.character.name if cbi.character != null else "", cbi.append_text
+				get_placeholders(cbi.say),
+				cbi.character.name if cbi.character != null else "",
+				cbi.append_text
 			)
 			UI.add_portrait(cbi.portrait, cbi.por_pos)
 			UI.show_say()
@@ -145,7 +147,8 @@ func execute_dialog() -> void:
 				indexer = indexer + 1
 				advance()
 
-func get_placeholders(input: String)-> String:
+
+func get_placeholders(input: String) -> String:
 	var regex := RegEx.new()
 	regex.compile(r"{(.*?)}")
 	var regex_resault := regex.search_all(input)
@@ -169,13 +172,11 @@ func get_placeholders(input: String)-> String:
 				if val_container:
 					format_dictionary[res] = val_container
 		elif res.begins_with("R|"):
-			var rand := res.erase(0,2).split("|")
+			var rand := res.erase(0, 2).split("|")
 			randomize()
 			format_dictionary[res] = rand[randi_range(0, rand.size() - 1)]
 
-
 	return input.format(format_dictionary)
-
 
 
 func parse_conditionals(conditionals: Array[ConditionResource]) -> bool:
