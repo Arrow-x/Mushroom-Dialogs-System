@@ -5,6 +5,7 @@ class_name SetVarCommand
 @export var var_path: String
 @export var var_name: String
 @export var var_value: String
+@export var parsed_var_value: Array
 
 
 func preview() -> String:

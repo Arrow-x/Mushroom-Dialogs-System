@@ -44,7 +44,7 @@ func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager) -> v
 func check_flowchart_path_before_save() -> void:
 	if flowchart == null:
 		return
-
+	parse_string_var(flowchart)
 	if flowchart.resource_path == "":
 		flow_tabs.set_tab_title(get_index(), String(name + "(*)"))
 		var _i: FileDialog = FileDialog.new()
@@ -115,3 +115,51 @@ func rename_block(new_name: String, prev_name: String) -> void:
 
 	current_block_name.text = new_name
 	flowchart.blocks.erase(prev_name)
+
+
+func parse_string_var(input_flowchart: FlowChart) -> void:
+	for block in input_flowchart.blocks:
+		for input in input_flowchart.get_block(block).commands:
+			if input is SayCommand:
+				for e: ConditionResource in input.conditionals:
+					e.parsed_check_val = get_type_from_string(e.check_val)
+					e.parsed_args = get_type_from_string(e.args)
+			elif input is ForkCommand:
+				for m: Choice in input.choices:
+					for e: ConditionResource in m.conditionals:
+						e.parsed_check_val = get_type_from_string(e.check_val)
+						e.parsed_args = get_type_from_string(e.args)
+			elif input is ConditionCommand:
+				for e: ConditionResource in input.conditionals:
+					e.parsed_check_val = get_type_from_string(e.check_val)
+					e.parsed_args = get_type_from_string(e.args)
+			elif input is SetVarCommand:
+				input.parsed_var_value = get_type_from_string(input.var_value)
+
+
+func get_type_from_string(value: String) -> Array:
+	if value.is_empty():
+		return []
+	var raw = load("res://addons/Mushroom/DialogManager/misc/Args.gd").new()
+	const INSTANCE_LOCATION := "res://addons/Mushroom/DialogManager/misc/args.tres"
+	ResourceSaver.save(raw, INSTANCE_LOCATION)
+	raw = null
+	var file_read := FileAccess.open(INSTANCE_LOCATION, FileAccess.READ)
+	var switch: bool = true
+	var new_file: String = ""
+	var current_line: String
+	while switch == true:
+		current_line = file_read.get_line()
+		if current_line.begins_with("args ="):
+			new_file += str("\n" + "args = " + "[" + value + "]")
+			switch = false
+			break
+		new_file += current_line
+		new_file += "\n"
+	file_read.close()
+	var file_write := FileAccess.open(INSTANCE_LOCATION, FileAccess.WRITE)
+	file_write.store_string(new_file)
+	file_write.close()
+	var parsed_array: Array = load(INSTANCE_LOCATION).args
+	DirAccess.remove_absolute(INSTANCE_LOCATION)
+	return parsed_array
