@@ -146,8 +146,16 @@ func execute_dialog() -> void:
 					await audio_player.finished
 				indexer = indexer + 1
 				advance()
+
 		"CallFunctionCommand":
 			get_node(cbi.req_node.insert(0, "/root/")).callv(cbi.func_name, cbi.parsed_args)
+			indexer = indexer + 1
+			advance()
+
+		"SignalCommand":
+			var _args: Array = cbi.singal_args_parsed.duplicate()
+			if _args.insert(0, cbi.signal_name) == OK:
+				get_node(cbi.req_node.insert(0, "/root/")).callv("emit_signal", _args)
 			indexer = indexer + 1
 			advance()
 

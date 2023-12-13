@@ -40,3 +40,6 @@ func _on_about_to_popup() -> void:
 
 	popup.add_item("Call Function", 8)
 	popup.set_item_metadata(8, CallFunctionCommand.new())
+
+	popup.add_item("Emit Signal", 9)
+	popup.set_item_metadata(9, SignalCommand.new())

@@ -127,6 +127,7 @@ func parse_string_var(input_flowchart: FlowChart) -> void:
 				var _get_args := get_args_from_placeholders(input.say)
 				if _get_args != {}:
 					input.placeholder_args[_get_args["args"]] = _get_args["parsed"]
+
 			elif input is ForkCommand:
 				for m: Choice in input.choices:
 					for e: ConditionResource in m.conditionals:
@@ -135,14 +136,20 @@ func parse_string_var(input_flowchart: FlowChart) -> void:
 					var _get_args := get_args_from_placeholders(m.text)
 					if _get_args != {}:
 						m.placeholder_args[_get_args["args"]] = _get_args["parsed"]
+
 			elif input is ConditionCommand:
 				for e: ConditionResource in input.conditionals:
 					e.parsed_check_val = get_type_from_string(e.check_val)
 					e.parsed_args = get_type_from_string(e.args)
+
 			elif input is SetVarCommand:
 				input.parsed_var_value = get_type_from_string(input.var_value)
+
 			elif input is CallFunctionCommand:
 				input.parsed_args = get_type_from_string(input.args)
+
+			elif input is SignalCommand:
+				input.singal_args_parsed = get_type_from_string(input.signal_args)
 
 
 # TODO: batch this process
