@@ -11,6 +11,7 @@ class_name SayCommand
 @export var is_cond: bool = false
 @export var conditionals: Array[ConditionResource]
 @export var follow_through: bool = false
+@export var placeholder_args: Dictionary = {}
 
 
 func preview() -> String:

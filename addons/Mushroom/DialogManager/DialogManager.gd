@@ -56,7 +56,7 @@ func execute_dialog() -> void:
 					advance()
 					return
 			UI.add_text(
-				get_placeholders(cbi.say),
+				get_placeholders(cbi.say, cbi),
 				cbi.character.name if cbi.character != null else "",
 				cbi.append_text
 			)
@@ -148,7 +148,7 @@ func execute_dialog() -> void:
 				advance()
 
 
-func get_placeholders(input: String) -> String:
+func get_placeholders(input: String, cmd: Command = null) -> String:
 	var regex := RegEx.new()
 	regex.compile(r"{(.*?)}")
 	var regex_resault := regex.search_all(input)
@@ -158,7 +158,19 @@ func get_placeholders(input: String) -> String:
 			resault_array.append(r.get_string(1))
 	var format_dictionary: Dictionary = {}
 	for res: String in resault_array:
-		if res.contains("."):
+		if res.begins_with("F|"):
+			var raw_call := res.erase(0, 2)
+			var split = raw_call.split(".")
+			regex.compile(r"\((.*)\)")
+			var just_call := raw_call.erase(0, split[0].length() + 1)
+			var res_call := regex.search(just_call).get_string(1)
+			if res_call and cmd != null:
+				format_dictionary[res] = str(
+					get_node(split[0].insert(0, "/root/")).callv(
+						just_call.left(just_call.find("(")), cmd.placeholder_args[res_call]
+					)
+				)
+		elif res.contains("."):
 			var split := res.split(".")
 			if split.size() == 2:
 				var val_node

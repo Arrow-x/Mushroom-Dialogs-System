@@ -124,11 +124,17 @@ func parse_string_var(input_flowchart: FlowChart) -> void:
 				for e: ConditionResource in input.conditionals:
 					e.parsed_check_val = get_type_from_string(e.check_val)
 					e.parsed_args = get_type_from_string(e.args)
+				var _get_args := get_args_from_placeholders(input.say)
+				if _get_args != {}:
+					input.placeholder_args[_get_args["args"]] = _get_args["parsed"]
 			elif input is ForkCommand:
 				for m: Choice in input.choices:
 					for e: ConditionResource in m.conditionals:
 						e.parsed_check_val = get_type_from_string(e.check_val)
 						e.parsed_args = get_type_from_string(e.args)
+					var _get_args := get_args_from_placeholders(m.text)
+					if _get_args != {}:
+						m.placeholder_args[_get_args["args"]] = _get_args["parsed"]
 			elif input is ConditionCommand:
 				for e: ConditionResource in input.conditionals:
 					e.parsed_check_val = get_type_from_string(e.check_val)
@@ -137,6 +143,7 @@ func parse_string_var(input_flowchart: FlowChart) -> void:
 				input.parsed_var_value = get_type_from_string(input.var_value)
 
 
+# TODO: batch this process
 func get_type_from_string(value: String) -> Array:
 	if value.is_empty():
 		return []
@@ -163,3 +170,21 @@ func get_type_from_string(value: String) -> Array:
 	var parsed_array: Array = load(INSTANCE_LOCATION).args
 	DirAccess.remove_absolute(INSTANCE_LOCATION)
 	return parsed_array
+
+
+func get_args_from_placeholders(input: String) -> Dictionary:
+	var regex := RegEx.new()
+	regex.compile(r"{(.*?)}")
+	var regex_resault := regex.search_all(input)
+	var resault_array := []
+	if regex_resault:
+		for r in regex_resault:
+			resault_array.append(r.get_string(1))
+	var format_dictionary: Dictionary = {}
+	for res: String in resault_array:
+		if res.contains("(") and res.contains(")"):
+			regex.compile(r"\((.*)\)")
+			var func_arg_res := regex.search(res).get_string(1)
+			if func_arg_res:
+				return {"args": func_arg_res, "parsed": get_type_from_string(func_arg_res)}
+	return {}
