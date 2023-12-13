@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://3l5bjgljqvuj"]
+
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/CallFunctionControl.gd" id="1_as3g4"]
+
+[node name="FuncVBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("req_node", "func_name", "args")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_as3g4")
+req_node = NodePath("NodeHBoxContainer/NodeLineEdit")
+func_name = NodePath("FuncNameHBoxContainer/FuncLineEdit")
+args = NodePath("ArgsHBoxContainer/ArgsLineEdit")
+
+[node name="NodeHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="NodeHBoxContainer"]
+layout_mode = 2
+text = "Node:"
+
+[node name="NodeLineEdit" type="LineEdit" parent="NodeHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FuncNameHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FuncNameHBoxContainer"]
+layout_mode = 2
+text = "Function Name:"
+
+[node name="FuncLineEdit" type="LineEdit" parent="FuncNameHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ArgsHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ArgsHBoxContainer"]
+layout_mode = 2
+text = "Arguments:"
+
+[node name="ArgsLineEdit" type="LineEdit" parent="ArgsHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="text_changed" from="NodeHBoxContainer/NodeLineEdit" to="." method="_on_node_line_edit_text_changed"]
+[connection signal="text_changed" from="FuncNameHBoxContainer/FuncLineEdit" to="." method="_on_func_line_edit_text_changed"]
+[connection signal="text_changed" from="ArgsHBoxContainer/ArgsLineEdit" to="." method="_on_args_line_edit_text_changed"]

@@ -141,6 +141,8 @@ func parse_string_var(input_flowchart: FlowChart) -> void:
 					e.parsed_args = get_type_from_string(e.args)
 			elif input is SetVarCommand:
 				input.parsed_var_value = get_type_from_string(input.var_value)
+			elif input is CallFunctionCommand:
+				input.parsed_args = get_type_from_string(input.args)
 
 
 # TODO: batch this process

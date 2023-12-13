@@ -146,6 +146,10 @@ func execute_dialog() -> void:
 					await audio_player.finished
 				indexer = indexer + 1
 				advance()
+		"CallFunctionCommand":
+			get_node(cbi.req_node.insert(0, "/root/")).callv(cbi.func_name, cbi.parsed_args)
+			indexer = indexer + 1
+			advance()
 
 
 func get_placeholders(input: String, cmd: Command = null) -> String:

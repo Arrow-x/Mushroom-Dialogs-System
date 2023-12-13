@@ -436,6 +436,14 @@ func create_command_editor(current_item = null) -> void:
 			)
 			commands_settings.add_child(control, true)
 			control.set_up(current_item, undo_redo, self)
+
+		"CallFunctionCommand":
+			control = (
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/CallFunctionControl.tscn")
+				. instantiate()
+			)
+			commands_settings.add_child(control, true)
+			control.set_up(current_item)
 		_:
 			return
 

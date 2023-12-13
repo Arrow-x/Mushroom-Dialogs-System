@@ -29,6 +29,9 @@ func ready_commands():
 	add_item("Change UI", 7)
 	set_item_metadata(7, ChangeUICommand.new())
 
+	add_item("Call Function", 8)
+	set_item_metadata(8, CallFunctionCommand.new())
+
 
 func popit(button: Button) -> void:
 	ready_commands()
