@@ -104,12 +104,12 @@ func rename_block(new_name: String, prev_name: String) -> void:
 	graph_edit.graph_nodes.erase(prev_name)
 
 	var current_data := flowchart.blocks.get(prev_name)
-	current_data.block.name = new_name
+	current_data.name = new_name
 	flowchart.blocks[new_name] = current_data
 
-	for output in flowchart.blocks[new_name].block.outputs:
+	for output in flowchart.blocks[new_name].outputs:
 		output.origin_block = new_name
-	for input in flowchart.blocks[new_name].block.inputs:
+	for input in flowchart.blocks[new_name].inputs:
 		for choice in input.choices:
 			choice.next_block = new_name
 
