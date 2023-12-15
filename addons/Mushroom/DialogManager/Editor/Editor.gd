@@ -1,6 +1,7 @@
 @tool
 extends Control
 
+@export var i_flowchart_control: PackedScene
 @export var flowcharts_container: Control
 @export var f_tabs: TabBar
 
@@ -13,9 +14,7 @@ func open_flowchart_scene(flowchart: FlowChart, undo_redo: EditorUndoRedoManager
 			_on_new_flowchart_tabs_tab_clicked(c_tab_idx)
 			return
 
-	var ed: Control = (
-		load("res://addons/Mushroom/DialogManager/Editor/Scenes/FlowChartTab.tscn").instantiate()
-	)
+	var ed: Control = i_flowchart_control.instantiate()
 	flowcharts_container.add_child(ed)
 	ed.set_flowchart(flowchart, undo_redo)
 

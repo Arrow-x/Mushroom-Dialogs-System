@@ -6,6 +6,19 @@ extends Tree
 @export var general_rmb_menu: PopupMenu
 @export var rename_button: Button
 
+@export var i_animation_control: PackedScene
+@export var i_call_function_control: PackedScene
+@export var i_change_ui_control: PackedScene
+@export var i_condition_control: PackedScene
+@export var i_fork_control: PackedScene
+@export var i_jump_control: PackedScene
+@export var i_say_control: PackedScene
+@export var i_set_var_control: PackedScene
+@export var i_signal_control: PackedScene
+@export var i_sound_control: PackedScene
+
+@export var icon_x: Texture2D
+
 var flowchart_tab: Control
 var current_block: Block
 var undo_redo: EditorUndoRedoManager
@@ -134,9 +147,7 @@ func create_tree_item_from_command(
 	_item.set_text(0, command.preview())
 	_item.set_icon(0, command.get_icon())
 	_item.set_meta("command", command)
-	_item.add_button(
-		0, load("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png")
-	)
+	_item.add_button(0, icon_x)
 	flowchart_tab.changed_flowchart()
 	return _item
 
@@ -372,81 +383,54 @@ func create_command_editor(current_item = null) -> void:
 	var control: Control
 	match current_item.get_class():
 		"SayCommand":
-			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SayControl.tscn")
-				. instantiate()
-			)
+			control = i_say_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item, undo_redo, flowchart_tab.flowchart, self)
 
 		"ForkCommand":
-			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ForkControl.tscn")
-				. instantiate()
-			)
+			control = i_fork_control.nstantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(
 				current_item, undo_redo, flowchart_tab.flowchart, current_block, graph_edit, self
 			)
 
 		"ConditionCommand":
-			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ConditionControl.tscn")
-				. instantiate()
-			)
+			control = i_condition_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item, undo_redo, self)
 
 		"SetVarCommand":
-			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SetVar.tscn")
-				. instantiate()
-			)
+			control = i_set_var_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item)
 
 		"AnimationCommand":
-			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/AnimationControl.tscn")
-				. instantiate()
-			)
+			control = i_animation_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item, undo_redo, self)
 
 		"JumpCommand":
-			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/JumpControl.tscn")
-				. instantiate()
-			)
+			control = i_jump_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item, undo_redo, flowchart_tab.flowchart, self)
 
 		"SoundCommand":
-			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SoundControl.tscn")
-				. instantiate()
-			)
+			control = i_sound_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item, undo_redo, self)
 
 		"ChangeUICommand":
-			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ChangeUIControl.tscn")
-				. instantiate()
-			)
+			control = i_change_ui_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item, undo_redo, self)
 
 		"CallFunctionCommand":
-			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/CallFunctionControl.tscn")
-				. instantiate()
-			)
+			control = i_call_function_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item)
 
 		"SignalCommand":
-			control = load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SignalControl.tscn").instantiate()
+			control = i_signal_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item)
 

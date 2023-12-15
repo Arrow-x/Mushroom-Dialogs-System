@@ -1,13 +1,24 @@
-[gd_scene load_steps=9 format=3 uid="uid://bdwysurgi6vsh"]
+[gd_scene load_steps=20 format=3 uid="uid://bdwysurgi6vsh"]
 
 [ext_resource type="PackedScene" path="res://addons/Mushroom/DialogManager/Editor/Scenes/AddCommnadPopupMenu.tscn" id="1"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/CommandsTree.gd" id="2"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/FlowChartTab.gd" id="3"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/AddCommandMenuButton.gd" id="3_58pwy"]
+[ext_resource type="PackedScene" uid="uid://b5sqw3b74f83e" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SayControl.tscn" id="5_esu74"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/CommandRmbPopup.gd" id="6"]
+[ext_resource type="PackedScene" uid="uid://ca4mhqtis68pb" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ForkControl.tscn" id="6_ay6we"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/GraphEdit.gd" id="7"]
+[ext_resource type="PackedScene" uid="uid://cgcqum8la33hn" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ConditionControl.tscn" id="7_wbynn"]
+[ext_resource type="PackedScene" uid="uid://tgwiokob1t1j" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SetVar.tscn" id="8_bsl15"]
 [ext_resource type="PackedScene" uid="uid://dr44rkqgqfyrq" path="res://addons/Mushroom/DialogManager/Editor/Scenes/EnterNameScene.tscn" id="8_mcj0f"]
 [ext_resource type="PackedScene" uid="uid://b57ggihn01qk0" path="res://addons/Mushroom/DialogManager/Editor/Scenes/GraphNode.tscn" id="9_adxui"]
+[ext_resource type="PackedScene" uid="uid://dy1fqsaty2u30" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/AnimationControl.tscn" id="9_b0t6e"]
+[ext_resource type="PackedScene" uid="uid://doakmwk8exdsy" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/JumpControl.tscn" id="10_aof7f"]
+[ext_resource type="PackedScene" uid="uid://e8ir6x0dxwui" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SoundControl.tscn" id="11_ootm2"]
+[ext_resource type="PackedScene" uid="uid://be32jycsbxckh" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ChangeUIControl.tscn" id="12_afd8q"]
+[ext_resource type="PackedScene" uid="uid://3l5bjgljqvuj" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/CallFunctionControl.tscn" id="13_lxhvy"]
+[ext_resource type="PackedScene" uid="uid://duw2so33mqwt6" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SignalControl.tscn" id="14_17iw2"]
+[ext_resource type="Texture2D" uid="uid://cihgya2oylt7c" path="res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png" id="15_cx1ab"]
 
 [node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree", "current_block_name")]
 anchors_preset = 15
@@ -74,6 +85,17 @@ current_block_label = NodePath("../TreeHeaderVboxContainer/HBoxContainer/Current
 commands_settings = NodePath("../../CommandEditorsContianer")
 general_rmb_menu = NodePath("GeneralRMBMenu")
 rename_button = NodePath("../TreeHeaderVboxContainer/HBoxContainer/RenameButton")
+i_animation_control = ExtResource("9_b0t6e")
+i_call_function_control = ExtResource("13_lxhvy")
+i_change_ui_control = ExtResource("12_afd8q")
+i_condition_control = ExtResource("7_wbynn")
+i_fork_control = ExtResource("6_ay6we")
+i_jump_control = ExtResource("10_aof7f")
+i_say_control = ExtResource("5_esu74")
+i_set_var_control = ExtResource("8_bsl15")
+i_signal_control = ExtResource("14_17iw2")
+i_sound_control = ExtResource("11_ootm2")
+icon_x = ExtResource("15_cx1ab")
 
 [node name="GeneralRMBMenu" type="PopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"]
 size = Vector2i(100, 50)

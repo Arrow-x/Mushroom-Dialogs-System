@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://wka3537sqbd8"]
+[gd_scene load_steps=3 format=3 uid="uid://wka3537sqbd8"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Editor.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://bdwysurgi6vsh" path="res://addons/Mushroom/DialogManager/Editor/Scenes/FlowChartTab.tscn" id="2_j1soa"]
 
 [node name="Editor" type="Control" node_paths=PackedStringArray("flowcharts_container", "f_tabs")]
 layout_mode = 3
@@ -14,6 +15,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
+i_flowchart_control = ExtResource("2_j1soa")
 flowcharts_container = NodePath("VBoxContainer/FlowCharTabs")
 f_tabs = NodePath("VBoxContainer/TabBar")
 
