@@ -34,14 +34,18 @@ signal moved(item, to_item, shift)
 func _ready():
 	button_clicked.connect(_on_tree_item_x_button_pressed)
 	general_rmb_menu.add_index_pressed.connect(_on_add_command.bind(true))
-	general_rmb_menu.index_pressed.connect(func(idx: int)-> void: 
-		if general_rmb_menu.get_item_text(idx) == "delete": 
-			_on_tree_item_x_button_pressed(get_selected(),0,1,1))
-
+	general_rmb_menu.index_pressed.connect(_rmb_menu_index_pressed)
 	moved.connect(_on_moved)
 
 
-func _on_tree_item_x_button_pressed(item: TreeItem, _collumn: int, _id: int, mouse_idx: int) -> void:
+func _rmb_menu_index_pressed(idx: int) -> void:
+	if general_rmb_menu.get_item_text(idx) == "delete":
+		_on_tree_item_x_button_pressed(get_selected(), 0, 1, 1)
+
+
+func _on_tree_item_x_button_pressed(
+	item: TreeItem, _collumn: int, _id: int, mouse_idx: int
+) -> void:
 	if mouse_idx != 1:
 		return
 	var cmd: Command = item.get_meta("command")
@@ -452,7 +456,9 @@ func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> v
 	general_rmb_menu.popup(Rect2(gmp.x, gmp.y, general_rmb_menu.size.x, general_rmb_menu.size.y))
 
 
-func command_undo_redo_caller(undo_redo_method: StringName, args: Array = [], obj = null, is_condition_container:= false) -> void:
+func command_undo_redo_caller(
+	undo_redo_method: StringName, args: Array = [], obj = null, is_condition_container := false
+) -> void:
 	var object
 	if obj != null:
 		match obj.get_class():
@@ -475,7 +481,9 @@ func command_undo_redo_caller(undo_redo_method: StringName, args: Array = [], ob
 							continue
 						condition_editors.append_array(c.cond_editors_container.get_children())
 				else:
-					condition_editors = commands_settings.get_child(0).cond_editors_container.get_children()
+					condition_editors = (
+						commands_settings.get_child(0).cond_editors_container.get_children()
+					)
 				if condition_editors != []:
 					for c in condition_editors:
 						if not c.has_method("get_conditional"):
