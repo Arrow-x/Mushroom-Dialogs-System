@@ -12,8 +12,18 @@ func _init():
 
 
 func preview() -> String:
-	# return str("if " + required_var + " " + condition_type + " " + check_val)
-	return "if command"
+	var ret := "if: "
+	for c in range(conditionals.size()):
+		if c != 0:
+			if conditionals[c].is_and == true:
+				ret = ret + " and if: "
+			else:
+				ret = ret + " or if: "
+		ret = ret + conditionals[c].required_var + " "
+		ret = ret + conditionals[c].condition_type + " "
+		ret = ret + conditionals[c].check_val
+
+	return ret
 
 
 func get_icon() -> Resource:
