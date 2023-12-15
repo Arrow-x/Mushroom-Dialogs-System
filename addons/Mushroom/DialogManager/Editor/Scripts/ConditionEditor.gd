@@ -145,6 +145,7 @@ func _on_req_node_input_text_changed(new_text: String) -> void:
 
 func _on_close_button_pressed() -> void:
 	close_pressed.emit(current_conditional)
+	is_changed()
 
 
 func get_conditional() -> ConditionResource:

@@ -8,6 +8,8 @@ var current_command
 var undo_redo: EditorUndoRedoManager
 var commands_tree: Tree
 
+signal cond_changed
+
 
 func set_up(cmd, u_r: EditorUndoRedoManager, cmd_tree: Tree) -> void:
 	current_command = cmd
@@ -66,6 +68,7 @@ func create_conditional_editor(conditional: ConditionResource) -> void:
 		cond_editor.sequence_container.visible = false
 	cond_editors_container.add_child(cond_editor, true)
 	cond_editor.close_pressed.connect(_on_conditional_close_button_pressed)
+	conditional.changed.connect(func(): self.cond_changed.emit())
 
 
 func add_conditional(conditional: ConditionResource = null, idx := -1) -> void:
