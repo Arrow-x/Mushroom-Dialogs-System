@@ -373,7 +373,7 @@ func create_command_editor(current_item = null) -> void:
 	match current_item.get_class():
 		"SayCommand":
 			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.tscn")
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SayControl.tscn")
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
@@ -381,7 +381,7 @@ func create_command_editor(current_item = null) -> void:
 
 		"ForkCommand":
 			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.tscn")
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ForkControl.tscn")
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
@@ -391,7 +391,7 @@ func create_command_editor(current_item = null) -> void:
 
 		"ConditionCommand":
 			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.tscn")
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ConditionControl.tscn")
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
@@ -399,7 +399,7 @@ func create_command_editor(current_item = null) -> void:
 
 		"SetVarCommand":
 			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/SetVar.tscn")
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SetVar.tscn")
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
@@ -407,7 +407,7 @@ func create_command_editor(current_item = null) -> void:
 
 		"AnimationCommand":
 			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.tscn")
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/AnimationControl.tscn")
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
@@ -415,7 +415,7 @@ func create_command_editor(current_item = null) -> void:
 
 		"JumpCommand":
 			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/JumpControl.tscn")
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/JumpControl.tscn")
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
@@ -423,7 +423,7 @@ func create_command_editor(current_item = null) -> void:
 
 		"SoundCommand":
 			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/SoundControl.tscn")
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SoundControl.tscn")
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
@@ -431,7 +431,7 @@ func create_command_editor(current_item = null) -> void:
 
 		"ChangeUICommand":
 			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.tscn")
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ChangeUIControl.tscn")
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
@@ -439,14 +439,14 @@ func create_command_editor(current_item = null) -> void:
 
 		"CallFunctionCommand":
 			control = (
-				load("res://addons/Mushroom/DialogManager/Editor/Commands/CallFunctionControl.tscn")
+				load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/CallFunctionControl.tscn")
 				. instantiate()
 			)
 			commands_settings.add_child(control, true)
 			control.set_up(current_item)
 
 		"SignalCommand":
-			control = load("res://addons/Mushroom/DialogManager/Editor/Commands/SignalControl.tscn").instantiate()
+			control = load("res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SignalControl.tscn").instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item)
 

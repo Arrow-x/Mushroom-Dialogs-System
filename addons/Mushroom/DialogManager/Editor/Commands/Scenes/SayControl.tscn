@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b5sqw3b74f83e"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/SayControl.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/ConditionContainer.tscn" id="2_p1tgx"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionContainer.tscn" id="2_p1tgx"]
 
 [node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("character_menu", "portraits_menu", "portraits_pos_menu", "say_text_edit", "v_slit", "is_cond", "cond_box", "cond_editors_container", "append_check", "follow_check")]
 anchors_preset = 15

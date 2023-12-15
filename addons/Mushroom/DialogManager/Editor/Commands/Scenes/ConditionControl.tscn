@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cgcqum8la33hn"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ConditionControl.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/ConditionContainer.tscn" id="2_hufaf"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionContainer.tscn" id="2_hufaf"]
 
 [node name="Control" type="VBoxContainer" node_paths=PackedStringArray("cond_box", "cond_editors_container")]
 anchors_preset = 15

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dy1fqsaty2u30"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/AnimationControl.gd" id="1"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/AnimationControl.gd" id="1"]
 
 [node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("anim_path_ctrl", "anim_name_ctrl", "blend_ctrl", "speed_ctrl", "from_end_ctrl", "wait_check")]
 anchors_preset = 15

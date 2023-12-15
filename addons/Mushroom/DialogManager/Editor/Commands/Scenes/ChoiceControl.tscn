@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dnwd4iberh8eq"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ChoiceControl.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/ConditionContainer.tscn" id="2_fvplh"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionContainer.tscn" id="2_fvplh"]
 
 [node name="Control" type="VBoxContainer" node_paths=PackedStringArray("choice_text", "next_block_menu", "next_index_text", "delete_choice", "is_cond", "cond_box", "cond_editors_container")]
 anchors_preset = 15

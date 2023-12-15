@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://wka3537sqbd8"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/Editor.gd" id="1"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Editor.gd" id="1"]
 
 [node name="Editor" type="Control" node_paths=PackedStringArray("flowcharts_container", "f_tabs")]
 layout_mode = 3

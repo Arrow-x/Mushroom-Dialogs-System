@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://doakmwk8exdsy"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/JumpControl.gd" id="1"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/JumpControl.gd" id="1"]
 
 [node name="Control" type="VBoxContainer" node_paths=PackedStringArray("index_control", "global_control", "chose_block_control", "block_selection_cotrol")]
 anchors_preset = 15

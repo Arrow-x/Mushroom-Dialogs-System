@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=2]
-
-[ext_resource path="res://addons/Mushroom/DialogManager/Editor/Scripts/AddCommnadPopupMenu.gd" type="Script" id=1]
-
-[node name="PopupMenu" type="PopupMenu"]
-offset_right = 20.0
-offset_bottom = 20.0
-script = ExtResource( 1 )

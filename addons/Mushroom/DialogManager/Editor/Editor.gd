@@ -14,7 +14,7 @@ func open_flowchart_scene(flowchart: FlowChart, undo_redo: EditorUndoRedoManager
 			return
 
 	var ed: Control = (
-		load("res://addons/Mushroom/DialogManager/Editor/FlowChartTab.tscn").instantiate()
+		load("res://addons/Mushroom/DialogManager/Editor/Scenes/FlowChartTab.tscn").instantiate()
 	)
 	flowcharts_container.add_child(ed)
 	ed.set_flowchart(flowchart, undo_redo)

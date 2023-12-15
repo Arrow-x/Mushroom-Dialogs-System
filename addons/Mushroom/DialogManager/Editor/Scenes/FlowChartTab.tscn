@@ -1,13 +1,13 @@
 [gd_scene load_steps=9 format=3 uid="uid://bdwysurgi6vsh"]
 
-[ext_resource type="PackedScene" path="res://addons/Mushroom/DialogManager/Editor/AddCommnadPopupMenu.tscn" id="1"]
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandsTree.gd" id="2"]
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/FlowChartTab.gd" id="3"]
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/AddCommandMenuButton.gd" id="3_58pwy"]
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/CommandRmbPopup.gd" id="6"]
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/GraphEdit.gd" id="7"]
-[ext_resource type="PackedScene" uid="uid://dr44rkqgqfyrq" path="res://addons/Mushroom/DialogManager/Editor/EnterNameScene.tscn" id="8_mcj0f"]
-[ext_resource type="PackedScene" uid="uid://b57ggihn01qk0" path="res://addons/Mushroom/DialogManager/Editor/GraphNode.tscn" id="9_adxui"]
+[ext_resource type="PackedScene" path="res://addons/Mushroom/DialogManager/Editor/Scenes/AddCommnadPopupMenu.tscn" id="1"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/CommandsTree.gd" id="2"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/FlowChartTab.gd" id="3"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/AddCommandMenuButton.gd" id="3_58pwy"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/CommandRmbPopup.gd" id="6"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/GraphEdit.gd" id="7"]
+[ext_resource type="PackedScene" uid="uid://dr44rkqgqfyrq" path="res://addons/Mushroom/DialogManager/Editor/Scenes/EnterNameScene.tscn" id="8_mcj0f"]
+[ext_resource type="PackedScene" uid="uid://b57ggihn01qk0" path="res://addons/Mushroom/DialogManager/Editor/Scenes/GraphNode.tscn" id="9_adxui"]
 
 [node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree", "current_block_name")]
 anchors_preset = 15

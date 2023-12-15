@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://be32jycsbxckh"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ChangeUIControl.gd" id="1"]
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/Dragger.gd" id="2"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ChangeUIControl.gd" id="1"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Dragger.gd" id="2"]
 
 [node name="ChangeUIControl" type="VBoxContainer" node_paths=PackedStringArray("default_check", "ui_drag_target", "ui_drag_container")]
 anchors_preset = 15

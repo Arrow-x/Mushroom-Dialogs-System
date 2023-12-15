@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ca4mhqtis68pb"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scripts/ForkControl.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://dnwd4iberh8eq" path="res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.tscn" id="2_x1dho"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://dnwd4iberh8eq" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ChoiceControl.tscn" id="2_x1dho"]
 
 [node name="ChoicesContainer" type="VBoxContainer" node_paths=PackedStringArray("add_choice_button")]
 offset_right = 1152.0

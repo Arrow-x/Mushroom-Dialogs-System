@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b57ggihn01qk0"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/GraphNode.gd" id="1_fjmtd"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/GraphNode.gd" id="1_fjmtd"]
 
 [node name="GraphNode" type="GraphNode"]
 offset_left = 8.0

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://7hkgqixxw3bw"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/ConditionEditor.gd" id="1_swf1l"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/ConditionEditor.gd" id="1_swf1l"]
 
 [node name="ConditionEditor" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "sequence_container", "check_operation", "req_node", "req_var", "is_prop", "args_inputs", "req_val", "val_or_return_label")]
 anchors_preset = 15

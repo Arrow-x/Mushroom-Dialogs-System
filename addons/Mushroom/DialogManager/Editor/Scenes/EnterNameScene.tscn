@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dr44rkqgqfyrq"]
 
-[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Scripts/EnterNameScene.gd" id="1"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/EnterNameScene.gd" id="1"]
 
 [node name="EnterNameScene" type="Window" node_paths=PackedStringArray("ok", "cancel", "line_edit")]
 size = Vector2i(218, 141)
