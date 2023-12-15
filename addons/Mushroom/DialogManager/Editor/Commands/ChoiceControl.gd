@@ -29,7 +29,6 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_tree: Tree)
 	next_index_text.value = c.next_index
 
 	cond_box.set_up(current_choice, undo_redo, commands_tree)
-	cond_box.cond_changed.connect(func(): connecting.emit())
 	is_cond.set_pressed_no_signal(c.is_cond)
 	if is_cond.button_pressed == true:
 		cond_box.visible = true

@@ -16,16 +16,9 @@ class_name SayCommand
 
 func preview() -> String:
 	var prev: String
-	var prev_length := 60
-
-	if say.length() < prev_length:
-		prev = str("Say: " + say)
-	else:
-		prev = str("Say: " + say.left(prev_length) + "... ")
-
+	prev = str("Say: " + say)
 	if character != null:
 		prev = str(prev + " by: " + character.name)
-
 	return prev
 
 

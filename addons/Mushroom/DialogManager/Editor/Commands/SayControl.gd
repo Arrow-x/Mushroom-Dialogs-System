@@ -27,7 +27,6 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree
 	character_menu.get_popup().id_pressed.connect(_on_character_selected)
 	portraits_menu.get_popup().id_pressed.connect(_on_portrait_selected)
 	portraits_pos_menu.get_popup().id_pressed.connect(_on_portrait_pos_selected)
-	cond_box.cond_changed.connect(is_changed)
 
 	if c_s.character != null:
 		character_menu.text = c_s.character.name
