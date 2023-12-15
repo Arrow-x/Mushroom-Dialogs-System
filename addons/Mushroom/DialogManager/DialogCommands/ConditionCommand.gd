@@ -1,14 +1,13 @@
 @tool
-extends Command
+extends ContainerCommand
 class_name ConditionCommand
 
-@export var condition_block: Resource
 @export var conditionals: Array[ConditionResource]
+@export var container_block: Block
 
 
-func _init():
-	condition_block = Block.new()
-	conditionals.append(ConditionResource.new())
+func _init() -> void:
+	container_block = Block.new()
 
 
 func preview() -> String:

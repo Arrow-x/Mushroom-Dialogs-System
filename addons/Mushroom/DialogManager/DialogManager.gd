@@ -88,10 +88,10 @@ func execute_dialog() -> void:
 
 		"ConditionCommand":
 			if parse_conditionals(cbi.conditionals) == false:
-				cbi.condition_block._next_block = current_block
-				cbi.condition_block._next_indexer = indexer + 1
+				cbi.container_block._next_block = current_block
+				cbi.container_block._next_indexer = indexer + 1
 				indexer = 0
-				current_block = cbi.condition_block
+				current_block = cbi.container_block
 				advance()
 				return
 			indexer = indexer + 1

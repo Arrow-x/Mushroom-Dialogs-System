@@ -38,9 +38,9 @@ func _on_tree_item_x_button_pressed(item: TreeItem, _collumn: int, _id: int, mou
 
 	if item.get_parent().has_meta("command"):
 		var parent_meta = item.get_parent().get_meta("command")
-		if parent_meta is ConditionCommand:
+		if parent_meta is ContainerCommand:
 			parent_command = parent_meta
-			idx = parent_meta.condition_block.commands.find(cmd)
+			idx = parent_meta.container_block.commands.find(cmd)
 			parent = item.get_parent()
 
 	undo_redo.create_action("delete_command")
@@ -85,14 +85,14 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 
 	if is_rmb:
 		var selec_m: Command = get_selected().get_meta("command")
-		if selec_m is ConditionCommand:
+		if selec_m is ContainerCommand:
 			p = selec_m
 		else:
 			var selec_p := get_selected().get_parent()
 			if selec_p == get_root():
 				idx = find_tree_item(get_selected()) + 1
 			else:
-				idx = selec_p.get_meta("command").condition_block.commands.find(selec_m) + 1
+				idx = selec_p.get_meta("command").container_block.commands.find(selec_m) + 1
 				p = selec_p.get_meta("command")
 
 	undo_redo.create_action("Added Command")
@@ -101,8 +101,8 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 	undo_redo.commit_action()
 
 
-func add_command_to_block(command: Command, idx: int = -1, parent = null) -> void:
-	if parent == null or parent == get_root():
+func add_command_to_block(command: Command, idx: int = -1, parent: Command = null) -> void:
+	if parent == null:
 		var cbc: Array = current_block.commands
 		if idx == -1:
 			cbc.append(command)
@@ -110,8 +110,8 @@ func add_command_to_block(command: Command, idx: int = -1, parent = null) -> voi
 			cbc.insert(idx, command)
 
 	else:
-		if parent is ConditionCommand:
-			var prc: Array = parent.condition_block.commands
+		if parent is ContainerCommand:
+			var prc: Array[Command] = parent.container_block.commands
 			if idx == -1:
 				prc.append(command)
 			else:
@@ -149,7 +149,7 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 
 	if tree:
 		d_tree = tree.get_children()
-		d_block = tree.get_meta("command").condition_block
+		d_block = tree.get_meta("command").container_block
 	else:
 		d_tree = get_root().get_children()
 		d_block = current_block
@@ -161,7 +161,7 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 			free_Command_editor(command)
 			create_tree_from_block(current_block)
 			return resault.success
-		elif d_c.get_meta("command") is ConditionCommand:
+		elif d_c.get_meta("command") is ContainerCommand:
 			var b = delete_command(command, d_c)
 			if b != resault.not_found:
 				free_Command_editor(command)
@@ -190,7 +190,7 @@ func _can_drop_data(position: Vector2, data) -> bool:
 		return false
 	var to_item := get_item_at_position(position)
 	if to_item is TreeItem:
-		if to_item.get_meta("command") is ConditionCommand:
+		if to_item.get_meta("command") is ContainerCommand:
 			set_drop_mode_flags(DROP_MODE_INBETWEEN | DROP_MODE_ON_ITEM)
 		else:
 			set_drop_mode_flags(DROP_MODE_INBETWEEN)
@@ -219,7 +219,7 @@ func _on_moved(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 	var to_item_parent_commands: Array = (
 		current_block.commands
 		if parent_item == get_root()
-		else parent_item.get_meta("command").condition_block.commands
+		else parent_item.get_meta("command").container_block.commands
 	)
 	var item_command := item.get_meta("command") as Command
 	var to_item_command := to_item.get_meta("command") as Command if to_item != null else null
@@ -242,17 +242,17 @@ func move_tree_item(
 	var to_item_parent_commands: Array = (
 		current_block.commands
 		if to_itme_parent == get_root()
-		else to_itme_parent.get_meta("command").condition_block.commands
+		else to_itme_parent.get_meta("command").container_block.commands
 	)
 
 	match shift:
 		-1:
 			to_item_parent_commands.insert(to_item_idx, item_command)
 		0:
-			to_item_command.condition_block.commands.append(item_command)
+			to_item_command.container_block.commands.append(item_command)
 		1:
-			if to_item_command is ConditionCommand:
-				to_item_command.condition_block.commands.insert(0, item_command)
+			if to_item_command is ContainerCommand:
+				to_item_command.container_block.commands.insert(0, item_command)
 			else:
 				if to_item_idx + 1 > to_item_parent_commands.size():
 					to_item_parent_commands.append(item_command)
@@ -264,14 +264,14 @@ func move_tree_item(
 	if to_item_idx != resault.not_found:
 		if shift != 0 or shift != 1:
 			if item.get_parent() == to_itme_parent:
-				if not to_item_command is ConditionCommand:
+				if not to_item_command is ContainerCommand:
 					if item_idx > to_item_idx:
 						item_idx = item_idx + 1
 
 	if item.get_parent() == get_root():
 		current_block.commands.remove_at(item_idx)
 	else:
-		item.get_parent().get_meta("command").condition_block.commands.remove_at(item_idx)
+		item.get_parent().get_meta("command").container_block.commands.remove_at(item_idx)
 
 	create_tree_from_block(current_block)
 
@@ -289,8 +289,8 @@ func undo_move_tree_item(og_item_command: Command, og_parent_commands: Array, og
 
 	if to_item == null or to_item_parent == get_root():
 		current_block.commands.remove_at(item_idx)
-	elif to_item_parent_commands is ConditionCommand:
-		to_item_parent_commands.condition_block.commands.remove_at(item_idx)
+	elif to_item_parent_commands is ContainerCommand:
+		to_item_parent_commands.container_block.commands.remove_at(item_idx)
 
 	og_parent_commands.insert(og_idx, og_item_command)
 	create_tree_from_block(current_block)
@@ -308,7 +308,7 @@ func find_tree_item(item: TreeItem, parent: TreeItem = null) -> int:
 	for i in treeitems.size():
 		if treeitems[i] == item:
 			return i
-		elif treeitems[i].get_meta("command") is ConditionCommand:
+		elif treeitems[i].get_meta("command") is ContainerCommand:
 			var r: int = find_tree_item(item, treeitems[i])
 			if r != resault.not_found:
 				return r
@@ -327,7 +327,7 @@ func get_tree_item_from_command(command: Command, parent: TreeItem = null) -> Tr
 		var t_cmd: Command = t.get_meta("command")
 		if t_cmd == command:
 			return t
-		elif t_cmd is ConditionCommand:
+		elif t_cmd is ContainerCommand:
 			var s := get_tree_item_from_command(command, t)
 			if s != null:
 				return s
@@ -341,8 +341,8 @@ func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:
 		return
 	for i in block.commands:
 		var created_item: TreeItem = create_tree_item_from_command(i, -1, parent)
-		if i is ConditionCommand:
-			create_tree_from_block(i.condition_block, created_item)
+		if i is ContainerCommand:
+			create_tree_from_block(i.container_block, created_item)
 
 
 func _on_tree_item_double_clicked() -> void:
