@@ -11,6 +11,7 @@ extends Tree
 @export var i_change_ui_control: PackedScene
 @export var i_condition_control: PackedScene
 @export var i_fork_control: PackedScene
+@export var i_general_container_command: PackedScene
 @export var i_jump_control: PackedScene
 @export var i_say_control: PackedScene
 @export var i_set_var_control: PackedScene
@@ -438,7 +439,13 @@ func create_command_editor(current_item = null) -> void:
 			commands_settings.add_child(control, true)
 			control.set_up(current_item)
 
+		"GeneralContainerCommand":
+			control = i_general_container_command.instantiate()
+			commands_settings.add_child(control, true)
+			control.set_up(current_item)
+
 		_:
+			push_error("CommandsTree: Unknow Command ", current_item.get_class())
 			return
 
 	var item := get_tree_item_from_command(current_item)

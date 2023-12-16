@@ -159,6 +159,17 @@ func execute_dialog() -> void:
 			indexer = indexer + 1
 			advance()
 
+		"GeneralContainerCommand":
+			cbi.container_block._next_block = current_block
+			cbi.container_block._next_indexer = indexer + 1
+			indexer = 0
+			current_block = cbi.container_block
+			advance()
+
+		_:
+			push_error("Dialog Manager: Unknown Command", cbi.get_class())
+			return
+
 
 func get_placeholders(input: String, cmd: Command = null) -> String:
 	var regex := RegEx.new()

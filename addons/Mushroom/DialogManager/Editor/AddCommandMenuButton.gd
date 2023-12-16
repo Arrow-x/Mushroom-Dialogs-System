@@ -43,3 +43,6 @@ func _on_about_to_popup() -> void:
 
 	popup.add_item("Emit Signal", 9)
 	popup.set_item_metadata(9, SignalCommand.new())
+
+	popup.add_item("General Container", 10)
+	popup.set_item_metadata(10, GeneralContainerCommand.new())

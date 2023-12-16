@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3grdpuvdk0a1"]
+
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/GeneralContainerControl.gd" id="1_useft"]
+
+[node name="GenContVBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("name_edit")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_useft")
+name_edit = NodePath("HBoxContainer/LineEdit")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Name:"
+
+[node name="LineEdit" type="LineEdit" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="text_changed" from="HBoxContainer/LineEdit" to="." method="_on_line_edit_text_changed"]

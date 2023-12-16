@@ -35,6 +35,9 @@ func ready_commands():
 	add_item("Emit Signal", 9)
 	set_item_metadata(9, SignalCommand.new())
 
+	add_item("General Container", 10)
+	set_item_metadata(10, GeneralContainerCommand.new())
+
 
 func popit(button: Button) -> void:
 	ready_commands()
