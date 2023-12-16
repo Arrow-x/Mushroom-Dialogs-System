@@ -304,6 +304,8 @@ func calc_var(
 		"!=":
 			if typed_check_val != val_container:
 				return true
+		_:
+			return false
 
 	return false
 
