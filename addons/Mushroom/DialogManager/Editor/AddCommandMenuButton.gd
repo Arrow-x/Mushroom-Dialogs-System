@@ -4,6 +4,21 @@ extends MenuButton
 @export var commands_tree: Tree
 
 var popup := get_popup()
+var commands := [
+	"Say",
+	"Animation",
+	"Fork",
+	"Conditional",
+	"Call Function",
+	"Change UI",
+	"Else",
+	"Emit Signal",
+	"General Container",
+	"If Else",
+	"Jump",
+	"Play Sound",
+	"Set Variable",
+]
 
 
 func _ready():
@@ -13,39 +28,47 @@ func _ready():
 
 func _on_about_to_popup() -> void:
 	popup.clear()
-
-	popup.add_item("Say", 0)
-	popup.set_item_metadata(0, SayCommand.new())
-
-	popup.add_item("Animation", 1)
-	popup.set_item_metadata(1, AnimationCommand.new())
-
-	popup.add_item("Fork", 2)
-	popup.set_item_metadata(2, ForkCommand.new())
-
-	popup.add_item("Conditional", 3)
-	popup.set_item_metadata(3, ConditionCommand.new())
-
-	popup.add_item("Else", 4)
-	popup.set_item_metadata(4, ElseCommand.new())
-
-	popup.add_item("Set Variable", 5)
-	popup.set_item_metadata(5, SetVarCommand.new())
-
-	popup.add_item("Play Sound", 6)
-	popup.set_item_metadata(6, SoundCommand.new())
-
-	popup.add_item("Change UI", 7)
-	popup.set_item_metadata(7, ChangeUICommand.new())
-
-	popup.add_item("Call Function", 8)
-	popup.set_item_metadata(8, CallFunctionCommand.new())
-
-	popup.add_item("Emit Signal", 9)
-	popup.set_item_metadata(9, SignalCommand.new())
-
-	popup.add_item("General Container", 10)
-	popup.set_item_metadata(10, GeneralContainerCommand.new())
-
-	popup.add_item("Jump", 11)
-	popup.set_item_metadata(11, JumpCommand.new())
+	for i in range(commands.size()):
+		match commands[i]:
+			"Say":
+				popup.add_item("Say", i)
+				popup.set_item_metadata(i, SayCommand.new())
+			"Animation":
+				popup.add_item("Animation", i)
+				popup.set_item_metadata(i, AnimationCommand.new())
+			"Fork":
+				popup.add_item("Fork", i)
+				popup.set_item_metadata(i, ForkCommand.new())
+			"Conditional":
+				popup.add_item("Conditional", i)
+				popup.set_item_metadata(i, ConditionCommand.new())
+			"Else":
+				popup.add_item("Else", i)
+				popup.set_item_metadata(i, ElseCommand.new())
+			"If Else":
+				popup.add_item("If Else", i)
+				popup.set_item_metadata(i, IfElseCommand.new())
+			"Play Sound":
+				popup.add_item("Play Sound", i)
+				popup.set_item_metadata(i, SoundCommand.new())
+			"Change UI":
+				popup.add_item("Change UI", i)
+				popup.set_item_metadata(i, ChangeUICommand.new())
+			"Call Function":
+				popup.add_item("Call Function", i)
+				popup.set_item_metadata(i, CallFunctionCommand.new())
+			"Emit Signal":
+				popup.add_item("Emit Signal", i)
+				popup.set_item_metadata(i, SignalCommand.new())
+			"General Container":
+				popup.add_item("General Container", i)
+				popup.set_item_metadata(i, GeneralContainerCommand.new())
+			"Jump":
+				popup.add_item("Jump", i)
+				popup.set_item_metadata(i, JumpCommand.new())
+			"Set Variable":
+				popup.add_item("Set Variable", i)
+				popup.set_item_metadata(i, SetVarCommand.new())
+			_:
+				push_error("Add Command Popup: unknown command")
+				return

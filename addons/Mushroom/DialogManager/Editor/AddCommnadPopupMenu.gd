@@ -1,45 +1,70 @@
 @tool
 extends PopupMenu
 
+var commands := [
+	"Animation",
+	"Call Function",
+	"Change UI",
+	"Conditional",
+	"Else",
+	"Emit Signal",
+	"Fork",
+	"General Container",
+	"If Else",
+	"Jump",
+	"Play Sound",
+	"Say",
+	"Set Variable",
+]
+
 
 func ready_commands():
 	clear()
 
-	add_item("Say", 0)
-	set_item_metadata(0, SayCommand.new())
-
-	add_item("Animation", 1)
-	set_item_metadata(1, AnimationCommand.new())
-
-	add_item("Fork", 2)
-	set_item_metadata(2, ForkCommand.new())
-
-	add_item("Conditional", 3)
-	set_item_metadata(3, ConditionCommand.new())
-
-	add_item("Else", 4)
-	set_item_metadata(4, ElseCommand.new())
-
-	add_item("Set Variable", 5)
-	set_item_metadata(5, SetVarCommand.new())
-
-	add_item("Play Sound", 6)
-	set_item_metadata(6, SoundCommand.new())
-
-	add_item("Change UI", 7)
-	set_item_metadata(7, ChangeUICommand.new())
-
-	add_item("Call Function", 8)
-	set_item_metadata(8, CallFunctionCommand.new())
-
-	add_item("Emit Signal", 9)
-	set_item_metadata(9, SignalCommand.new())
-
-	add_item("General Container", 10)
-	set_item_metadata(10, GeneralContainerCommand.new())
-
-	add_item("Jump", 11)
-	set_item_metadata(11, JumpCommand.new())
+	for i in range(commands.size()):
+		match commands[i]:
+			"Say":
+				add_item("Say", i)
+				set_item_metadata(i, SayCommand.new())
+			"Animation":
+				add_item("Animation", i)
+				set_item_metadata(i, AnimationCommand.new())
+			"Fork":
+				add_item("Fork", i)
+				set_item_metadata(i, ForkCommand.new())
+			"Conditional":
+				add_item("Conditional", i)
+				set_item_metadata(i, ConditionCommand.new())
+			"Else":
+				add_item("Else", i)
+				set_item_metadata(i, ElseCommand.new())
+			"If Else":
+				add_item("If Else", i)
+				set_item_metadata(i, IfElseCommand.new())
+			"Play Sound":
+				add_item("Play Sound", i)
+				set_item_metadata(i, SoundCommand.new())
+			"Change UI":
+				add_item("Change UI", i)
+				set_item_metadata(i, ChangeUICommand.new())
+			"Call Function":
+				add_item("Call Function", i)
+				set_item_metadata(i, CallFunctionCommand.new())
+			"Emit Signal":
+				add_item("Emit Signal", i)
+				set_item_metadata(i, SignalCommand.new())
+			"General Container":
+				add_item("General Container", i)
+				set_item_metadata(i, GeneralContainerCommand.new())
+			"Jump":
+				add_item("Jump", i)
+				set_item_metadata(i, JumpCommand.new())
+			"Set Variable":
+				add_item("Set Variable", i)
+				set_item_metadata(i, SetVarCommand.new())
+			_:
+				push_error("Add Command Popup: unknown command")
+				return
 
 
 func popit(button: Button) -> void:

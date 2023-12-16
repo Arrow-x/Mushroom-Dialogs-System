@@ -194,6 +194,8 @@ func free_Command_editor(command: Command) -> void:
 
 
 func _get_drag_data(_position: Vector2):
+	if get_selected() == null:
+		return
 	var preview := Label.new()
 	preview.text = get_selected().get_text(0)
 
@@ -400,7 +402,7 @@ func create_command_editor(current_item = null) -> void:
 				current_item, undo_redo, flowchart_tab.flowchart, current_block, graph_edit, self
 			)
 
-		"ConditionCommand":
+		"ConditionCommand", "IfElseCommand":
 			control = i_condition_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(current_item, undo_redo, self)

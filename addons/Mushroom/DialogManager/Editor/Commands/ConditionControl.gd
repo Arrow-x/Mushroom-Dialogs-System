@@ -4,12 +4,12 @@ extends Control
 @export var cond_box: VBoxContainer
 @export var cond_editors_container: VBoxContainer
 
-var current_condition: ConditionCommand
+var current_condition: ContainerCommand
 var undo_redo: EditorUndoRedoManager
 var commands_tree: Tree
 
 
-func set_up(cc: ConditionCommand, u_r: EditorUndoRedoManager, cmd_tree: Tree) -> void:
+func set_up(cc: ContainerCommand, u_r: EditorUndoRedoManager, cmd_tree: Tree) -> void:
 	current_condition = cc
 	undo_redo = u_r
 	commands_tree = cmd_tree

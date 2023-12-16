@@ -104,10 +104,18 @@ func execute_dialog() -> void:
 						current_block = cbi_plus.container_block
 						advance()
 						return
+					elif cbi_plus.get_class() == "IfElseCommand":
+						if parse_conditionals(cbi_plus.conditionals) == true:
+							cbi_plus.container_block._next_block = current_block
+							cbi_plus.container_block._next_indexer = indexer + 2
+							indexer = 0
+							current_block = cbi_plus.container_block
+							advance()
+							return
 			indexer = indexer + 1
 			advance()
 
-		"ElseCommand":
+		"ElseCommand", "IfElseCommand":
 			indexer = indexer + 1
 			advance()
 

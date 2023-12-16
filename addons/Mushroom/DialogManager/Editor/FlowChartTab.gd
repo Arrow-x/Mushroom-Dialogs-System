@@ -137,7 +137,7 @@ func parse_string_var(input_flowchart: FlowChart) -> void:
 					if _get_args != {}:
 						m.placeholder_args[_get_args["args"]] = _get_args["parsed"]
 
-			elif input is ConditionCommand:
+			elif input is ConditionCommand or input is IfElseCommand:
 				for e: ConditionResource in input.conditionals:
 					e.parsed_check_val = get_type_from_string(e.check_val)
 					e.parsed_args = get_type_from_string(e.args)
