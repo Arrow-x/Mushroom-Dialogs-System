@@ -153,6 +153,7 @@ func create_tree_item_from_command(
 	_item.set_icon(0, command.get_icon())
 	_item.set_meta("command", command)
 	_item.add_button(0, icon_x)
+	# TODO: warn if Else Command is not under a Conditional Command
 	flowchart_tab.changed_flowchart()
 	return _item
 
@@ -444,6 +445,8 @@ func create_command_editor(current_item = null) -> void:
 			commands_settings.add_child(control, true)
 			control.set_up(current_item)
 
+		"ElseCommand":
+			pass
 		_:
 			push_error("CommandsTree: Unknow Command ", current_item.get_class())
 			return

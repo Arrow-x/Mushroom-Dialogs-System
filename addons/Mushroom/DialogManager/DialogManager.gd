@@ -87,13 +87,27 @@ func execute_dialog() -> void:
 			advance()
 
 		"ConditionCommand":
-			if parse_conditionals(cbi.conditionals) == false:
+			if parse_conditionals(cbi.conditionals) == true:
 				cbi.container_block._next_block = current_block
 				cbi.container_block._next_indexer = indexer + 1
 				indexer = 0
 				current_block = cbi.container_block
 				advance()
 				return
+			else:
+				var cbi_plus = current_block.commands[indexer + 1]
+				if current_block.commands.size() > indexer + 1:
+					if cbi_plus.get_class() == "ElseCommand":
+						cbi_plus.container_block._next_block = current_block
+						cbi_plus.container_block._next_indexer = indexer + 2
+						indexer = 0
+						current_block = cbi_plus.container_block
+						advance()
+						return
+			indexer = indexer + 1
+			advance()
+
+		"ElseCommand":
 			indexer = indexer + 1
 			advance()
 
@@ -167,7 +181,7 @@ func execute_dialog() -> void:
 			advance()
 
 		_:
-			push_error("Dialog Manager: Unknown Command", cbi.get_class())
+			push_error("Dialog Manager: Unknown Command ", cbi.get_class())
 			return
 
 

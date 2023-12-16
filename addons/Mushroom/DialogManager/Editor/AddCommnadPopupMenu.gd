@@ -17,8 +17,8 @@ func ready_commands():
 	add_item("Conditional", 3)
 	set_item_metadata(3, ConditionCommand.new())
 
-	add_item("Jump", 4)
-	set_item_metadata(4, JumpCommand.new())
+	add_item("Else", 4)
+	set_item_metadata(4, ElseCommand.new())
 
 	add_item("Set Variable", 5)
 	set_item_metadata(5, SetVarCommand.new())
@@ -37,6 +37,9 @@ func ready_commands():
 
 	add_item("General Container", 10)
 	set_item_metadata(10, GeneralContainerCommand.new())
+
+	add_item("Jump", 11)
+	set_item_metadata(11, JumpCommand.new())
 
 
 func popit(button: Button) -> void:

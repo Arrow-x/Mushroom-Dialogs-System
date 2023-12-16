@@ -26,8 +26,8 @@ func _on_about_to_popup() -> void:
 	popup.add_item("Conditional", 3)
 	popup.set_item_metadata(3, ConditionCommand.new())
 
-	popup.add_item("Jump", 4)
-	popup.set_item_metadata(4, JumpCommand.new())
+	popup.add_item("Else", 4)
+	popup.set_item_metadata(4, ElseCommand.new())
 
 	popup.add_item("Set Variable", 5)
 	popup.set_item_metadata(5, SetVarCommand.new())
@@ -46,3 +46,6 @@ func _on_about_to_popup() -> void:
 
 	popup.add_item("General Container", 10)
 	popup.set_item_metadata(10, GeneralContainerCommand.new())
+
+	popup.add_item("Jump", 11)
+	popup.set_item_metadata(11, JumpCommand.new())
