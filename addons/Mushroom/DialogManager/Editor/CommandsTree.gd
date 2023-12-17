@@ -240,8 +240,8 @@ func _on_moved(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 		if parent_item == get_root()
 		else parent_item.get_meta("command").container_block.commands
 	)
-	var item_command := item.get_meta("command") as Command
-	var to_item_command := to_item.get_meta("command") as Command if to_item != null else null
+	var item_command := item.get_meta("command")
+	var to_item_command := to_item.get_meta("command") if to_item != null else null
 
 	undo_redo.create_action("drag command")
 	undo_redo.add_do_method(self, "move_tree_item", item_command, item_idx, to_item_command, shift)
@@ -281,11 +281,10 @@ func move_tree_item(
 			to_item_parent_commands.append(item_command)
 
 	if to_item_idx != resault.not_found:
-		if shift != 0 or shift != 1:
+		if shift == -1:
 			if item.get_parent() == to_itme_parent:
-				if not to_item_command is ContainerCommand:
-					if item_idx > to_item_idx:
-						item_idx = item_idx + 1
+				if item_idx > to_item_idx:
+					item_idx = item_idx + 1
 
 	if item.get_parent() == get_root():
 		current_block.commands.remove_at(item_idx)
