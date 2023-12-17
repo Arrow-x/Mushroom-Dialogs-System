@@ -2,20 +2,20 @@
 extends PopupMenu
 
 var commands := [
-	"Animation",
-	"Call Function",
-	"Change UI",
-	"Conditional",
-	"Else",
-	"Emit Signal",
-	"Fork",
-	"General Container",
-	"If Else",
-	"Jump",
-	"Random",
-	"Play Sound",
 	"Say",
+	"Fork",
+	"If",
+	"Else",
+	"If Else",
+	"General Container",
+	"Random",
+	"Call Function",
+	"Emit Signal",
 	"Set Variable",
+	"Animation",
+	"Play Sound",
+	"Jump",
+	"Change UI",
 ]
 
 
@@ -33,8 +33,8 @@ func ready_commands():
 			"Fork":
 				add_item("Fork", i)
 				set_item_metadata(i, ForkCommand.new())
-			"Conditional":
-				add_item("Conditional", i)
+			"If":
+				add_item("If", i)
 				set_item_metadata(i, ConditionCommand.new())
 			"Else":
 				add_item("Else", i)
