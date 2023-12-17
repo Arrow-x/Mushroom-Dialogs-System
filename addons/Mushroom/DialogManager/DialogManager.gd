@@ -23,7 +23,7 @@ func _input(event):
 
 func execute_dialog() -> void:
 	if current_block == null:
-		#print("Error: No block has been added")
+		push_error("Dialog Manager: No block has been added")
 		end_dialog()
 		return
 
@@ -35,14 +35,13 @@ func execute_dialog() -> void:
 			indexer = temp_block._next_indexer
 			advance()
 			return
-		#print("Alert: the block have ended")
 		end_dialog()
 		return
 
-	cbi = current_block.commands[indexer]  #for eas of typing
+	cbi = current_block.commands[indexer]
 
 	if cbi == null:
-		#print("Error: this command in the block is empty")
+		push_error("Dialog Manager: this command in the block is empty")
 		indexer = indexer + 1
 		advance()
 		return
@@ -97,14 +96,14 @@ func execute_dialog() -> void:
 			else:
 				var cbi_plus = current_block.commands[indexer + 1]
 				if current_block.commands.size() > indexer + 1:
-					if cbi_plus.get_class() == "ElseCommand":
+					if cbi_plus is ElseCommand:
 						cbi_plus.container_block._next_block = current_block
 						cbi_plus.container_block._next_indexer = indexer + 2
 						indexer = 0
 						current_block = cbi_plus.container_block
 						advance()
 						return
-					elif cbi_plus.get_class() == "IfElseCommand":
+					elif cbi_plus is IfElseCommand:
 						if parse_conditionals(cbi_plus.conditionals) == true:
 							cbi_plus.container_block._next_block = current_block
 							cbi_plus.container_block._next_indexer = indexer + 2
@@ -138,7 +137,7 @@ func execute_dialog() -> void:
 			indexer = indexer + 1
 			advance()
 
-		"ChangeUICommand":  #To Debug
+		"ChangeUICommand":
 			if cbi.change_to_default == true:
 				UI.queue_free()
 				UI = UI_pc.instantiate()
