@@ -69,8 +69,3 @@ func ready_commands():
 			_:
 				push_error("Add Command Popup: unknown command")
 				return
-
-
-func popit(button: Button) -> void:
-	ready_commands()
-	popup(Rect2(button.global_position.x, button.global_position.y + button.size.y, size.x, size.y))
