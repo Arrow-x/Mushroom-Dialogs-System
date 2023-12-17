@@ -447,7 +447,7 @@ func create_command_editor(current_item = null) -> void:
 			commands_settings.add_child(control, true)
 			control.set_up(current_item)
 
-		"ElseCommand":
+		"ElseCommand", "RandomCommand":
 			pass
 		_:
 			push_error("CommandsTree: Unknow Command ", current_item.get_class())

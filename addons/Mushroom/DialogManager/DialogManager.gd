@@ -28,7 +28,7 @@ func execute_dialog() -> void:
 		return
 
 	#Needed for the The Conditional Command to work
-	if indexer >= current_block.commands.size():
+	if indexer >= current_block.commands.size() or current_block.rand_times == 0:
 		if current_block._next_block != null:
 			var temp_block = current_block
 			current_block = temp_block._next_block
@@ -185,6 +185,15 @@ func execute_dialog() -> void:
 			cbi.container_block._next_indexer = indexer + 1
 			indexer = 0
 			current_block = cbi.container_block
+			advance()
+
+		"RandomCommand":
+			cbi.container_block._next_block = current_block
+			cbi.container_block._next_indexer = indexer + 1
+			current_block = cbi.container_block
+			current_block.rand_times = 2
+			randomize()
+			indexer = randi_range(0, cbi.container_block.commands.size() - 1)
 			advance()
 
 		_:
@@ -359,5 +368,8 @@ func advance() -> void:
 		audio_player.finished.emit()
 		audio_skip = false
 		return
+
+	if current_block.rand_times != -1:
+		current_block.rand_times -= 1
 
 	execute_dialog()

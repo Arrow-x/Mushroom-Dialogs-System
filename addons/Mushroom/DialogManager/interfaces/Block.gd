@@ -5,6 +5,7 @@ class_name Block
 #each block should now what flowchart it is parented to
 @export var name: StringName
 @export var commands: Array[Command]  # (Array, Resource)
+@export var rand_times := -1
 
 #these are used when a block is used as condtional block
 @export var _next_block: Block

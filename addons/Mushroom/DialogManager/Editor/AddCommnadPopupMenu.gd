@@ -12,6 +12,7 @@ var commands := [
 	"General Container",
 	"If Else",
 	"Jump",
+	"Random",
 	"Play Sound",
 	"Say",
 	"Set Variable",
@@ -62,6 +63,9 @@ func ready_commands():
 			"Set Variable":
 				add_item("Set Variable", i)
 				set_item_metadata(i, SetVarCommand.new())
+			"Random":
+				add_item("Random", i)
+				set_item_metadata(i, RandomCommand.new())
 			_:
 				push_error("Add Command Popup: unknown command")
 				return
