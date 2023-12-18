@@ -18,17 +18,17 @@ func open_flowchart_scene(flowchart: FlowChart, u_r: EditorUndoRedoManager) -> v
 			_on_new_flowchart_tabs_tab_clicked(c_tab_idx)
 			return
 
-	var ed: Control = i_flowchart_control.instantiate()
-	flowcharts_container.add_child(ed)
-	ed.set_flowchart(flowchart, u_r)
+	var fc_control: Control = i_flowchart_control.instantiate()
+	flowcharts_container.add_child(fc_control)
+	fc_control.set_flowchart(flowchart, u_r)
 
 	var flowchart_name := flowchart.get_flowchart_name()
-	ed.name = flowchart_name
-	ed.flow_tabs = f_tabs
+	fc_control.name = flowchart_name
+	fc_control.flow_tabs = f_tabs
 	f_tabs.add_tab(flowchart_name)
-	var f := flowcharts_container.get_children().find(ed)
-	current_idx = f
-	f_tabs.set_current_tab(f)
+	var fc_control_idx := flowcharts_container.get_children().find(fc_control)
+	current_idx = fc_control_idx
+	f_tabs.set_current_tab(fc_control_idx)
 
 
 func _on_new_flowchart_tabs_tab_clicked(tab: int) -> void:
@@ -42,8 +42,8 @@ func _on_new_flowchart_tabs_tab_clicked(tab: int) -> void:
 
 func select_flowchart_tab(tab: int) -> void:
 	var flowchart_editors := flowcharts_container.get_children()
-	for c in flowchart_editors:
-		c.visible = false
+	for e in flowchart_editors:
+		e.visible = false
 	flowchart_editors[tab].visible = true
 	current_idx = tab
 	f_tabs.set_current_tab(tab)
@@ -55,22 +55,26 @@ func _on_new_flowchart_tabs_tab_close(tab: int) -> void:
 		flowchart_editors[tab].modified == true
 		or flowchart_editors[tab].flowchart.resource_path == ""
 	):
-		var _c := AcceptDialog.new()
-		_c.set_text("Save changes in flowchart before closing?")
-		_c.set_title("Please Confirm...")
-		_c.add_cancel_button("Cancel")
-		_c.add_button("Don't Save", false, "discard")
-		_c.get_ok_button().set_text("Save & Close")
-		_c.confirmed.connect(_close_confirm_choice.bind("save", flowchart_editors, tab, _c))
-		_c.custom_action.connect(_close_confirm_choice.bind(flowchart_editors, tab, _c))
-		_c.set_size(Vector2(0, 0))
-		add_child(_c)
-		_c.popup_centered()
+		var accept_d := AcceptDialog.new()
+		accept_d.set_text("Save changes in flowchart before closing?")
+		accept_d.set_title("Please Confirm...")
+		accept_d.add_cancel_button("Cancel")
+		accept_d.add_button("Don't Save", false, "discard")
+		accept_d.get_ok_button().set_text("Save & Close")
+		accept_d.confirmed.connect(
+			_close_confirm_choice.bind("save", flowchart_editors, tab, accept_d)
+		)
+		accept_d.custom_action.connect(_close_confirm_choice.bind(flowchart_editors, tab, accept_d))
+		accept_d.set_size(Vector2(0, 0))
+		add_child(accept_d)
+		accept_d.popup_centered()
 		return
 	free_tab_and_select_another(flowchart_editors, tab)
 
 
-func _close_confirm_choice(custom_action, flowchart_editors, tab, confirm_window) -> void:
+func _close_confirm_choice(
+	custom_action, flowchart_editors: Array, tab: int, confirm_window: AcceptDialog
+) -> void:
 	if custom_action == "cancel":
 		confirm_window.queue_free()
 		return
@@ -94,12 +98,14 @@ func save_flowcharts() -> void:
 		container.check_flowchart_path_before_save()
 
 
-func free_tab_and_select_another(flowchart_editors, tab, confirm_window = null) -> void:
+func free_tab_and_select_another(
+	flowchart_editors: Array, tab: int, confirm_window: AcceptDialog = null
+) -> void:
 	if confirm_window != null:
 		confirm_window.queue_free()
 	if tab == f_tabs.get_current_tab():
-		for c in flowchart_editors:
-			c.visible = false
+		for fc_editor in flowchart_editors:
+			fc_editor.visible = false
 		if tab > 0:
 			flowchart_editors[tab - 1].visible = true
 		elif tab == 0:
