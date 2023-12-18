@@ -235,6 +235,9 @@ func _on_moved(item: TreeItem, to_item: TreeItem, shift: int) -> void:
 			push_error("can't dragge into self")
 			return
 
+	if to_item == item:
+		return
+
 	var parent_item: TreeItem = item.get_parent() if item != null else get_root()
 	var to_item_parent_commands: Array = (
 		current_block.commands
