@@ -6,7 +6,6 @@ extends Control
 @export var f_tabs: TabBar
 
 var undo_redo: EditorUndoRedoManager
-var current_idx: int
 
 
 func open_flowchart_scene(flowchart: FlowChart, u_r: EditorUndoRedoManager) -> void:
@@ -27,26 +26,28 @@ func open_flowchart_scene(flowchart: FlowChart, u_r: EditorUndoRedoManager) -> v
 	fc_control.flow_tabs = f_tabs
 	f_tabs.add_tab(flowchart_name)
 	var fc_control_idx := flowcharts_container.get_children().find(fc_control)
-	current_idx = fc_control_idx
+	fc_control.f_tab_changed.connect(select_flowchart_tab)
 	f_tabs.set_current_tab(fc_control_idx)
 
 
 func _on_new_flowchart_tabs_tab_clicked(tab: int) -> void:
-	if tab > f_tabs.count:
-		return
-	undo_redo.create_action("select flowchart")
-	undo_redo.add_do_method(self, "select_flowchart_tab", tab)
-	undo_redo.add_undo_method(self, "select_flowchart_tab", current_idx)
-	undo_redo.commit_action()
-
-
-func select_flowchart_tab(tab: int) -> void:
 	var flowchart_editors := flowcharts_container.get_children()
 	for e in flowchart_editors:
 		e.visible = false
 	flowchart_editors[tab].visible = true
-	current_idx = tab
 	f_tabs.set_current_tab(tab)
+
+
+func select_flowchart_tab(fc: FlowChart) -> void:
+	var flowchart_editors := flowcharts_container.get_children()
+	if flowchart_editors[f_tabs.get_current_tab()].flowchart == fc:
+		return
+	for i in range(flowchart_editors.size()):
+		var e := flowchart_editors[i]
+		e.visible = false
+		if e.flowchart == fc:
+			e.visible = true
+			f_tabs.set_current_tab(i)
 
 
 func _on_new_flowchart_tabs_tab_close(tab: int) -> void:

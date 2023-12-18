@@ -14,6 +14,7 @@ var undo_redo: EditorUndoRedoManager
 var modified := false
 
 signal done_saving
+signal f_tab_changed(flowchart: FlowChart)
 
 
 func check_for_duplicates(name) -> bool:
@@ -37,6 +38,7 @@ func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager) -> v
 	command_tree.undo_redo = sent_undo_redo
 	command_tree.graph_edit = graph_edit
 	command_tree.flowchart_tab = self
+	command_tree.tree_changed.connect(func(fc: FlowChart) -> void: f_tab_changed.emit(fc))
 
 	graph_edit.sync_flowchart_graph(flowchart)
 
@@ -71,6 +73,7 @@ func save_flowchart_to_disc(path: String, overwrite := false) -> void:
 
 
 func changed_flowchart() -> void:
+	f_tab_changed.emit(flowchart)
 	if name.findn("(*)") == -1:
 		flow_tabs.set_tab_title(get_index(), str(name + "(*)"))
 		modified = true

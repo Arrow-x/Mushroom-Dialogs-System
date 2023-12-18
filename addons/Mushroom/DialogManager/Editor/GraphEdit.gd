@@ -85,6 +85,7 @@ func create_graph_node_from_block(title: String, offset = null, in_block: Block 
 		return
 
 	node.add_close_button()
+	flow_changed.emit()
 
 
 func close_node(d_node: String) -> void:
@@ -104,6 +105,7 @@ func close_node(d_node: String) -> void:
 	# and then delete the node
 	graph_nodes[d_node].queue_free()
 	graph_nodes.erase(d_node)
+	flow_changed.emit()
 
 
 func sync_flowchart_graph(fl: FlowChart) -> void:
@@ -226,6 +228,7 @@ func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> 
 			graph_nodes[c_destination].get_name(),
 			flowchart.get_block(c_destination).inputs.find(fork)
 		)
+	flow_changed.emit()
 
 
 func on_graph_node_clicked(node: GraphNode) -> void:
@@ -239,6 +242,7 @@ func on_graph_node_clicked(node: GraphNode) -> void:
 func send_block_to_tree(node: String) -> void:
 	g_node_clicked.emit(flowchart.get_block(node))
 	set_selected(graph_nodes[node])
+	flow_changed.emit()
 
 
 func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title: String) -> void:
@@ -246,9 +250,9 @@ func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title
 	undo_redo.add_do_method(self, "set_node_offset", node_title, finished_offset)
 	undo_redo.add_undo_method(self, "set_node_offset", node_title, start_offset)
 	undo_redo.commit_action()
-	flow_changed.emit()
 
 
 func set_node_offset(title: String, offset: Vector2) -> void:
 	graph_nodes[title].position_offset = offset
 	flowchart.blocks_offset[title] = offset
+	flow_changed.emit()

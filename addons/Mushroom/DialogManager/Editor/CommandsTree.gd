@@ -30,6 +30,7 @@ var prev_selected_Command: Command
 enum resault { success = 1, not_found = -2 }
 
 signal moved(item, to_item, shift)
+signal tree_changed(flowchart: FlowChart)
 
 
 func _ready():
@@ -353,6 +354,7 @@ func get_tree_item_from_command(command: Command, parent: TreeItem = null) -> Tr
 
 
 func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:
+	tree_changed.emit(flowchart_tab.flowchart)
 	if parent == null:
 		self.clear()
 	if block.commands == null:
