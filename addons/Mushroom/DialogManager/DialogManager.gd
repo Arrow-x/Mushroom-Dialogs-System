@@ -86,33 +86,9 @@ func execute_dialog() -> void:
 			advance()
 
 		"ConditionCommand":
-			if parse_conditionals(cbi.conditionals) == true:
-				cbi.container_block._next_block = current_block
-				cbi.container_block._next_indexer = indexer + 1
-				indexer = 0
-				current_block = cbi.container_block
+			if handle_condition(cbi) == false:
+				indexer = indexer + 1
 				advance()
-				return
-			else:
-				var cbi_plus = current_block.commands[indexer + 1]
-				if current_block.commands.size() > indexer + 1:
-					if cbi_plus is ElseCommand:
-						cbi_plus.container_block._next_block = current_block
-						cbi_plus.container_block._next_indexer = indexer + 2
-						indexer = 0
-						current_block = cbi_plus.container_block
-						advance()
-						return
-					elif cbi_plus is IfElseCommand:
-						if parse_conditionals(cbi_plus.conditionals) == true:
-							cbi_plus.container_block._next_block = current_block
-							cbi_plus.container_block._next_indexer = indexer + 2
-							indexer = 0
-							current_block = cbi_plus.container_block
-							advance()
-							return
-			indexer = indexer + 1
-			advance()
 
 		"ElseCommand", "IfElseCommand":
 			indexer = indexer + 1
@@ -199,6 +175,29 @@ func execute_dialog() -> void:
 		_:
 			push_error("Dialog Manager: Unknown Command ", cbi.get_class())
 			return
+
+
+func handle_condition(cbi: Command, jump: int = 1) -> bool:
+	if parse_conditionals(cbi.conditionals) == true:
+		cbi.container_block._next_block = current_block
+		cbi.container_block._next_indexer = indexer + jump
+		indexer = 0
+		current_block = cbi.container_block
+		advance()
+		return true
+	else:
+		if current_block.commands.size() > indexer + jump:
+			var cbi_plus = current_block.commands[indexer + jump]
+			if cbi_plus is ElseCommand:
+				cbi_plus.container_block._next_block = current_block
+				cbi_plus.container_block._next_indexer = indexer + jump
+				indexer = 0
+				current_block = cbi_plus.container_block
+				advance()
+				return true
+			elif cbi_plus is IfElseCommand:
+				return handle_condition(cbi_plus, jump + 1)
+	return false
 
 
 func get_placeholders(input: String, cmd: Command = null) -> String:
