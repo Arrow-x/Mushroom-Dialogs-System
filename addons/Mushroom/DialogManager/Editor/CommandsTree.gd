@@ -40,6 +40,14 @@ func _ready():
 	moved.connect(_on_moved)
 
 
+func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> void:
+	if mouse_button_index != 2:
+		return
+	general_rmb_menu.set_up()
+	var gmp := get_global_mouse_position()
+	general_rmb_menu.popup(Rect2(gmp.x, gmp.y, general_rmb_menu.size.x, general_rmb_menu.size.y))
+
+
 func _rmb_menu_index_pressed(idx: int) -> void:
 	if general_rmb_menu.get_item_text(idx) == "delete":
 		_on_tree_item_x_button_pressed(get_selected(), 0, 1, 1)
@@ -462,14 +470,6 @@ func create_command_editor(current_item = null) -> void:
 		return
 	set_selected(item, 0)
 	ensure_cursor_is_visible()
-
-
-func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> void:
-	if mouse_button_index != 2:
-		return
-	general_rmb_menu.set_up()
-	var gmp := get_global_mouse_position()
-	general_rmb_menu.popup(Rect2(gmp.x, gmp.y, general_rmb_menu.size.x, general_rmb_menu.size.y))
 
 
 func command_undo_redo_caller(
