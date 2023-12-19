@@ -75,8 +75,9 @@ func save_flowchart_to_disc(path: String, overwrite := false) -> void:
 func changed_flowchart() -> void:
 	f_tab_changed.emit(flowchart)
 	if name.findn("(*)") == -1:
-		flow_tabs.set_tab_title(get_index(), str(name + "(*)"))
-		modified = true
+		if flow_tabs:
+			flow_tabs.set_tab_title(get_index(), str(name + "(*)"))
+			modified = true
 
 
 func _on_rename_button_pressed() -> void:
