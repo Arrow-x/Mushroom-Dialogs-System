@@ -205,16 +205,38 @@ func free_Command_editor(command: Command) -> void:
 func _get_drag_data(_position: Vector2):
 	if get_selected() == null:
 		return
-	var preview := Label.new()
-	preview.text = get_selected().get_text(0)
+	var selected_dict := get_all_selected_tree_items()
 
+	var preview := Label.new()
+	var selected_item := get_next_selected(null)
+	var preview_text := ""
+	while selected_item:
+		preview_text += selected_item.get_text(0) + "\n"
+		selected_item = get_next_selected(selected_item)
+	preview.text = preview_text
 	set_drag_preview(preview)
 
-	return get_selected()
+	return selected_dict
+
+
+func get_all_selected_tree_items() -> Dictionary:
+	var selected_item := get_next_selected(null)
+	var r_dict: Dictionary
+	while selected_item:
+		var selected_parent := selected_item.get_parent()
+		var selected_parent_command: Command = (
+			selected_parent.get_meta("command") if selected_parent != get_root() else null
+		)
+		if r_dict.has(selected_parent_command) == false:
+			r_dict[selected_item.get_meta("command")] = {
+				"index": selected_item.get_index(), "parent": selected_parent_command
+			}
+		selected_item = get_next_selected(selected_item)
+	return r_dict
 
 
 func _can_drop_data(position: Vector2, data) -> bool:
-	if not data is TreeItem:
+	if not data is Dictionary:
 		return false
 	var to_item := get_item_at_position(position)
 	if to_item is TreeItem:
@@ -225,52 +247,47 @@ func _can_drop_data(position: Vector2, data) -> bool:
 	return true
 
 
-func _drop_data(position: Vector2, item) -> void:
+func _drop_data(position: Vector2, items) -> void:
 	var to_item := get_item_at_position(position)
 	var shift := get_drop_section_at_position(position)
 	# shift == 0 if dropping on item, -1, +1 if in between
-	moved.emit(item, to_item, shift)
+	for i in items:
+		if to_item:
+			if i == to_item.get_meta("command"):
+				return
+			if to_item.get_parent() != get_root():
+				if i == to_item.get_parent().get_meta("command"):
+					return
+	moved.emit(items, to_item, shift)
 
 
-func _on_moved(item: TreeItem, to_item: TreeItem, shift: int) -> void:
-	var item_idx: int = find_tree_item(item)
-	if item_idx == resault.not_found:
-		push_error("can't find dragged TreeItem")
-		return
-
-	if to_item != null:
-		if to_item.get_parent() == item:
-			push_error("can't dragge into self")
-			return
-
-	if to_item == item:
-		return
-
-	var parent_item: TreeItem = item.get_parent() if item != null else get_root()
-	var to_item_parent_commands: Array = (
-		current_block.commands
-		if parent_item == get_root()
-		else parent_item.get_meta("command").container_block.commands
-	)
-	var item_command := item.get_meta("command")
-	var to_item_command := to_item.get_meta("command") if to_item != null else null
-
+func _on_moved(items: Dictionary, to_item: TreeItem, shift: int) -> void:
+	var to_item_command: Command = to_item.get_meta("command") if to_item != null else null
 	undo_redo.create_action("drag command")
-	undo_redo.add_do_method(self, "move_tree_item", item_command, item_idx, to_item_command, shift)
-	undo_redo.add_undo_method(
-		self, "undo_move_tree_item", item.get_meta("command"), to_item_parent_commands, item_idx
-	)
+	undo_redo.add_do_method(self, "move_list_tree_items", items, to_item_command, shift)
+	undo_redo.add_undo_method(self, "undo_move_list_tree_items", items)
 	undo_redo.commit_action()
 
 
+func move_list_tree_items(d: Dictionary, to_item_command: Command, shift: int) -> void:
+	for item_command in d:
+		move_tree_item(item_command, to_item_command, shift)
+
+
+func undo_move_list_tree_items(t: Dictionary):
+	for item_command in t:
+		undo_move_tree_item(item_command, t[item_command]["index"], t[item_command]["parent"])
+
+
 func move_tree_item(
-	item_command: Command, item_idx: int, to_item_command: Command = null, shift: int = -100
+	item_command: Command, to_item_command: Command = null, shift: int = -100
 ) -> void:
 	var item := get_tree_item_from_command(item_command)
+	var item_idx := find_tree_item(item)
 	var to_item := get_tree_item_from_command(to_item_command)
 	var to_item_idx: int = find_tree_item(to_item)
 	var to_itme_parent: TreeItem = to_item.get_parent() if to_item != null else get_root()
-	var to_item_parent_commands: Array = (
+	var to_item_parent_commands: Array[Command] = (
 		current_block.commands
 		if to_itme_parent == get_root()
 		else to_itme_parent.get_meta("command").container_block.commands
@@ -306,21 +323,26 @@ func move_tree_item(
 	create_tree_from_block(current_block)
 
 
-func undo_move_tree_item(og_item_command: Command, og_parent_commands: Array, og_idx: int):
+func undo_move_tree_item(og_item_command: Command, og_idx: int, og_parent_command: Command):
 	var to_item := get_tree_item_from_command(og_item_command)
 	var item_idx := find_tree_item(to_item)
 	if item_idx == resault.not_found:
 		push_error("can't find it")
 		return
 	var to_item_parent := to_item.get_parent()
-	var to_item_parent_commands: Command = (
+	var og_parent_commands: Array[Command] = (
+		og_parent_command.container_block.commands
+		if og_parent_command != null
+		else current_block.commands
+	)
+	var to_item_parent_command: Command = (
 		to_item_parent.get_meta("command") if to_item_parent.has_meta("command") else null
 	)
 
 	if to_item == null or to_item_parent == get_root():
 		current_block.commands.remove_at(item_idx)
-	elif to_item_parent_commands is ContainerCommand:
-		to_item_parent_commands.container_block.commands.remove_at(item_idx)
+	elif to_item_parent_command is ContainerCommand:
+		to_item_parent_command.container_block.commands.remove_at(item_idx)
 
 	og_parent_commands.insert(og_idx, og_item_command)
 	create_tree_from_block(current_block)
