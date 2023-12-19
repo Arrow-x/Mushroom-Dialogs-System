@@ -4,6 +4,7 @@ class_name GeneralContainerCommand
 
 @export var name: String = ""
 @export var container_block: Block
+@export var collapse: bool
 
 
 func _init() -> void:

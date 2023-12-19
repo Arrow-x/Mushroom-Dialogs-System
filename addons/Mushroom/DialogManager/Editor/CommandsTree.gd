@@ -37,6 +37,9 @@ func _ready():
 	button_clicked.connect(_on_tree_item_x_button_pressed)
 	general_rmb_menu.add_index_pressed.connect(_on_add_command.bind(true))
 	general_rmb_menu.index_pressed.connect(_rmb_menu_index_pressed)
+	item_collapsed.connect(
+		func(item: TreeItem) -> void: item.get_meta("command").collapse = item.is_collapsed()
+	)
 	moved.connect(_on_moved)
 
 
@@ -162,6 +165,8 @@ func create_tree_item_from_command(
 	_item.set_icon(0, command.get_icon())
 	_item.set_meta("command", command)
 	_item.add_button(0, icon_x)
+	if command is ContainerCommand:
+		_item.set_collapsed(command.collapse)
 	if command is ElseCommand or command is IfElseCommand:
 		var l := l_parent.get_children() if l_parent != null else get_root().get_children()
 		var v_idx := l.size() - 2 if idx == -1 else idx - 1

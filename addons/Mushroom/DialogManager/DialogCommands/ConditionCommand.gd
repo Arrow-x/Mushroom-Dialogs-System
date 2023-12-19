@@ -4,6 +4,7 @@ class_name ConditionCommand
 
 @export var conditionals: Array[ConditionResource]
 @export var container_block: Block
+@export var collapse: bool
 
 
 func _init() -> void:

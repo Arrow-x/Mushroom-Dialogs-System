@@ -3,6 +3,7 @@ extends ContainerCommand
 class_name ElseCommand
 
 @export var container_block: Block
+@export var collapse: bool
 
 
 func _init() -> void:
