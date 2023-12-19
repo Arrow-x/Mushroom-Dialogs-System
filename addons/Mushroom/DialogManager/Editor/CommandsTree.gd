@@ -286,8 +286,14 @@ func move_list_tree_items(d: Dictionary, to_item_command: Command, shift: int) -
 
 
 func undo_move_list_tree_items(t: Dictionary):
+	var t_keys := t.keys()
+	for i in range(t_keys.size() - 1, -1, -1):
+		undo_move_tree_item_delete(t_keys[i])
 	for item_command in t:
-		undo_move_tree_item(item_command, t[item_command]["index"], t[item_command]["parent"])
+		undo_move_tree_item_insert(
+			item_command, t[item_command]["index"], t[item_command]["parent"]
+		)
+	create_tree_from_block(current_block)
 
 
 func move_tree_item(
@@ -334,29 +340,37 @@ func move_tree_item(
 	create_tree_from_block(current_block)
 
 
-func undo_move_tree_item(og_item_command: Command, og_idx: int, og_parent_command: Command):
+func undo_move_tree_item_delete(og_item_command: Command):
 	var to_item := get_tree_item_from_command(og_item_command)
+	if to_item == null:
+		push_error(og_item_command, "is not in this tree")
+		return
 	var item_idx := find_tree_item(to_item)
 	if item_idx == resault.not_found:
 		push_error("can't find it")
 		return
 	var to_item_parent := to_item.get_parent()
+	var to_item_parent_command: Command = (
+		to_item_parent.get_meta("command") if to_item_parent.has_meta("command") else null
+	)
+
+	if to_item_parent_command != null:
+		to_item_parent_command.container_block.commands.remove_at(item_idx)
+	else:
+		current_block.commands.remove_at(item_idx)
+
+
+func undo_move_tree_item_insert(
+	og_item_command: Command, og_idx: int, og_parent_command: Command
+) -> void:
 	var og_parent_commands: Array[Command] = (
 		og_parent_command.container_block.commands
 		if og_parent_command != null
 		else current_block.commands
 	)
-	var to_item_parent_command: Command = (
-		to_item_parent.get_meta("command") if to_item_parent.has_meta("command") else null
-	)
-
-	if to_item == null or to_item_parent == get_root():
-		current_block.commands.remove_at(item_idx)
-	elif to_item_parent_command is ContainerCommand:
-		to_item_parent_command.container_block.commands.remove_at(item_idx)
-
-	og_parent_commands.insert(og_idx, og_item_command)
-	create_tree_from_block(current_block)
+	var err := og_parent_commands.insert(og_idx, og_item_command)
+	if err != OK:
+		push_error("can't insert: ", og_parent_command, "at: ", og_idx, "on: ", og_parent_commands)
 
 
 func find_tree_item(item: TreeItem, parent: TreeItem = null) -> int:
