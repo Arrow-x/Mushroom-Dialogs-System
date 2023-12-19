@@ -398,7 +398,9 @@ func get_tree_item_from_command(command: Command, parent: TreeItem = null) -> Tr
 
 
 func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:
-	tree_changed.emit(flowchart_tab.flowchart)
+	var current_item_command: Command
+	if get_selected():
+		current_item_command = get_selected().get_meta("command")
 	if parent == null:
 		self.clear()
 	if block.commands == null:
@@ -407,6 +409,10 @@ func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:
 		var created_item: TreeItem = create_tree_item_from_command(i, -1, parent)
 		if i is ContainerCommand:
 			create_tree_from_block(i.container_block, created_item)
+
+	if current_item_command:
+		set_selected(get_tree_item_from_command(current_item_command), 0)
+	tree_changed.emit(flowchart_tab.flowchart)
 
 
 func _on_tree_item_double_clicked() -> void:
