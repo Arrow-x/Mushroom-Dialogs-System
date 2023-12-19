@@ -1,5 +1,5 @@
 @tool
-extends ContainerCommand
+extends IfCommand
 class_name ConditionCommand
 
 @export var conditionals: Array[ConditionResource]

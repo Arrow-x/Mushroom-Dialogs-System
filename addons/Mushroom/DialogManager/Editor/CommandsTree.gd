@@ -162,7 +162,13 @@ func create_tree_item_from_command(
 	_item.set_icon(0, command.get_icon())
 	_item.set_meta("command", command)
 	_item.add_button(0, icon_x)
-	# TODO: warn if Else Command is not under a Conditional Command
+	if command is ElseCommand or command is IfElseCommand:
+		var l := l_parent.get_children() if l_parent != null else get_root().get_children()
+		var v_idx := l.size() - 2 if idx == -1 else idx - 1
+		var l_cmd: Command = l[v_idx].get_meta("command")
+		if not l_cmd is IfCommand or v_idx == -1:
+			_item.set_custom_color(0, Color.RED)
+
 	flowchart_tab.changed_flowchart()
 	return _item
 
