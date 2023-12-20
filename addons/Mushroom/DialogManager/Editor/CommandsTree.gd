@@ -108,26 +108,31 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 		push_error("there is no block selected")
 		return
 
-	var _command: Command = pop_up.get_item_metadata(id).duplicate()
+	var command: Command = pop_up.get_item_metadata(id).duplicate()
 
 	var idx: int = -1
-	var p: Command = null
+	var parent_cmd: Command = null
 
 	if is_rmb:
-		var selec_m: Command = get_selected().get_meta("command")
-		if selec_m is ContainerCommand:
-			p = selec_m
+		var selected_item_cmd: Command = get_selected().get_meta("command")
+		if selected_item_cmd is ContainerCommand:
+			parent_cmd = selected_item_cmd
 		else:
-			var selec_p := get_selected().get_parent()
-			if selec_p == get_root():
+			var selected_parent := get_selected().get_parent()
+			if selected_parent == get_root():
 				idx = find_tree_item(get_selected()) + 1
 			else:
-				idx = selec_p.get_meta("command").container_block.commands.find(selec_m) + 1
-				p = selec_p.get_meta("command")
+				idx = (
+					selected_parent.get_meta("command").container_block.commands.find(
+						selected_item_cmd
+					)
+					+ 1
+				)
+				parent_cmd = selected_parent.get_meta("command")
 
 	undo_redo.create_action("Added Command")
-	undo_redo.add_do_method(self, "add_command_to_block", _command, idx, p)
-	undo_redo.add_undo_method(self, "delete_command", _command)
+	undo_redo.add_do_method(self, "add_command_to_block", command, idx, parent_cmd)
+	undo_redo.add_undo_method(self, "delete_command", command)
 	undo_redo.commit_action()
 
 
@@ -141,11 +146,11 @@ func add_command_to_block(command: Command, idx: int = -1, parent: Command = nul
 
 	else:
 		if parent is ContainerCommand:
-			var prc: Array[Command] = parent.container_block.commands
+			var pbc: Array[Command] = parent.container_block.commands
 			if idx == -1:
-				prc.append(command)
+				pbc.append(command)
 			else:
-				prc.insert(idx, command)
+				pbc.insert(idx, command)
 	if command is ForkCommand:
 		current_block.outputs.append(command)
 	create_tree_from_block(current_block)
@@ -153,54 +158,56 @@ func add_command_to_block(command: Command, idx: int = -1, parent: Command = nul
 
 
 func create_tree_item_from_command(
-	command: Command, idx: int = -1, parent: TreeItem = null
+	command: Command, idx: int = -1, in_parent: TreeItem = null
 ) -> TreeItem:
-	var l_parent := parent
+	var parent := in_parent
 	if get_root() == null:
-		l_parent = self.create_item()
+		parent = self.create_item()
 		self.set_hide_root(true)
 
-	var _item: TreeItem = self.create_item(l_parent, idx)
-	_item.set_text(0, command.preview())
-	_item.set_icon(0, command.get_icon())
-	_item.set_meta("command", command)
-	_item.add_button(0, icon_x)
+	var item: TreeItem = self.create_item(parent, idx)
+	item.set_text(0, command.preview())
+	item.set_icon(0, command.get_icon())
+	item.set_meta("command", command)
+	item.add_button(0, icon_x)
 	if command is ContainerCommand:
-		_item.set_collapsed(command.collapse)
+		item.set_collapsed(command.collapse)
 	if command is ElseCommand or command is IfElseCommand:
-		var l := l_parent.get_children() if l_parent != null else get_root().get_children()
-		var v_idx := l.size() - 2 if idx == -1 else idx - 1
-		var l_cmd: Command = l[v_idx].get_meta("command")
-		if not l_cmd is IfCommand or v_idx == -1:
-			_item.set_custom_color(0, Color.RED)
+		var parent_children := (
+			parent.get_children() if parent != null else get_root().get_children()
+		)
+		var create_idx := parent_children.size() - 2 if idx == -1 else idx - 1
+		var created_cmd: Command = parent_children[create_idx].get_meta("command")
+		if not created_cmd is IfCommand or create_idx == -1:
+			item.set_custom_color(0, Color.RED)
 
 	flowchart_tab.changed_flowchart()
-	return _item
+	return item
 
 
 func delete_command(command: Command, tree: TreeItem = null) -> int:
-	var d_tree: Array
-	var d_block: Block
+	var del_tree: Array
+	var del_block: Block
 	if command is ForkCommand:
 		graph_edit.delete_output(current_block.name, command)
 
 	if tree:
-		d_tree = tree.get_children()
-		d_block = tree.get_meta("command").container_block
+		del_tree = tree.get_children()
+		del_block = tree.get_meta("command").container_block
 	else:
-		d_tree = get_root().get_children()
-		d_block = current_block
-	for c in d_tree.size():
-		var d_c = d_tree[c]
-		if d_c.get_meta("command") == command:
-			d_c.free()
-			d_block.commands.remove_at(c)
+		del_tree = get_root().get_children()
+		del_block = current_block
+	for t_idx in del_tree.size():
+		var d_t: TreeItem = del_tree[t_idx]
+		if d_t.get_meta("command") == command:
+			d_t.free()
+			del_block.commands.remove_at(t_idx)
 			free_Command_editor(command)
 			create_tree_from_block(current_block)
 			return resault.success
-		elif d_c.get_meta("command") is ContainerCommand:
-			var b = delete_command(command, d_c)
-			if b != resault.not_found:
+		elif d_t.get_meta("command") is ContainerCommand:
+			var err := delete_command(command, d_t)
+			if err != resault.not_found:
 				free_Command_editor(command)
 				create_tree_from_block(current_block)
 				return resault.success
