@@ -170,6 +170,7 @@ func create_tree_item_from_command(
 	item.set_icon(0, command.get_icon())
 	item.set_meta("command", command)
 	item.add_button(0, icon_x)
+	command.tree_item = item
 	if command is ContainerCommand:
 		item.set_collapsed(command.collapse)
 	if command is ElseCommand or command is IfElseCommand:
@@ -380,42 +381,17 @@ func undo_move_tree_item_insert(
 		push_error("can't insert: ", og_parent_command, "at: ", og_idx, "on: ", og_parent_commands)
 
 
-func find_tree_item(item: TreeItem, parent: TreeItem = null) -> int:
-	var treeitems: Array
-	if item == null:
-		return resault.not_found
-	if parent == null:
-		treeitems = get_root().get_children()
-	else:
-		treeitems = parent.get_children()
-
-	for i in treeitems.size():
-		if treeitems[i] == item:
-			return i
-		elif treeitems[i].get_meta("command") is ContainerCommand:
-			var r: int = find_tree_item(item, treeitems[i])
-			if r != resault.not_found:
-				return r
+func find_tree_item(item: TreeItem) -> int:
+	if item != null:
+		return item.get_index()
 	return resault.not_found
 
 
-func get_tree_item_from_command(command: Command, parent: TreeItem = null) -> TreeItem:
-	var tree: Array
-	if command == null:
-		return null
-	if parent == null:
-		tree = get_root().get_children()
+func get_tree_item_from_command(command: Command) -> TreeItem:
+	if command != null:
+		return command.tree_item
 	else:
-		tree = parent.get_children()
-	for t in tree:
-		var t_cmd: Command = t.get_meta("command")
-		if t_cmd == command:
-			return t
-		elif t_cmd is ContainerCommand:
-			var s := get_tree_item_from_command(command, t)
-			if s != null:
-				return s
-	return null
+		return null
 
 
 func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:
