@@ -41,7 +41,7 @@ func _on_delete_choice_pressed() -> void:
 
 func _on_next_index_value_changed(value: float) -> void:
 	current_choice.next_index = int(value)
-	connecting.emit()
+	is_changed()
 
 
 func _on_next_blocklist_about_to_show() -> void:
@@ -82,7 +82,7 @@ func change_next_block(next_block_name: String = "") -> void:
 
 func _on_choicetext_text_changed(new_text: String) -> void:
 	current_choice.text = new_text
-	connecting.emit()
+	is_changed()
 
 
 func _on_is_cond_checkbox_toggled(button_pressed: bool) -> void:
@@ -108,8 +108,12 @@ func show_condition_toggle(button_pressed: bool) -> void:
 	is_cond.set_pressed_no_signal(button_pressed)
 	cond_box.visible = button_pressed
 	current_choice.is_cond = button_pressed
-	connecting.emit()
+	is_changed()
 
 
 func get_choice() -> Choice:
 	return current_choice
+
+
+func is_changed() -> void:
+	current_choice.changed.emit()

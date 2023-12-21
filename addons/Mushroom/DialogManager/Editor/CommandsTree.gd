@@ -412,6 +412,11 @@ func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:
 	tree_changed.emit(flowchart_tab.flowchart)
 
 
+func update_command_preview(cmd: Command) -> void:
+	cmd.tree_item.set_text(0, cmd.preview())
+	tree_changed.emit(flowchart_tab.flowchart)
+
+
 func _on_tree_item_double_clicked() -> void:
 	var sel_c: Command = get_selected().get_meta("command")
 	undo_redo.create_action("selecting a command")
@@ -431,8 +436,8 @@ func create_command_editor(current_item = null) -> void:
 	if current_item == null:
 		return
 
-	if !current_item.changed.is_connected(create_tree_from_block):
-		current_item.changed.connect(create_tree_from_block.bind(current_block))
+	if !current_item.changed.is_connected(update_command_preview):
+		current_item.changed.connect(update_command_preview)
 
 	for c in commands_settings.get_children():
 		c.queue_free()
@@ -444,7 +449,7 @@ func create_command_editor(current_item = null) -> void:
 			control.set_up(current_item, undo_redo, flowchart_tab.flowchart, self)
 
 		"ForkCommand":
-			control = i_fork_control.nstantiate()
+			control = i_fork_control.instantiate()
 			commands_settings.add_child(control, true)
 			control.set_up(
 				current_item, undo_redo, flowchart_tab.flowchart, current_block, graph_edit, self

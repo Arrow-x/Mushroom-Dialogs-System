@@ -193,4 +193,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_say.changed.emit()
+	current_say.changed.emit(current_say)

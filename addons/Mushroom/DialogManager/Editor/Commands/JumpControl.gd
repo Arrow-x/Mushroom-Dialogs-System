@@ -78,9 +78,9 @@ func do_change_jump_block(next_block: Block = null) -> void:
 	is_changed()
 
 
-func is_changed() -> void:
-	current_jump.changed.emit()
-
-
 func get_command() -> Command:
 	return current_jump
+
+
+func is_changed() -> void:
+	current_jump.changed.emit(current_jump)

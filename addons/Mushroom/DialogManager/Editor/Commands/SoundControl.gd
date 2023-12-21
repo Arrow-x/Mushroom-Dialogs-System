@@ -150,9 +150,9 @@ func select_mix(id: int, mix_menu_text: String) -> void:
 	is_changed()
 
 
-func is_changed() -> void:
-	current_sound.changed.emit()
-
-
 func get_command() -> Command:
 	return current_sound
+
+
+func is_changed() -> void:
+	current_sound.changed.emit(current_sound)

@@ -21,4 +21,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_general_container.changed.emit()
+	current_general_container.changed.emit(current_general_container)

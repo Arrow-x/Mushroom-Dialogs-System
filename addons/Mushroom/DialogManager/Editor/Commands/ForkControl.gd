@@ -107,4 +107,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_fork.changed.emit()
+	current_fork.changed.emit(current_fork)

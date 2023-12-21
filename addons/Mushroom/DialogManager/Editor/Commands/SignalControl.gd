@@ -34,4 +34,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_signal.changed.emit()
+	current_signal.changed.emit(current_signal)

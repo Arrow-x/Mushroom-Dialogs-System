@@ -38,7 +38,7 @@ func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager) -> v
 	command_tree.undo_redo = sent_undo_redo
 	command_tree.graph_edit = graph_edit
 	command_tree.flowchart_tab = self
-	command_tree.tree_changed.connect(func(fc: FlowChart) -> void: f_tab_changed.emit(fc))
+	command_tree.tree_changed.connect(changed_flowchart)
 
 	graph_edit.sync_flowchart_graph(flowchart)
 
@@ -72,8 +72,11 @@ func save_flowchart_to_disc(path: String, overwrite := false) -> void:
 	done_saving.emit()
 
 
-func changed_flowchart() -> void:
-	f_tab_changed.emit(flowchart)
+func changed_flowchart(f: FlowChart = null) -> void:
+	if f == null:
+		f_tab_changed.emit(flowchart)
+	else:
+		f_tab_changed.emit(f)
 	if name.findn("(*)") == -1:
 		if flow_tabs:
 			flow_tabs.set_tab_title(get_index(), str(name + "(*)"))

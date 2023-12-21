@@ -66,4 +66,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_change_ui.changed.emit()
+	current_change_ui.changed.emit(current_change_ui)

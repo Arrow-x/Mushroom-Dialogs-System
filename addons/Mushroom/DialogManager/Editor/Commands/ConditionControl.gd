@@ -26,4 +26,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_condition.changed.emit()
+	current_condition.changed.emit(current_condition)

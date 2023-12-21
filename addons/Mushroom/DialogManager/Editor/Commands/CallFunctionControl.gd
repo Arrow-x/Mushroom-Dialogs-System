@@ -35,4 +35,4 @@ func get_command() -> Command:
 
 
 func is_changed() -> void:
-	current_call_func.changed.emit()
+	current_call_func.changed.emit(current_call_func)
