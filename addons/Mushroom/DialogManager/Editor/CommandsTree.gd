@@ -33,27 +33,94 @@ signal moved(item, to_item, shift)
 signal tree_changed(flowchart: FlowChart)
 
 
-func _ready():
+func _ready() -> void:
 	button_clicked.connect(_on_tree_item_x_button_pressed)
 	general_rmb_menu.add_index_pressed.connect(_on_add_command.bind(true))
 	general_rmb_menu.index_pressed.connect(_rmb_menu_index_pressed)
+	item_mouse_selected.connect(
+		func(pos: Vector2, m_flag: int): _on_tree_item_rmb_selected(pos, m_flag, true)
+	)
+	empty_clicked.connect(
+		func(pos: Vector2, m_flag: int): _on_tree_item_rmb_selected(pos, m_flag, false)
+	)
 	item_collapsed.connect(
 		func(item: TreeItem) -> void: item.get_meta("command").collapse = item.is_collapsed()
 	)
 	moved.connect(_on_moved)
 
 
-func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int) -> void:
+func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int, is_item: bool) -> void:
 	if mouse_button_index != 2:
 		return
-	general_rmb_menu.set_up()
+	var paste := false
+	if flowchart_tab.main_editor.commands_clipboard.is_empty() == false:
+		paste = true
+	general_rmb_menu.set_up(paste, is_item)
 	var gmp := get_global_mouse_position()
-	general_rmb_menu.popup(Rect2(gmp.x, gmp.y, general_rmb_menu.size.x, general_rmb_menu.size.y))
+	general_rmb_menu.popup(Rect2(gmp.x, gmp.y, 0, 0))
 
 
 func _rmb_menu_index_pressed(idx: int) -> void:
-	if general_rmb_menu.get_item_text(idx) == "delete":
-		_on_tree_item_x_button_pressed(get_selected(), 0, 1, 1)
+	match general_rmb_menu.get_item_text(idx):
+		"Delete":
+			_on_tree_item_x_button_pressed(get_selected(), 0, 1, 1)
+		"Copy":
+			flowchart_tab.main_editor.commands_clipboard.clear()
+			flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items_copy()
+		"Cut":
+			# TODO: UndoRedo This is gotcha lol
+			var refs := get_selected_tree_items_refs()
+			var refs_keys := refs.keys()
+			flowchart_tab.main_editor.commands_clipboard.clear()
+			flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items_copy()
+			for i in range(refs_keys.size() - 1, -1, -1):
+				undo_move_tree_item_delete(refs_keys[i])
+		"Paste":
+			var sel_idx: int
+			var cmds: Array
+			if get_selected() == null:
+				cmds = current_block.commands
+				sel_idx = cmds.size()
+			else:
+				var selected_cmd: Command = get_selected().get_meta("command")
+				if selected_cmd is ContainerCommand:
+					cmds = selected_cmd.container_block.commands
+					sel_idx = cmds.size()
+				else:
+					sel_idx = get_selected().get_index() + 1
+					var parent = get_selected().get_parent()
+					if parent == get_root() or parent == null:
+						cmds = current_block.commands
+					else:
+						cmds = (
+							get_selected().get_parent().get_meta("command").container_block.commands
+						)
+			var clip: Array = flowchart_tab.main_editor.commands_clipboard
+			undo_redo.create_action("paste commands")
+			undo_redo.add_do_method(
+				self, "paste_commands", cmds, clip, sel_idx, flowchart_tab.flowchart
+			)
+			undo_redo.add_undo_method(
+				self, "undo_paste_commands", sel_idx, clip.size(), cmds, flowchart_tab.flowchart
+			)
+			undo_redo.commit_action()
+
+		_:
+			push_error("Unknow key in right menu button")
+
+
+func paste_commands(to_array: Array, paste_array: Array, idx: int, fl: FlowChart) -> void:
+	tree_changed.emit(fl)
+	for i in range(paste_array.size() - 1, -1, -1):
+		to_array.insert(idx, paste_array[i])
+	create_tree_from_block(current_block)
+
+
+func undo_paste_commands(input_idx: int, paste_count: int, pasted: Array, fl: FlowChart) -> void:
+	tree_changed.emit(fl)
+	for i in range(paste_count + input_idx - 1, input_idx - 1, -1):
+		pasted.remove_at(i)
+	create_tree_from_block(current_block)
 
 
 func _on_tree_item_x_button_pressed(
@@ -114,21 +181,22 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 	var parent_cmd: Command = null
 
 	if is_rmb:
-		var selected_item_cmd: Command = get_selected().get_meta("command")
-		if selected_item_cmd is ContainerCommand:
-			parent_cmd = selected_item_cmd
-		else:
-			var selected_parent := get_selected().get_parent()
-			if selected_parent == get_root():
-				idx = find_tree_item(get_selected()) + 1
+		if get_selected() != null:
+			var selected_item_cmd: Command = get_selected().get_meta("command")
+			if selected_item_cmd is ContainerCommand:
+				parent_cmd = selected_item_cmd
 			else:
-				idx = (
-					selected_parent.get_meta("command").container_block.commands.find(
-						selected_item_cmd
+				var selected_parent := get_selected().get_parent()
+				if selected_parent == get_root():
+					idx = find_tree_item(get_selected()) + 1
+				else:
+					idx = (
+						selected_parent.get_meta("command").container_block.commands.find(
+							selected_item_cmd
+						)
+						+ 1
 					)
-					+ 1
-				)
-				parent_cmd = selected_parent.get_meta("command")
+					parent_cmd = selected_parent.get_meta("command")
 
 	undo_redo.create_action("Added Command")
 	undo_redo.add_do_method(self, "add_command_to_block", command, idx, parent_cmd)
@@ -224,7 +292,7 @@ func free_Command_editor(command: Command) -> void:
 func _get_drag_data(_position: Vector2):
 	if get_selected() == null:
 		return
-	var selected_dict := get_all_selected_tree_items()
+	var selected_dict := get_selected_tree_items_refs()
 
 	var preview := Label.new()
 	var selected_item := get_next_selected(null)
@@ -238,7 +306,21 @@ func _get_drag_data(_position: Vector2):
 	return selected_dict
 
 
-func get_all_selected_tree_items() -> Dictionary:
+func get_selected_tree_items_copy() -> Array:
+	var selected_item := get_next_selected(null)
+	var copies_array: Array
+	while selected_item:
+		var selected_parent := selected_item.get_parent()
+		var selected_parent_command: Command = (
+			selected_parent.get_meta("command") if selected_parent != get_root() else null
+		)
+		if copies_array.has(selected_parent_command) == false:
+			copies_array.append(selected_item.get_meta("command").duplicate())
+		selected_item = get_next_selected(selected_item)
+	return copies_array
+
+
+func get_selected_tree_items_refs() -> Dictionary:
 	var selected_item := get_next_selected(null)
 	var r_dict: Dictionary
 	while selected_item:
@@ -395,9 +477,6 @@ func get_tree_item_from_command(command: Command) -> TreeItem:
 
 
 func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:
-	var current_item_command: Command
-	if get_selected():
-		current_item_command = get_selected().get_meta("command")
 	if parent == null:
 		self.clear()
 	if block.commands == null:
@@ -407,8 +486,6 @@ func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:
 		if i is ContainerCommand:
 			create_tree_from_block(i.container_block, created_item)
 
-	if current_item_command:
-		set_selected(get_tree_item_from_command(current_item_command), 0)
 	tree_changed.emit(flowchart_tab.flowchart)
 
 

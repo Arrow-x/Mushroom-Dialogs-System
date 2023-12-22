@@ -6,6 +6,7 @@ extends Control
 @export var f_tabs: TabBar
 
 var undo_redo: EditorUndoRedoManager
+var commands_clipboard: Array
 
 
 func open_flowchart_scene(flowchart: FlowChart, u_r: EditorUndoRedoManager) -> void:
@@ -19,7 +20,7 @@ func open_flowchart_scene(flowchart: FlowChart, u_r: EditorUndoRedoManager) -> v
 
 	var fc_control: Control = i_flowchart_control.instantiate()
 	flowcharts_container.add_child(fc_control)
-	fc_control.set_flowchart(flowchart, u_r)
+	fc_control.set_flowchart(flowchart, u_r, self)
 
 	var flowchart_name := flowchart.get_flowchart_name()
 	fc_control.name = flowchart_name

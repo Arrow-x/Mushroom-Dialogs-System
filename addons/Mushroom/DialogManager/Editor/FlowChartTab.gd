@@ -10,6 +10,7 @@ extends HSplitContainer
 var flowchart: FlowChart
 var flow_tabs: TabBar
 var undo_redo: EditorUndoRedoManager
+var main_editor: Control
 
 var modified := false
 
@@ -24,9 +25,10 @@ func check_for_duplicates(name) -> bool:
 	return false
 
 
-func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager) -> void:
+func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager, ed: Control) -> void:
 	flowchart = chart
 	undo_redo = sent_undo_redo
+	main_editor = ed
 
 	add_block_button.button_down.connect(graph_edit.on_add_block_button_pressed)
 
