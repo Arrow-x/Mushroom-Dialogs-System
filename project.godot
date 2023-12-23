@@ -19,7 +19,7 @@ DialogManagerNode="*res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Mushroom/plugin.cfg", "res://addons/plugin_refresher/plugin.cfg")
+enabled=PackedStringArray("res://addons/Mushroom/plugin.cfg", "res://addons/plugin_refresher/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg")
 
 [gui]
 
