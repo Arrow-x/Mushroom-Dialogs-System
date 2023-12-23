@@ -203,7 +203,7 @@ func full_clear() -> void:
 		current_block_label.text = ""
 
 
-func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
+func _on_add_command(id: int, pop_up: Popup, on_item:= false, is_rmb := false) -> void:
 	if current_block == null:
 		push_error("there is no block selected")
 		return
@@ -214,7 +214,7 @@ func _on_add_command(id: int, pop_up: Popup, is_rmb = false) -> void:
 	var parent_cmd: Command = null
 
 	if is_rmb:
-		if get_selected() != null:
+		if get_selected() != null and on_item == true:
 			var selected_item_cmd: Command = get_selected().get_meta("command")
 			if selected_item_cmd is ContainerCommand:
 				parent_cmd = selected_item_cmd
