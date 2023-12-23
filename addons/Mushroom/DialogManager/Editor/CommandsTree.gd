@@ -1,10 +1,14 @@
 @tool
 extends Tree
 
+signal moved(item, to_item, shift)
+signal tree_changed(flowchart: FlowChart)
+
+enum resault { success = 1, not_found = -2 }
+
 @export var current_block_label: Label
 @export var commands_settings: Container
 @export var general_rmb_menu: PopupMenu
-@export var rename_button: Button
 
 @export var i_animation_control: PackedScene
 @export var i_call_function_control: PackedScene
@@ -26,11 +30,6 @@ var undo_redo: EditorUndoRedoManager
 var graph_edit: GraphEdit
 
 var prev_selected_Command: Command
-
-enum resault { success = 1, not_found = -2 }
-
-signal moved(item, to_item, shift)
-signal tree_changed(flowchart: FlowChart)
 
 
 func _ready() -> void:
@@ -180,15 +179,14 @@ func _on_tree_item_x_button_pressed(
 
 
 func initiate_tree_from_block(meta: Block) -> void:
-	if meta == current_block or meta == null:
+	if meta == null:
+		return
+	if meta == current_block:
+		current_block_label.set_text(meta.name)
 		return
 	full_clear()
+	current_block_label.set_text(meta.name)
 	current_block = meta
-	current_block_label.text = meta.name
-	if meta.name == "first_block":
-		rename_button.disabled = true
-	else:
-		rename_button.disabled = false
 
 	for c in commands_settings.get_children():
 		c.queue_free()
@@ -199,11 +197,10 @@ func initiate_tree_from_block(meta: Block) -> void:
 func full_clear() -> void:
 	self.clear()
 	current_block = null
-	if current_block_label:
-		current_block_label.text = ""
+	current_block_label.text = ""
 
 
-func _on_add_command(id: int, pop_up: Popup, on_item:= false, is_rmb := false) -> void:
+func _on_add_command(id: int, pop_up: Popup, on_item := false, is_rmb := false) -> void:
 	if current_block == null:
 		push_error("there is no block selected")
 		return

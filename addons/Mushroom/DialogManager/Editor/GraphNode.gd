@@ -1,22 +1,58 @@
 @tool
 extends GraphNode
 
+signal dragging
+signal node_closed
+signal right_menu_click
+
 var c_inputs: Array
 var c_outputs: Array
 
 var connected_destenation_blocks: Array
+var block_clipboard: Array
 
-signal graph_node_meta
-signal dragging
-signal node_closed
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == 2:
+			accept_event()
+			righ_click_menu()
 
 
 func _ready() -> void:
-	if !raise_request.is_connected(_on_GraphNode_raise_request):
-		raise_request.connect(_on_GraphNode_raise_request)
+	dragged.connect(_on_graph_node_dragged)
 
-	if !dragged.is_connected(_on_GraphNode_dragged):
-		dragged.connect(_on_GraphNode_dragged)
+
+func righ_click_menu():
+	var pop := PopupMenu.new()
+	pop.popup_hide.connect(func(): pop.queue_free())
+	pop.index_pressed.connect(handle_right_click.bind(pop))
+	pop.add_item("Copy")
+	pop.add_item("Cut")
+	if block_clipboard != null:
+		pop.add_item("Paste")
+	if not self.title == "first_block":
+		pop.add_item("Rename")
+		pop.add_item("Delete")
+	add_child(pop)
+	var gmp := DisplayServer.mouse_get_position()
+	pop.popup(Rect2(gmp.x, gmp.y, 0, 0))
+
+
+func handle_right_click(idx: int, pop: PopupMenu) -> void:
+	match pop.get_item_text(idx):
+		"Copy":
+			right_menu_click.emit("Copy", Vector2.ZERO, self)
+		"Cut":
+			right_menu_click.emit("Cut", Vector2.ZERO, self)
+		"Paste":
+			right_menu_click.emit("Paste", Vector2.ZERO, self)
+		"Delete":
+			right_menu_click.emit("Delete", Vector2.ZERO, self)
+		"Rename":
+			right_menu_click.emit("Rename", Vector2.ZERO, self)
+		_:
+			push_error("GraphNode: Unknow option in right click menu")
 
 
 func add_close_button() -> void:
@@ -95,9 +131,5 @@ func create_contorl_for_g_node_connection(io_c: Array, fork: ForkCommand) -> voi
 	io_c.append(cc)
 
 
-func _on_GraphNode_raise_request() -> void:
-	graph_node_meta.emit(self)
-
-
-func _on_GraphNode_dragged(from, too) -> void:
+func _on_graph_node_dragged(from, too) -> void:
 	dragging.emit(from, too, self.title)

@@ -59,11 +59,7 @@ text = "Current Block: "
 [node name="CurrentBlock" type="Label" parent="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="RenameButton" type="Button" parent="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/HBoxContainer"]
-layout_mode = 2
-disabled = true
-text = "R"
+horizontal_alignment = 2
 
 [node name="inspectorHeaderHBoxContainer" type="HBoxContainer" parent="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer"]
 layout_mode = 2
@@ -75,7 +71,7 @@ script = ExtResource("3_58pwy")
 commands_tree = NodePath("../../../CommandsTree")
 i_rmb_add_menu = ExtResource("1")
 
-[node name="CommandsTree" type="Tree" parent="InspectorTabContainer/Block Settings/InspectorVContainer" node_paths=PackedStringArray("current_block_label", "commands_settings", "general_rmb_menu", "rename_button")]
+[node name="CommandsTree" type="Tree" parent="InspectorTabContainer/Block Settings/InspectorVContainer" node_paths=PackedStringArray("current_block_label", "commands_settings", "general_rmb_menu")]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -87,7 +83,6 @@ script = ExtResource("2")
 current_block_label = NodePath("../TreeHeaderVboxContainer/HBoxContainer/CurrentBlock")
 commands_settings = NodePath("../../CommandEditorsContianer")
 general_rmb_menu = NodePath("GeneralRMBMenu")
-rename_button = NodePath("../TreeHeaderVboxContainer/HBoxContainer/RenameButton")
 i_animation_control = ExtResource("9_b0t6e")
 i_call_function_control = ExtResource("13_lxhvy")
 i_change_ui_control = ExtResource("12_afd8q")
@@ -153,5 +148,6 @@ i_graph_node = ExtResource("9_adxui")
 flowchart_tab = NodePath("../..")
 command_tree = NodePath("../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree")
 
-[connection signal="pressed" from="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/HBoxContainer/RenameButton" to="." method="_on_rename_button_pressed"]
 [connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/SaveButton" to="." method="check_flowchart_path_before_save"]
+[connection signal="node_selected" from="GraphContainer/GraphEdit" to="GraphContainer/GraphEdit" method="on_graph_node_clicked"]
+[connection signal="popup_request" from="GraphContainer/GraphEdit" to="GraphContainer/GraphEdit" method="_on_popup_request"]

@@ -1,6 +1,10 @@
 @tool
 extends GraphEdit
 
+signal g_node_clicked
+signal flow_changed
+signal graph_node_close
+
 @export var enter_name_scene: PackedScene
 @export var i_graph_node: PackedScene
 @export var flowchart_tab: Control
@@ -12,19 +16,15 @@ var flowchart: FlowChart
 var graph_nodes: Dictionary
 var current_selected_graph_node: String
 
-signal g_node_clicked
-signal flow_changed
-signal graph_node_close
 
-
-func on_add_block_button_pressed() -> void:
+func on_add_block_button_pressed(mouse_position := Vector2.ZERO) -> void:
 	var enter_name: Window = enter_name_scene.instantiate()
 	add_child(enter_name, true)
 	enter_name.popup_centered()
-	enter_name.new_text_confirm.connect(on_new_text_confirm)
+	enter_name.new_text_confirm.connect(on_new_text_confirm.bind(mouse_position))
 
 
-func on_new_text_confirm(new_title: String) -> void:
+func on_new_text_confirm(new_title: String, mouse_position := Vector2.ZERO) -> void:
 	if flowchart_tab.check_for_duplicates(new_title) or new_title.is_empty():
 		await get_tree().create_timer(0.01).timeout
 		push_error("The Title is a duplicate! or an Empty string")
@@ -32,7 +32,7 @@ func on_new_text_confirm(new_title: String) -> void:
 		return
 
 	undo_redo.create_action("Creating a block")
-	undo_redo.add_do_method(self, "add_block", new_title)
+	undo_redo.add_do_method(self, "add_block", new_title, mouse_position)
 	undo_redo.add_undo_method(self, "close_node", new_title)
 	undo_redo.commit_action()
 
@@ -46,34 +46,37 @@ func on_node_close(node: GraphNode) -> void:
 	undo_redo.commit_action()
 
 
-func add_block(title: String, offset = null, in_block: Block = null) -> void:
+func add_block(title: String, offset := Vector2.ZERO, in_block: Block = null) -> void:
 	create_graph_node_from_block(title, offset, in_block)
 	if in_block != null:
 		connect_block_inputs(in_block)
 		connect_block_outputs(in_block)
 
 
-func create_graph_node_from_block(title: String, offset = null, in_block: Block = null) -> void:
+func create_graph_node_from_block(
+	title: String, offset := Vector2.ZERO, in_block: Block = null
+) -> void:
 	var node: GraphNode = i_graph_node.instantiate()
 	node.title = title
-	if offset == null:
+	if offset == Vector2.ZERO:
 		node.position_offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
 	else:
 		node.position_offset = offset
-	var _new_block: Block
+	var new_block: Block
 	if in_block == null:
-		_new_block = Block.new()
-		_new_block.name = title
+		new_block = Block.new()
+		new_block.name = title
 	else:
-		_new_block = in_block
+		new_block = in_block
 
-	flowchart.blocks[title] = _new_block
+	flowchart.blocks[title] = new_block
 	flowchart.blocks_offset[title] = node.position_offset
-	node.set_meta("block", _new_block)
-	node.graph_node_meta.connect(on_graph_node_clicked, CONNECT_PERSIST)
-	node.dragging.connect(on_node_dragged, CONNECT_PERSIST)
+	node.set_meta("block", new_block)
+	node.dragging.connect(on_node_dragged)
+	node.block_clipboard = flowchart_tab.main_editor.block_clipboard
+	node.right_menu_click.connect(handle_right_menu)
 	if title != "first_block":
-		node.node_closed.connect(on_node_close, CONNECT_PERSIST)
+		node.node_closed.connect(on_node_close)
 	add_child(node)
 	node.set_owner(self)
 	graph_nodes[title] = node
@@ -241,8 +244,6 @@ func on_graph_node_clicked(node: GraphNode) -> void:
 
 func send_block_to_tree(node: String) -> void:
 	g_node_clicked.emit(flowchart.get_block(node))
-	set_selected(graph_nodes[node])
-	flow_changed.emit()
 
 
 func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title: String) -> void:
@@ -256,3 +257,85 @@ func set_node_offset(title: String, offset: Vector2) -> void:
 	graph_nodes[title].position_offset = offset
 	flowchart.blocks_offset[title] = offset
 	flow_changed.emit()
+
+
+func on_rename_button_pressed(block_to_rename: Block) -> void:
+	var enter_name: Window = enter_name_scene.instantiate()
+	enter_name.line_edit.text = block_to_rename.name
+	enter_name.line_edit.select(0)
+	add_child(enter_name, true)
+	enter_name.popup_centered()
+	enter_name.new_text_confirm.connect(_on_new_text_confirm.bind(block_to_rename))
+
+
+func _on_new_text_confirm(new_title: String, block_to_rename: Block) -> void:
+	if flowchart_tab.check_for_duplicates(new_title) or new_title.is_empty():
+		await get_tree().create_timer(0.01).timeout
+		push_error("GraphEdi: The Title is a duplicate! or an Empty string")
+		on_rename_button_pressed(block_to_rename)
+		return
+
+	undo_redo.create_action("Rename a block")
+	undo_redo.add_do_method(self, "rename_block", new_title, block_to_rename.name, block_to_rename)
+	undo_redo.add_undo_method(
+		self, "rename_block", block_to_rename.name, new_title, block_to_rename
+	)
+	undo_redo.commit_action()
+
+
+func rename_block(new_name: String, prev_name: String, block_to_rename: Block) -> void:
+	graph_nodes[prev_name].title = new_name
+	graph_nodes[new_name] = graph_nodes.get(prev_name)
+	graph_nodes.erase(prev_name)
+
+	var current_data := flowchart.blocks.get(prev_name)
+	current_data.name = new_name
+	flowchart.blocks[new_name] = current_data
+	flowchart.blocks_offset[new_name] = graph_nodes[new_name].position_offset
+
+	for output in flowchart.blocks[new_name].outputs:
+		output.origin_block = new_name
+	for input in flowchart.blocks[new_name].inputs:
+		for choice in input.choices:
+			choice.next_block = new_name
+
+	block_to_rename.name = new_name
+	flowchart.blocks.erase(prev_name)
+	flowchart.blocks_offset.erase(prev_name)
+	g_node_clicked.emit(block_to_rename)
+
+
+func _on_popup_request(position: Vector2):
+	accept_event()
+	var pop := PopupMenu.new()
+	pop.popup_hide.connect(func(): pop.queue_free())
+	pop.index_pressed.connect(
+		func(idx: int) -> void: handle_right_menu(pop.get_item_text(idx), position)
+	)
+	pop.add_item("Add Block")
+	if flowchart_tab.main_editor.block_clipboard != null:
+		pop.add_item("Paste")
+	add_child(pop)
+	var gmp := get_global_mouse_position()
+	pop.popup(Rect2(gmp.x, gmp.y, 0, 0))
+
+
+func handle_right_menu(case: String, pos := Vector2.ZERO, node: GraphNode = null) -> void:
+	if node != null:
+		set_selected(node)
+	match case:
+		"Add Block":
+			on_add_block_button_pressed(pos)
+		"Copy":
+			print("copy")
+		"Paste":
+			print("paste")
+		"Cut":
+			print("cut")
+		"Delete":
+			if node != null:
+				on_node_close(node)
+		"Rename":
+			on_rename_button_pressed(node.get_meta("block"))
+		_:
+			push_error("GraphEdit: no idea what have you pressed: ", case)
