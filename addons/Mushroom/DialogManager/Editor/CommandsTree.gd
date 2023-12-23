@@ -69,13 +69,15 @@ func _rmb_menu_index_pressed(idx: int) -> void:
 			flowchart_tab.main_editor.commands_clipboard.clear()
 			flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items_copy()
 		"Cut":
-			# TODO: UndoRedo This is gotcha lol
-			var refs := get_selected_tree_items_refs()
-			var refs_keys := refs.keys()
+			var selected_copies := get_selected_tree_items(true)
 			flowchart_tab.main_editor.commands_clipboard.clear()
 			flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items_copy()
-			for i in range(refs_keys.size() - 1, -1, -1):
-				undo_move_tree_item_delete(refs_keys[i])
+			undo_redo.create_action("cut commands")
+			undo_redo.add_do_method(self, "cut_commands", selected_copies, flowchart_tab.flowchart)
+			undo_redo.add_undo_method(
+				self, "undo_cut_commands", selected_copies, flowchart_tab.flowchart
+			)
+			undo_redo.commit_action()
 		"Paste":
 			var sel_idx: int
 			var cmds: Array
@@ -121,6 +123,31 @@ func undo_paste_commands(input_idx: int, paste_count: int, pasted: Array, fl: Fl
 	tree_changed.emit(fl)
 	for i in range(paste_count + input_idx - 1, input_idx - 1, -1):
 		pasted.remove_at(i)
+	create_tree_from_block(current_block)
+
+
+func cut_commands(selected: Dictionary, fl: FlowChart) -> void:
+	tree_changed.emit(fl)
+	var keys := selected.keys()
+	for i in range(keys.size() - 1, -1, -1):
+		var cmds: Array = (
+			selected[keys[i]]["parent"].container_block.commands
+			if selected[keys[i]]["parent"] != null
+			else current_block.commands
+		)
+		cmds.remove_at(selected[keys[i]]["index"])
+	create_tree_from_block(current_block)
+
+
+func undo_cut_commands(selected: Dictionary, fl: FlowChart) -> void:
+	tree_changed.emit(fl)
+	for s: Command in selected:
+		var cmds: Array = (
+			selected[s]["parent"].container_block.commands
+			if selected[s]["parent"] != null
+			else current_block.commands
+		)
+		cmds.insert(selected[s]["index"], s)
 	create_tree_from_block(current_block)
 
 
@@ -293,7 +320,7 @@ func free_Command_editor(command: Command) -> void:
 func _get_drag_data(_position: Vector2):
 	if get_selected() == null:
 		return
-	var selected_dict := get_selected_tree_items_refs()
+	var selected_dict := get_selected_tree_items(false)
 
 	var preview := Label.new()
 	var selected_item := get_next_selected(null)
@@ -321,7 +348,7 @@ func get_selected_tree_items_copy() -> Array:
 	return copies_array
 
 
-func get_selected_tree_items_refs() -> Dictionary:
+func get_selected_tree_items(copy: bool) -> Dictionary:
 	var selected_item := get_next_selected(null)
 	var r_dict: Dictionary
 	while selected_item:
@@ -330,9 +357,14 @@ func get_selected_tree_items_refs() -> Dictionary:
 			selected_parent.get_meta("command") if selected_parent != get_root() else null
 		)
 		if r_dict.has(selected_parent_command) == false:
-			r_dict[selected_item.get_meta("command")] = {
-				"index": selected_item.get_index(), "parent": selected_parent_command
-			}
+			if copy == true:
+				r_dict[selected_item.get_meta("command").duplicate()] = {
+					"index": selected_item.get_index(), "parent": selected_parent_command
+				}
+			else:
+				r_dict[selected_item.get_meta("command")] = {
+					"index": selected_item.get_index(), "parent": selected_parent_command
+				}
 		selected_item = get_next_selected(selected_item)
 	return r_dict
 
