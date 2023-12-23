@@ -37,6 +37,7 @@ func _ready() -> void:
 	button_clicked.connect(_on_tree_item_x_button_pressed)
 	general_rmb_menu.add_index_pressed.connect(_on_add_command.bind(true))
 	general_rmb_menu.index_pressed.connect(_rmb_menu_index_pressed)
+	item_activated.connect(_on_tree_item_double_clicked)
 	item_mouse_selected.connect(
 		func(pos: Vector2, m_flag: int): _on_tree_item_rmb_selected(pos, m_flag, true)
 	)
