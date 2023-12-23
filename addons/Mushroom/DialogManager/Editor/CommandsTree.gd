@@ -41,13 +41,18 @@ func _ready() -> void:
 	item_mouse_selected.connect(
 		func(pos: Vector2, m_flag: int): _on_tree_item_rmb_selected(pos, m_flag, true)
 	)
-	empty_clicked.connect(
-		func(pos: Vector2, m_flag: int): _on_tree_item_rmb_selected(pos, m_flag, false)
-	)
 	item_collapsed.connect(
 		func(item: TreeItem) -> void: item.get_meta("command").collapse = item.is_collapsed()
 	)
+	gui_input.connect(genaric_right_click)
 	moved.connect(_on_moved)
+
+
+func genaric_right_click(input: InputEvent) -> void:
+	if current_block == null:
+		return
+	if input is InputEventMouseButton:
+		_on_tree_item_rmb_selected(input.position, input.button_index, false)
 
 
 func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int, is_item: bool) -> void:
