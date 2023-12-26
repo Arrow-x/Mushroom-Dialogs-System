@@ -15,6 +15,7 @@ var undo_redo: EditorUndoRedoManager
 var flowchart: FlowChart
 var graph_nodes: Dictionary
 var current_selected_graph_node: String
+var clipboard: Array[Block]
 
 
 func on_add_block_button_pressed(mouse_position := Vector2.ZERO) -> void:
@@ -313,25 +314,38 @@ func _on_popup_request(position: Vector2):
 		func(idx: int) -> void: handle_right_menu(pop.get_item_text(idx), position)
 	)
 	pop.add_item("Add Block")
-	if flowchart_tab.main_editor.block_clipboard != null:
+	if not flowchart_tab.main_editor.block_clipboard.is_empty():
 		pop.add_item("Paste")
 	add_child(pop)
 	var gmp := get_global_mouse_position()
 	pop.popup(Rect2(gmp.x, gmp.y, 0, 0))
 
 
-func handle_right_menu(case: String, pos := Vector2.ZERO, node: GraphNode = null) -> void:
+func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> void:
 	if node != null:
 		set_selected(node)
 	match case:
 		"Add Block":
 			on_add_block_button_pressed(pos)
 		"Copy":
-			print("copy")
+			if node != null:
+				clipboard.clear()
+				clipboard.append(node.get_meta("block").duplicate())
 		"Paste":
-			print("paste")
+			# paste_block(clipboard, pos)
+			undo_redo.create_action("Paste block")
+			undo_redo.add_do_method(self, "paste_block", clipboard, pos)
+			undo_redo.add_undo_method(self, "close_nodes", clipboard)
+			undo_redo.commit_action()
 		"Cut":
-			print("cut")
+			var block: Array[Block] = []
+			block.append(node.get_meta("block").duplicate())
+			undo_redo.create_action("Cut block")
+			undo_redo.add_do_method(self, "cut_block", node.get_meta("block").duplicate())
+			undo_redo.add_undo_method(
+				self, "paste_block", block, flowchart.blocks_offset[node.title]
+			)
+			undo_redo.commit_action()
 		"Delete":
 			if node != null:
 				on_node_close(node)
@@ -339,3 +353,25 @@ func handle_right_menu(case: String, pos := Vector2.ZERO, node: GraphNode = null
 			on_rename_button_pressed(node.get_meta("block"))
 		_:
 			push_error("GraphEdit: no idea what have you pressed: ", case)
+
+
+func cut_block(block: Block) -> void:
+	flow_changed.emit()
+	flowchart_tab.main_editor.block_clipboard.clear()
+	flowchart_tab.main_editor.block_clipboard.append(block)
+	close_node(block.name)
+
+
+func paste_block(blocks: Array[Block], pos: Vector2) -> void:
+	flow_changed.emit()
+	for block in blocks:
+		if flowchart.blocks.has(block.name):
+			block.name = str(block.name + "*")
+
+		create_graph_node_from_block(block.name, pos, block)
+
+
+func close_nodes(blocks: Array[Block]) -> void:
+	flow_changed.emit()
+	for block in blocks:
+		close_node(block.name)

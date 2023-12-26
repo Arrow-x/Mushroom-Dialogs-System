@@ -7,7 +7,7 @@ extends Control
 
 var undo_redo: EditorUndoRedoManager
 var commands_clipboard: Array
-var block_clipboard: Array
+var block_clipboard: Array[Block] = []
 
 
 func open_flowchart_scene(flowchart: FlowChart, u_r: EditorUndoRedoManager) -> void:

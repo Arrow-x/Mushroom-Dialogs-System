@@ -28,10 +28,8 @@ func righ_click_menu():
 	pop.popup_hide.connect(func(): pop.queue_free())
 	pop.index_pressed.connect(handle_right_click.bind(pop))
 	pop.add_item("Copy")
-	pop.add_item("Cut")
-	if block_clipboard != null:
-		pop.add_item("Paste")
 	if not self.title == "first_block":
+		pop.add_item("Cut")
 		pop.add_item("Rename")
 		pop.add_item("Delete")
 	add_child(pop)
@@ -40,19 +38,20 @@ func righ_click_menu():
 
 
 func handle_right_click(idx: int, pop: PopupMenu) -> void:
+	var state: String
 	match pop.get_item_text(idx):
 		"Copy":
-			right_menu_click.emit("Copy", Vector2.ZERO, self)
+			state = "Copy"
 		"Cut":
-			right_menu_click.emit("Cut", Vector2.ZERO, self)
-		"Paste":
-			right_menu_click.emit("Paste", Vector2.ZERO, self)
+			state = "Cut"
 		"Delete":
-			right_menu_click.emit("Delete", Vector2.ZERO, self)
+			state = "Delete"
 		"Rename":
-			right_menu_click.emit("Rename", Vector2.ZERO, self)
+			state = "Rename"
 		_:
 			push_error("GraphNode: Unknow option in right click menu")
+			return
+	right_menu_click.emit(state, self.position_offset, self)
 
 
 func add_close_button() -> void:
