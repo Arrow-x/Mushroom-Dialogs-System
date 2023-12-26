@@ -27,7 +27,7 @@ func on_add_block_button_pressed(mouse_position := Vector2.ZERO) -> void:
 func on_new_text_confirm(new_title: String, mouse_position := Vector2.ZERO) -> void:
 	if flowchart_tab.check_for_duplicates(new_title) or new_title.is_empty():
 		await get_tree().create_timer(0.01).timeout
-		push_error("The Title is a duplicate! or an Empty string")
+		push_error("GraphEdit: The Title is a duplicate! or an Empty string")
 		on_add_block_button_pressed()
 		return
 

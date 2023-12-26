@@ -109,7 +109,7 @@ func execute_dialog() -> void:
 				var req_node_path := NodePath(cbi.var_path.insert(0, "/root/"))
 				get_node(req_node_path).set(cbi.var_name, cbi.var_value)
 			else:
-				push_error("NodePath in change var command is not valid")
+				push_error("Dialog Manager: NodePath in change var command is not valid")
 			indexer = indexer + 1
 			advance()
 
@@ -290,7 +290,7 @@ func calc_var(
 			val_container = val_node.call(req_var_or_func, args)
 
 	if val_container == null:
-		push_error("calc_var couldn't get the node")
+		push_error("Dialog Manager: calc_var couldn't get the node")
 		return false
 
 	var typed_check_val = chek_val if chek_val.size() > 1 else chek_val[0]

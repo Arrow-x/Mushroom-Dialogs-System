@@ -51,14 +51,14 @@ func check_flowchart_path_before_save() -> void:
 	parse_string_var(flowchart)
 	if flowchart.resource_path == "":
 		flow_tabs.set_tab_title(get_index(), String(name + "(*)"))
-		var _i: FileDialog = FileDialog.new()
-		_i.resizable = true
-		_i.set_size(Vector2(800, 500))
-		_i.get_line_edit().set_text(String(name.trim_suffix("(*)") + ".tres"))
-		_i.get_line_edit().select(0, 12)
-		_i.file_selected.connect(save_flowchart_to_disc.bind(true))
-		add_child(_i)
-		_i.popup_centered()
+		var file_dialog: FileDialog = FileDialog.new()
+		file_dialog.resizable = true
+		file_dialog.set_size(Vector2(800, 500))
+		file_dialog.get_line_edit().set_text(String(name.trim_suffix("(*)") + ".tres"))
+		file_dialog.get_line_edit().select(0, 12)
+		file_dialog.file_selected.connect(save_flowchart_to_disc.bind(true))
+		add_child(file_dialog)
+		file_dialog.popup_centered()
 		return
 
 	save_flowchart_to_disc(flowchart.resource_path)

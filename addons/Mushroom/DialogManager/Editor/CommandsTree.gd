@@ -4,7 +4,7 @@ extends Tree
 signal moved(item, to_item, shift)
 signal tree_changed(flowchart: FlowChart)
 
-enum resault { success = 1, not_found = -2 }
+enum Resault { SUCCESS = 1, NOT_FOUND = -2 }
 
 @export var current_block_label: Label
 @export var commands_settings: Container
@@ -202,7 +202,7 @@ func full_clear() -> void:
 
 func _on_add_command(id: int, pop_up: Popup, on_item := false, is_rmb := false) -> void:
 	if current_block == null:
-		push_error("there is no block selected")
+		push_error("CommandsTree: there is no block selected")
 		return
 
 	var command: Command = pop_up.get_item_metadata(id).duplicate()
@@ -280,7 +280,7 @@ func create_tree_item_from_command(
 		if not created_cmd is IfCommand or create_idx == -1:
 			item.set_custom_color(0, Color.RED)
 
-	flowchart_tab.changed_flowchart()
+	tree_changed.emit(flowchart_tab.flowchart)
 	return item
 
 
@@ -303,14 +303,14 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 			del_block.commands.remove_at(t_idx)
 			free_Command_editor(command)
 			create_tree_from_block(current_block)
-			return resault.success
+			return Resault.SUCCESS
 		elif d_t.get_meta("command") is ContainerCommand:
 			var err := delete_command(command, d_t)
-			if err != resault.not_found:
+			if err != Resault.NOT_FOUND:
 				free_Command_editor(command)
 				create_tree_from_block(current_block)
-				return resault.success
-	return resault.not_found
+				return Resault.SUCCESS
+	return Resault.NOT_FOUND
 
 
 func free_Command_editor(command: Command) -> void:
@@ -451,7 +451,7 @@ func move_tree_item(
 		-100:
 			to_item_parent_commands.append(item_command)
 
-	if to_item_idx != resault.not_found:
+	if to_item_idx != Resault.NOT_FOUND:
 		if shift == -1:
 			if item.get_parent() == to_itme_parent:
 				if item_idx > to_item_idx:
@@ -468,11 +468,11 @@ func move_tree_item(
 func undo_move_tree_item_delete(og_item_command: Command):
 	var to_item := get_tree_item_from_command(og_item_command)
 	if to_item == null:
-		push_error(og_item_command, "is not in this tree")
+		push_error("CommandsTree: ", og_item_command, "is not in this tree")
 		return
 	var item_idx := find_tree_item(to_item)
-	if item_idx == resault.not_found:
-		push_error("can't find it")
+	if item_idx == Resault.NOT_FOUND:
+		push_error("CommandsTree: can't find it")
 		return
 	var to_item_parent := to_item.get_parent()
 	var to_item_parent_command: Command = (
@@ -495,13 +495,20 @@ func undo_move_tree_item_insert(
 	)
 	var err := og_parent_commands.insert(og_idx, og_item_command)
 	if err != OK:
-		push_error("can't insert: ", og_parent_command, "at: ", og_idx, "on: ", og_parent_commands)
+		push_error(
+			"CommandsTree: can't insert: ",
+			og_parent_command,
+			"at: ",
+			og_idx,
+			"on: ",
+			og_parent_commands
+		)
 
 
 func find_tree_item(item: TreeItem) -> int:
 	if item != null:
 		return item.get_index()
-	return resault.not_found
+	return Resault.NOT_FOUND
 
 
 func get_tree_item_from_command(command: Command) -> TreeItem:
