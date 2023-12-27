@@ -15,8 +15,14 @@ func get_flowchart_name() -> String:
 
 
 func get_block(b_name: String) -> Block:
-	return blocks[b_name]
+	if b_name:
+		return blocks[b_name]
+	push_error("flowchart: ", get_flowchart_name(), "can't get_block with string: ", b_name)
+	return null
 
 
 func get_block_offset(b_name: String) -> Vector2:
-	return blocks_offset[b_name]
+	if b_name:
+		return blocks_offset[b_name]
+	push_error("flowchart: ", get_flowchart_name(), "can't get_block with string: ", b_name)
+	return Vector2.ZERO
