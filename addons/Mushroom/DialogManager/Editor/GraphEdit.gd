@@ -89,7 +89,7 @@ func create_graph_node_from_block(
 		return
 
 	node.add_close_button()
-	flow_changed.emit()
+	flow_changed.emit(flowchart)
 
 
 func close_node(d_node: String) -> void:
@@ -109,7 +109,7 @@ func close_node(d_node: String) -> void:
 	# and then delete the node
 	graph_nodes[d_node].queue_free()
 	graph_nodes.erase(d_node)
-	flow_changed.emit()
+	flow_changed.emit(flowchart)
 
 
 func sync_flowchart_graph(fl: FlowChart) -> void:
@@ -232,7 +232,7 @@ func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> 
 			graph_nodes[c_destination].get_name(),
 			flowchart.get_block(c_destination).inputs.find(fork)
 		)
-	flow_changed.emit()
+	flow_changed.emit(flowchart)
 
 
 func on_graph_node_clicked(node: GraphNode) -> void:
@@ -257,7 +257,7 @@ func on_node_dragged(start_offset: Vector2, finished_offset: Vector2, node_title
 func set_node_offset(title: String, offset: Vector2) -> void:
 	graph_nodes[title].position_offset = offset
 	flowchart.blocks_offset[title] = offset
-	flow_changed.emit()
+	flow_changed.emit(flowchart)
 
 
 func on_rename_button_pressed(block_to_rename: Block) -> void:
@@ -328,23 +328,32 @@ func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> vo
 		"Add Block":
 			on_add_block_button_pressed(pos)
 		"Copy":
+			# TODO: add all selected graph nodes
 			if node != null:
 				clipboard.clear()
-				clipboard.append(node.get_meta("block").duplicate())
+				clipboard.append(node.get_meta("block"))
 		"Paste":
-			# paste_block(clipboard, pos)
+			var dupes: Array[Block] = []
+			for c in clipboard:
+				dupes.append(c.duplicate())
+			for block in dupes:
+				if flowchart.blocks.has(block.name) == true:
+					for i in range(1, 999):
+						if flowchart.blocks.has(str(block.name) + " (" + str(i) + ")") == true:
+							continue
+						block.name = str(str(block.name) + " (" + str(i) + ")")
+						break
 			undo_redo.create_action("Paste block")
-			undo_redo.add_do_method(self, "paste_block", clipboard, pos)
-			undo_redo.add_undo_method(self, "close_nodes", clipboard)
+			undo_redo.add_do_method(self, "paste_block", dupes, pos)
+			undo_redo.add_undo_method(self, "close_nodes", dupes)
 			undo_redo.commit_action()
 		"Cut":
 			var block: Array[Block] = []
-			block.append(node.get_meta("block").duplicate())
+			# TODO: add all selected graph nodes
+			block.append(node.get_meta("block"))
 			undo_redo.create_action("Cut block")
-			undo_redo.add_do_method(self, "cut_block", node.get_meta("block").duplicate())
-			undo_redo.add_undo_method(
-				self, "paste_block", block, flowchart.blocks_offset[node.title]
-			)
+			undo_redo.add_do_method(self, "cut_block", block)
+			undo_redo.add_undo_method(self, "paste_block", block, pos)
 			undo_redo.commit_action()
 		"Delete":
 			if node != null:
@@ -355,23 +364,21 @@ func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> vo
 			push_error("GraphEdit: no idea what have you pressed: ", case)
 
 
-func cut_block(block: Block) -> void:
-	flow_changed.emit()
+func cut_block(blocks: Array[Block]) -> void:
+	flow_changed.emit(flowchart)
 	flowchart_tab.main_editor.block_clipboard.clear()
-	flowchart_tab.main_editor.block_clipboard.append(block)
-	close_node(block.name)
+	flowchart_tab.main_editor.block_clipboard.append_array(blocks)
+	for block: Block in blocks:
+		close_node(block.name)
 
 
 func paste_block(blocks: Array[Block], pos: Vector2) -> void:
-	flow_changed.emit()
-	for block in blocks:
-		if flowchart.blocks.has(block.name):
-			block.name = str(block.name + "*")
-
+	flow_changed.emit(flowchart)
+	for block: Block in blocks:
 		create_graph_node_from_block(block.name, pos, block)
 
 
 func close_nodes(blocks: Array[Block]) -> void:
-	flow_changed.emit()
-	for block in blocks:
+	flow_changed.emit(flowchart)
+	for block: Block in blocks:
 		close_node(block.name)
