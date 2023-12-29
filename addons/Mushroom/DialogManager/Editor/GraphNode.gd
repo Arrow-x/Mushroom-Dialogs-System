@@ -4,6 +4,7 @@ extends GraphNode
 signal dragging
 signal node_closed
 signal right_menu_click
+class_name BlockGraphNode
 
 var c_inputs: Array
 var c_outputs: Array

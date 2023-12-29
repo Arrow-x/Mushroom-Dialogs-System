@@ -1,9 +1,9 @@
 @tool
 extends HSplitContainer
 
-@export var graph_edit: GraphEdit
+@export var graph_edit: FlowChartGraphEdit
 @export var add_block_button: Button
-@export var command_tree: Tree
+@export var command_tree: BlockCommandsTree
 @export var enter_name_scene: PackedScene
 @export var current_block_name: Label
 

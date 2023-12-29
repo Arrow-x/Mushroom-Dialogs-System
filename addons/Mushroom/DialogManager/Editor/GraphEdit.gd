@@ -1,5 +1,6 @@
 @tool
 extends GraphEdit
+class_name FlowChartGraphEdit
 
 signal g_node_clicked
 signal flow_changed

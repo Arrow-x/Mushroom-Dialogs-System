@@ -1,5 +1,6 @@
 @tool
 extends Tree
+class_name BlockCommandsTree
 
 signal moved(item, to_item, shift)
 signal tree_changed(flowchart: FlowChart)
