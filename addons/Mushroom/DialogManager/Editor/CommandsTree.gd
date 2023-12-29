@@ -55,7 +55,7 @@ func genaric_right_click(input: InputEvent) -> void:
 		_on_tree_item_rmb_selected(input.position, input.button_index, false)
 
 
-func _on_tree_item_rmb_selected(position: Vector2, mouse_button_index: int, is_item: bool) -> void:
+func _on_tree_item_rmb_selected(_position: Vector2, mouse_button_index: int, is_item: bool) -> void:
 	if mouse_button_index != 2:
 		return
 	var paste := false
@@ -305,7 +305,7 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 			free_Command_editor(command)
 			create_tree_from_block(current_block)
 			return Resault.SUCCESS
-		elif d_t.get_meta("command") is ContainerCommand:
+		if d_t.get_meta("command") is ContainerCommand:
 			var err := delete_command(command, d_t)
 			if err != Resault.NOT_FOUND:
 				free_Command_editor(command)
@@ -515,8 +515,7 @@ func find_tree_item(item: TreeItem) -> int:
 func get_tree_item_from_command(command: Command) -> TreeItem:
 	if command != null:
 		return command.tree_item
-	else:
-		return null
+	return null
 
 
 func create_tree_from_block(block: Block, parent: TreeItem = null) -> void:

@@ -26,10 +26,10 @@ func on_add_block_button_pressed(mouse_position := Vector2.ZERO) -> void:
 	var enter_name: Window = enter_name_scene.instantiate()
 	add_child(enter_name, true)
 	enter_name.popup_centered()
-	enter_name.new_text_confirm.connect(on_new_text_confirm.bind(mouse_position))
+	enter_name.new_text_confirm.connect(_on_new_text_confirm.bind(mouse_position))
 
 
-func on_new_text_confirm(new_title: String, mouse_position := Vector2.ZERO) -> void:
+func _on_new_text_confirm(new_title: String, mouse_position := Vector2.ZERO) -> void:
 	if flowchart_tab.check_for_duplicates(new_title) or new_title.is_empty():
 		await get_tree().create_timer(0.01).timeout
 		push_error("GraphEdit: The Title is a duplicate! or an Empty string")
@@ -271,10 +271,10 @@ func on_rename_button_pressed(block_to_rename: Block) -> void:
 	enter_name.line_edit.select(0)
 	add_child(enter_name, true)
 	enter_name.popup_centered()
-	enter_name.new_text_confirm.connect(_on_new_text_confirm.bind(block_to_rename))
+	enter_name.new_text_confirm.connect(_on_new_rename_text_confirm.bind(block_to_rename))
 
 
-func _on_new_text_confirm(new_title: String, block_to_rename: Block) -> void:
+func _on_new_rename_text_confirm(new_title: String, block_to_rename: Block) -> void:
 	if flowchart_tab.check_for_duplicates(new_title) or new_title.is_empty():
 		await get_tree().create_timer(0.01).timeout
 		push_error("GraphEdi: The Title is a duplicate! or an Empty string")
