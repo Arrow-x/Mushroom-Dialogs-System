@@ -17,9 +17,15 @@ var flowchart: FlowChart
 var graph_nodes: Dictionary
 var current_selected_graph_node: String
 var clipboard: Array[Block]
+var selected_graph_nodes: Dictionary
+
+
 func _ready() -> void:
+	selected_graph_nodes = {}
 	popup_request.connect(_on_popup_request)
 	node_selected.connect(_on_node_selected)
+	node_deselected.connect(_on_node_deselected)
+	delete_nodes_request.connect(func(_node: Array) -> void: on_node_close(selected_graph_nodes))
 
 
 func on_add_block_button_pressed(mouse_position := Vector2.ZERO) -> void:
@@ -42,13 +48,32 @@ func _on_new_text_confirm(new_title: String, mouse_position := Vector2.ZERO) -> 
 	undo_redo.commit_action()
 
 
-func on_node_close(node: GraphNode) -> void:
+func on_node_close(_d = null) -> void:
+	var curr_sel: Dictionary = {}
+	for s in selected_graph_nodes:
+		if selected_graph_nodes[s]["selected"] == true:
+			curr_sel[s] = {
+				"offset": selected_graph_nodes[s]["offset"],
+				"block": selected_graph_nodes[s]["block"]
+			}
 	undo_redo.create_action("Block Closed")
-	undo_redo.add_do_method(self, "close_node", node.get_title())
-	undo_redo.add_undo_method(
-		self, "add_block", node.get_title(), node.position_offset, node.get_meta("block")
-	)
+	undo_redo.add_do_method(self, "close_nodes", curr_sel)
+	undo_redo.add_undo_method(self, "add_blocks", curr_sel)
 	undo_redo.commit_action()
+
+
+func close_nodes(nodes: Dictionary) -> void:
+	for node in nodes:
+		if node == "first_block":
+			continue
+		close_node(node)
+
+
+func add_blocks(nodes: Dictionary) -> void:
+	for node in nodes:
+		if node == "first_block":
+			continue
+		add_block(node, nodes[node]["offset"], nodes[node]["block"])
 
 
 func add_block(title: String, offset := Vector2.ZERO, in_block: Block = null) -> void:
@@ -327,8 +352,6 @@ func _on_popup_request(position: Vector2):
 
 
 func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> void:
-	if node != null:
-		set_selected(node)
 	match case:
 		"Add Block":
 			on_add_block_button_pressed(pos)
@@ -362,11 +385,13 @@ func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> vo
 			undo_redo.commit_action()
 		"Delete":
 			if node != null:
-				on_node_close(node)
+				on_node_close(selected_graph_nodes)
 		"Rename":
 			on_rename_button_pressed(node.get_meta("block"))
 		_:
 			push_error("GraphEdit: no idea what have you pressed: ", case)
+	if node != null:
+		set_selected(node)
 
 
 func cut_block(blocks: Array[Block]) -> void:
@@ -383,7 +408,11 @@ func paste_block(blocks: Array[Block], pos: Vector2) -> void:
 		create_graph_node_from_block(block.name, pos, block)
 
 
-func close_nodes(blocks: Array[Block]) -> void:
-	flow_changed.emit(flowchart)
-	for block: Block in blocks:
-		close_node(block.name)
+func _on_node_selected(node: Node) -> void:
+	selected_graph_nodes[node.title] = {
+		"block": node.get_meta("block"), "offset": node.position_offset, "selected": true
+	}
+
+
+func _on_node_deselected(node: Node) -> void:
+	selected_graph_nodes[node.title] = {"selected": false}
