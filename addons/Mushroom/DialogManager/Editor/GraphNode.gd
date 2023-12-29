@@ -15,9 +15,13 @@ var block_clipboard: Array
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
-		if event.button_index == 2:
-			accept_event()
-			righ_click_menu()
+		match event.button_index:
+			MOUSE_BUTTON_LEFT:
+				if event.double_click == true:
+					graph_edit.on_graph_node_clicked(self)
+			MOUSE_BUTTON_RIGHT:
+				accept_event()
+				righ_click_menu()
 
 
 func _ready() -> void:

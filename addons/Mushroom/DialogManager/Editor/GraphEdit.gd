@@ -245,6 +245,7 @@ func on_graph_node_clicked(node: GraphNode) -> void:
 
 
 func send_block_to_tree(node: String) -> void:
+	set_selected(graph_nodes[node])
 	g_node_clicked.emit(flowchart.get_block(node))
 
 
