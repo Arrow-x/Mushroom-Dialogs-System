@@ -16,7 +16,7 @@ var undo_redo: EditorUndoRedoManager
 var flowchart: FlowChart
 var graph_nodes: Dictionary
 var current_selected_graph_node: String
-var clipboard: Array[Block]
+var clipboard: Dictionary
 var selected_graph_nodes: Dictionary
 
 
@@ -118,10 +118,11 @@ func create_graph_node_from_block(
 
 
 func close_node(d_node: String) -> void:
-	for closed_node_output in flowchart.get_block(d_node).outputs:
-		for c in closed_node_output.choices:
-			var deconecting_node: String = c.next_block
-			delete_input(deconecting_node, closed_node_output)
+	if flowchart.get_block(d_node) != null:
+		for closed_node_output in flowchart.get_block(d_node).outputs:
+			for c in closed_node_output.choices:
+				var deconecting_node: String = c.next_block
+				delete_input(deconecting_node, closed_node_output)
 
 	# Remove the block commands and the it's editor
 	if command_tree.current_block == flowchart.get_block(d_node):
@@ -352,32 +353,43 @@ func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> vo
 		"Add Block":
 			on_add_block_button_pressed(pos)
 		"Copy":
-			# TODO: add all selected graph nodes
-			if node != null:
-				clipboard.clear()
-				clipboard.append(node.get_meta("block"))
+			# BUG: not clearing before adding to the clipboard
+			clipboard = {}
+			for s in selected_graph_nodes:
+				if selected_graph_nodes[s]["selected"]:
+					clipboard[s] = {
+						"offset": selected_graph_nodes[s]["offset"],
+						"block": selected_graph_nodes[s]["block"]
+					}
 		"Paste":
-			var dupes: Array[Block] = []
+			var dupes: Dictionary
+			var last_pos := pos
 			for c in clipboard:
-				dupes.append(c.duplicate())
+				last_pos += Vector2(30, 30)
+				dupes[c] = {"block": clipboard[c]["block"].duplicate(), "offset": last_pos}
 			for block in dupes:
-				if flowchart.blocks.has(block.name) == true:
+				if flowchart.blocks.has(block) == true:
 					for i in range(1, 999):
-						if flowchart.blocks.has(str(block.name) + " (" + str(i) + ")") == true:
+						if flowchart.blocks.has(str(block) + " (" + str(i) + ")") == true:
 							continue
-						block.name = str(str(block.name) + " (" + str(i) + ")")
+						dupes[block]["block"].name = str(str(block) + " (" + str(i) + ")")
 						break
 			undo_redo.create_action("Paste block")
-			undo_redo.add_do_method(self, "paste_block", dupes, pos)
+			undo_redo.add_do_method(self, "paste_block", dupes)
 			undo_redo.add_undo_method(self, "close_nodes", dupes)
 			undo_redo.commit_action()
 		"Cut":
-			var block: Array[Block] = []
-			# TODO: add all selected graph nodes
-			block.append(node.get_meta("block"))
+			var sel_blocks: Dictionary = {}
+			for s in selected_graph_nodes:
+				if selected_graph_nodes[s]["selected"]:
+					sel_blocks[s] = {
+						"offset": selected_graph_nodes[s]["offset"],
+						"block": selected_graph_nodes[s]["block"]
+					}
+
 			undo_redo.create_action("Cut block")
-			undo_redo.add_do_method(self, "cut_block", block)
-			undo_redo.add_undo_method(self, "paste_block", block, pos)
+			undo_redo.add_do_method(self, "cut_block", sel_blocks)
+			undo_redo.add_undo_method(self, "paste_block", sel_blocks)
 			undo_redo.commit_action()
 		"Delete":
 			if node != null:
@@ -390,18 +402,20 @@ func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> vo
 		set_selected(node)
 
 
-func cut_block(blocks: Array[Block]) -> void:
+func cut_block(blocks: Dictionary) -> void:
 	flow_changed.emit(flowchart)
-	flowchart_tab.main_editor.block_clipboard.clear()
-	flowchart_tab.main_editor.block_clipboard.append_array(blocks)
-	for block: Block in blocks:
-		close_node(block.name)
+	clipboard = {}
+	for block: String in blocks:
+		clipboard[block] = {"offset": blocks[block]["offset"], "block": blocks[block]["block"]}
+		close_node(block)
 
 
-func paste_block(blocks: Array[Block], pos: Vector2) -> void:
+func paste_block(blocks: Dictionary) -> void:
 	flow_changed.emit(flowchart)
-	for block: Block in blocks:
-		create_graph_node_from_block(block.name, pos, block)
+	for block: String in blocks:
+		create_graph_node_from_block(
+			blocks[block]["block"].name, blocks[block]["offset"], blocks[block]["block"]
+		)
 
 
 func _on_node_selected(node: Node) -> void:
