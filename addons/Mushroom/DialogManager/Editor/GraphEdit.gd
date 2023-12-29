@@ -86,12 +86,12 @@ func add_block(title: String, offset := Vector2.ZERO, in_block: Block = null) ->
 func create_graph_node_from_block(
 	title: String, offset := Vector2.ZERO, in_block: Block = null
 ) -> void:
-	var node: GraphNode = i_graph_node.instantiate()
-	node.title = title
+	var g_node: BlockGraphNode = i_graph_node.instantiate()
+	g_node.title = title
 	if offset == Vector2.ZERO:
-		node.position_offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
+		g_node.position_offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
 	else:
-		node.position_offset = offset
+		g_node.position_offset = offset
 	var new_block: Block
 	if in_block == null:
 		new_block = Block.new()
@@ -100,24 +100,20 @@ func create_graph_node_from_block(
 		new_block = in_block
 
 	flowchart.blocks[title] = new_block
-	flowchart.blocks_offset[title] = node.position_offset
-	node.set_meta("block", new_block)
-	node.dragging.connect(on_node_dragged)
-	node.block_clipboard = flowchart_tab.main_editor.block_clipboard
-	node.right_menu_click.connect(handle_right_menu)
-	if title != "first_block":
-		node.node_closed.connect(on_node_close)
-	add_child(node)
-	node.set_owner(self)
-	graph_nodes[title] = node
+	flowchart.blocks_offset[title] = g_node.position_offset
+	g_node.set_meta("block", new_block)
+	g_node.graph_edit = self
+	add_child(g_node)
+	g_node.set_owner(self)
+	graph_nodes[title] = g_node
 
 	if title == "first_block":
 		graph_nodes["first_block"].set_modulate(Color("#f8ac52"))
 		flowchart.first_block = flowchart.blocks["first_block"]
-		node.selected = true
+		g_node.selected = true
 		return
 
-	node.add_close_button()
+	g_node.add_close_button()
 	flow_changed.emit(flowchart)
 
 

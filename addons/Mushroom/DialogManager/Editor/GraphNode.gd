@@ -1,16 +1,12 @@
 @tool
 extends GraphNode
-
-signal dragging
-signal node_closed
-signal right_menu_click
 class_name BlockGraphNode
 
 var c_inputs: Array
 var c_outputs: Array
 
 var connected_destenation_blocks: Array
-var block_clipboard: Array
+var graph_edit: FlowChartGraphEdit
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -56,7 +52,7 @@ func handle_right_click(idx: int, pop: PopupMenu) -> void:
 		_:
 			push_error("GraphNode: Unknow option in right click menu")
 			return
-	right_menu_click.emit(state, self.position_offset, self)
+	graph_edit.handle_right_menu(state, self.position_offset, self)
 
 
 func add_close_button() -> void:
@@ -64,7 +60,13 @@ func add_close_button() -> void:
 	button.text = "x"
 	button.flat = true
 	get_titlebar_hbox().add_child(button)
-	button.pressed.connect(func(): node_closed.emit(self))
+	button.pressed.connect(_close_button_pressed)
+
+
+func _close_button_pressed() -> void:
+	graph_edit.selected_graph_nodes.clear()
+	graph_edit._on_node_selected(self)
+	graph_edit.on_node_close()
 
 
 func delete_inputs(fork: ForkCommand) -> void:
@@ -136,4 +138,4 @@ func create_contorl_for_g_node_connection(io_c: Array, fork: ForkCommand) -> voi
 
 
 func _on_graph_node_dragged(from, too) -> void:
-	dragging.emit(from, too, self.title)
+	graph_edit.on_node_dragged(from, too, title)
