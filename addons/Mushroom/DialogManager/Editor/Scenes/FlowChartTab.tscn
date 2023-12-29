@@ -149,5 +149,3 @@ flowchart_tab = NodePath("../..")
 command_tree = NodePath("../../InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree")
 
 [connection signal="pressed" from="GraphContainer/GraphHeader/GraphHeaderContainer/SaveButton" to="." method="check_flowchart_path_before_save"]
-[connection signal="node_selected" from="GraphContainer/GraphEdit" to="GraphContainer/GraphEdit" method="on_graph_node_clicked"]
-[connection signal="popup_request" from="GraphContainer/GraphEdit" to="GraphContainer/GraphEdit" method="_on_popup_request"]

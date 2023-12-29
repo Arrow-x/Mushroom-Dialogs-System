@@ -17,6 +17,9 @@ var flowchart: FlowChart
 var graph_nodes: Dictionary
 var current_selected_graph_node: String
 var clipboard: Array[Block]
+func _ready() -> void:
+	popup_request.connect(_on_popup_request)
+	node_selected.connect(_on_node_selected)
 
 
 func on_add_block_button_pressed(mouse_position := Vector2.ZERO) -> void:
