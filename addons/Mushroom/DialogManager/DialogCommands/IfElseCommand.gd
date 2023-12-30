@@ -2,7 +2,7 @@
 extends IfCommand
 class_name IfElseCommand
 
-@export var conditionals: Array[ConditionResource]
+@export var conditionals: Array
 @export var container_block: Block
 @export var collapse: bool
 

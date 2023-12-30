@@ -245,7 +245,7 @@ func add_command_to_block(command: Command, idx: int = -1, parent: Command = nul
 
 	else:
 		if parent is ContainerCommand:
-			var pbc: Array[Command] = parent.container_block.commands
+			var pbc: Array = parent.container_block.commands
 			if idx == -1:
 				pbc.append(command)
 			else:
@@ -430,7 +430,7 @@ func move_tree_item(
 	var to_item := get_tree_item_from_command(to_item_command)
 	var to_item_idx: int = find_tree_item(to_item)
 	var to_itme_parent: TreeItem = to_item.get_parent() if to_item != null else get_root()
-	var to_item_parent_commands: Array[Command] = (
+	var to_item_parent_commands: Array = (
 		current_block.commands
 		if to_itme_parent == get_root()
 		else to_itme_parent.get_meta("command").container_block.commands
@@ -489,7 +489,7 @@ func undo_move_tree_item_delete(og_item_command: Command):
 func undo_move_tree_item_insert(
 	og_item_command: Command, og_idx: int, og_parent_command: Command
 ) -> void:
-	var og_parent_commands: Array[Command] = (
+	var og_parent_commands: Array = (
 		og_parent_command.container_block.commands
 		if og_parent_command != null
 		else current_block.commands

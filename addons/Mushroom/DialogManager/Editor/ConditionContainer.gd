@@ -79,7 +79,7 @@ func add_conditional(conditional: ConditionResource = null, idx := -1) -> void:
 	build_current_command_conditional_editors(current_command.conditionals)
 
 
-func build_current_command_conditional_editors(conditionals: Array[ConditionResource]) -> void:
+func build_current_command_conditional_editors(conditionals: Array) -> void:
 	for e in cond_editors_container.get_children():
 		e.queue_free()
 	await get_tree().create_timer(0.001).timeout

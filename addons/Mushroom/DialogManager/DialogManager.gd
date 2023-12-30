@@ -243,7 +243,7 @@ func get_placeholders(input: String, cmd: Command = null) -> String:
 	return input.format(format_dictionary)
 
 
-func parse_conditionals(conditionals: Array[ConditionResource]) -> bool:
+func parse_conditionals(conditionals: Array) -> bool:
 	for c_idx in conditionals.size():
 		var resault := calc_var(
 			conditionals[c_idx].required_node,

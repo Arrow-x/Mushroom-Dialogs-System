@@ -5,7 +5,7 @@ class_name Choice
 @export var next_block: String
 @export var next_index: int = 0
 @export var is_cond: bool = false
-@export var conditionals: Array[ConditionResource]
+@export var conditionals: Array
 @export var placeholder_args: Dictionary = {}
 
 
