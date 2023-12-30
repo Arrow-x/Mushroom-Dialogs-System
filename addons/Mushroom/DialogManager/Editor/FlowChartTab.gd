@@ -1,5 +1,6 @@
 @tool
 extends HSplitContainer
+class_name FlowChartTabs
 
 @export var graph_edit: FlowChartGraphEdit
 @export var add_block_button: Button
@@ -35,7 +36,7 @@ func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager, ed: 
 	graph_edit.g_node_clicked.connect(command_tree.initiate_tree_from_block)
 	graph_edit.flow_changed.connect(changed_flowchart)
 	graph_edit.undo_redo = sent_undo_redo
-	graph_edit.clipboard = ed.block_clipboard
+	main_editor.block_clipboard = {}
 
 	command_tree.full_clear()
 	command_tree.undo_redo = sent_undo_redo

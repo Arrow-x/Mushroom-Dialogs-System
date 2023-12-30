@@ -8,7 +8,7 @@ signal graph_node_close
 
 @export var enter_name_scene: PackedScene
 @export var i_graph_node: PackedScene
-@export var flowchart_tab: Control
+@export var flowchart_tab: FlowChartTabs
 @export var command_tree: Tree
 
 var g_node_posititon := Vector2(40, 40)
@@ -16,7 +16,6 @@ var undo_redo: EditorUndoRedoManager
 var flowchart: FlowChart
 var graph_nodes: Dictionary
 var current_selected_graph_node: String
-var clipboard: Dictionary
 var selected_graph_nodes: Dictionary
 
 
@@ -25,7 +24,9 @@ func _ready() -> void:
 	popup_request.connect(_on_popup_request)
 	node_selected.connect(_on_node_selected)
 	node_deselected.connect(_on_node_deselected)
-	delete_nodes_request.connect(func(_node: Array) -> void: on_node_close(selected_graph_nodes))
+	delete_nodes_request.connect(
+		func _on_delete_nodes_request(_node: Array) -> void: on_node_close(selected_graph_nodes)
+	)
 
 
 func on_add_block_button_pressed(mouse_position := Vector2.ZERO) -> void:
@@ -51,11 +52,9 @@ func _on_new_text_confirm(new_title: String, mouse_position := Vector2.ZERO) -> 
 func on_node_close(_d = null) -> void:
 	var curr_sel: Dictionary = {}
 	for s in selected_graph_nodes:
-		if selected_graph_nodes[s]["selected"] == true:
-			curr_sel[s] = {
-				"offset": selected_graph_nodes[s]["offset"],
-				"block": selected_graph_nodes[s]["block"]
-			}
+		curr_sel[s] = {
+			"offset": selected_graph_nodes[s]["offset"], "block": selected_graph_nodes[s]["block"]
+		}
 	undo_redo.create_action("Block Closed")
 	undo_redo.add_do_method(self, "close_nodes", curr_sel)
 	undo_redo.add_undo_method(self, "add_blocks", curr_sel)
@@ -67,6 +66,7 @@ func close_nodes(nodes: Dictionary) -> void:
 		if node == "first_block":
 			continue
 		close_node(node)
+	selected_graph_nodes = {}
 
 
 func add_blocks(nodes: Dictionary) -> void:
@@ -232,6 +232,7 @@ func reconnect_inputs(deconecting_node: String) -> void:
 
 
 func update_block_flow(sender: Block, fork: ForkCommand, delete_first: bool) -> void:
+	print("updating")
 	graph_nodes[sender.name].add_g_node_output(fork)
 	if delete_first:
 		for c_destination in graph_nodes[sender.name].connected_destenation_blocks:
@@ -316,7 +317,7 @@ func rename_block(new_name: String, prev_name: String, block_to_rename: Block) -
 	graph_nodes[new_name] = graph_nodes.get(prev_name)
 	graph_nodes.erase(prev_name)
 
-	var current_data := flowchart.blocks.get(prev_name)
+	var current_data: Block = flowchart.blocks.get(prev_name)
 	current_data.name = new_name
 	flowchart.blocks[new_name] = current_data
 	flowchart.blocks_offset[new_name] = graph_nodes[new_name].position_offset
@@ -330,6 +331,7 @@ func rename_block(new_name: String, prev_name: String, block_to_rename: Block) -
 	block_to_rename.name = new_name
 	flowchart.blocks.erase(prev_name)
 	flowchart.blocks_offset.erase(prev_name)
+	selected_graph_nodes = {}
 	g_node_clicked.emit(block_to_rename)
 
 
@@ -348,32 +350,80 @@ func _on_popup_request(position: Vector2):
 	pop.popup(Rect2(gmp.x, gmp.y, 0, 0))
 
 
+func deep_duplicate_block(block: Block) -> Block:
+	# HACK: Godot do sucks
+	var new_block: Block = block.duplicate(true)
+	new_block.commands = duplicate_array(new_block.commands)
+	for command in new_block.commands:
+		if command is ContainerCommand:
+			if command is IfCommand:
+				command.conditionals = duplicate_array(command.conditionals)
+				for conditional in command.conditionals:
+					conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
+					conditional.parsed_args = duplicate_array(conditional.parsed_args)
+			command.container_block = deep_duplicate_block(command.container_block)
+		elif command is ForkCommand:
+			command.choices = duplicate_array(command.choices)
+			for choice in command.choices:
+				choice.conditionals = duplicate_array(choice.conditionals)
+				#TODO:  sus
+				choice.placeholder_args = choice.placeholder_args.duplicate(true)
+
+				for conditional in choice.conditionals:
+					conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
+					conditional.parsed_args = duplicate_array(conditional.parsed_args)
+	new_block.inputs = []
+	new_block.outputs = []
+	return new_block
+
+
+func duplicate_array(input: Array) -> Array:
+	var ret_arr: Array = []
+	for d in input:
+		if d is Object:
+			if d.has_method("duplicate"):
+				ret_arr.append(d.duplicate(true))
+		else:
+			ret_arr.append(d)
+	return ret_arr
+
+
 func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> void:
 	match case:
 		"Add Block":
 			on_add_block_button_pressed(pos)
 		"Copy":
-			# BUG: not clearing before adding to the clipboard
-			clipboard = {}
+			flowchart_tab.main_editor.block_clipboard = {}
 			for s in selected_graph_nodes:
-				if selected_graph_nodes[s]["selected"]:
-					clipboard[s] = {
-						"offset": selected_graph_nodes[s]["offset"],
-						"block": selected_graph_nodes[s]["block"]
-					}
+				flowchart_tab.main_editor.block_clipboard[s] = {
+					"offset": selected_graph_nodes[s]["offset"],
+					"block": deep_duplicate_block(selected_graph_nodes[s]["block"])
+				}
 		"Paste":
-			var dupes: Dictionary
+			var dupes: Dictionary = {}
 			var last_pos := pos
-			for c in clipboard:
+			for c: String in flowchart_tab.main_editor.block_clipboard:
 				last_pos += Vector2(30, 30)
-				dupes[c] = {"block": clipboard[c]["block"].duplicate(), "offset": last_pos}
-			for block in dupes:
-				if flowchart.blocks.has(block) == true:
+				dupes[c] = {
+					"block":
+					deep_duplicate_block(flowchart_tab.main_editor.block_clipboard[c]["block"]),
+					"offset": last_pos
+				}
+			var keys_to_delete: Array[String] = []
+			for block_key in dupes:
+				if flowchart.blocks.has(block_key) == true:
 					for i in range(1, 999):
-						if flowchart.blocks.has(str(block) + " (" + str(i) + ")") == true:
+						var mod_name: String = str(block_key) + " (" + str(i) + ")"
+						if flowchart.blocks.has(mod_name) == true:
 							continue
-						dupes[block]["block"].name = str(str(block) + " (" + str(i) + ")")
+						dupes[block_key]["block"].name = mod_name
+						dupes[mod_name] = {
+							"block": dupes[block_key]["block"], "offset": dupes[block_key]["offset"]
+						}
+						keys_to_delete.append(block_key)
 						break
+			for b in keys_to_delete:
+				dupes.erase(b)
 			undo_redo.create_action("Paste block")
 			undo_redo.add_do_method(self, "paste_block", dupes)
 			undo_redo.add_undo_method(self, "close_nodes", dupes)
@@ -381,11 +431,10 @@ func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> vo
 		"Cut":
 			var sel_blocks: Dictionary = {}
 			for s in selected_graph_nodes:
-				if selected_graph_nodes[s]["selected"]:
-					sel_blocks[s] = {
-						"offset": selected_graph_nodes[s]["offset"],
-						"block": selected_graph_nodes[s]["block"]
-					}
+				sel_blocks[s] = {
+					"offset": selected_graph_nodes[s]["offset"],
+					"block": selected_graph_nodes[s]["block"]
+				}
 
 			undo_redo.create_action("Cut block")
 			undo_redo.add_do_method(self, "cut_block", sel_blocks)
@@ -404,9 +453,15 @@ func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> vo
 
 func cut_block(blocks: Dictionary) -> void:
 	flow_changed.emit(flowchart)
-	clipboard = {}
+	flowchart_tab.main_editor.block_clipboard = {}
+	selected_graph_nodes = {}
+	set_selected(null)
 	for block: String in blocks:
-		clipboard[block] = {"offset": blocks[block]["offset"], "block": blocks[block]["block"]}
+		flowchart_tab.main_editor.block_clipboard[block] = {
+			"offset": blocks[block]["offset"], "block": deep_duplicate_block(blocks[block]["block"])
+		}
+		if block == "first_block":
+			continue
 		close_node(block)
 
 
@@ -420,9 +475,9 @@ func paste_block(blocks: Dictionary) -> void:
 
 func _on_node_selected(node: Node) -> void:
 	selected_graph_nodes[node.title] = {
-		"block": node.get_meta("block"), "offset": node.position_offset, "selected": true
+		"block": node.get_meta("block"), "offset": node.position_offset
 	}
 
 
 func _on_node_deselected(node: Node) -> void:
-	selected_graph_nodes[node.title] = {"selected": false}
+	selected_graph_nodes.erase(node.title)
