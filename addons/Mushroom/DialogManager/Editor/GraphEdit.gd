@@ -24,6 +24,9 @@ func _ready() -> void:
 	popup_request.connect(_on_popup_request)
 	node_selected.connect(_on_node_selected)
 	node_deselected.connect(_on_node_deselected)
+	copy_nodes_request.connect(on_copy)
+	paste_nodes_request.connect(on_paste.bind(DisplayServer.mouse_get_position()))
+
 	delete_nodes_request.connect(
 		func _on_delete_nodes_request(_node: Array) -> void: on_node_close(selected_graph_nodes)
 	)
@@ -393,53 +396,11 @@ func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> vo
 		"Add Block":
 			on_add_block_button_pressed(pos)
 		"Copy":
-			flowchart_tab.main_editor.block_clipboard = {}
-			for s in selected_graph_nodes:
-				flowchart_tab.main_editor.block_clipboard[s] = {
-					"offset": selected_graph_nodes[s]["offset"],
-					"block": deep_duplicate_block(selected_graph_nodes[s]["block"])
-				}
+			on_copy()
 		"Paste":
-			var dupes: Dictionary = {}
-			var last_pos := pos
-			for c: String in flowchart_tab.main_editor.block_clipboard:
-				last_pos += Vector2(30, 30)
-				dupes[c] = {
-					"block":
-					deep_duplicate_block(flowchart_tab.main_editor.block_clipboard[c]["block"]),
-					"offset": last_pos
-				}
-			var keys_to_delete: Array[String] = []
-			for block_key in dupes:
-				if flowchart.blocks.has(block_key) == true:
-					for i in range(1, 999):
-						var mod_name: String = str(block_key) + " (" + str(i) + ")"
-						if flowchart.blocks.has(mod_name) == true:
-							continue
-						dupes[block_key]["block"].name = mod_name
-						dupes[mod_name] = {
-							"block": dupes[block_key]["block"], "offset": dupes[block_key]["offset"]
-						}
-						keys_to_delete.append(block_key)
-						break
-			for b in keys_to_delete:
-				dupes.erase(b)
-			undo_redo.create_action("Paste block")
-			undo_redo.add_do_method(self, "paste_block", dupes)
-			undo_redo.add_undo_method(self, "close_nodes", dupes)
-			undo_redo.commit_action()
+			on_paste(pos)
 		"Cut":
-			var sel_blocks: Dictionary = {}
-			for s in selected_graph_nodes:
-				sel_blocks[s] = {
-					"offset": selected_graph_nodes[s]["offset"],
-					"block": selected_graph_nodes[s]["block"]
-				}
-
-			undo_redo.create_action("Cut block")
-			undo_redo.add_do_method(self, "cut_block", sel_blocks)
-			undo_redo.add_undo_method(self, "paste_block", sel_blocks)
-			undo_redo.commit_action()
+			on_cut()
 		"Delete":
 			if node != null:
 				on_node_close(selected_graph_nodes)
@@ -449,6 +410,58 @@ func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> vo
 			push_error("GraphEdit: no idea what have you pressed: ", case)
 	if node != null:
 		set_selected(node)
+
+
+func on_copy() -> void:
+	flowchart_tab.main_editor.block_clipboard = {}
+	for s in selected_graph_nodes:
+		flowchart_tab.main_editor.block_clipboard[s] = {
+			"offset": selected_graph_nodes[s]["offset"],
+			"block": deep_duplicate_block(selected_graph_nodes[s]["block"])
+		}
+
+
+func on_cut() -> void:
+	var sel_blocks: Dictionary = {}
+	for s in selected_graph_nodes:
+		sel_blocks[s] = {
+			"offset": selected_graph_nodes[s]["offset"], "block": selected_graph_nodes[s]["block"]
+		}
+
+	undo_redo.create_action("Cut block")
+	undo_redo.add_do_method(self, "cut_block", sel_blocks)
+	undo_redo.add_undo_method(self, "paste_block", sel_blocks)
+	undo_redo.commit_action()
+
+
+func on_paste(pos: Vector2) -> void:
+	var dupes: Dictionary = {}
+	var last_pos := pos
+	for c: String in flowchart_tab.main_editor.block_clipboard:
+		last_pos += Vector2(30, 30)
+		dupes[c] = {
+			"block": deep_duplicate_block(flowchart_tab.main_editor.block_clipboard[c]["block"]),
+			"offset": last_pos
+		}
+	var keys_to_delete: Array[String] = []
+	for block_key in dupes:
+		if flowchart.blocks.has(block_key) == true:
+			for i in range(1, 999):
+				var mod_name: String = str(block_key) + " (" + str(i) + ")"
+				if flowchart.blocks.has(mod_name) == true:
+					continue
+				dupes[block_key]["block"].name = mod_name
+				dupes[mod_name] = {
+					"block": dupes[block_key]["block"], "offset": dupes[block_key]["offset"]
+				}
+				keys_to_delete.append(block_key)
+				break
+	for b in keys_to_delete:
+		dupes.erase(b)
+	undo_redo.create_action("Paste block")
+	undo_redo.add_do_method(self, "paste_block", dupes)
+	undo_redo.add_undo_method(self, "close_nodes", dupes)
+	undo_redo.commit_action()
 
 
 func cut_block(blocks: Dictionary) -> void:
