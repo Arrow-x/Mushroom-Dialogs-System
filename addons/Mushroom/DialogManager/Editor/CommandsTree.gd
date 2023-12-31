@@ -640,41 +640,40 @@ func command_undo_redo_caller(
 ) -> void:
 	var object
 	if obj != null:
-		match obj.get_class():
-			"Choice":
+		if obj is Choice:
+			for c in commands_settings.get_child(0).get_children():
+				if not c.has_method("get_choice"):
+					continue
+				if c.get_choice() == obj:
+					if is_condition_container == true:
+						object = c.cond_box
+						break
+					else:
+						object = c
+						break
+		elif obj is ConditionResource:
+			var condition_editors: Array
+			if commands_settings.get_child(0).get_command() is ForkCommand:
 				for c in commands_settings.get_child(0).get_children():
 					if not c.has_method("get_choice"):
 						continue
-					if c.get_choice() == obj:
-						if is_condition_container == true:
-							object = c.cond_box
-							break
-						else:
-							object = c
-							break
-			"ConditionResource":
-				var condition_editors: Array
-				if commands_settings.get_child(0).get_command() is ForkCommand:
-					for c in commands_settings.get_child(0).get_children():
-						if not c.has_method("get_choice"):
-							continue
-						condition_editors.append_array(c.cond_editors_container.get_children())
-				else:
-					condition_editors = (
-						commands_settings.get_child(0).cond_editors_container.get_children()
-					)
-				if condition_editors != []:
-					for c in condition_editors:
-						if not c.has_method("get_conditional"):
-							continue
-						if c.get_conditional() == obj:
-							object = c
-							break
-			_:
-				if is_condition_container == true:
-					object = commands_settings.get_child(0).cond_box
-				else:
-					object = obj
+					condition_editors.append_array(c.cond_editors_container.get_children())
+			else:
+				condition_editors = (
+					commands_settings.get_child(0).cond_editors_container.get_children()
+				)
+			if condition_editors != []:
+				for c in condition_editors:
+					if not c.has_method("get_conditional"):
+						continue
+					if c.get_conditional() == obj:
+						object = c
+						break
+		else:
+			if is_condition_container == true:
+				object = commands_settings.get_child(0).cond_box
+			else:
+				object = obj
 	else:
 		object = commands_settings.get_child(0)
 
