@@ -52,7 +52,7 @@ func handle_right_click(idx: int, pop: PopupMenu) -> void:
 		_:
 			push_error("GraphNode: Unknow option in right click menu")
 			return
-	graph_edit.handle_right_menu(state, DisplayServer.mouse_get_position(), self)
+	graph_edit.handle_right_menu(state, position_offset, self)
 
 
 func add_close_button() -> void:

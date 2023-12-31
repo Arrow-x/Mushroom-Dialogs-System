@@ -25,7 +25,7 @@ func _ready() -> void:
 	node_selected.connect(_on_node_selected)
 	node_deselected.connect(_on_node_deselected)
 	copy_nodes_request.connect(on_copy)
-	paste_nodes_request.connect(on_paste.bind(DisplayServer.mouse_get_position()))
+	paste_nodes_request.connect(on_paste.bind(Vector2.ZERO))
 
 	delete_nodes_request.connect(
 		func _on_delete_nodes_request(_node: Array) -> void: on_node_close(selected_graph_nodes)
@@ -429,6 +429,8 @@ func on_cut() -> void:
 
 func on_paste(pos: Vector2) -> void:
 	var dupes: Dictionary = {}
+	if pos == Vector2.ZERO:
+		pos = get_local_mouse_position()
 	var last_pos := pos
 	for c: String in flowchart_tab.main_editor.block_clipboard:
 		last_pos += Vector2(30, 30)
