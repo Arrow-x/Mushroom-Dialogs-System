@@ -13,9 +13,7 @@ var current_choice: Choice
 var flowchart: FlowChart
 var undo_redo: EditorUndoRedoManager
 var commands_tree: Tree
-
-signal connecting
-signal removing_choice
+var fork: ForkControl
 
 
 func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_tree: Tree) -> void:
@@ -35,8 +33,8 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_tree: Tree)
 
 
 func _on_delete_choice_pressed() -> void:
-	removing_choice.emit(self)
-	connecting.emit()
+	fork.removing_choice_action(self)
+	fork.update_block_in_graph(fork.current_block)
 
 
 func _on_next_index_value_changed(value: float) -> void:
@@ -53,7 +51,7 @@ func _on_next_blocklist_about_to_show() -> void:
 		menu.add_item(b)
 
 
-func change_next_bloc(index, m: PopupMenu) -> void:
+func change_next_bloc(index: int, m: PopupMenu) -> void:
 	var next_block_name := m.get_item_text(index)
 	var current_next_block_name := current_choice.next_block
 	undo_redo.create_action("change next block")
@@ -77,7 +75,7 @@ func change_next_bloc(index, m: PopupMenu) -> void:
 func change_next_block(next_block_name: String = "") -> void:
 	current_choice.next_block = next_block_name
 	next_block_menu.text = next_block_name
-	connecting.emit()
+	fork.update_block_in_graph(fork.current_block)
 
 
 func _on_choicetext_text_changed(new_text: String) -> void:

@@ -1,5 +1,6 @@
 @tool
 extends Control
+class_name ForkControl
 
 @export var add_choice_button: Button
 @export var i_choice_control: PackedScene
@@ -38,7 +39,7 @@ func set_up(
 
 func _on_add_choice_button_pressed() -> void:
 	undo_redo.create_action("adding_choice")
-	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "add_choice_contol")
+	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "add_choice_resource")
 	undo_redo.add_undo_method(commands_tree, "command_undo_redo_caller", "free_choice_control")
 	undo_redo.commit_action()
 
@@ -51,13 +52,13 @@ func removing_choice_action(choice_c: Control) -> void:
 	undo_redo.add_undo_method(
 		commands_tree,
 		"command_undo_redo_caller",
-		"add_choice_contol",
+		"add_choice_resource",
 		[choice_c.current_choice, choice_c.get_index()]
 	)
 	undo_redo.commit_action()
 
 
-func add_choice_contol(c: Choice = null, idx: int = -1) -> void:
+func add_choice_resource(c: Choice = null, idx: int = -1) -> void:
 	var n_c: Choice
 	if c == null:
 		n_c = Choice.new()
@@ -91,8 +92,7 @@ func update_block_in_graph(sender: Block) -> void:
 func create_choice_control(choice: Choice, idx: int = -1) -> void:
 	var choice_control: Control = i_choice_control.instantiate()
 
-	choice_control.connecting.connect(update_block_in_graph.bind(current_block))
-	choice_control.removing_choice.connect(removing_choice_action)
+	choice_control.fork = self
 	add_child(choice_control)
 	if idx != -1:
 		move_child(choice_control, idx)

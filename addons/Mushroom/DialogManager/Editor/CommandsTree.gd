@@ -84,6 +84,7 @@ func _rmb_menu_index_pressed(idx: int) -> void:
 			)
 			undo_redo.commit_action()
 		"Paste":
+			# BUG: are we pasting refs?
 			var sel_idx: int
 			var cmds: Array
 			if get_selected() == null:
@@ -103,7 +104,9 @@ func _rmb_menu_index_pressed(idx: int) -> void:
 						cmds = (
 							get_selected().get_parent().get_meta("command").container_block.commands
 						)
-			var clip: Array = flowchart_tab.main_editor.commands_clipboard
+			var clip: Array = []
+			for c in flowchart_tab.main_editor.commands_clipboard:
+				clip.append(c.duplicate(true))
 			undo_redo.create_action("paste commands")
 			undo_redo.add_do_method(
 				self, "paste_commands", cmds, clip, sel_idx, flowchart_tab.flowchart
@@ -675,6 +678,6 @@ func command_undo_redo_caller(
 	else:
 		object = commands_settings.get_child(0)
 
-	if object:
+	if object != null:
 		if object.has_method(undo_redo_method):
 			object.callv(undo_redo_method, args)
