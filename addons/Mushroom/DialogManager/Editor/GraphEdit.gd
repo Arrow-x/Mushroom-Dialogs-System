@@ -356,12 +356,18 @@ func deep_duplicate_block(block: Block) -> Block:
 			command.choices = duplicate_array(command.choices)
 			for choice in command.choices:
 				choice.conditionals = duplicate_array(choice.conditionals)
-				#TODO:  sus
+				# WARN:  sus
 				choice.placeholder_args = choice.placeholder_args.duplicate(true)
 
 				for conditional in choice.conditionals:
 					conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
 					conditional.parsed_args = duplicate_array(conditional.parsed_args)
+		elif command is SayCommand:
+			command.conditionals = duplicate_array(command.conditionals)
+			for conditional in command.conditionals:
+				conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
+				conditional.parsed_args = duplicate_array(conditional.parsed_args)
+			command.placeholder_args = command.placeholder_args.duplicate(true)
 	new_block.inputs = []
 	new_block.outputs = []
 	return new_block
