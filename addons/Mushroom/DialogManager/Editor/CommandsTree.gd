@@ -1,6 +1,5 @@
 @tool
 extends Tree
-class_name BlockCommandsTree
 
 signal moved(item, to_item, shift)
 signal tree_changed(flowchart: FlowChart)
@@ -25,7 +24,7 @@ enum Resault { SUCCESS = 1, NOT_FOUND = -2 }
 
 @export var icon_x: Texture2D
 
-var flowchart_tab: Control
+var flowchart_tab: FlowChartTabs
 var current_block: Block
 var undo_redo: EditorUndoRedoManager
 var graph_edit: GraphEdit

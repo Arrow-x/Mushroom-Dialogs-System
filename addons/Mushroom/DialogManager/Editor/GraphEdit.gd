@@ -1,6 +1,5 @@
 @tool
 extends GraphEdit
-class_name FlowChartGraphEdit
 
 signal g_node_clicked
 signal flow_changed
@@ -89,7 +88,7 @@ func add_block(title: String, offset := Vector2.ZERO, in_block: Block = null) ->
 func create_graph_node_from_block(
 	title: String, offset := Vector2.ZERO, in_block: Block = null
 ) -> void:
-	var g_node: BlockGraphNode = i_graph_node.instantiate()
+	var g_node: GraphNode = i_graph_node.instantiate()
 	g_node.title = title
 	if offset == Vector2.ZERO:
 		g_node.position_offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))

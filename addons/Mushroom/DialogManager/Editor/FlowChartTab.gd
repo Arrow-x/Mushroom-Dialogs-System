@@ -2,9 +2,9 @@
 extends HSplitContainer
 class_name FlowChartTabs
 
-@export var graph_edit: FlowChartGraphEdit
+@export var graph_edit: GraphEdit
 @export var add_block_button: Button
-@export var command_tree: BlockCommandsTree
+@export var command_tree: Tree
 @export var enter_name_scene: PackedScene
 @export var current_block_name: Label
 
@@ -170,7 +170,6 @@ func get_args_from_placeholders(input: String) -> Dictionary:
 
 
 func deep_duplicate_block(block: Block) -> Block:
-	# HACK: Godot do sucks
 	var new_block: Block = block.duplicate(true)
 	new_block.commands = deep_duplicate_commands(new_block.commands)
 	new_block.inputs = []

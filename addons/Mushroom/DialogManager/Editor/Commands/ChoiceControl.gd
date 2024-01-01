@@ -13,7 +13,7 @@ var current_choice: Choice
 var flowchart: FlowChart
 var undo_redo: EditorUndoRedoManager
 var commands_tree: Tree
-var fork: ForkControl
+var fork: Control
 
 
 func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_tree: Tree) -> void:

@@ -1,12 +1,11 @@
 @tool
 extends GraphNode
-class_name BlockGraphNode
 
 var c_inputs: Array
 var c_outputs: Array
 
 var connected_destenation_blocks: Array
-var graph_edit: FlowChartGraphEdit
+var graph_edit: GraphEdit
 
 
 func _gui_input(event: InputEvent) -> void:

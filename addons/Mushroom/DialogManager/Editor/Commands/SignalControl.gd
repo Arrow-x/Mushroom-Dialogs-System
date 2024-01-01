@@ -1,5 +1,6 @@
 @tool
 extends VBoxContainer
+
 @export var req_node: LineEdit
 @export var signal_name: LineEdit
 @export var signal_args: LineEdit
