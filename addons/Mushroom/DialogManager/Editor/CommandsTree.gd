@@ -100,7 +100,6 @@ func on_commands_cut() -> void:
 
 
 func on_commands_paste() -> void:
-	# BUG: are we pasting refs?
 	var sel_idx: int
 	var cmds: Array
 	if get_selected() == null:
@@ -118,9 +117,9 @@ func on_commands_paste() -> void:
 				cmds = current_block.commands
 			else:
 				cmds = (get_selected().get_parent().get_meta("command").container_block.commands)
-	var clip: Array = []
-	for c in flowchart_tab.main_editor.commands_clipboard:
-		clip.append(c.duplicate(true))
+	var clip: Array = flowchart_tab.deep_duplicate_commands(
+		flowchart_tab.main_editor.commands_clipboard
+	)
 	undo_redo.create_action("paste commands")
 	undo_redo.add_do_method(self, "paste_commands", cmds, clip, sel_idx, flowchart_tab.flowchart)
 	undo_redo.add_undo_method(
