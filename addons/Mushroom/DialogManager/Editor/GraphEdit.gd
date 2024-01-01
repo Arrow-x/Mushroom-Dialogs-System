@@ -340,50 +340,6 @@ func _on_popup_request(position: Vector2):
 	pop.popup(Rect2(gmp.x, gmp.y, 0, 0))
 
 
-func deep_duplicate_block(block: Block) -> Block:
-	# HACK: Godot do sucks
-	var new_block: Block = block.duplicate(true)
-	new_block.commands = duplicate_array(new_block.commands)
-	for command in new_block.commands:
-		if command is ContainerCommand:
-			if command is IfCommand:
-				command.conditionals = duplicate_array(command.conditionals)
-				for conditional in command.conditionals:
-					conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
-					conditional.parsed_args = duplicate_array(conditional.parsed_args)
-			command.container_block = deep_duplicate_block(command.container_block)
-		elif command is ForkCommand:
-			command.choices = duplicate_array(command.choices)
-			for choice in command.choices:
-				choice.conditionals = duplicate_array(choice.conditionals)
-				# WARN:  sus
-				choice.placeholder_args = choice.placeholder_args.duplicate(true)
-
-				for conditional in choice.conditionals:
-					conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
-					conditional.parsed_args = duplicate_array(conditional.parsed_args)
-		elif command is SayCommand:
-			command.conditionals = duplicate_array(command.conditionals)
-			for conditional in command.conditionals:
-				conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
-				conditional.parsed_args = duplicate_array(conditional.parsed_args)
-			command.placeholder_args = command.placeholder_args.duplicate(true)
-	new_block.inputs = []
-	new_block.outputs = []
-	return new_block
-
-
-func duplicate_array(input: Array) -> Array:
-	var ret_arr: Array = []
-	for d in input:
-		if d is Object:
-			if d.has_method("duplicate"):
-				ret_arr.append(d.duplicate(true))
-		else:
-			ret_arr.append(d)
-	return ret_arr
-
-
 func handle_right_menu(case: String, pos: Vector2, node: GraphNode = null) -> void:
 	match case:
 		"Add Block":
@@ -410,7 +366,7 @@ func on_copy() -> void:
 	for s in selected_graph_nodes:
 		flowchart_tab.main_editor.block_clipboard[s] = {
 			"offset": selected_graph_nodes[s]["offset"],
-			"block": deep_duplicate_block(selected_graph_nodes[s]["block"])
+			"block": flowchart_tab.deep_duplicate_block(selected_graph_nodes[s]["block"])
 		}
 
 
@@ -435,7 +391,10 @@ func on_paste(pos: Vector2) -> void:
 	for c: String in flowchart_tab.main_editor.block_clipboard:
 		last_pos += Vector2(30, 30)
 		dupes[c] = {
-			"block": deep_duplicate_block(flowchart_tab.main_editor.block_clipboard[c]["block"]),
+			"block":
+			flowchart_tab.deep_duplicate_block(
+				flowchart_tab.main_editor.block_clipboard[c]["block"]
+			),
 			"offset": last_pos
 		}
 	var keys_to_delete: Array[String] = []
@@ -467,7 +426,8 @@ func cut_block(blocks: Dictionary) -> void:
 	set_selected(null)
 	for block: String in blocks:
 		flowchart_tab.main_editor.block_clipboard[block] = {
-			"offset": blocks[block]["offset"], "block": deep_duplicate_block(blocks[block]["block"])
+			"offset": blocks[block]["offset"],
+			"block": flowchart_tab.deep_duplicate_block(blocks[block]["block"])
 		}
 		if block == "first_block":
 			continue

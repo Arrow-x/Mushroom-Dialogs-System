@@ -167,3 +167,52 @@ func get_args_from_placeholders(input: String) -> Dictionary:
 			if func_arg_res:
 				return {"args": func_arg_res, "parsed": get_type_from_string(func_arg_res)}
 	return {}
+
+
+func deep_duplicate_block(block: Block) -> Block:
+	# HACK: Godot do sucks
+	var new_block: Block = block.duplicate(true)
+	new_block.commands = deep_duplicate_commands(new_block.commands)
+	new_block.inputs = []
+	new_block.outputs = []
+	return new_block
+
+
+func deep_duplicate_commands(block_commnds: Array) -> Array:
+	var ret_array = duplicate_array(block_commnds)
+	for command in ret_array:
+		if command is ContainerCommand:
+			if command is IfCommand:
+				command.conditionals = duplicate_array(command.conditionals)
+				for conditional in command.conditionals:
+					conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
+					conditional.parsed_args = duplicate_array(conditional.parsed_args)
+			command.container_block = deep_duplicate_block(command.container_block)
+		elif command is ForkCommand:
+			command.choices = duplicate_array(command.choices)
+			for choice in command.choices:
+				choice.conditionals = duplicate_array(choice.conditionals)
+				# WARN:  sus
+				choice.placeholder_args = choice.placeholder_args.duplicate(true)
+
+				for conditional in choice.conditionals:
+					conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
+					conditional.parsed_args = duplicate_array(conditional.parsed_args)
+		elif command is SayCommand:
+			command.conditionals = duplicate_array(command.conditionals)
+			for conditional in command.conditionals:
+				conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
+				conditional.parsed_args = duplicate_array(conditional.parsed_args)
+			command.placeholder_args = command.placeholder_args.duplicate(true)
+	return ret_array
+
+
+func duplicate_array(input: Array) -> Array:
+	var ret_arr: Array = []
+	for d in input:
+		if d is Object:
+			if d.has_method("duplicate"):
+				ret_arr.append(d.duplicate(true))
+		else:
+			ret_arr.append(d)
+	return ret_arr
