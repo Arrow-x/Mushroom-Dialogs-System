@@ -69,55 +69,64 @@ func _on_tree_item_rmb_selected(_position: Vector2, mouse_button_index: int, is_
 func _rmb_menu_index_pressed(idx: int) -> void:
 	match general_rmb_menu.get_item_text(idx):
 		"Delete":
-			_on_tree_item_x_button_pressed(get_selected(), 0, 1, 1)
+			on_commands_delete()
 		"Copy":
-			flowchart_tab.main_editor.commands_clipboard.clear()
-			flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items_copy()
+			on_commands_copy()
 		"Cut":
-			var selected_copies := get_selected_tree_items(true)
-			flowchart_tab.main_editor.commands_clipboard.clear()
-			flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items_copy()
-			undo_redo.create_action("cut commands")
-			undo_redo.add_do_method(self, "cut_commands", selected_copies, flowchart_tab.flowchart)
-			undo_redo.add_undo_method(
-				self, "undo_cut_commands", selected_copies, flowchart_tab.flowchart
-			)
-			undo_redo.commit_action()
+			on_commands_cut()
 		"Paste":
-			# BUG: are we pasting refs?
-			var sel_idx: int
-			var cmds: Array
-			if get_selected() == null:
-				cmds = current_block.commands
-				sel_idx = cmds.size()
-			else:
-				var selected_cmd: Command = get_selected().get_meta("command")
-				if selected_cmd is ContainerCommand:
-					cmds = selected_cmd.container_block.commands
-					sel_idx = cmds.size()
-				else:
-					sel_idx = get_selected().get_index() + 1
-					var parent = get_selected().get_parent()
-					if parent == get_root() or parent == null:
-						cmds = current_block.commands
-					else:
-						cmds = (
-							get_selected().get_parent().get_meta("command").container_block.commands
-						)
-			var clip: Array = []
-			for c in flowchart_tab.main_editor.commands_clipboard:
-				clip.append(c.duplicate(true))
-			undo_redo.create_action("paste commands")
-			undo_redo.add_do_method(
-				self, "paste_commands", cmds, clip, sel_idx, flowchart_tab.flowchart
-			)
-			undo_redo.add_undo_method(
-				self, "undo_paste_commands", sel_idx, clip.size(), cmds, flowchart_tab.flowchart
-			)
-			undo_redo.commit_action()
-
+			on_commands_paste()
 		_:
 			push_error("Unknow key in right menu button")
+
+
+func on_commands_delete() -> void:
+	_on_tree_item_x_button_pressed(get_selected(), 0, 1, 1)
+
+
+func on_commands_copy() -> void:
+	flowchart_tab.main_editor.commands_clipboard.clear()
+	flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items_copy()
+
+
+func on_commands_cut() -> void:
+	var selected_copies := get_selected_tree_items(true)
+	flowchart_tab.main_editor.commands_clipboard.clear()
+	flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items_copy()
+	undo_redo.create_action("cut commands")
+	undo_redo.add_do_method(self, "cut_commands", selected_copies, flowchart_tab.flowchart)
+	undo_redo.add_undo_method(self, "undo_cut_commands", selected_copies, flowchart_tab.flowchart)
+	undo_redo.commit_action()
+
+
+func on_commands_paste() -> void:
+	# BUG: are we pasting refs?
+	var sel_idx: int
+	var cmds: Array
+	if get_selected() == null:
+		cmds = current_block.commands
+		sel_idx = cmds.size()
+	else:
+		var selected_cmd: Command = get_selected().get_meta("command")
+		if selected_cmd is ContainerCommand:
+			cmds = selected_cmd.container_block.commands
+			sel_idx = cmds.size()
+		else:
+			sel_idx = get_selected().get_index() + 1
+			var parent = get_selected().get_parent()
+			if parent == get_root() or parent == null:
+				cmds = current_block.commands
+			else:
+				cmds = (get_selected().get_parent().get_meta("command").container_block.commands)
+	var clip: Array = []
+	for c in flowchart_tab.main_editor.commands_clipboard:
+		clip.append(c.duplicate(true))
+	undo_redo.create_action("paste commands")
+	undo_redo.add_do_method(self, "paste_commands", cmds, clip, sel_idx, flowchart_tab.flowchart)
+	undo_redo.add_undo_method(
+		self, "undo_paste_commands", sel_idx, clip.size(), cmds, flowchart_tab.flowchart
+	)
+	undo_redo.commit_action()
 
 
 func paste_commands(to_array: Array, paste_array: Array, idx: int, fl: FlowChart) -> void:
@@ -214,28 +223,36 @@ func _on_add_command(id: int, pop_up: Popup, on_item := false, is_rmb := false) 
 	var idx: int = -1
 	var parent_cmd: Command = null
 
-	if is_rmb:
-		if get_selected() != null and on_item == true:
-			var selected_item_cmd: Command = get_selected().get_meta("command")
-			if selected_item_cmd is ContainerCommand:
-				parent_cmd = selected_item_cmd
-			else:
-				var selected_parent := get_selected().get_parent()
-				if selected_parent == get_root():
-					idx = find_tree_item(get_selected()) + 1
-				else:
-					idx = (
-						selected_parent.get_meta("command").container_block.commands.find(
-							selected_item_cmd
-						)
-						+ 1
-					)
-					parent_cmd = selected_parent.get_meta("command")
+	if is_rmb and on_item:
+		var ret := on_rmb_find_parent_and_idx()
+		idx = ret["idx"]
+		parent_cmd = ret["parent_cmd"]
 
 	undo_redo.create_action("Added Command")
 	undo_redo.add_do_method(self, "add_command_to_block", command, idx, parent_cmd)
 	undo_redo.add_undo_method(self, "delete_command", command)
 	undo_redo.commit_action()
+
+
+func on_rmb_find_parent_and_idx() -> Dictionary:
+	var ret_dic = {"parent_cmd": null, "idx": -1}
+	if get_selected() == null:
+		return ret_dic
+
+	var selected_item_cmd: Command = get_selected().get_meta("command")
+	if selected_item_cmd is ContainerCommand:
+		ret_dic["parent_cmd"] = selected_item_cmd
+	else:
+		var selected_parent := get_selected().get_parent()
+		if selected_parent != get_root():
+			ret_dic["idx"] = (
+				selected_parent.get_meta("command").container_block.commands.find(selected_item_cmd)
+				+ 1
+			)
+			ret_dic["parent_cmd "] = selected_parent.get_meta("command")
+			return ret_dic
+		ret_dic["idx"] = find_tree_item(get_selected()) + 1
+	return ret_dic
 
 
 func add_command_to_block(command: Command, idx: int = -1, parent: Command = null) -> void:
@@ -245,14 +262,12 @@ func add_command_to_block(command: Command, idx: int = -1, parent: Command = nul
 			cbc.append(command)
 		else:
 			cbc.insert(idx, command)
-
-	else:
-		if parent is ContainerCommand:
-			var pbc: Array = parent.container_block.commands
-			if idx == -1:
-				pbc.append(command)
-			else:
-				pbc.insert(idx, command)
+	elif parent is ContainerCommand:
+		var pbc: Array = parent.container_block.commands
+		if idx == -1:
+			pbc.append(command)
+		else:
+			pbc.insert(idx, command)
 	if command is ForkCommand:
 		current_block.outputs.append(command)
 	create_tree_from_block(current_block)
@@ -636,47 +651,50 @@ func create_command_editor(current_item = null) -> void:
 
 
 func command_undo_redo_caller(
-	undo_redo_method: StringName, args: Array = [], obj = null, is_condition_container := false
+	undo_redo_method: StringName,
+	args: Array = [],
+	input_obj = null,
+	is_condition_container := false
 ) -> void:
+	var current_ed: Control = commands_settings.get_child(0)
 	var object
-	if obj != null:
-		if obj is Choice:
-			for c in commands_settings.get_child(0).get_children():
+
+	if input_obj is Choice:
+		for c in current_ed.get_children():
+			if not c.has_method("get_choice"):
+				continue
+			if c.get_choice() != input_obj:
+				continue
+			if is_condition_container == true:
+				object = c.cond_box
+				break
+			object = c
+			break
+	elif input_obj is ConditionResource:
+		var condition_editors: Array = []
+		if current_ed.get_command() is ForkCommand:
+			for c in current_ed.get_children():
 				if not c.has_method("get_choice"):
 					continue
-				if c.get_choice() == obj:
-					if is_condition_container == true:
-						object = c.cond_box
-						break
-					else:
-						object = c
-						break
-		elif obj is ConditionResource:
-			var condition_editors: Array
-			if commands_settings.get_child(0).get_command() is ForkCommand:
-				for c in commands_settings.get_child(0).get_children():
-					if not c.has_method("get_choice"):
-						continue
-					condition_editors.append_array(c.cond_editors_container.get_children())
-			else:
-				condition_editors = (
-					commands_settings.get_child(0).cond_editors_container.get_children()
-				)
-			if condition_editors != []:
-				for c in condition_editors:
-					if not c.has_method("get_conditional"):
-						continue
-					if c.get_conditional() == obj:
-						object = c
-						break
+				condition_editors.append_array(c.cond_editors_container.get_children())
 		else:
-			if is_condition_container == true:
-				object = commands_settings.get_child(0).cond_box
-			else:
-				object = obj
-	else:
-		object = commands_settings.get_child(0)
+			condition_editors = current_ed.cond_editors_container.get_children()
 
-	if object != null:
-		if object.has_method(undo_redo_method):
-			object.callv(undo_redo_method, args)
+		for c in condition_editors:
+			if not c.has_method("get_conditional"):
+				continue
+			if c.get_conditional() != input_obj:
+				continue
+			object = c
+			break
+	else:
+		object = current_ed.cond_box if is_condition_container == true else current_ed
+
+	if object == null:
+		push_error("Can't find the calling object")
+		return
+	if not object.has_method(undo_redo_method):
+		push_error(object, " doesn't have ", undo_redo_method)
+		return
+
+	object.callv(undo_redo_method, args)

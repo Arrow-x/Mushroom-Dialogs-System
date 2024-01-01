@@ -440,17 +440,18 @@ func on_paste(pos: Vector2) -> void:
 		}
 	var keys_to_delete: Array[String] = []
 	for block_key in dupes:
-		if flowchart.blocks.has(block_key) == true:
-			for i in range(1, 999):
-				var mod_name: String = str(block_key) + " (" + str(i) + ")"
-				if flowchart.blocks.has(mod_name) == true:
-					continue
-				dupes[block_key]["block"].name = mod_name
-				dupes[mod_name] = {
-					"block": dupes[block_key]["block"], "offset": dupes[block_key]["offset"]
-				}
-				keys_to_delete.append(block_key)
-				break
+		if flowchart.blocks.has(block_key) != true:
+			continue
+		for i in range(1, 999):
+			var mod_name: String = str(block_key) + " (" + str(i) + ")"
+			if flowchart.blocks.has(mod_name) == true:
+				continue
+			dupes[block_key]["block"].name = mod_name
+			dupes[mod_name] = {
+				"block": dupes[block_key]["block"], "offset": dupes[block_key]["offset"]
+			}
+			keys_to_delete.append(block_key)
+			break
 	for b in keys_to_delete:
 		dupes.erase(b)
 	undo_redo.create_action("Paste block")
