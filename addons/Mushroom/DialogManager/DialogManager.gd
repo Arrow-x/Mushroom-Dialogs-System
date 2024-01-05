@@ -55,8 +55,8 @@ func execute_dialog() -> void:
 					advance()
 					return
 			UI.add_text(
-				get_placeholders(cbi.say, cbi),
-				cbi.character.name if cbi.character != null else "",
+				get_placeholders(tr(cbi.tr_code), cbi),
+				tr(cbi.character.name) if cbi.character != null else "",
 				cbi.append_text
 			)
 			UI.add_portrait(cbi.portrait, cbi.por_pos)
@@ -76,7 +76,7 @@ func execute_dialog() -> void:
 					if parse_conditionals(ci.conditionals) == false:
 						continue
 				current_choices.append(current_flowchart.get_block(ci.next_block))
-				UI.add_choice(get_placeholders(ci.text), choice_idx, ci.next_index)
+				UI.add_choice(get_placeholders(tr(ci.tr_code)), choice_idx, ci.next_index)
 			UI.show_choice()
 
 		"JumpCommand":

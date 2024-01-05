@@ -7,6 +7,7 @@ class_name Choice
 @export var is_cond: bool = false
 @export var conditionals: Array
 @export var placeholder_args: Dictionary = {}
+@export var tr_code: StringName
 
 
 func get_class() -> String:

@@ -12,6 +12,7 @@ class_name SayCommand
 @export var conditionals: Array
 @export var follow_through: bool = false
 @export var placeholder_args: Dictionary = {}
+@export var tr_code: StringName
 
 
 func preview() -> String:

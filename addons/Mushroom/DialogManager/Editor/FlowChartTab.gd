@@ -7,11 +7,14 @@ class_name FlowChartTabs
 @export var command_tree: Tree
 @export var enter_name_scene: PackedScene
 @export var current_block_name: Label
+@export var translation_lineedit: LineEdit
 
 var flowchart: FlowChart
 var flow_tabs: TabBar
 var undo_redo: EditorUndoRedoManager
 var main_editor: Control
+var plugin_config: ConfigFile
+var default_translation_location: String
 
 var modified := false
 
@@ -44,13 +47,27 @@ func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager, ed: 
 	command_tree.flowchart_tab = self
 	command_tree.tree_changed.connect(changed_flowchart)
 
+	plugin_config = ConfigFile.new()
+	plugin_config.load("res://addons/Mushroom/plugin.cfg")
+	default_translation_location = plugin_config.get_value(
+		"plugin", "translation_file", "res://Translations/test.en.translation"
+	)
+	translation_lineedit.text = default_translation_location
+	translation_lineedit.text_changed.connect(_on_translation_linedit_text_change)
+
 	graph_edit.sync_flowchart_graph(flowchart)
+
+
+func _on_translation_linedit_text_change(new_text: String) -> void:
+	plugin_config.set_value("plugin", "translation_file", new_text)
+	default_translation_location = new_text
 
 
 func check_flowchart_path_before_save() -> void:
 	if flowchart == null:
 		return
 	parse_string_var(flowchart)
+	replace_text_with_code(flowchart)
 	if flowchart.resource_path == "":
 		flow_tabs.set_tab_title(get_index(), String(name + "(*)"))
 		var file_dialog: FileDialog = FileDialog.new()
@@ -68,6 +85,7 @@ func check_flowchart_path_before_save() -> void:
 
 func save_flowchart_to_disc(path: String, overwrite := false) -> void:
 	ResourceSaver.save(flowchart, path)
+	plugin_config.save("res://addons/Mushroom/plugin.cfg")
 	if overwrite == true:
 		flowchart.set_path(path)
 
@@ -85,6 +103,57 @@ func changed_flowchart(f: FlowChart = null) -> void:
 		if flow_tabs:
 			flow_tabs.set_tab_title(get_index(), str(name + "(*)"))
 			modified = true
+
+
+func replace_text_with_code(i_flowchart: FlowChart) -> void:
+	var default_translation: Translation = load(default_translation_location)
+	if default_translation == null:
+		push_error("FlowChartTabs: couldn't get the english translation file")
+		return
+	var current_commands: Array
+	var current_cmd: Command
+	var current_choice: Choice
+	var new_tr_code: StringName
+	for block: String in i_flowchart.blocks:
+		current_commands = i_flowchart.get_block(block).commands
+		for c_idx: int in range(i_flowchart.get_block(block).commands.size()):
+			current_cmd = current_commands[c_idx]
+
+			if current_cmd is SayCommand:
+				new_tr_code = (
+					"Say_" + i_flowchart.get_flowchart_name() + "_" + block + "_" + str(c_idx)
+				)
+
+				if current_cmd.tr_code != new_tr_code:
+					default_translation.erase_message(StringName(current_cmd.tr_code))
+					current_cmd.tr_code = new_tr_code
+
+				default_translation.add_message(StringName(new_tr_code), current_cmd.say)
+
+			elif current_cmd is ForkCommand:
+				for choice_idx: int in range(current_cmd.choices.size()):
+					current_choice = current_cmd.choices[choice_idx]
+					new_tr_code = (
+						"Choice_"
+						+ str(choice_idx)
+						+ "_in_Fork_"
+						+ i_flowchart.get_flowchart_name()
+						+ "_"
+						+ block
+						+ "_"
+						+ str(c_idx)
+					)
+
+					if current_choice.tr_code != new_tr_code:
+						default_translation.erase_message(StringName(current_choice.tr_code))
+						current_choice.tr_code = new_tr_code
+
+					default_translation.add_message(new_tr_code, StringName(current_choice.text))
+
+	for c: Chararcter in i_flowchart.characters:
+		default_translation.add_message(StringName(c.name), StringName(c.name))
+
+	ResourceSaver.save(default_translation, default_translation_location)
 
 
 func parse_string_var(input_flowchart: FlowChart) -> void:
