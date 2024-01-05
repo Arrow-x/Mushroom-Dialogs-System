@@ -9,3 +9,7 @@ icon.png
 default_env.tres
 nvim.shada
 addons/Mushroom/DialogManager/misc/args.tres
+Translations
+icon.svg.import
+icon.svg
+.gitattributes
