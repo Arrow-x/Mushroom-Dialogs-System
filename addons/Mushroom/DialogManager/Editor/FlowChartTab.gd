@@ -110,50 +110,85 @@ func replace_text_with_code(i_flowchart: FlowChart) -> void:
 	if default_translation == null:
 		push_error("FlowChartTabs: couldn't get the english translation file")
 		return
+	for block: String in i_flowchart.blocks:
+		replace_text_in_commands(
+			i_flowchart.get_block(block).commands,
+			block,
+			i_flowchart.get_flowchart_name(),
+			default_translation
+		)
+
+	for c: Chararcter in i_flowchart.characters:
+		default_translation.add_message(StringName(c.name), StringName(c.name))
+	ResourceSaver.save(default_translation, default_translation_location)
+
+
+func replace_text_in_commands(
+	commands: Array,
+	block_name: String,
+	flowchart_name: String,
+	translation: Translation,
+	last_code := ""
+) -> void:
 	var current_commands: Array
 	var current_cmd: Command
 	var current_choice: Choice
 	var new_tr_code: StringName
-	for block: String in i_flowchart.blocks:
-		current_commands = i_flowchart.get_block(block).commands
-		for c_idx: int in range(i_flowchart.get_block(block).commands.size()):
-			current_cmd = current_commands[c_idx]
+	for c_idx: int in range(commands.size()):
+		current_cmd = commands[c_idx]
 
-			if current_cmd is SayCommand:
+		if current_cmd is SayCommand:
+			new_tr_code = (
+				last_code + "Say_" + flowchart_name + "_" + block_name + "_" + str(c_idx)
+			)
+
+			if current_cmd.tr_code != new_tr_code:
+				translation.erase_message(StringName(current_cmd.tr_code))
+				current_cmd.tr_code = new_tr_code
+
+			translation.add_message(StringName(new_tr_code), current_cmd.say)
+
+		elif current_cmd is ForkCommand:
+			for choice_idx: int in range(current_cmd.choices.size()):
+				current_choice = current_cmd.choices[choice_idx]
 				new_tr_code = (
-					"Say_" + i_flowchart.get_flowchart_name() + "_" + block + "_" + str(c_idx)
+					last_code
+					+ "Choice_"
+					+ str(choice_idx)
+					+ "_in_Fork_"
+					+ flowchart_name
+					+ "_"
+					+ block_name
+					+ "_"
+					+ str(c_idx)
 				)
 
-				if current_cmd.tr_code != new_tr_code:
-					default_translation.erase_message(StringName(current_cmd.tr_code))
-					current_cmd.tr_code = new_tr_code
+				if current_choice.tr_code != new_tr_code:
+					translation.erase_message(StringName(current_choice.tr_code))
+					current_choice.tr_code = new_tr_code
 
-				default_translation.add_message(StringName(new_tr_code), current_cmd.say)
+				translation.add_message(new_tr_code, StringName(current_choice.text))
+		elif current_cmd is ContainerCommand:
+			if current_cmd is GeneralContainerCommand:
+				new_tr_code = (
+					last_code + "General Container_" + current_cmd.name + "_" + str(c_idx) + "_"
+				)
+			elif current_cmd is RandomCommand:
+				new_tr_code = last_code + "Random_" + str(c_idx) + "_"
+			elif current_cmd is ConditionCommand:
+				new_tr_code = last_code + "if_" + str(c_idx) + "_"
+			elif current_cmd is IfElseCommand:
+				new_tr_code = last_code + "else_if_" + str(c_idx) + "_"
+			elif current_cmd is ElseCommand:
+				new_tr_code = last_code + "else_" + str(c_idx) + "_"
 
-			elif current_cmd is ForkCommand:
-				for choice_idx: int in range(current_cmd.choices.size()):
-					current_choice = current_cmd.choices[choice_idx]
-					new_tr_code = (
-						"Choice_"
-						+ str(choice_idx)
-						+ "_in_Fork_"
-						+ i_flowchart.get_flowchart_name()
-						+ "_"
-						+ block
-						+ "_"
-						+ str(c_idx)
-					)
-
-					if current_choice.tr_code != new_tr_code:
-						default_translation.erase_message(StringName(current_choice.tr_code))
-						current_choice.tr_code = new_tr_code
-
-					default_translation.add_message(new_tr_code, StringName(current_choice.text))
-
-	for c: Chararcter in i_flowchart.characters:
-		default_translation.add_message(StringName(c.name), StringName(c.name))
-
-	ResourceSaver.save(default_translation, default_translation_location)
+			replace_text_in_commands(
+				current_cmd.container_block.commands,
+				block_name,
+				flowchart_name,
+				translation,
+				new_tr_code
+			)
 
 
 func parse_string_var(input_flowchart: FlowChart) -> void:
