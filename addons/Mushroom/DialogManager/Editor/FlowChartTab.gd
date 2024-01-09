@@ -2,6 +2,8 @@
 extends HSplitContainer
 class_name FlowChartTabs
 
+# TODO: add a butoon to export csv
+
 @export var graph_edit: GraphEdit
 @export var add_block_button: Button
 @export var command_tree: Tree
@@ -50,7 +52,7 @@ func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager, ed: 
 	plugin_config = ConfigFile.new()
 	plugin_config.load("res://addons/Mushroom/plugin.cfg")
 	default_translation_location = plugin_config.get_value(
-		"plugin", "translation_file", "res://Translations/test.en.translation"
+		"plugin", "translation_file", "res://Translations/default.en.translation"
 	)
 	translation_lineedit.text = default_translation_location
 	translation_lineedit.text_changed.connect(_on_translation_linedit_text_change)
@@ -121,6 +123,7 @@ func replace_text_with_code(i_flowchart: FlowChart) -> void:
 	for c: Chararcter in i_flowchart.characters:
 		default_translation.add_message(StringName(c.name), StringName(c.name))
 	ResourceSaver.save(default_translation, default_translation_location)
+	translation_to_csv(default_translation)
 
 
 func replace_text_in_commands(
@@ -171,7 +174,7 @@ func replace_text_in_commands(
 		elif current_cmd is ContainerCommand:
 			if current_cmd is GeneralContainerCommand:
 				new_tr_code = (
-					last_code + "General Container_" + current_cmd.name + "_" + str(c_idx) + "_"
+					last_code + "General_Container_" + current_cmd.name + "_" + str(c_idx) + "_"
 				)
 			elif current_cmd is RandomCommand:
 				new_tr_code = last_code + "Random_" + str(c_idx) + "_"
@@ -189,6 +192,20 @@ func replace_text_in_commands(
 				translation,
 				new_tr_code
 			)
+
+
+func translation_to_csv(translation: Translation) -> void:
+	# TODO: add a file picker to chose wher to store the csv
+	const CSV_FILE := "res://TranslationCsvs/default.csv"
+	var msg_list := translation.get_message_list()
+	var tr_msg_list := translation.get_translated_message_list()
+	var file_write := FileAccess.open(CSV_FILE, FileAccess.WRITE)
+	if file_write == null:
+		push_error("FlowChartTabs: ", error_string(FileAccess.get_open_error()))
+		return
+	file_write.store_string("key,en\n")
+	for m: int in range(translation.get_message_count()):
+		file_write.store_string(str(msg_list[m] + "," + '"' + tr_msg_list[m] + '"' + "\n"))
 
 
 func parse_string_var(input_flowchart: FlowChart) -> void:
