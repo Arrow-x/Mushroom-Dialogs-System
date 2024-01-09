@@ -114,7 +114,7 @@ size_flags_horizontal = 3
 [node name="VBoxContainer" type="VBoxContainer" parent="InspectorTabContainer/FlowChartSettings"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="InspectorTabContainer/FlowChartSettings/VBoxContainer"]
+[node name="HBoxContainer" type="VBoxContainer" parent="InspectorTabContainer/FlowChartSettings/VBoxContainer"]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="InspectorTabContainer/FlowChartSettings/VBoxContainer/HBoxContainer"]
