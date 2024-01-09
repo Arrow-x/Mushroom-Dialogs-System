@@ -13,3 +13,4 @@ Translations
 icon.svg.import
 icon.svg
 .gitattributes
+.vscode/settings.json
