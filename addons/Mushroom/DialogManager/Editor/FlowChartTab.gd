@@ -2,14 +2,13 @@
 extends HSplitContainer
 class_name FlowChartTabs
 
-# TODO: add a butoon to export csv
-
 @export var graph_edit: GraphEdit
 @export var add_block_button: Button
 @export var command_tree: Tree
 @export var enter_name_scene: PackedScene
 @export var current_block_name: Label
 @export var translation_lineedit: LineEdit
+@export var export_button: Button
 
 var flowchart: FlowChart
 var flow_tabs: TabBar
@@ -56,6 +55,7 @@ func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager, ed: 
 	)
 	translation_lineedit.text = default_translation_location
 	translation_lineedit.text_changed.connect(_on_translation_linedit_text_change)
+	export_button.pressed.connect(translation_to_csv.bind(load(default_translation_location)))
 
 	graph_edit.sync_flowchart_graph(flowchart)
 
@@ -123,7 +123,6 @@ func replace_text_with_code(i_flowchart: FlowChart) -> void:
 	for c: Chararcter in i_flowchart.characters:
 		default_translation.add_message(StringName(c.name), StringName(c.name))
 	ResourceSaver.save(default_translation, default_translation_location)
-	translation_to_csv(default_translation)
 
 
 func replace_text_in_commands(
@@ -195,11 +194,22 @@ func replace_text_in_commands(
 
 
 func translation_to_csv(translation: Translation) -> void:
-	# TODO: add a file picker to chose wher to store the csv
-	const CSV_FILE := "res://TranslationCsvs/default.csv"
+	if translation == null:
+		push_error("FlowChartTab: default translation file is null")
+		return
+	var file_dialog: FileDialog = FileDialog.new()
+	file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	file_dialog.set_size(Vector2(800, 500))
+	file_dialog.get_line_edit().set_text("default.csv")
+	file_dialog.file_selected.connect(csv_location_chosen.bind(translation))
+	add_child(file_dialog)
+	file_dialog.popup_centered()
+
+
+func csv_location_chosen(csv_file: String, translation: Translation) -> void:
 	var msg_list := translation.get_message_list()
 	var tr_msg_list := translation.get_translated_message_list()
-	var file_write := FileAccess.open(CSV_FILE, FileAccess.WRITE)
+	var file_write := FileAccess.open(csv_file, FileAccess.WRITE)
 	if file_write == null:
 		push_error("FlowChartTabs: ", error_string(FileAccess.get_open_error()))
 		return
