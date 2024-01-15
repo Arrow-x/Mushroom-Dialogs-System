@@ -1,5 +1,5 @@
 @tool
-extends Control
+extends Node
 
 @export var index_control: SpinBox
 @export var global_control: CheckButton

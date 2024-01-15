@@ -1,5 +1,5 @@
 @tool
-extends Control
+extends Node
 
 @export var character_menu: MenuButton
 @export var portraits_menu: MenuButton

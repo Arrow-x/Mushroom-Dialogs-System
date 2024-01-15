@@ -1,5 +1,5 @@
 @tool
-extends Control
+extends Node
 
 @export var cond_box: VBoxContainer
 @export var cond_editors_container: VBoxContainer

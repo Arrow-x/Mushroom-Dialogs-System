@@ -1,5 +1,5 @@
 @tool
-extends Control
+extends Node
 
 @export var choice_text: LineEdit
 @export var next_block_menu: MenuButton

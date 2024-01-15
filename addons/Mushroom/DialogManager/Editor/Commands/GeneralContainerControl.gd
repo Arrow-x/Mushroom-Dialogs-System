@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends Node
 
 @export var name_edit: LineEdit
 

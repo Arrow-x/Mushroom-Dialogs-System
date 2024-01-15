@@ -1,5 +1,5 @@
 @tool
-extends Control
+extends Node
 
 @export var var_node_lineedit: LineEdit
 @export var var_name_lineedit: LineEdit

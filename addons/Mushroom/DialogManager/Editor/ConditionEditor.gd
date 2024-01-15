@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends Node
 
 @export var sequencer_check: CheckButton
 @export var sequence_container: VBoxContainer

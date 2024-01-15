@@ -1,5 +1,5 @@
 @tool
-extends Control
+extends Node
 
 @export var anim_path_ctrl: LineEdit
 @export var anim_name_ctrl: LineEdit

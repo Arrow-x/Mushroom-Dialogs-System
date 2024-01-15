@@ -1,5 +1,5 @@
 @tool
-extends Control
+extends Node
 
 @export var stream: Label
 @export var volume_slider: SpinBox

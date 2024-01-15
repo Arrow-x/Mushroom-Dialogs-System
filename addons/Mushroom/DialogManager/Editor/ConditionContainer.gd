@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends Node
 
 @export var conditional_editor_scene: PackedScene
 @export var cond_editors_container: Container

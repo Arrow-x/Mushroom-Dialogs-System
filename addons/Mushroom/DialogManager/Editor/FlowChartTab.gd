@@ -1,6 +1,5 @@
 @tool
-extends HSplitContainer
-class_name FlowChartTabs
+class_name FlowChartTabs extends Node
 
 @export var graph_edit: GraphEdit
 @export var add_block_button: Button

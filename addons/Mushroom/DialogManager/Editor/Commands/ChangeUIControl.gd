@@ -1,5 +1,5 @@
 @tool
-extends Control
+extends Node
 
 @export var default_check: CheckButton
 @export var ui_drag_target: Label
