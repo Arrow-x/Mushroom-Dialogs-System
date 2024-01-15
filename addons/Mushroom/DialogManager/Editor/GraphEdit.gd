@@ -13,6 +13,7 @@ signal graph_node_close
 var g_node_posititon := Vector2(40, 40)
 var undo_redo: EditorUndoRedoManager
 var flowchart: FlowChart
+
 var graph_nodes: Dictionary
 var current_selected_graph_node: String
 var selected_graph_nodes: Dictionary

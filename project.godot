@@ -24,7 +24,7 @@ enabled=PackedStringArray("res://addons/Mushroom/plugin.cfg", "res://addons/plug
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://Translations/proper.en.translation")
+locale/translations=PackedStringArray("res://Translations/default.en.translation")
 
 [rendering]
 

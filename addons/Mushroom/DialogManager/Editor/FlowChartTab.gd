@@ -14,6 +14,7 @@ var flowchart: FlowChart
 var flow_tabs: TabBar
 var undo_redo: EditorUndoRedoManager
 var main_editor: Control
+
 var plugin_config: ConfigFile
 var default_translation_location: String
 
