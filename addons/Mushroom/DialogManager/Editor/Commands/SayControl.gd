@@ -28,6 +28,9 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree
 	portraits_menu.get_popup().id_pressed.connect(_on_portrait_selected)
 	portraits_pos_menu.get_popup().id_pressed.connect(_on_portrait_pos_selected)
 
+	if c_s.say.is_empty():
+		c_s.say = TranslationServer.get_translation_object("en").get_message(c_s.tr_code)
+
 	if c_s.character != null:
 		character_menu.text = c_s.character.name
 	if c_s.portrait_id != "":

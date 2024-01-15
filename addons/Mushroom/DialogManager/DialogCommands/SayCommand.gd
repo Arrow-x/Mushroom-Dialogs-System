@@ -3,7 +3,7 @@ extends Command
 class_name SayCommand
 
 @export var character: Resource
-@export_multiline var say: String
+var say: String
 @export var portrait_id: String
 @export var portrait: CompressedTexture2D
 @export_enum("Left", "Right", "Center") var por_pos: String = "Right"
@@ -17,7 +17,13 @@ class_name SayCommand
 
 func preview() -> String:
 	var prev: String
-	prev = str("Say: " + say)
+	prev = str(
+		(
+			"Say: " + say
+			if not say.is_empty()
+			else TranslationServer.get_translation_object("en").get_message(tr_code)
+		)
+	)
 	if character != null:
 		prev = str(prev + " by: " + character.name)
 	return prev

@@ -17,9 +17,12 @@ var fork: Control
 
 
 func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_tree: Tree) -> void:
+	if c.choice_text.is_empty():
+		c.choice_text = TranslationServer.get_translation_object("en").get_message(c.tr_code)
+
 	flowchart = fct
 	current_choice = c
-	choice_text.text = c.text
+	choice_text.text = c.choice_text
 	undo_redo = u
 	commands_tree = cmd_tree
 	if c.next_block != null:
@@ -79,7 +82,7 @@ func change_next_block(next_block_name: String = "") -> void:
 
 
 func _on_choicetext_text_changed(new_text: String) -> void:
-	current_choice.text = new_text
+	current_choice.choice_text = new_text
 	is_changed()
 
 

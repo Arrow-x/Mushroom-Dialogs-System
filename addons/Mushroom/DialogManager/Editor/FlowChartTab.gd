@@ -170,7 +170,7 @@ func replace_text_in_commands(
 					translation.erase_message(StringName(current_choice.tr_code))
 					current_choice.tr_code = new_tr_code
 
-				translation.add_message(new_tr_code, StringName(current_choice.text))
+				translation.add_message(new_tr_code, StringName(current_choice.choice_text))
 		elif current_cmd is ContainerCommand:
 			if current_cmd is GeneralContainerCommand:
 				new_tr_code = (
@@ -235,7 +235,7 @@ func parse_string_var(input_flowchart: FlowChart) -> void:
 					for e: ConditionResource in m.conditionals:
 						e.parsed_check_val = get_type_from_string(e.check_val)
 						e.parsed_args = get_type_from_string(e.args)
-					var _get_args := get_args_from_placeholders(m.text)
+					var _get_args := get_args_from_placeholders(m.choice_text)
 					if _get_args != {}:
 						m.placeholder_args[_get_args["args"]] = _get_args["parsed"]
 
