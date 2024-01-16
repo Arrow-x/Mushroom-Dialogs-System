@@ -49,9 +49,9 @@ func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager, ed: 
 	command_tree.tree_changed.connect(changed_flowchart)
 
 	plugin_config = ConfigFile.new()
-	plugin_config.load("res://addons/Mushroom/plugin.cfg")
+	plugin_config.load("res://addons/Mushroom/mushroom_configs.cfg")
 	default_translation_location = plugin_config.get_value(
-		"plugin", "translation_file", "res://Translations/default.en.translation"
+		"translation", "translation_file", "res://Translations/default.en.translation"
 	)
 	translation_lineedit.text = default_translation_location
 	translation_lineedit.text_changed.connect(_on_translation_linedit_text_change)
@@ -61,7 +61,7 @@ func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager, ed: 
 
 
 func _on_translation_linedit_text_change(new_text: String) -> void:
-	plugin_config.set_value("plugin", "translation_file", new_text)
+	plugin_config.set_value("translation", "translation_file", new_text)
 	default_translation_location = new_text
 
 
@@ -87,7 +87,7 @@ func check_flowchart_path_before_save() -> void:
 
 func save_flowchart_to_disc(path: String, overwrite := false) -> void:
 	ResourceSaver.save(flowchart, path)
-	plugin_config.save("res://addons/Mushroom/plugin.cfg")
+	plugin_config.save("res://addons/Mushroom/mushroom_configs.cfg")
 	if overwrite == true:
 		flowchart.set_path(path)
 
