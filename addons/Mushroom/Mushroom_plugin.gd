@@ -13,7 +13,23 @@ func _enter_tree():
 		"DialogManagerNode", "res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
 	)
 	get_editor_interface().get_editor_main_screen().add_child(editor_instance)
+	EditorInterface.get_file_system_dock().resource_removed.connect(
+		remove_flowchart_entries_from_translation
+	)
 	_make_visible(false)
+
+
+func remove_flowchart_entries_from_translation(deleted_resoruce: Resource):
+	if not deleted_resoruce is FlowChart:
+		return
+	var tr_obj := TranslationServer.get_translation_object("en")
+	for b: StringName in deleted_resoruce.blocks:
+		for c: Command in deleted_resoruce.blocks[b].commands:
+			if c is SayCommand:
+				tr_obj.erase_message(c.tr_code)
+			elif c is ForkCommand:
+				for cc: Choice in c.choices:
+					tr_obj.erase_message(cc.tr_code)
 
 
 func _exit_tree():
