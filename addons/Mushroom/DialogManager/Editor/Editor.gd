@@ -17,6 +17,7 @@ func open_flowchart_scene(flowchart: FlowChart, u_r: EditorUndoRedoManager) -> v
 			var c_tab_idx = flowcharts_container.get_children().find(tab)
 			f_tabs.set_current_tab(c_tab_idx)
 			_on_new_flowchart_tabs_tab_clicked(c_tab_idx)
+			f_tabs.set_tab_title(c_tab_idx, flowchart.get_flowchart_name())
 			return
 
 	var fc_control: Control = i_flowchart_control.instantiate()
