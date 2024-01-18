@@ -16,6 +16,9 @@ func _enter_tree():
 	EditorInterface.get_file_system_dock().resource_removed.connect(
 		remove_flowchart_entries_from_translation
 	)
+	EditorInterface.get_file_system_dock().files_moved.connect(
+		move_flowchart_entries_in_translation
+	)
 	_make_visible(false)
 
 
@@ -30,6 +33,28 @@ func remove_flowchart_entries_from_translation(deleted_resoruce: Resource):
 			elif c is ForkCommand:
 				for cc: Choice in c.choices:
 					tr_obj.erase_message(cc.tr_code)
+
+
+func move_flowchart_entries_in_translation(old_file: String, new_file: String) -> void:
+	var tr_obj := TranslationServer.get_translation_object("en")
+	var old_file_fn := str(
+		"___" + old_file.get_file().trim_suffix(str("." + old_file.get_extension())) + "___"
+	)
+	for e: int in range(tr_obj.get_message_count()):
+		var msg_idx := tr_obj.get_message_list()[e]
+		if msg_idx.contains(old_file_fn):
+			var new_name := msg_idx.replace(
+				old_file_fn,
+				str(
+					(
+						"___"
+						+ new_file.get_file().trim_suffix(str("." + new_file.get_extension()))
+						+ "___"
+					)
+				)
+			)
+			tr_obj.add_message(new_name, tr_obj.get_translated_message_list()[e])
+			tr_obj.erase_message(msg_idx)
 
 
 func _exit_tree():

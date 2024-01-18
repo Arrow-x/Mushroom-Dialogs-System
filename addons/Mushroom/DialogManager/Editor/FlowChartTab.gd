@@ -140,7 +140,7 @@ func replace_text_in_commands(
 
 		if current_cmd is SayCommand:
 			new_tr_code = (
-				last_code + "Say_" + flowchart_name + "_" + block_name + "_" + str(c_idx)
+				last_code + "Say___" + flowchart_name + "___" + block_name + "_" + str(c_idx)
 			)
 
 			if current_cmd.tr_code != new_tr_code:
@@ -156,9 +156,9 @@ func replace_text_in_commands(
 					last_code
 					+ "Choice_"
 					+ str(choice_idx)
-					+ "_in_Fork_"
+					+ "_in_Fork___"
 					+ flowchart_name
-					+ "_"
+					+ "___"
 					+ block_name
 					+ "_"
 					+ str(c_idx)
