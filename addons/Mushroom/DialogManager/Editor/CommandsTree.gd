@@ -21,6 +21,7 @@ enum Resault { SUCCESS = 1, NOT_FOUND = -2 }
 @export var i_set_var_control: PackedScene
 @export var i_signal_control: PackedScene
 @export var i_sound_control: PackedScene
+@export var i_show_media_control: PackedScene
 
 @export var icon_x: Texture2D
 
@@ -637,6 +638,12 @@ func create_command_editor(current_item = null) -> void:
 
 		"ElseCommand", "RandomCommand":
 			pass
+
+		"ShowMediaCommand":
+			control = i_show_media_control.instantiate()
+			commands_settings.add_child(control, true)
+			control.set_up(current_item, undo_redo, self)
+
 		_:
 			push_error("CommandsTree: Unknow Command ", current_item.get_class())
 			return

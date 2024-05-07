@@ -10,6 +10,8 @@ var portraits: Dictionary
 @export var right_portrait: Control
 @export var center_portrait: Control
 @export var left_portrait: Control
+@export var image_media: TextureRect
+@export var video_media: VideoStreamPlayer
 
 var is_tweening := false
 
@@ -79,3 +81,23 @@ func _on_SayText_message_done():
 
 func _on_SayText_message_start():
 	is_tweening = true
+
+
+func show_image(image: Texture2D) -> void:
+	clear_media()
+	image_media.texture = image
+	image_media.visible = true
+
+
+func show_video(video: VideoStreamTheora) -> void:
+	clear_media()
+	video_media.stream = video
+	video_media.visible = true
+	video_media.play()
+
+
+func clear_media() -> void:
+	image_media.visible = false
+	video_media.visible = false
+	video_media.stream = null
+	image_media.texture = null

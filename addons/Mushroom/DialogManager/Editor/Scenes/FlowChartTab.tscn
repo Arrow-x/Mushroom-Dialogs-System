@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bdwysurgi6vsh"]
+[gd_scene load_steps=22 format=3 uid="uid://bdwysurgi6vsh"]
 
 [ext_resource type="PackedScene" uid="uid://bse8n61wlw8b" path="res://addons/Mushroom/DialogManager/Editor/Scenes/AddCommnadPopupMenu.tscn" id="1"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/CommandsTree.gd" id="2"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://3l5bjgljqvuj" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/CallFunctionControl.tscn" id="13_lxhvy"]
 [ext_resource type="PackedScene" uid="uid://duw2so33mqwt6" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SignalControl.tscn" id="14_17iw2"]
 [ext_resource type="Texture2D" uid="uid://cihgya2oylt7c" path="res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png" id="15_cx1ab"]
+[ext_resource type="PackedScene" uid="uid://t1hlq3er4wuh" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ShowMediaControl.tscn" id="17_stbgo"]
 
 [node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree", "current_block_name", "translation_lineedit", "export_button")]
 anchors_preset = 15
@@ -96,6 +97,7 @@ i_say_control = ExtResource("5_esu74")
 i_set_var_control = ExtResource("8_bsl15")
 i_signal_control = ExtResource("14_17iw2")
 i_sound_control = ExtResource("11_ootm2")
+i_show_media_control = ExtResource("17_stbgo")
 icon_x = ExtResource("15_cx1ab")
 
 [node name="GeneralRMBMenu" type="PopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"]

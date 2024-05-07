@@ -16,6 +16,7 @@ var commands := [
 	"Play Sound",
 	"Jump",
 	"Change UI",
+	"ShowMedia"
 ]
 
 
@@ -66,6 +67,9 @@ func ready_commands():
 			"Random":
 				add_item("Random", i)
 				set_item_metadata(i, RandomCommand.new())
+			"ShowMedia":
+				add_item("ShowMedia", i)
+				set_item_metadata(i, ShowMediaCommand.new())
 			_:
 				push_error("Add Command Popup: unknown command")
 				return

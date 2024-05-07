@@ -1,0 +1,89 @@
+[gd_scene load_steps=3 format=3 uid="uid://t1hlq3er4wuh"]
+
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ShowMediaControl.gd" id="1_us7o3"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/Dragger.gd" id="2_gvpot"]
+
+[node name="ShowMediaControl" type="VBoxContainer" node_paths=PackedStringArray("type_menu", "image_label", "image_container", "video_label", "video_container")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_us7o3")
+type_menu = NodePath("TypeHBoxContainer/TypeMenuButton")
+image_label = NodePath("MediaImageHBoxContainer/LabelDragImage")
+image_container = NodePath("MediaImageHBoxContainer")
+video_label = NodePath("MediaVideoHBoxContainer/LabelDragVideo")
+video_container = NodePath("MediaVideoHBoxContainer")
+
+[node name="TypeHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="TypeHBoxContainer"]
+layout_mode = 2
+text = "Media Type:"
+
+[node name="TypeMenuButton" type="MenuButton" parent="TypeHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "clear"
+flat = false
+item_count = 3
+popup/item_0/text = "clear"
+popup/item_0/id = 0
+popup/item_1/text = "image"
+popup/item_1/id = 1
+popup/item_2/text = "video"
+popup/item_2/id = 2
+
+[node name="MediaImageHBoxContainer" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="ImageLabel" type="Label" parent="MediaImageHBoxContainer"]
+layout_mode = 2
+text = "Image"
+
+[node name="LabelDragImage" type="Label" parent="MediaImageHBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 0
+text = "..."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("2_gvpot")
+type = "Texture2D"
+
+[node name="ClearButton" type="Button" parent="MediaImageHBoxContainer"]
+layout_mode = 2
+text = "C"
+
+[node name="MediaVideoHBoxContainer" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="VideoLabel" type="Label" parent="MediaVideoHBoxContainer"]
+layout_mode = 2
+text = "Video"
+
+[node name="LabelDragVideo" type="Label" parent="MediaVideoHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 0
+text = "..."
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("2_gvpot")
+extension = "ogv"
+
+[node name="ClearButton" type="Button" parent="MediaVideoHBoxContainer"]
+layout_mode = 2
+text = "C"
+
+[connection signal="value_dragged" from="MediaImageHBoxContainer/LabelDragImage" to="." method="_on_label_drag_image_value_dragged"]
+[connection signal="pressed" from="MediaImageHBoxContainer/ClearButton" to="." method="_on_clear_image_button_pressed"]
+[connection signal="value_dragged" from="MediaVideoHBoxContainer/LabelDragVideo" to="." method="_on_label_drag_video_value_dragged"]
+[connection signal="pressed" from="MediaVideoHBoxContainer/ClearButton" to="." method="_on_clear_video_button_pressed"]

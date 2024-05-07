@@ -172,6 +172,17 @@ func execute_dialog() -> void:
 			indexer = randi_range(0, cbi.container_block.commands.size() - 1)
 			advance()
 
+		"ShowMediaCommand":
+			indexer += 1
+			match cbi.media_type:
+				"image":
+					UI.show_image(cbi.media)
+				"video":
+					UI.show_video(cbi.media)
+				"clear":
+					UI.clear_media()
+					advance()
+					return
 		_:
 			push_error("Dialog Manager: Unknown Command ", cbi.get_class())
 			return
