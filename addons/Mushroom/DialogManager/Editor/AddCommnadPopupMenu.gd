@@ -2,65 +2,91 @@
 extends PopupMenu
 
 
-func ready_commands():
-	clear(true)
-	var command: Command
-	command = SayCommand.new()
-	add_icon_item(command.get_icon(), "Say", item_count)
-	set_item_metadata(item_count - 1, command)
+func _ready() -> void:
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/say_icon.png"), "Say", item_count
+	)
 
-	command = AnimationCommand.new()
-	add_icon_item(command.get_icon(), "Animation", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		"Animation",
+		item_count
+	)
 
-	command = ForkCommand.new()
-	add_icon_item(command.get_icon(), "Fork", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/fork_icon.png"),
+		"Fork",
+		item_count
+	)
 
-	command = ConditionCommand.new()
-	add_icon_item(command.get_icon(), "If", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/conditional_icon.png"),
+		"If",
+		item_count
+	)
 
-	command = ElseCommand.new()
-	add_icon_item(command.get_icon(), "Else", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/conditional_icon.png"),
+		"Else",
+		item_count
+	)
 
-	command = IfElseCommand.new()
-	add_icon_item(command.get_icon(), "If Else", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/conditional_icon.png"),
+		"If Else",
+		item_count
+	)
 
-	command = SoundCommand.new()
-	add_icon_item(command.get_icon(), "Play Sound", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		"Play Sound",
+		item_count
+	)
 
-	command = ChangeUICommand.new()
-	add_icon_item(command.get_icon(), "Change UI", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		"Change UI",
+		item_count
+	)
 
-	command = CallFunctionCommand.new()
-	add_icon_item(command.get_icon(), "Call Function", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		"Call Function",
+		item_count
+	)
 
-	command = SignalCommand.new()
-	add_icon_item(command.get_icon(), "Emit Signal", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		"Emit Signal",
+		item_count
+	)
 
-	command = GeneralContainerCommand.new()
-	add_icon_item(command.get_icon(), "General Container", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/general_container_icon.png"),
+		"General Container",
+		item_count
+	)
 
-	command = JumpCommand.new()
-	add_icon_item(command.get_icon(), "Jump", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		"Jump",
+		item_count
+	)
 
-	command = SetVarCommand.new()
-	add_icon_item(command.get_icon(), "Set Variable", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		"Set Variable",
+		item_count
+	)
 
-	command = RandomCommand.new()
-	add_icon_item(command.get_icon(), "Random", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		"Random",
+		item_count
+	)
 
-	command = ShowMediaCommand.new()
-	add_icon_item(command.get_icon(), "ShowMedia", item_count)
-	set_item_metadata(item_count - 1, command)
+	add_icon_item(
+		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		"ShowMedia",
+		item_count
+	)

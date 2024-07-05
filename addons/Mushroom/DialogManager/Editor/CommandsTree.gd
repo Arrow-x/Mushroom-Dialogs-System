@@ -212,12 +212,39 @@ func full_clear() -> void:
 	current_block_label.text = ""
 
 
-func _on_add_command(id: int, pop_up: Popup, on_item := false, is_rmb := false) -> void:
-	if current_block == null:
-		push_error("CommandsTree: there is no block selected")
-		return
-
-	var command: Command = pop_up.get_item_metadata(id)
+func _on_add_command(id: int, on_item := false, is_rmb := false) -> void:
+	var command: Command
+	match id:
+		0:
+			command = SayCommand.new()
+		1:
+			command = AnimationCommand.new()
+		2:
+			command = ForkCommand.new()
+		3:
+			command = ConditionCommand.new()
+		4:
+			command = ElseCommand.new()
+		5:
+			command = IfElseCommand.new()
+		6:
+			command = SoundCommand.new()
+		7:
+			command = ChangeUICommand.new()
+		8:
+			command = CallFunctionCommand.new()
+		9:
+			command = SignalCommand.new()
+		10:
+			command = GeneralContainerCommand.new()
+		11:
+			command = JumpCommand.new()
+		12:
+			command = SetVarCommand.new()
+		13:
+			command = RandomCommand.new()
+		14:
+			command = ShowMediaCommand.new()
 
 	var idx: int = -1
 	var parent_cmd: Command = null
