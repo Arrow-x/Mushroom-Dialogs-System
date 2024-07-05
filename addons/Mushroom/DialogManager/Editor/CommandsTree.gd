@@ -217,7 +217,7 @@ func _on_add_command(id: int, pop_up: Popup, on_item := false, is_rmb := false) 
 		push_error("CommandsTree: there is no block selected")
 		return
 
-	var command: Command = pop_up.get_item_metadata(id).duplicate()
+	var command: Command = pop_up.get_item_metadata(id)
 
 	var idx: int = -1
 	var parent_cmd: Command = null
