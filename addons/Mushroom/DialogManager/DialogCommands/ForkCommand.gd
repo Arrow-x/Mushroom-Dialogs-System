@@ -14,14 +14,13 @@ func _init():
 func preview():
 	if choices.is_empty():
 		return "Fork"
-	else:
-		var choices_str: Array
-		for c in choices:
-			if c.next_block == null:
-				choices_str.append("Empty")
-				continue
-			choices_str.append(c.next_block)
-		return str("Fork to: " + str(choices_str))
+	var choices_str: Array
+	for c in choices:
+		if c.next_block == null:
+			choices_str.append("Empty")
+			continue
+		choices_str.append(c.next_block)
+	return str("Fork to: " + str(choices_str))
 
 
 func get_icon() -> Resource:
