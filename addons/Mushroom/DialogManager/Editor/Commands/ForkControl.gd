@@ -80,6 +80,7 @@ func free_choice_control(choice: Choice = null) -> void:
 				continue
 			if c.get_choice() == choice:
 				c.queue_free()
+	TranslationServer.get_translation_object("en").erase_message(choice.tr_code)
 	update_block_in_graph(current_block)
 
 

@@ -346,6 +346,8 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 		if d_t.get_meta("command") == command:
 			d_t.free()
 			del_block.commands.remove_at(t_idx)
+			if "tr_code" in command:
+				TranslationServer.get_translation_object("en").erase_message(command.tr_code)
 			free_Command_editor(command)
 			create_tree_from_block(current_block)
 			return Resault.SUCCESS
