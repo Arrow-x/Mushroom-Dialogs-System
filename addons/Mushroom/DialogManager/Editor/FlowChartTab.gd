@@ -86,6 +86,11 @@ func check_flowchart_path_before_save() -> void:
 
 func save_flowchart_to_disc(path: String, overwrite := false) -> void:
 	ResourceSaver.save(flowchart, path)
+	var default_translation: Translation = load(default_translation_location)
+	if default_translation == null:
+		push_error("FlowChartTabs: couldn't get the english translation file")
+		return
+	ResourceSaver.save(default_translation, default_translation_location)
 	plugin_config.save("res://addons/Mushroom/mushroom_configs.cfg")
 	if overwrite == true:
 		flowchart.set_path(path)
@@ -119,10 +124,6 @@ func replace_text_with_code(i_flowchart: FlowChart) -> void:
 			default_translation
 		)
 
-	for c: Chararcter in i_flowchart.characters:
-		default_translation.add_message(StringName(c.name), StringName(c.name))
-	ResourceSaver.save(default_translation, default_translation_location)
-
 
 func replace_text_in_commands(
 	commands: Array,
@@ -140,7 +141,7 @@ func replace_text_in_commands(
 
 		if current_cmd is SayCommand:
 			new_tr_code = (
-				last_code + "Say___" + flowchart_name + "___" + block_name + "_" + str(c_idx)
+				last_code + flowchart_name + "___" + block_name + "___" + str(c_idx) + "___Say"
 			)
 
 			if current_cmd.tr_code != new_tr_code:
@@ -154,14 +155,14 @@ func replace_text_in_commands(
 				current_choice = current_cmd.choices[choice_idx]
 				new_tr_code = (
 					last_code
-					+ "Choice_"
-					+ str(choice_idx)
-					+ "_in_Fork___"
 					+ flowchart_name
 					+ "___"
 					+ block_name
-					+ "_"
+					+ "___Fork___"
 					+ str(c_idx)
+					+ "___"
+					+ str(choice_idx)
+					+ "___Choice"
 				)
 
 				if current_choice.tr_code != new_tr_code:
@@ -169,19 +170,66 @@ func replace_text_in_commands(
 					current_choice.tr_code = new_tr_code
 
 				translation.add_message(new_tr_code, StringName(current_choice.choice_text))
+
 		elif current_cmd is ContainerCommand:
 			if current_cmd is GeneralContainerCommand:
 				new_tr_code = (
-					last_code + "General_Container_" + current_cmd.name + "_" + str(c_idx) + "_"
+					last_code
+					+ flowchart_name
+					+ "___"
+					+ block_name
+					+ "___"
+					+ str(c_idx)
+					+ "___"
+					+ "General_Container_"
+					+ current_cmd.name
 				)
 			elif current_cmd is RandomCommand:
-				new_tr_code = last_code + "Random_" + str(c_idx) + "_"
+				new_tr_code = (
+					last_code
+					+ flowchart_name
+					+ "___"
+					+ block_name
+					+ "___"
+					+ str(c_idx)
+					+ "___"
+					+ "Random"
+				)
 			elif current_cmd is ConditionCommand:
-				new_tr_code = last_code + "if_" + str(c_idx) + "_"
+				new_tr_code = (
+					last_code
+					+ flowchart_name
+					+ "___"
+					+ block_name
+					+ "___"
+					+ str(c_idx)
+					+ "___"
+					+ "if"
+				)
 			elif current_cmd is IfElseCommand:
-				new_tr_code = last_code + "else_if_" + str(c_idx) + "_"
+				new_tr_code = (
+					last_code
+					+ "___"
+					+ flowchart_name
+					+ "___"
+					+ block_name
+					+ "___"
+					+ str(c_idx)
+					+ "___"
+					+ "else_if"
+				)
 			elif current_cmd is ElseCommand:
-				new_tr_code = last_code + "else_" + str(c_idx) + "_"
+				new_tr_code = (
+					last_code
+					+ "___"
+					+ flowchart_name
+					+ "___"
+					+ block_name
+					+ "___"
+					+ str(c_idx)
+					+ "___"
+					+ "else"
+				)
 
 			replace_text_in_commands(
 				current_cmd.container_block.commands,
