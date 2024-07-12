@@ -329,7 +329,7 @@ func create_tree_item_from_command(
 	return item
 
 
-func delete_command(command: Command, tree: TreeItem = null) -> int:
+func delete_command(command: Command, tree: TreeItem = null) -> Resault:
 	var del_tree: Array
 	var del_block: Block
 	if command is ForkCommand:
@@ -341,7 +341,8 @@ func delete_command(command: Command, tree: TreeItem = null) -> int:
 	else:
 		del_tree = get_root().get_children()
 		del_block = current_block
-	for t_idx in del_tree.size():
+
+	for t_idx: int in del_tree.size():
 		var d_t: TreeItem = del_tree[t_idx]
 		if d_t.get_meta("command") == command:
 			d_t.free()

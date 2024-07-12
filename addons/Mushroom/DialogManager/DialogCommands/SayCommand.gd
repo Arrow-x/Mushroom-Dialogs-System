@@ -2,7 +2,7 @@
 extends Command
 class_name SayCommand
 
-@export var character: Resource
+@export var character: Chararcter
 var say: String
 @export var portrait_id: String
 @export var portrait: CompressedTexture2D
