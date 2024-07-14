@@ -102,45 +102,42 @@ func on_commands_cut() -> void:
 
 func on_commands_paste() -> void:
 	var sel_idx: int
-	var cmds: Array
+	var parent: Command
+
 	if get_selected() == null:
-		cmds = current_block.commands
-		sel_idx = cmds.size()
+		sel_idx = current_block.commands.size()
+		parent = null
 	else:
 		var selected_cmd: Command = get_selected().get_meta("command")
 		if selected_cmd is ContainerCommand:
-			cmds = selected_cmd.container_block.commands
-			sel_idx = cmds.size()
+			sel_idx = selected_cmd.container_block.commands.size()
+			parent = selected_cmd
 		else:
 			sel_idx = get_selected().get_index() + 1
-			var parent = get_selected().get_parent()
-			if parent == get_root() or parent == null:
-				cmds = current_block.commands
+			if get_selected().get_parent() != get_root():
+				parent = get_selected().get_parent().get_meta("command")
 			else:
-				cmds = (get_selected().get_parent().get_meta("command").container_block.commands)
-	var clip: Array = flowchart_tab.deep_duplicate_commands(
-		flowchart_tab.main_editor.commands_clipboard
-	)
+				parent = null
+
+	var clip: Array = flowchart_tab.main_editor.commands_clipboard
 	undo_redo.create_action("paste commands")
-	undo_redo.add_do_method(self, "paste_commands", cmds, clip, sel_idx, flowchart_tab.flowchart)
+	undo_redo.add_do_method(self, "paste_commands", clip, sel_idx, flowchart_tab.flowchart, parent)
 	undo_redo.add_undo_method(
-		self, "undo_paste_commands", sel_idx, clip.size(), cmds, flowchart_tab.flowchart
+		self, "undo_paste_commands", clip, sel_idx, flowchart_tab.flowchart, parent
 	)
 	undo_redo.commit_action()
 
 
-func paste_commands(to_array: Array, paste_array: Array, idx: int, fl: FlowChart) -> void:
+func paste_commands(paste_array: Array, idx: int, fl: FlowChart, p_cmd: Command) -> void:
 	tree_changed.emit(fl)
-	for i in range(paste_array.size() - 1, -1, -1):
-		to_array.insert(idx, paste_array[i])
-	create_tree_from_block(current_block)
+	for i: int in range(paste_array.size() - 1, -1, -1):
+		add_command_to_block(paste_array[i], idx, p_cmd)
 
 
-func undo_paste_commands(input_idx: int, paste_count: int, pasted: Array, fl: FlowChart) -> void:
+func undo_paste_commands(pasted_array: Array, idx: int, fl: FlowChart, p_cmd: Command) -> void:
 	tree_changed.emit(fl)
-	for i in range(paste_count + input_idx - 1, input_idx - 1, -1):
-		pasted.remove_at(i)
-	create_tree_from_block(current_block)
+	for c: Command in pasted_array:
+		delete_command(c, get_tree_item_from_command(p_cmd), idx)
 
 
 func cut_commands(selected: Dictionary, fl: FlowChart) -> void:
