@@ -289,6 +289,10 @@ func add_command_to_block(command: Command, idx: int = -1, parent: Command = nul
 			pbc.insert(idx, command)
 	if command is ForkCommand:
 		current_block.outputs.append(command)
+	elif command is ContainerCommand:
+		for c: Command in command.container_block.commands:
+			if c is ForkCommand:
+				current_block.outputs.append(c)
 	create_tree_from_block(current_block)
 	graph_edit.connect_block_outputs(current_block, true)
 
@@ -327,6 +331,11 @@ func delete_command(command: Command, tree: TreeItem = null, index := -1) -> Res
 	var del_block: Block
 	if command is ForkCommand:
 		graph_edit.delete_output(current_block.name, command)
+
+	elif command is ContainerCommand:
+		for c: Command in command.container_block.commands:
+			if c is ForkCommand:
+				graph_edit.delete_output(current_block.name, c)
 
 	if tree:
 		del_tree = tree.get_children()
