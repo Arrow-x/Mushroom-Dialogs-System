@@ -147,22 +147,16 @@ func cut_commands(selected: Dictionary, fl: FlowChart) -> void:
 	tree_changed.emit(fl)
 	var keys := selected.keys()
 	for i: int in range(keys.size() - 1, -1, -1):
-		var cmds: Array = (
-			selected[keys[i]]["parent"].container_block.commands
-			if selected[keys[i]]["parent"] != null
-			else current_block.commands
+		delete_command(
+			keys[i],
+			get_tree_item_from_command(selected[keys[i]]["parent"]),
+			selected[keys[i]]["index"]
 		)
-		delete_command(keys[i], get_tree_item_from_command(selected[keys[i]]["parent"]))
 
 
 func undo_cut_commands(selected: Dictionary, fl: FlowChart) -> void:
 	tree_changed.emit(fl)
 	for s: Command in selected:
-		var cmds: Array = (
-			selected[s]["parent"].container_block.commands
-			if selected[s]["parent"] != null
-			else current_block.commands
-		)
 		add_command_to_block(s, selected[s]["index"], selected[s]["parent"])
 
 
@@ -328,7 +322,7 @@ func create_tree_item_from_command(
 	return item
 
 
-func delete_command(command: Command, tree: TreeItem = null) -> Resault:
+func delete_command(command: Command, tree: TreeItem = null, index := -1) -> Resault:
 	var del_tree: Array
 	var del_block: Block
 	if command is ForkCommand:
@@ -340,6 +334,16 @@ func delete_command(command: Command, tree: TreeItem = null) -> Resault:
 	else:
 		del_tree = get_root().get_children()
 		del_block = current_block
+
+	if index != -1:
+		# if the deleted treeitem index is already known
+		del_tree[index].free()
+		del_block.commands.remove_at(index)
+		if "tr_code" in command:
+			TranslationServer.get_translation_object("en").erase_message(command.tr_code)
+		free_Command_editor(command)
+		create_tree_from_block(current_block)
+		return Resault.SUCCESS
 
 	for t_idx: int in del_tree.size():
 		var d_t: TreeItem = del_tree[t_idx]
