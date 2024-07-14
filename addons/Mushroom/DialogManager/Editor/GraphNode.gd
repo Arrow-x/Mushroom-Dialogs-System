@@ -7,6 +7,8 @@ var c_outputs: Array
 var connected_destenation_blocks: Array
 var graph_edit: GraphEdit
 
+enum Direction { LEFT, RIGHT }
+
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -70,35 +72,38 @@ func _close_button_pressed() -> void:
 
 func delete_inputs(fork: ForkCommand) -> void:
 	var block: Block = get_meta("block")
-	remove_slot(block.inputs, c_inputs, true, fork)
+	remove_slot(block.inputs, c_inputs, Direction.LEFT, fork)
 
 
 func delete_outputs(fork: ForkCommand) -> void:
 	var block: Block = get_meta("block")
-	remove_slot(block.outputs, c_outputs, false, fork)
+	remove_slot(block.outputs, c_outputs, Direction.RIGHT, fork)
 
 
-# remove a slot from true:  right, false: left
-func remove_slot(meta_slots: Array, control_slots: Array, left: bool, fork: ForkCommand) -> void:
+func remove_slot(
+	meta_slots: Array, control_slots: Array, dir: Direction, fork: ForkCommand
+) -> void:
 	var idx := meta_slots.find(fork)
+	if idx == -1:
+		return
 
 	for f in meta_slots:
-		if left:
+		if dir == Direction.LEFT:
 			set_slot_enabled_left(meta_slots.find(f), false)
-		else:
+		elif dir == Direction.RIGHT:
 			set_slot_enabled_right(meta_slots.find(f), false)
 
 	if control_slots.size() > 0:
 		control_slots[idx].queue_free()
 		control_slots.remove_at(idx)
-	meta_slots.erase(fork)
+		meta_slots.erase(fork)
 
 	for f in meta_slots:
-		if left:
+		if dir == Direction.LEFT:
 			set_slot_enabled_left(meta_slots.find(f), true)
 			set_slot_type_left(meta_slots.find(f), 1)
 			set_slot_color_left(meta_slots.find(f), f.f_color)
-		else:
+		elif dir == Direction.RIGHT:
 			set_slot_enabled_right(meta_slots.find(f), true)
 			set_slot_type_right(meta_slots.find(f), 1)
 			set_slot_color_right(meta_slots.find(f), f.f_color)

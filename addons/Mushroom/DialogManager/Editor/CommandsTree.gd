@@ -5,6 +5,7 @@ signal moved(item, to_item, shift)
 signal tree_changed(flowchart: FlowChart)
 
 enum Resault { SUCCESS = 1, NOT_FOUND = -2 }
+enum Copy_or_not { COPY, DONT_COPY }
 
 @export var current_block_label: Label
 @export var commands_settings: Container
@@ -90,12 +91,12 @@ func on_commands_copy() -> void:
 
 
 func on_commands_cut() -> void:
-	var selected_copies := get_selected_tree_items(true)
+	var _selected := get_selected_tree_items(Copy_or_not.DONT_COPY)
 	flowchart_tab.main_editor.commands_clipboard.clear()
-	flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items_copy()
+	flowchart_tab.main_editor.commands_clipboard = _selected.keys()
 	undo_redo.create_action("cut commands")
-	undo_redo.add_do_method(self, "cut_commands", selected_copies, flowchart_tab.flowchart)
-	undo_redo.add_undo_method(self, "undo_cut_commands", selected_copies, flowchart_tab.flowchart)
+	undo_redo.add_do_method(self, "cut_commands", _selected, flowchart_tab.flowchart)
+	undo_redo.add_undo_method(self, "undo_cut_commands", _selected, flowchart_tab.flowchart)
 	undo_redo.commit_action()
 
 
@@ -145,14 +146,13 @@ func undo_paste_commands(input_idx: int, paste_count: int, pasted: Array, fl: Fl
 func cut_commands(selected: Dictionary, fl: FlowChart) -> void:
 	tree_changed.emit(fl)
 	var keys := selected.keys()
-	for i in range(keys.size() - 1, -1, -1):
+	for i: int in range(keys.size() - 1, -1, -1):
 		var cmds: Array = (
 			selected[keys[i]]["parent"].container_block.commands
 			if selected[keys[i]]["parent"] != null
 			else current_block.commands
 		)
-		cmds.remove_at(selected[keys[i]]["index"])
-	create_tree_from_block(current_block)
+		delete_command(keys[i], get_tree_item_from_command(selected[keys[i]]["parent"]))
 
 
 func undo_cut_commands(selected: Dictionary, fl: FlowChart) -> void:
@@ -163,8 +163,7 @@ func undo_cut_commands(selected: Dictionary, fl: FlowChart) -> void:
 			if selected[s]["parent"] != null
 			else current_block.commands
 		)
-		cmds.insert(selected[s]["index"], s)
-	create_tree_from_block(current_block)
+		add_command_to_block(s, selected[s]["index"], selected[s]["parent"])
 
 
 func _on_tree_item_x_button_pressed(
@@ -370,7 +369,7 @@ func free_Command_editor(command: Command) -> void:
 func _get_drag_data(_position: Vector2):
 	if get_selected() == null:
 		return
-	var selected_dict := get_selected_tree_items(false)
+	var selected_dict := get_selected_tree_items(Copy_or_not.DONT_COPY)
 
 	var preview := Label.new()
 	var selected_item := get_next_selected(null)
@@ -398,7 +397,7 @@ func get_selected_tree_items_copy() -> Array:
 	return copies_array
 
 
-func get_selected_tree_items(copy: bool) -> Dictionary:
+func get_selected_tree_items(c: Copy_or_not) -> Dictionary:
 	var selected_item := get_next_selected(null)
 	var r_dict: Dictionary
 	while selected_item:
@@ -407,11 +406,11 @@ func get_selected_tree_items(copy: bool) -> Dictionary:
 			selected_parent.get_meta("command") if selected_parent != get_root() else null
 		)
 		if r_dict.has(selected_parent_command) == false:
-			if copy == true:
+			if c == Copy_or_not.COPY:
 				r_dict[selected_item.get_meta("command").duplicate()] = {
 					"index": selected_item.get_index(), "parent": selected_parent_command
 				}
-			else:
+			elif c == Copy_or_not.DONT_COPY:
 				r_dict[selected_item.get_meta("command")] = {
 					"index": selected_item.get_index(), "parent": selected_parent_command
 				}
