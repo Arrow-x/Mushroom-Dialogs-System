@@ -123,7 +123,7 @@ func on_commands_paste() -> void:
 	undo_redo.create_action("paste commands")
 	undo_redo.add_do_method(self, "paste_commands", clip, sel_idx, flowchart_tab.flowchart, parent)
 	undo_redo.add_undo_method(
-		self, "undo_paste_commands", clip, sel_idx, flowchart_tab.flowchart, parent
+		self, "undo_paste_commands", clip.size(), sel_idx, flowchart_tab.flowchart, parent
 	)
 	undo_redo.commit_action()
 
@@ -134,10 +134,10 @@ func paste_commands(paste_array: Array, idx: int, fl: FlowChart, p_cmd: Command)
 		add_command_to_block(paste_array[i], idx, p_cmd)
 
 
-func undo_paste_commands(pasted_array: Array, idx: int, fl: FlowChart, p_cmd: Command) -> void:
+func undo_paste_commands(pasted_array_size: int, idx: int, fl: FlowChart, p_cmd: Command) -> void:
 	tree_changed.emit(fl)
-	for c: Command in pasted_array:
-		delete_command(c, get_tree_item_from_command(p_cmd), idx)
+	for i in pasted_array_size:
+		delete_command(idx, get_tree_item_from_command(p_cmd))
 
 
 func cut_commands(selected: Dictionary, fl: FlowChart) -> void:
@@ -145,9 +145,7 @@ func cut_commands(selected: Dictionary, fl: FlowChart) -> void:
 	var keys := selected.keys()
 	for i: int in range(keys.size() - 1, -1, -1):
 		delete_command(
-			keys[i],
-			get_tree_item_from_command(selected[keys[i]]["parent"]),
-			selected[keys[i]]["index"]
+			selected[keys[i]]["index"], get_tree_item_from_command(selected[keys[i]]["parent"])
 		)
 
 
@@ -174,8 +172,8 @@ func _on_tree_item_x_button_pressed(
 			idx = parent_meta.container_block.commands.find(cmd)
 			parent = item.get_parent()
 
-	undo_redo.create_action("delete_command")
-	undo_redo.add_do_method(self, "delete_command", cmd, parent)
+	undo_redo.create_action("remove a command")
+	undo_redo.add_do_method(self, "delete_command", idx, parent)
 	undo_redo.add_undo_method(self, "add_command_to_block", cmd, idx, parent_command)
 	undo_redo.commit_action()
 
@@ -246,7 +244,7 @@ func _on_add_command(id: int, on_item := false, is_rmb := false) -> void:
 
 	undo_redo.create_action("Added Command")
 	undo_redo.add_do_method(self, "add_command_to_block", command, idx, parent_cmd)
-	undo_redo.add_undo_method(self, "delete_command", command)
+	undo_redo.add_undo_method(self, "delete_command", idx)
 	undo_redo.commit_action()
 
 
@@ -323,9 +321,19 @@ func create_tree_item_from_command(
 	return item
 
 
-func delete_command(command: Command, tree: TreeItem = null, index := -1) -> Resault:
-	var del_tree: Array
+func delete_command(index: int, parent_treeitem: TreeItem = null) -> void:
+	var items_array: Array
 	var del_block: Block
+
+	if parent_treeitem:
+		items_array = parent_treeitem.get_children()
+		del_block = parent_treeitem.get_meta("command").container_block
+	else:
+		items_array = get_root().get_children()
+		del_block = current_block
+
+	var command: Command = del_block.commands[index]
+
 	if command is ForkCommand:
 		graph_edit.delete_output(current_block.name, command)
 
@@ -334,40 +342,11 @@ func delete_command(command: Command, tree: TreeItem = null, index := -1) -> Res
 			if c is ForkCommand:
 				graph_edit.delete_output(current_block.name, c)
 
-	if tree:
-		del_tree = tree.get_children()
-		del_block = tree.get_meta("command").container_block
-	else:
-		del_tree = get_root().get_children()
-		del_block = current_block
-
-	if index != -1:
-		# if the deleted treeitem index is already known
-		del_tree[index].free()
-		del_block.commands.remove_at(index)
-		if "tr_code" in command:
-			TranslationServer.get_translation_object("en").erase_message(command.tr_code)
-		free_Command_editor(command)
-		create_tree_from_block(current_block)
-		return Resault.SUCCESS
-
-	for t_idx: int in del_tree.size():
-		var d_t: TreeItem = del_tree[t_idx]
-		if d_t.get_meta("command") == command:
-			d_t.free()
-			del_block.commands.remove_at(t_idx)
-			if "tr_code" in command:
-				TranslationServer.get_translation_object("en").erase_message(command.tr_code)
-			free_Command_editor(command)
-			create_tree_from_block(current_block)
-			return Resault.SUCCESS
-		if d_t.get_meta("command") is ContainerCommand:
-			var err := delete_command(command, d_t)
-			if err != Resault.NOT_FOUND:
-				free_Command_editor(command)
-				create_tree_from_block(current_block)
-				return Resault.SUCCESS
-	return Resault.NOT_FOUND
+	items_array[index].free()
+	if "tr_code" in command:
+		TranslationServer.get_translation_object("en").erase_message(command.tr_code)
+	del_block.commands.remove_at(index)
+	free_Command_editor(command)
 
 
 func free_Command_editor(command: Command) -> void:
