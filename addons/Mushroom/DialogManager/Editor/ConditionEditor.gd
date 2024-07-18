@@ -2,7 +2,6 @@
 extends Node
 
 @export var sequencer_check: CheckButton
-@export var sequence_container: VBoxContainer
 @export var check_operation: MenuButton
 @export var req_node: LineEdit
 @export var req_var: LineEdit

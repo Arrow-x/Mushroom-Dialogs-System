@@ -1,5 +1,5 @@
 @tool
-extends Node
+extends VBoxContainer
 
 @export var conditional_editor_scene: PackedScene
 @export var cond_editors_container: Container
@@ -65,10 +65,18 @@ func create_conditional_editor(conditional: ConditionResource) -> void:
 	var cond_editor: Control = conditional_editor_scene.instantiate()
 	cond_editor.set_up(conditional, undo_redo, commands_tree)
 	if cond_editors_container.get_child_count() == 0:
-		cond_editor.sequence_container.visible = false
+		cond_editor.sequencer_check.visible = false
 	cond_editors_container.add_child(cond_editor, true)
 	cond_editor.close_pressed.connect(_on_conditional_close_button_pressed)
 	conditional.changed.connect(func(): self.cond_changed.emit())
+
+
+func changed() -> void:
+	if cond_editors_container.get_child_count() == 0:
+		custom_minimum_size = Vector2.ZERO
+	else:
+		custom_minimum_size = Vector2(0, 120)
+	cond_changed.emit()
 
 
 func add_conditional(conditional: ConditionResource = null, idx := -1) -> void:
@@ -86,6 +94,7 @@ func build_current_command_conditional_editors(conditionals: Array) -> void:
 	current_command.conditionals = conditionals
 	for c in current_command.conditionals:
 		create_conditional_editor(c)
+	changed()
 
 
 func remove_conditional(conditional: ConditionResource) -> void:
@@ -93,3 +102,4 @@ func remove_conditional(conditional: ConditionResource) -> void:
 		if e.get_conditional() == conditional:
 			current_command.conditionals.erase(e.get_conditional())
 			build_current_command_conditional_editors(current_command.conditionals)
+	changed()

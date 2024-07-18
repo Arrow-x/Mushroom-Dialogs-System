@@ -699,9 +699,9 @@ func command_undo_redo_caller(
 			for c in current_ed.choices_container.get_children():
 				if not c.has_method("get_choice"):
 					continue
-				condition_editors.append_array(c.cond_editors_container.get_children())
+				condition_editors.append_array(c.cond_box.cond_editors_container.get_children())
 		else:
-			condition_editors = current_ed.cond_editors_container.get_children()
+			condition_editors = current_ed.cond_box.cond_editors_container.get_children()
 
 		for c in condition_editors:
 			if not c.has_method("get_conditional"):

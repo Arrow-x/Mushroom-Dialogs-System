@@ -4,15 +4,28 @@
 [ext_resource type="PackedScene" uid="uid://7hkgqixxw3bw" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionEditor.tscn" id="2_wyjny"]
 
 [node name="CondVBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("cond_editors_container")]
+custom_minimum_size = Vector2(0, 180)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_k6vvh")
 conditional_editor_scene = ExtResource("2_wyjny")
-cond_editors_container = NodePath("CondEditorsContainer")
+cond_editors_container = NodePath("ScrollContainer/CondEditorsContainer")
 
 [node name="AddConditionalButton" type="Button" parent="."]
 layout_mode = 2
 text = "add condition"
 
-[node name="CondEditorsContainer" type="VBoxContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="CondEditorsContainer" type="VBoxContainer" parent="ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
