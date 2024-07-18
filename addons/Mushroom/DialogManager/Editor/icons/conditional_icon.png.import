@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cgi6xlx2m6nbd"
-path="res://.godot/imported/say_icon.png-55f471b963545ca77fcba2c4f944cde1.ctex"
+uid="uid://stof7s5v3b72"
+path="res://.godot/imported/conditional_icon.png-e645a4ce78706d92a6c444d97f5fa854.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Mushroom/DialogManager/Editor/icons/say_icon.png"
-dest_files=["res://.godot/imported/say_icon.png-55f471b963545ca77fcba2c4f944cde1.ctex"]
+source_file="res://addons/Mushroom/DialogManager/Editor/icons/conditional_icon.png"
+dest_files=["res://.godot/imported/conditional_icon.png-e645a4ce78706d92a6c444d97f5fa854.ctex"]
 
 [params]
 

@@ -16,7 +16,7 @@ func preview() -> String:
 
 
 func get_icon() -> Resource:
-	return load("res://addons/Mushroom/DialogManager/Editor/icons/say_icon.png")
+	return load("res://addons/Mushroom/DialogManager/Editor/icons/general_container_icon.png")
 
 
 func get_class() -> String:

@@ -15,7 +15,7 @@ func preview() -> String:
 
 
 func get_icon() -> Resource:
-	return load("res://addons/Mushroom/DialogManager/Editor/icons/condition_fork.png")
+	return load("res://addons/Mushroom/DialogManager/Editor/icons/conditional_icon.png")
 
 
 func get_class() -> String:
