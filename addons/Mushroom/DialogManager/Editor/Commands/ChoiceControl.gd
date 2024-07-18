@@ -6,7 +6,6 @@ extends Node
 @export var next_index_text: SpinBox
 @export var delete_choice: Button
 @export var cond_box: VBoxContainer
-@export var cond_editors_container: VBoxContainer
 
 var current_choice: Choice
 var flowchart: FlowChart

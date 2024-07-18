@@ -1,7 +1,6 @@
 @tool
 extends Node
 
-@export var add_choice_button: Button
 @export var i_choice_control: PackedScene
 @export var choices_container: VBoxContainer
 

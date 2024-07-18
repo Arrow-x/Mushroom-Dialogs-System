@@ -7,7 +7,6 @@ extends Node
 @export var say_text_edit: TextEdit
 @export var v_slit: VSplitContainer
 @export var cond_box: VBoxContainer
-@export var cond_editors_container: VBoxContainer
 @export var append_check: CheckBox
 @export var follow_check: CheckBox
 

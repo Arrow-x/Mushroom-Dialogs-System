@@ -2,7 +2,6 @@
 extends Node
 
 @export var cond_box: VBoxContainer
-@export var cond_editors_container: VBoxContainer
 
 var current_condition: IfCommand
 var undo_redo: EditorUndoRedoManager
