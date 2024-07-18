@@ -3,6 +3,7 @@ extends Node
 
 @export var add_choice_button: Button
 @export var i_choice_control: PackedScene
+@export var choices_container: VBoxContainer
 
 var current_fork: ForkCommand
 var current_block: Block
@@ -72,10 +73,10 @@ func add_choice_resource(c: Choice = null, idx: int = -1) -> void:
 func free_choice_control(choice: Choice = null) -> void:
 	if choice == null:
 		current_fork.choices.resize(current_fork.choices.size() - 1)
-		get_children()[-1].queue_free()
+		choices_container.get_children()[-1].queue_free()
 	else:
 		current_fork.choices.erase(choice)
-		for c in get_children():
+		for c in choices_container.get_children():
 			if not c.has_method("get_choice"):
 				continue
 			if c.get_choice() == choice:
@@ -93,9 +94,9 @@ func create_choice_control(choice: Choice, idx: int = -1) -> void:
 	var choice_control: Control = i_choice_control.instantiate()
 
 	choice_control.fork = self
-	add_child(choice_control)
+	choices_container.add_child(choice_control)
 	if idx != -1:
-		move_child(choice_control, idx)
+		choices_container.move_child(choice_control, idx)
 	choice_control.set_up(choice, flowchart, undo_redo, commands_tree)
 	if !choice.changed.is_connected(is_changed):
 		choice.changed.connect(is_changed)

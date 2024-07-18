@@ -683,7 +683,7 @@ func command_undo_redo_caller(
 	var object
 
 	if input_obj is Choice:
-		for c in current_ed.get_children():
+		for c in current_ed.choices_container.get_children():
 			if not c.has_method("get_choice"):
 				continue
 			if c.get_choice() != input_obj:
@@ -696,7 +696,7 @@ func command_undo_redo_caller(
 	elif input_obj is ConditionResource:
 		var condition_editors: Array = []
 		if current_ed.get_command() is ForkCommand:
-			for c in current_ed.get_children():
+			for c in current_ed.choices_container.get_children():
 				if not c.has_method("get_choice"):
 					continue
 				condition_editors.append_array(c.cond_editors_container.get_children())
