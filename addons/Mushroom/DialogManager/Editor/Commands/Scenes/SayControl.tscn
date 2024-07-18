@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionContainer.tscn" id="2_p1tgx"]
 
-[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("character_menu", "portraits_menu", "portraits_pos_menu", "say_text_edit", "v_slit", "is_cond", "cond_box", "cond_editors_container", "append_check", "follow_check")]
+[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("character_menu", "portraits_menu", "portraits_pos_menu", "say_text_edit", "v_slit", "cond_box", "cond_editors_container", "append_check", "follow_check")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,7 +17,6 @@ portraits_menu = NodePath("VSplitContainer/VBoxContainer/PortraitHBoxContainer/P
 portraits_pos_menu = NodePath("VSplitContainer/VBoxContainer/PortraitPositionHBoxContainer/PortraitPositionMenuButton")
 say_text_edit = NodePath("VSplitContainer/SayHBoxContainer/TextEdit")
 v_slit = NodePath("VSplitContainer")
-is_cond = NodePath("IsCondCheckBox")
 cond_box = NodePath("CondVBoxContainer")
 cond_editors_container = NodePath("CondVBoxContainer/CondEditorsContainer")
 append_check = NodePath("AppendHBoxContainer/AppendCheckBox")
@@ -26,11 +25,8 @@ follow_check = NodePath("AppendHBoxContainer/ThroughCheckBox")
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="IsCondCheckBox" type="CheckButton" parent="."]
-layout_mode = 2
-text = "Conditional Command"
-
 [node name="CondVBoxContainer" parent="." instance=ExtResource("2_p1tgx")]
+visible = true
 layout_mode = 2
 
 [node name="AppendHBoxContainer" type="HBoxContainer" parent="."]
@@ -137,13 +133,11 @@ size_flags_horizontal = 3
 text = "Choose a Posititon"
 item_count = 3
 popup/item_0/text = "Left"
-popup/item_0/id = 0
 popup/item_1/text = "Right"
 popup/item_1/id = 1
 popup/item_2/text = "Center"
 popup/item_2/id = 2
 
-[connection signal="toggled" from="IsCondCheckBox" to="." method="_on_is_cond_check_box_toggled"]
 [connection signal="toggled" from="AppendHBoxContainer/AppendCheckBox" to="." method="_on_append_check_box_toggled"]
 [connection signal="toggled" from="AppendHBoxContainer/ThroughCheckBox" to="." method="_on_through_check_box_toggled"]
 [connection signal="about_to_popup" from="CharacterHBoxContainer/CharacterMenuButton" to="." method="_on_character_menu_button_about_to_show"]

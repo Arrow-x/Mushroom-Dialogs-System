@@ -49,11 +49,10 @@ func execute_dialog() -> void:
 	match cbi.get_class():
 		"SayCommand":
 			UI.hide_say()
-			if cbi.is_cond:
-				if parse_conditionals(cbi.conditionals) == false:
-					indexer = indexer + 1
-					advance()
-					return
+			if parse_conditionals(cbi.conditionals) == false:
+				indexer = indexer + 1
+				advance()
+				return
 			UI.add_text(
 				get_placeholders(tr(cbi.tr_code), cbi),
 				tr(cbi.character.name) if cbi.character != null else "",
@@ -72,9 +71,8 @@ func execute_dialog() -> void:
 			current_choices.clear()
 			for choice_idx in cbi.choices.size():
 				var ci: Choice = cbi.choices[choice_idx]
-				if ci.is_cond:
-					if parse_conditionals(ci.conditionals) == false:
-						continue
+				if parse_conditionals(ci.conditionals) == false:
+					continue
 				current_choices.append(current_flowchart.get_block(ci.next_block))
 				UI.add_choice(get_placeholders(tr(ci.tr_code)), choice_idx, ci.next_index)
 			UI.show_choice()
@@ -255,6 +253,9 @@ func get_placeholders(input: String, cmd: Command = null) -> String:
 
 
 func parse_conditionals(conditionals: Array) -> bool:
+	if conditionals.is_empty():
+		return true
+
 	for c_idx in conditionals.size():
 		var resault := calc_var(
 			conditionals[c_idx].required_node,

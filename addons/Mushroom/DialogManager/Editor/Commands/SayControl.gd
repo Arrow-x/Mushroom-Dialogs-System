@@ -6,7 +6,6 @@ extends Node
 @export var portraits_pos_menu: MenuButton
 @export var say_text_edit: TextEdit
 @export var v_slit: VSplitContainer
-@export var is_cond: CheckButton
 @export var cond_box: VBoxContainer
 @export var cond_editors_container: VBoxContainer
 @export var append_check: CheckBox
@@ -40,9 +39,6 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree
 	cond_box.set_up(current_say, undo_redo, commands_tree)
 	append_check.set_pressed_no_signal(c_s.append_text)
 	follow_check.set_pressed_no_signal(c_s.follow_through)
-	is_cond.set_pressed_no_signal(c_s.is_cond)
-	if is_cond.button_pressed == true:
-		cond_box.visible = true
 
 	set_say_box_hight()
 
@@ -134,24 +130,6 @@ func _on_portrait_menu_button_about_to_show() -> void:
 	var char_portrs: Dictionary = current_say.character.portraits
 	for c in char_portrs:
 		pop.add_item(c)
-
-
-func _on_is_cond_check_box_toggled(button_pressed: bool) -> void:
-	undo_redo.create_action("toggle condition")
-	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "show_condition_toggle", [button_pressed]
-	)
-	undo_redo.add_undo_method(
-		commands_tree, "command_undo_redo_caller", "show_condition_toggle", [current_say.is_cond]
-	)
-	undo_redo.commit_action()
-
-
-func show_condition_toggle(button_pressed: bool) -> void:
-	is_cond.set_pressed_no_signal(button_pressed)
-	cond_box.visible = button_pressed
-	current_say.is_cond = button_pressed
-	is_changed()
 
 
 func _on_append_check_box_toggled(button_pressed: bool) -> void:
