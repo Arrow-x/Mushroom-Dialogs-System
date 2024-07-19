@@ -9,12 +9,20 @@ extends Node
 @export var args_inputs: LineEdit
 @export var req_val: LineEdit
 @export var val_or_return_label: Label
+@export var up_button: Button
+@export var down_button: Button
 
 var current_conditional: ConditionResource
 var undo_redo: EditorUndoRedoManager
 var commands_tree: Tree
 
+enum {
+	UP,
+	DOWN,
+}
+
 signal close_pressed
+signal change_index
 
 
 func set_up(conditional: ConditionResource, u_r: EditorUndoRedoManager, tree: Tree) -> void:
@@ -145,6 +153,14 @@ func _on_req_node_input_text_changed(new_text: String) -> void:
 func _on_close_button_pressed() -> void:
 	close_pressed.emit(current_conditional)
 	is_changed()
+
+
+func _on_up_button_pressed() -> void:
+	change_index.emit(UP, current_conditional)
+
+
+func _on_down_button_pressed() -> void:
+	change_index.emit(DOWN, current_conditional)
 
 
 func get_conditional() -> ConditionResource:
