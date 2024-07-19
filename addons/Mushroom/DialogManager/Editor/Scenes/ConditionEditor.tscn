@@ -3,7 +3,6 @@
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/ConditionEditor.gd" id="1_swf1l"]
 
 [node name="ConditionEditor" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "check_operation", "req_node", "req_var", "is_prop", "args_inputs", "req_val", "val_or_return_label")]
-custom_minimum_size = Vector2(0, 112)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,7 +17,6 @@ is_prop = NodePath("HBoxContainer/CondVBoxContainer/ReqVar/IsProperty")
 args_inputs = NodePath("HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer/Args")
 req_val = NodePath("HBoxContainer/CondVBoxContainer/ReqVal/CheckValInput")
 val_or_return_label = NodePath("HBoxContainer/CondVBoxContainer/ReqVal/Label2")
-metadata/_edit_use_anchors_ = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

@@ -72,10 +72,6 @@ func create_conditional_editor(conditional: ConditionResource) -> void:
 
 
 func changed() -> void:
-	if cond_editors_container.get_child_count() == 0:
-		custom_minimum_size = Vector2.ZERO
-	else:
-		custom_minimum_size = Vector2(0, 120)
 	cond_changed.emit()
 
 
