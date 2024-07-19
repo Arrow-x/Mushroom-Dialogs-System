@@ -87,11 +87,11 @@ func toggle_is_prop(toggled_on: bool) -> void:
 	is_prop.set_pressed_no_signal(toggled_on)
 	current_conditional.is_property = toggled_on
 	if toggled_on == true:
-		is_prop.text = "Required Property:"
+		is_prop.text = "Property:"
 		val_or_return_label.text = "Value: "
 		args_inputs.visible = false
 	else:
-		is_prop.text = "Required Function:"
+		is_prop.text = "Function:"
 		val_or_return_label.text = "Return: "
 		args_inputs.visible = true
 

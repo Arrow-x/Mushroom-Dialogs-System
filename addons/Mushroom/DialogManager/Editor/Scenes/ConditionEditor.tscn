@@ -39,7 +39,7 @@ text = "or"
 
 [node name="Label" type="Label" parent="HBoxContainer/CondVBoxContainer/ReqNode"]
 layout_mode = 2
-text = "Required Node:"
+text = "Node:"
 
 [node name="ReqNodeInput" type="LineEdit" parent="HBoxContainer/CondVBoxContainer/ReqNode"]
 layout_mode = 2
