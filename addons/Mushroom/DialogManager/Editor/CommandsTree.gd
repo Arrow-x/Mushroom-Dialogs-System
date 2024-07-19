@@ -345,7 +345,10 @@ func delete_command(index: int, parent_treeitem: TreeItem = null) -> void:
 	items_array[index].free()
 	if "tr_code" in command:
 		TranslationServer.get_translation_object("en").erase_message(command.tr_code)
-	del_block.commands.remove_at(index)
+	if index == -1:
+		del_block.commands.remove_at(del_block.commands.size() - 1)
+	else:
+		del_block.commands.remove_at(index)
 	free_Command_editor(command)
 
 
