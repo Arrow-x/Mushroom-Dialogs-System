@@ -6,6 +6,7 @@ extends Node
 @export var next_index_text: SpinBox
 @export var delete_choice: Button
 @export var cond_box: VBoxContainer
+@export var sperator: Control
 
 var current_choice: Choice
 var flowchart: FlowChart
@@ -78,6 +79,14 @@ func change_next_block(next_block_name: String = "") -> void:
 
 func _on_choicetext_text_changed(new_text: String) -> void:
 	current_choice.choice_text = new_text
+	is_changed()
+
+
+func _on_conditional_changed() -> void:
+	if cond_box.cond_editors_container.get_child_count() == 0:
+		sperator.custom_minimum_size = Vector2.ZERO
+	else:
+		sperator.custom_minimum_size = Vector2(0, 10)
 	is_changed()
 
 
