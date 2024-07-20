@@ -266,25 +266,30 @@ func csv_location_chosen(csv_file: String, translation: Translation) -> void:
 
 
 func parse_string_var(input_flowchart: FlowChart) -> void:
-	# BUG: changing the string of a placehoder add a new parsed arg but doesn't delete the previeous one
+	#TODO: batch this process
+	var get_args: Dictionary
 	for block in input_flowchart.blocks:
 		for input in input_flowchart.get_block(block).commands:
 			if input is SayCommand:
 				for e: ConditionResource in input.conditionals:
 					e.parsed_check_val = get_type_from_string(e.check_val)
 					e.parsed_args = get_type_from_string(e.args)
-				var _get_args := get_args_from_placeholders(input.say)
-				if _get_args.is_empty() != true:
-					input.placeholder_args[_get_args["args"]] = _get_args["parsed"]
+				get_args = get_args_from_placeholders(input.say)
+				if get_args.is_empty() != true:
+					input.placeholder_args.clear()
+					for k: int in get_args:
+						input.placeholder_args[get_args[k]["args"]] = get_args[k]["parsed"]
 
 			elif input is ForkCommand:
 				for m: Choice in input.choices:
 					for e: ConditionResource in m.conditionals:
 						e.parsed_check_val = get_type_from_string(e.check_val)
 						e.parsed_args = get_type_from_string(e.args)
-					var _get_args := get_args_from_placeholders(m.choice_text)
-					if _get_args.is_empty() != true:
-						m.placeholder_args[_get_args["args"]] = _get_args["parsed"]
+					get_args = get_args_from_placeholders(m.choice_text)
+					if get_args.is_empty() != true:
+						m.placeholder_args.clear()
+						for k: int in get_args:
+							m.placeholder_args[get_args[k]["args"]] = get_args[k]["parsed"]
 
 			elif input is ConditionCommand or input is IfElseCommand:
 				for e: ConditionResource in input.conditionals:
@@ -301,7 +306,6 @@ func parse_string_var(input_flowchart: FlowChart) -> void:
 				input.singal_args_parsed = get_type_from_string(input.signal_args)
 
 
-# TODO: batch this process
 func get_type_from_string(value: String) -> Array:
 	if value.is_empty():
 		return []
@@ -335,17 +339,20 @@ func get_args_from_placeholders(input: String) -> Dictionary:
 	regex.compile(r"{(.*?)}")
 	var regex_resault := regex.search_all(input)
 	var resault_array := []
+	var ret_dict: Dictionary = {}
 	if regex_resault:
 		for r in regex_resault:
 			resault_array.append(r.get_string(1))
 	var format_dictionary: Dictionary = {}
-	for res: String in resault_array:
+	var res: String
+	for i: int in range(resault_array.size()):
+		res = resault_array[i]
 		if res.contains("(") and res.contains(")"):
 			regex.compile(r"\((.*)\)")
 			var func_arg_res := regex.search(res).get_string(1)
 			if func_arg_res:
-				return {"args": func_arg_res, "parsed": get_type_from_string(func_arg_res)}
-	return {}
+				ret_dict[i] = {"args": func_arg_res, "parsed": get_type_from_string(func_arg_res)}
+	return ret_dict
 
 
 func deep_duplicate_block(block: Block) -> Block:
