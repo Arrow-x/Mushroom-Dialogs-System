@@ -266,6 +266,7 @@ func csv_location_chosen(csv_file: String, translation: Translation) -> void:
 
 
 func parse_string_var(input_flowchart: FlowChart) -> void:
+	# BUG: changing the string of a placehoder add a new parsed arg but doesn't delete the previeous one
 	for block in input_flowchart.blocks:
 		for input in input_flowchart.get_block(block).commands:
 			if input is SayCommand:
@@ -273,7 +274,7 @@ func parse_string_var(input_flowchart: FlowChart) -> void:
 					e.parsed_check_val = get_type_from_string(e.check_val)
 					e.parsed_args = get_type_from_string(e.args)
 				var _get_args := get_args_from_placeholders(input.say)
-				if _get_args != {}:
+				if _get_args.is_empty() != true:
 					input.placeholder_args[_get_args["args"]] = _get_args["parsed"]
 
 			elif input is ForkCommand:
@@ -282,7 +283,7 @@ func parse_string_var(input_flowchart: FlowChart) -> void:
 						e.parsed_check_val = get_type_from_string(e.check_val)
 						e.parsed_args = get_type_from_string(e.args)
 					var _get_args := get_args_from_placeholders(m.choice_text)
-					if _get_args != {}:
+					if _get_args.is_empty() != true:
 						m.placeholder_args[_get_args["args"]] = _get_args["parsed"]
 
 			elif input is ConditionCommand or input is IfElseCommand:
@@ -348,40 +349,44 @@ func get_args_from_placeholders(input: String) -> Dictionary:
 
 
 func deep_duplicate_block(block: Block) -> Block:
-	var new_block: Block = block.duplicate(true)
-	new_block.commands = deep_duplicate_commands(new_block.commands)
-	new_block.inputs = []
-	new_block.outputs = []
+	var new_block: Block = Block.new()
+	new_block.commands = []
+	new_block.commands.resize(block.commands.size())
+	for i in range(block.commands.size()):
+		new_block.commands[i] = deep_duplicate_command(block.commands[i])
 	return new_block
 
 
-func deep_duplicate_commands(block_commnds: Array) -> Array:
-	var ret_array = duplicate_array(block_commnds)
-	for command in ret_array:
-		if command is ContainerCommand:
-			if command is IfCommand:
-				command.conditionals = duplicate_array(command.conditionals)
-				for conditional in command.conditionals:
-					conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
-					conditional.parsed_args = duplicate_array(conditional.parsed_args)
-			command.container_block = deep_duplicate_block(command.container_block)
-		elif command is ForkCommand:
-			command.choices = duplicate_array(command.choices)
-			for choice in command.choices:
-				choice.conditionals = duplicate_array(choice.conditionals)
-				# WARN:  sus
-				choice.placeholder_args = choice.placeholder_args.duplicate(true)
+func deep_duplicate_command(cmd: Command) -> Command:
+	var command: Command = cmd.duplicate()
+	if cmd is ContainerCommand:
+		if cmd is IfCommand:
+			command.conditionals = duplicate_array(cmd.conditionals)
+			for conditional in cmd.conditionals:
+				conditional.parsed_check_val = []
+				conditional.parsed_args = []
+		command.container_block = deep_duplicate_block(cmd.container_block)
+	elif cmd is ForkCommand:
+		command.choices = duplicate_array(cmd.choices)
+		command._init()
+		for i: int in range(cmd.choices.size()):
+			command.choices[i].choice_text = cmd.choices[i].choice_text
+			command.choices[i].tr_code = ""
+			command.choices[i].conditionals = duplicate_array(cmd.conditionals)
 
-				for conditional in choice.conditionals:
-					conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
-					conditional.parsed_args = duplicate_array(conditional.parsed_args)
-		elif command is SayCommand:
-			command.conditionals = duplicate_array(command.conditionals)
-			for conditional in command.conditionals:
-				conditional.parsed_check_val = duplicate_array(conditional.parsed_check_val)
-				conditional.parsed_args = duplicate_array(conditional.parsed_args)
-			command.placeholder_args = command.placeholder_args.duplicate(true)
-	return ret_array
+			for c_i: int in range(cmd.choices[i].conditionals.size()):
+				command.choices[i].conditionals[c_i].parsed_check_val = []
+				command.choices[i].conditionals[c_i].parsed_args = []
+			command.choices[i].placeholder_args = {}
+	elif cmd is SayCommand:
+		command.say = cmd.say
+		command.tr_code = ""
+		command.conditionals = duplicate_array(cmd.conditionals)
+		for i: int in range(cmd.conditionals.size()):
+			command.conditionals[i].parsed_check_val = []
+			command.conditionals[i].parsed_args = []
+		command.placeholder_args = {}
+	return command
 
 
 func duplicate_array(input: Array) -> Array:

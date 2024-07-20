@@ -87,7 +87,7 @@ func on_commands_delete() -> void:
 
 func on_commands_copy() -> void:
 	flowchart_tab.main_editor.commands_clipboard.clear()
-	flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items_copy()
+	flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items(Copy_or_not.COPY).keys()
 
 
 func on_commands_cut() -> void:
@@ -375,23 +375,11 @@ func _get_drag_data(_position: Vector2):
 	return selected_dict
 
 
-func get_selected_tree_items_copy() -> Array:
-	var selected_item := get_next_selected(null)
-	var copies_array: Array
-	while selected_item:
-		var selected_parent := selected_item.get_parent()
-		var selected_parent_command: Command = (
-			selected_parent.get_meta("command") if selected_parent != get_root() else null
-		)
-		if copies_array.has(selected_parent_command) == false:
-			copies_array.append(selected_item.get_meta("command").duplicate())
-		selected_item = get_next_selected(selected_item)
-	return copies_array
-
-
 func get_selected_tree_items(c: Copy_or_not) -> Dictionary:
 	var selected_item := get_next_selected(null)
+	var selected_item_meta: Command = selected_item.get_meta("command")
 	var r_dict: Dictionary
+	var copy: Command
 	while selected_item:
 		var selected_parent := selected_item.get_parent()
 		var selected_parent_command: Command = (
@@ -399,11 +387,12 @@ func get_selected_tree_items(c: Copy_or_not) -> Dictionary:
 		)
 		if r_dict.has(selected_parent_command) == false:
 			if c == Copy_or_not.COPY:
-				r_dict[selected_item.get_meta("command").duplicate()] = {
+				copy = flowchart_tab.deep_duplicate_command(selected_item_meta)
+				r_dict[copy] = {
 					"index": selected_item.get_index(), "parent": selected_parent_command
 				}
 			elif c == Copy_or_not.DONT_COPY:
-				r_dict[selected_item.get_meta("command")] = {
+				r_dict[selected_item_meta] = {
 					"index": selected_item.get_index(), "parent": selected_parent_command
 				}
 		selected_item = get_next_selected(selected_item)
