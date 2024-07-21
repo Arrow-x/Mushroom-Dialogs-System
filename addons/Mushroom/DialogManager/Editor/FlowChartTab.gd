@@ -370,8 +370,8 @@ func deep_duplicate_command(cmd: Command) -> Command:
 		if cmd is IfCommand:
 			command.conditionals = duplicate_array(cmd.conditionals)
 			for conditional in cmd.conditionals:
-				conditional.parsed_check_val = []
-				conditional.parsed_args = []
+				conditional.parsed_check_val.clear()
+				conditional.parsed_args.clear()
 		command.container_block = deep_duplicate_block(cmd.container_block)
 	elif cmd is ForkCommand:
 		command.choices = duplicate_array(cmd.choices)
@@ -379,20 +379,20 @@ func deep_duplicate_command(cmd: Command) -> Command:
 		for i: int in range(cmd.choices.size()):
 			command.choices[i].choice_text = cmd.choices[i].choice_text
 			command.choices[i].tr_code = ""
-			command.choices[i].conditionals = duplicate_array(cmd.conditionals)
+			command.choices[i].conditionals = duplicate_array(cmd.choices[i].conditionals)
+			for c: ConditionResource in command.choices[i].conditionals:
+				c.parsed_check_val.clear()
+				c.parsed_args.clear()
+			command.choices[i].placeholder_args.clear()
 
-			for c_i: int in range(cmd.choices[i].conditionals.size()):
-				command.choices[i].conditionals[c_i].parsed_check_val = []
-				command.choices[i].conditionals[c_i].parsed_args = []
-			command.choices[i].placeholder_args = {}
 	elif cmd is SayCommand:
 		command.say = cmd.say
 		command.tr_code = ""
 		command.conditionals = duplicate_array(cmd.conditionals)
-		for i: int in range(cmd.conditionals.size()):
-			command.conditionals[i].parsed_check_val = []
-			command.conditionals[i].parsed_args = []
-		command.placeholder_args = {}
+		for c: ConditionResource in command.conditionals:
+			c.parsed_check_val.clear()
+			c.parsed_args.clear()
+		command.placeholder_args.clear()
 	return command
 
 
