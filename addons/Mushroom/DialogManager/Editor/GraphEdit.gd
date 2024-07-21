@@ -437,9 +437,9 @@ func cut_block(blocks: Dictionary) -> void:
 func paste_block(blocks: Dictionary) -> void:
 	flow_changed.emit(flowchart)
 	for block: String in blocks:
-		create_graph_node_from_block(
-			blocks[block]["block"].name, blocks[block]["offset"], blocks[block]["block"]
-		)
+		for c: ForkCommand in blocks[block]["block"].outputs:
+			c.origin_block = blocks[block]["block"].name
+		add_block(blocks[block]["block"].name, blocks[block]["offset"], blocks[block]["block"])
 
 
 func _on_node_selected(node: Node) -> void:

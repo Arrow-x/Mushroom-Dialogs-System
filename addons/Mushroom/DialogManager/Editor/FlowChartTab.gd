@@ -360,11 +360,11 @@ func deep_duplicate_block(block: Block) -> Block:
 	new_block.commands = []
 	new_block.commands.resize(block.commands.size())
 	for i in range(block.commands.size()):
-		new_block.commands[i] = deep_duplicate_command(block.commands[i])
+		new_block.commands[i] = deep_duplicate_command(block.commands[i], new_block.outputs)
 	return new_block
 
 
-func deep_duplicate_command(cmd: Command) -> Command:
+func deep_duplicate_command(cmd: Command, outputs: Array[ForkCommand] = [null]) -> Command:
 	var command: Command = cmd.duplicate()
 	if cmd is ContainerCommand:
 		if cmd is IfCommand:
@@ -376,6 +376,9 @@ func deep_duplicate_command(cmd: Command) -> Command:
 	elif cmd is ForkCommand:
 		command.choices = duplicate_array(cmd.choices)
 		command._init()
+		if outputs != [null]:
+			outputs.append(command)
+
 		for i: int in range(cmd.choices.size()):
 			command.choices[i].choice_text = cmd.choices[i].choice_text
 			command.choices[i].tr_code = ""
