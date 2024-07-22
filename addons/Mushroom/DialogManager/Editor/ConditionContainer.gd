@@ -108,7 +108,7 @@ func remove_conditional(conditional: ConditionResource) -> void:
 
 func _on_change_conditional_index(dir: int, cond: ConditionResource) -> void:
 	var idx: int = current_command.conditionals.find(cond)
-	undo_redo.create_action("remove conditional")
+	undo_redo.create_action("change conditionals order")
 	undo_redo.add_do_method(
 		commands_tree,
 		"command_undo_redo_caller",
