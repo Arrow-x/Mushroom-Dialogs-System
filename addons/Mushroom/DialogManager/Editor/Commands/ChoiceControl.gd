@@ -7,12 +7,16 @@ extends Node
 @export var delete_choice: Button
 @export var cond_box: VBoxContainer
 @export var sperator: Control
+@export var up_button: Button
+@export var down_button: Button
 
 var current_choice: Choice
 var flowchart: FlowChart
 var undo_redo: EditorUndoRedoManager
 var commands_tree: Tree
 var fork: Control
+
+signal change_index
 
 
 func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_tree: Tree) -> void:
@@ -88,6 +92,14 @@ func _on_conditional_changed() -> void:
 	else:
 		sperator.custom_minimum_size = Vector2(0, 10)
 	is_changed()
+
+
+func _on_up_button_pressed() -> void:
+	change_index.emit(fork.UP, current_choice)
+
+
+func _on_down_button_pressed() -> void:
+	change_index.emit(fork.DOWN, current_choice)
 
 
 func get_choice() -> Choice:

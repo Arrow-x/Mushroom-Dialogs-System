@@ -12,6 +12,7 @@ var graph: GraphEdit
 var commands_tree: Tree
 
 signal adding_choice
+enum { UP, DOWN }
 
 
 func set_up(
@@ -30,10 +31,7 @@ func set_up(
 	commands_tree = cmd_tree
 
 	current_fork.origin_block = current_block.name
-
-	if f.choices != null:
-		for i in f.choices:
-			create_choice_control(i)
+	create_choices()
 
 
 func _on_add_choice_button_pressed() -> void:
@@ -58,14 +56,12 @@ func removing_choice_action(choice_c: Control) -> void:
 
 
 func add_choice_resource(c: Choice = null, idx: int = -1) -> void:
-	var n_c: Choice
-	if c == null:
-		n_c = Choice.new()
+	var n_c: Choice = Choice.new() if c == null else c
+	if idx == -1:
 		current_fork.choices.append(n_c)
 	else:
-		n_c = c
-		current_fork.choices.append(n_c)
-	create_choice_control(n_c, idx)
+		current_fork.choices.insert(idx, n_c)
+	create_choices()
 	update_block_in_graph(current_block)
 
 
@@ -89,17 +85,84 @@ func update_block_in_graph(sender: Block) -> void:
 	is_changed()
 
 
-func create_choice_control(choice: Choice, idx: int = -1) -> void:
+func create_choice_control(choice: Choice) -> Control:
 	var choice_control: Control = i_choice_control.instantiate()
 
 	choice_control.fork = self
 	choices_container.add_child(choice_control)
-	if idx != -1:
-		choices_container.move_child(choice_control, idx)
+
 	choice_control.set_up(choice, flowchart, undo_redo, commands_tree)
+	choice_control.change_index.connect(_on_change_index)
 	if !choice.changed.is_connected(is_changed):
 		choice.changed.connect(is_changed)
+	return choice_control
 	is_changed()
+
+
+func _on_change_index(dir: int, choice: Choice) -> void:
+	var idx: int = current_fork.choices.find(choice)
+	undo_redo.create_action("Change Choice order")
+	(
+		undo_redo
+		. add_do_method(
+			commands_tree,
+			"command_undo_redo_caller",
+			"change_choice_index",
+			[dir, idx],
+			current_fork,
+		)
+	)
+	(
+		undo_redo
+		. add_undo_method(
+			commands_tree,
+			"command_undo_redo_caller",
+			"change_choice_index",
+			[dir, idx],
+			current_fork,
+		)
+	)
+	undo_redo.commit_action()
+
+
+func change_choice_index(dir: int, idx: int) -> void:
+	var choice: Choice = current_fork.choices[idx]
+	if choice == null:
+		push_error("couldn't find Choice")
+		return
+	if idx == -1:
+		push_error("couldn't find Choice")
+		return
+
+	if dir == UP:
+		if idx == 0:
+			return
+		if current_fork.choices.insert(idx - 1, choice) == OK:
+			current_fork.choices.remove_at(idx + 1)
+		else:
+			push_error("couldn't insert at indx", idx - 1, "in Array", current_fork.choices)
+			return
+
+	elif dir == DOWN:
+		if idx == current_fork.choices.size() - 1:
+			return
+		if current_fork.choices.insert(idx + 2, choice) == OK:
+			current_fork.choices.remove_at(idx)
+		else:
+			push_error("couldn't insert at indx", idx + 2, "in Array", current_fork.choices)
+			return
+	create_choices()
+
+
+func create_choices() -> void:
+	var choice_cont: Control
+	for c in choices_container.get_children():
+		c.queue_free()
+	for i: int in range(current_fork.choices.size()):
+		choice_cont = create_choice_control(current_fork.choices[i])
+		if i == 0:
+			choice_cont.up_button.disabled = true
+	choice_cont.down_button.disabled = true
 
 
 func get_command() -> Command:

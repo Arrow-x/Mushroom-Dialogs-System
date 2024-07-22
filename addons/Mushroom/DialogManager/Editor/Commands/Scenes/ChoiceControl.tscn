@@ -3,11 +3,10 @@
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionContainer.tscn" id="2_fvplh"]
 
-[node name="Control" type="VBoxContainer" node_paths=PackedStringArray("choice_text", "next_block_menu", "next_index_text", "delete_choice", "cond_box", "sperator")]
+[node name="Control" type="VBoxContainer" node_paths=PackedStringArray("choice_text", "next_block_menu", "next_index_text", "delete_choice", "cond_box", "sperator", "up_button", "down_button")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = -412.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -19,6 +18,8 @@ next_index_text = NodePath("HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxCont
 delete_choice = NodePath("HBoxContainer6/VBoxContainer2/DeleteChoice")
 cond_box = NodePath("HBoxContainer6/VBoxContainer/CondVBoxContainer")
 sperator = NodePath("HBoxContainer6/VBoxContainer/Sperator")
+up_button = NodePath("HBoxContainer6/VBoxContainer2/UpButton")
+down_button = NodePath("HBoxContainer6/VBoxContainer2/DownButton")
 
 [node name="HBoxContainer6" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -80,8 +81,18 @@ layout_mode = 2
 layout_mode = 2
 text = "X"
 
+[node name="UpButton" type="Button" parent="HBoxContainer6/VBoxContainer2"]
+layout_mode = 2
+text = "U"
+
+[node name="DownButton" type="Button" parent="HBoxContainer6/VBoxContainer2"]
+layout_mode = 2
+text = "D"
+
 [connection signal="cond_changed" from="HBoxContainer6/VBoxContainer/CondVBoxContainer" to="." method="_on_conditional_changed"]
 [connection signal="text_changed" from="HBoxContainer6/VBoxContainer/HBoxContainer/ChoiceText" to="." method="_on_choicetext_text_changed"]
 [connection signal="about_to_popup" from="HBoxContainer6/VBoxContainer/HBoxContainer2/NextBlockList" to="." method="_on_next_blocklist_about_to_show"]
 [connection signal="value_changed" from="HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3/NextIndex" to="." method="_on_next_index_value_changed"]
 [connection signal="pressed" from="HBoxContainer6/VBoxContainer2/DeleteChoice" to="." method="_on_delete_choice_pressed"]
+[connection signal="pressed" from="HBoxContainer6/VBoxContainer2/UpButton" to="." method="_on_up_button_pressed"]
+[connection signal="pressed" from="HBoxContainer6/VBoxContainer2/DownButton" to="." method="_on_down_button_pressed"]
