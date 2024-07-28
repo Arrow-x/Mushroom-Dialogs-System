@@ -8,7 +8,14 @@ class_name ShowMediaCommand
 
 func preview() -> String:
 	if media_type != "clear":
-		return str("ShowMedia: " + media_type + " : " + media.resource_path.get_file())
+		return str(
+			(
+				"ShowMedia: "
+				+ media_type
+				+ " : "
+				+ (media.resource_path.get_file() if media != null else "null")
+			)
+		)
 	else:
 		return "ShowMedia: Clear"
 
