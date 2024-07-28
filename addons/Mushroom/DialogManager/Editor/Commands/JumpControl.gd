@@ -9,14 +9,14 @@ extends Node
 var current_jump: JumpCommand
 var undo_redo: EditorUndoRedoManager
 var flowchart: FlowChart
-var commands_tree: Tree
+var commands_container: Node
 
 
-func set_up(jump: JumpCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree: Tree) -> void:
+func set_up(jump: JumpCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_c: Node) -> void:
 	flowchart = fl
 	current_jump = jump
 	undo_redo = u_r
-	commands_tree = cmd_tree
+	commands_container = cmd_c
 	index_control.value = jump.jump_index
 	global_control.set_pressed_no_signal(jump.global)
 	block_selection_cotrol.text = jump.get_block_name()
@@ -31,10 +31,10 @@ func _on_spin_box_value_changed(value: float) -> void:
 func _on_check_button_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle local_jump")
 	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "show_block_menu", [button_pressed]
+		commands_container, "command_undo_redo_caller", "show_block_menu", [button_pressed]
 	)
 	undo_redo.add_undo_method(
-		commands_tree, "command_undo_redo_caller", "show_block_menu", [current_jump.global]
+		commands_container, "command_undo_redo_caller", "show_block_menu", [current_jump.global]
 	)
 	undo_redo.commit_action()
 
@@ -61,10 +61,10 @@ func change_jump_block(idx, m: PopupMenu) -> void:
 	var current_block: Block = current_jump.jump_block
 	undo_redo.create_action("change next block")
 	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "do_change_jump_block", [next_block]
+		commands_container, "command_undo_redo_caller", "do_change_jump_block", [next_block]
 	)
 	undo_redo.add_undo_method(
-		commands_tree, "command_undo_redo_caller", "do_change_jump_block", [current_block]
+		commands_container, "command_undo_redo_caller", "do_change_jump_block", [current_block]
 	)
 	undo_redo.commit_action()
 

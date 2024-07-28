@@ -5,18 +5,18 @@ extends Node
 
 var current_condition: IfCommand
 var undo_redo: EditorUndoRedoManager
-var commands_tree: Tree
+var commands_container: Node
 
 
-func set_up(cc: IfCommand, u_r: EditorUndoRedoManager, cmd_tree: Tree) -> void:
+func set_up(cc: IfCommand, u_r: EditorUndoRedoManager, cmd_c: Node) -> void:
 	current_condition = cc
 	undo_redo = u_r
-	commands_tree = cmd_tree
+	commands_container = cmd_c
 	if current_condition.conditionals.is_empty():
 		var new_cond := ConditionResource.new()
 		new_cond.changed.connect(is_changed)
 		current_condition.conditionals.append(new_cond)
-	cond_box.set_up(current_condition, undo_redo, commands_tree)
+	cond_box.set_up(current_condition, undo_redo, commands_container)
 	cond_box.cond_changed.connect(is_changed)
 
 

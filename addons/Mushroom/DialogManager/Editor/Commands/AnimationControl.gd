@@ -10,13 +10,13 @@ extends Node
 
 var current_animation: AnimationCommand
 var undo_redo: EditorUndoRedoManager
-var commands_tree: Tree
+var commands_container: Node
 
 
-func set_up(a_cmd: AnimationCommand, u_r: EditorUndoRedoManager, cmd_tree: Tree) -> void:
+func set_up(a_cmd: AnimationCommand, u_r: EditorUndoRedoManager, cmd_c: Node) -> void:
 	current_animation = a_cmd
 	undo_redo = u_r
-	commands_tree = cmd_tree
+	commands_container = cmd_c
 	anim_path_ctrl.text = current_animation.animation_path
 	anim_name_ctrl.text = current_animation.animation_name
 	blend_ctrl.value = current_animation.custom_blend
@@ -48,10 +48,13 @@ func _on_blend_lineedit_value_changed(value: float) -> void:
 func _on_from_endcheck_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("toggle from_end")
 	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "toggle_from_end", [button_pressed]
+		commands_container, "command_undo_redo_caller", "toggle_from_end", [button_pressed]
 	)
 	undo_redo.add_undo_method(
-		commands_tree, "command_undo_redo_caller", "toggle_from_end", [current_animation.from_end]
+		commands_container,
+		"command_undo_redo_caller",
+		"toggle_from_end",
+		[current_animation.from_end]
 	)
 	undo_redo.commit_action()
 
@@ -69,10 +72,13 @@ func toggle_from_end(button_pressed: bool) -> void:
 func _on_is_wait_check_toggled(toggled_on: bool) -> void:
 	undo_redo.create_action("toggle from_end")
 	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "toggle_is_wait", [toggled_on]
+		commands_container, "command_undo_redo_caller", "toggle_is_wait", [toggled_on]
 	)
 	undo_redo.add_undo_method(
-		commands_tree, "command_undo_redo_caller", "toggle_is_wait", [current_animation.is_wait]
+		commands_container,
+		"command_undo_redo_caller",
+		"toggle_is_wait",
+		[current_animation.is_wait]
 	)
 	undo_redo.commit_action()
 

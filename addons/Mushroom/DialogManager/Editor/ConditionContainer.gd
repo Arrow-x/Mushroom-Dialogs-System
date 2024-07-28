@@ -6,7 +6,7 @@ extends VBoxContainer
 
 var current_command
 var undo_redo: EditorUndoRedoManager
-var commands_tree: Tree
+var commands_container: Node
 
 signal cond_changed
 
@@ -16,10 +16,10 @@ enum {
 }
 
 
-func set_up(cmd, u_r: EditorUndoRedoManager, cmd_tree: Tree) -> void:
+func set_up(cmd, u_r: EditorUndoRedoManager, cmd_c: Node) -> void:
 	current_command = cmd
 	undo_redo = u_r
-	commands_tree = cmd_tree
+	commands_container = cmd_c
 	build_current_command_conditional_editors(cmd.conditionals)
 
 
@@ -27,7 +27,7 @@ func _on_add_conditional_button_pressed() -> void:
 	var new_cond := ConditionResource.new()
 	undo_redo.create_action("add a conditional")
 	undo_redo.add_do_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"add_conditional",
 		[new_cond],
@@ -35,7 +35,7 @@ func _on_add_conditional_button_pressed() -> void:
 		true
 	)
 	undo_redo.add_undo_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"remove_conditional",
 		[new_cond],
@@ -48,7 +48,7 @@ func _on_add_conditional_button_pressed() -> void:
 func _on_conditional_close_button_pressed(conditional: ConditionResource) -> void:
 	undo_redo.create_action("remove conditional")
 	undo_redo.add_do_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"remove_conditional",
 		[conditional],
@@ -56,7 +56,7 @@ func _on_conditional_close_button_pressed(conditional: ConditionResource) -> voi
 		true
 	)
 	undo_redo.add_undo_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"add_conditional",
 		[conditional, current_command.conditionals.find(conditional)],
@@ -68,7 +68,7 @@ func _on_conditional_close_button_pressed(conditional: ConditionResource) -> voi
 
 func create_conditional_editor(conditional: ConditionResource) -> void:
 	var cond_editor: Control = conditional_editor_scene.instantiate()
-	cond_editor.set_up(conditional, undo_redo, commands_tree)
+	cond_editor.set_up(conditional, undo_redo, commands_container)
 	if cond_editors_container.get_child_count() == 0:
 		cond_editor.sequencer_check.visible = false
 		cond_editor.up_button.disabled = true
@@ -110,7 +110,7 @@ func _on_change_conditional_index(dir: int, cond: ConditionResource) -> void:
 	var idx: int = current_command.conditionals.find(cond)
 	undo_redo.create_action("change conditionals order")
 	undo_redo.add_do_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"change_conditional_index",
 		[dir, idx],
@@ -118,7 +118,7 @@ func _on_change_conditional_index(dir: int, cond: ConditionResource) -> void:
 		true
 	)
 	undo_redo.add_undo_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"change_conditional_index",
 		[dir, idx],

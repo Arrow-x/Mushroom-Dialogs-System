@@ -13,13 +13,13 @@ extends Node
 var current_choice: Choice
 var flowchart: FlowChart
 var undo_redo: EditorUndoRedoManager
-var commands_tree: Tree
+var commands_container: Node
 var fork: Control
 
 signal change_index
 
 
-func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_tree: Tree) -> void:
+func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_c: Node) -> void:
 	if c.choice_text.is_empty():
 		c.choice_text = TranslationServer.get_translation_object("en").get_message(c.tr_code)
 
@@ -27,12 +27,12 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_tree: Tree)
 	current_choice = c
 	choice_text.text = c.choice_text
 	undo_redo = u
-	commands_tree = cmd_tree
+	commands_container = cmd_c
 	if c.next_block != null:
 		next_block_menu.text = c.next_block
 	next_index_text.value = c.next_index
 
-	cond_box.set_up(current_choice, undo_redo, commands_tree)
+	cond_box.set_up(current_choice, undo_redo, commands_container)
 
 
 func _on_delete_choice_pressed() -> void:
@@ -59,14 +59,14 @@ func change_next_bloc(index: int, m: PopupMenu) -> void:
 	var current_next_block_name := current_choice.next_block
 	undo_redo.create_action("change next block")
 	undo_redo.add_do_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"change_next_block",
 		[next_block_name],
 		current_choice
 	)
 	undo_redo.add_undo_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"change_next_block",
 		[current_next_block_name],

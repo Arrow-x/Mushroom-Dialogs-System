@@ -13,14 +13,14 @@ extends Node
 var current_say: SayCommand
 var undo_redo: EditorUndoRedoManager
 var current_flowchart: FlowChart
-var commands_tree: Tree
+var commands_container: Node
 
 
-func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree: Tree) -> void:
+func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, in_cmd_c: Node) -> void:
 	current_say = c_s
 	undo_redo = u_r
 	current_flowchart = fl
-	commands_tree = cmd_tree
+	commands_container = in_cmd_c
 
 	character_menu.get_popup().id_pressed.connect(_on_character_selected)
 	portraits_menu.get_popup().id_pressed.connect(_on_portrait_selected)
@@ -35,7 +35,7 @@ func set_up(c_s: SayCommand, u_r: EditorUndoRedoManager, fl: FlowChart, cmd_tree
 		portraits_menu.text = c_s.portrait_id
 	say_text_edit.text = c_s.say
 	portraits_pos_menu.text = c_s.por_pos
-	cond_box.set_up(current_say, undo_redo, commands_tree)
+	cond_box.set_up(current_say, undo_redo, commands_container)
 	append_check.set_pressed_no_signal(c_s.append_text)
 	follow_check.set_pressed_no_signal(c_s.follow_through)
 
@@ -57,9 +57,11 @@ func _on_text_edit_text_changed() -> void:
 func _on_character_selected(id: int) -> void:
 	var s_char: Chararcter = character_menu.get_popup().get_item_metadata(id)
 	undo_redo.create_action("select character")
-	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "select_character", [s_char])
+	undo_redo.add_do_method(
+		commands_container, "command_undo_redo_caller", "select_character", [s_char]
+	)
 	undo_redo.add_undo_method(
-		commands_tree, "command_undo_redo_caller", "select_character", [current_say.character]
+		commands_container, "command_undo_redo_caller", "select_character", [current_say.character]
 	)
 	undo_redo.commit_action()
 
@@ -77,10 +79,10 @@ func _on_portrait_selected(id: int) -> void:
 	var portrait_name := portraits_menu.get_popup().get_item_text(id)
 	undo_redo.create_action("select a portrait")
 	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "select_portrait", [portrait_name]
+		commands_container, "command_undo_redo_caller", "select_portrait", [portrait_name]
 	)
 	undo_redo.add_undo_method(
-		commands_tree, "command_undo_redo_caller", "select_portrait", [current_say.portrait_id]
+		commands_container, "command_undo_redo_caller", "select_portrait", [current_say.portrait_id]
 	)
 	undo_redo.commit_action()
 
@@ -100,10 +102,10 @@ func _on_portrait_pos_selected(id: int) -> void:
 	var portrait_pos_name := portraits_pos_menu.get_popup().get_item_text(id)
 	undo_redo.create_action("select portrait position")
 	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "select_portrait_pos", [portrait_pos_name]
+		commands_container, "command_undo_redo_caller", "select_portrait_pos", [portrait_pos_name]
 	)
 	undo_redo.add_undo_method(
-		commands_tree, "command_undo_redo_caller", "select_portrait_pos", [current_say.por_pos]
+		commands_container, "command_undo_redo_caller", "select_portrait_pos", [current_say.por_pos]
 	)
 	undo_redo.commit_action()
 
@@ -133,8 +135,8 @@ func _on_portrait_menu_button_about_to_show() -> void:
 
 func _on_append_check_box_toggled(button_pressed: bool) -> void:
 	undo_redo.create_action("Toggle append")
-	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "toggle_append")
-	undo_redo.add_undo_method(commands_tree, "command_undo_redo_caller", "toggle_append")
+	undo_redo.add_do_method(commands_container, "command_undo_redo_caller", "toggle_append")
+	undo_redo.add_undo_method(commands_container, "command_undo_redo_caller", "toggle_append")
 	undo_redo.commit_action()
 
 
@@ -146,8 +148,8 @@ func toggle_append() -> void:
 
 func _on_through_check_box_toggled(toggled_on: bool) -> void:
 	undo_redo.create_action("Toggle follow")
-	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "toggle_follow")
-	undo_redo.add_undo_method(commands_tree, "command_undo_redo_caller", "toggle_follow")
+	undo_redo.add_do_method(commands_container, "command_undo_redo_caller", "toggle_follow")
+	undo_redo.add_undo_method(commands_container, "command_undo_redo_caller", "toggle_follow")
 	undo_redo.commit_action()
 
 
@@ -159,8 +161,8 @@ func toggle_follow() -> void:
 
 func _on_wrap_button_pressed() -> void:
 	undo_redo.create_action("Set Say Text Wrap preview")
-	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "set_say_text_wrap")
-	undo_redo.add_undo_method(commands_tree, "command_undo_redo_caller", "set_say_text_wrap")
+	undo_redo.add_do_method(commands_container, "command_undo_redo_caller", "set_say_text_wrap")
+	undo_redo.add_undo_method(commands_container, "command_undo_redo_caller", "set_say_text_wrap")
 	undo_redo.commit_action()
 
 

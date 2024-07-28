@@ -9,26 +9,21 @@ var current_block: Block
 var flowchart: FlowChart
 var undo_redo: EditorUndoRedoManager
 var graph: GraphEdit
-var commands_tree: Tree
+var commands_container: Node
 
 signal adding_choice
 enum { UP, DOWN }
 
 
 func set_up(
-	f: ForkCommand,
-	ur: EditorUndoRedoManager,
-	fc: FlowChart,
-	cb: Block,
-	ge: GraphEdit,
-	cmd_tree: Tree
+	f: ForkCommand, ur: EditorUndoRedoManager, fc: FlowChart, cb: Block, ge: GraphEdit, cmd_c: Node
 ) -> void:
 	current_fork = f
 	flowchart = fc
 	graph = ge
 	current_block = cb
 	undo_redo = ur
-	commands_tree = cmd_tree
+	commands_container = cmd_c
 
 	current_fork.origin_block = current_block.name
 	create_choices()
@@ -36,18 +31,21 @@ func set_up(
 
 func _on_add_choice_button_pressed() -> void:
 	undo_redo.create_action("adding_choice")
-	undo_redo.add_do_method(commands_tree, "command_undo_redo_caller", "add_choice_resource")
-	undo_redo.add_undo_method(commands_tree, "command_undo_redo_caller", "free_choice_control")
+	undo_redo.add_do_method(commands_container, "command_undo_redo_caller", "add_choice_resource")
+	undo_redo.add_undo_method(commands_container, "command_undo_redo_caller", "free_choice_control")
 	undo_redo.commit_action()
 
 
 func removing_choice_action(choice_c: Control) -> void:
 	undo_redo.create_action("removing_choice")
 	undo_redo.add_do_method(
-		commands_tree, "command_undo_redo_caller", "free_choice_control", [choice_c.current_choice]
+		commands_container,
+		"command_undo_redo_caller",
+		"free_choice_control",
+		[choice_c.current_choice]
 	)
 	undo_redo.add_undo_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"add_choice_resource",
 		[choice_c.current_choice, choice_c.get_index()]
@@ -91,12 +89,12 @@ func create_choice_control(choice: Choice) -> Control:
 	choice_control.fork = self
 	choices_container.add_child(choice_control)
 
-	choice_control.set_up(choice, flowchart, undo_redo, commands_tree)
+	choice_control.set_up(choice, flowchart, undo_redo, commands_container)
 	choice_control.change_index.connect(_on_change_index)
 	if !choice.changed.is_connected(is_changed):
 		choice.changed.connect(is_changed)
-	return choice_control
 	is_changed()
+	return choice_control
 
 
 func _on_change_index(dir: int, choice: Choice) -> void:
@@ -105,7 +103,7 @@ func _on_change_index(dir: int, choice: Choice) -> void:
 	(
 		undo_redo
 		. add_do_method(
-			commands_tree,
+			commands_container,
 			"command_undo_redo_caller",
 			"change_choice_index",
 			[dir, idx],
@@ -115,7 +113,7 @@ func _on_change_index(dir: int, choice: Choice) -> void:
 	(
 		undo_redo
 		. add_undo_method(
-			commands_tree,
+			commands_container,
 			"command_undo_redo_caller",
 			"change_choice_index",
 			[dir, idx],
@@ -162,7 +160,8 @@ func create_choices() -> void:
 		choice_cont = create_choice_control(current_fork.choices[i])
 		if i == 0:
 			choice_cont.up_button.disabled = true
-	choice_cont.down_button.disabled = true
+	if choice_cont != null:
+		choice_cont.down_button.disabled = true
 
 
 func get_command() -> Command:

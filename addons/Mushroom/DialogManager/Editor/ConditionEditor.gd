@@ -14,7 +14,7 @@ extends Node
 
 var current_conditional: ConditionResource
 var undo_redo: EditorUndoRedoManager
-var commands_tree: Tree
+var commands_container: Node
 
 enum {
 	UP,
@@ -25,10 +25,10 @@ signal close_pressed
 signal change_index
 
 
-func set_up(conditional: ConditionResource, u_r: EditorUndoRedoManager, tree: Tree) -> void:
+func set_up(conditional: ConditionResource, u_r: EditorUndoRedoManager, cmd_c: Node) -> void:
 	current_conditional = conditional
 	undo_redo = u_r
-	commands_tree = tree
+	commands_container = cmd_c
 
 	var check_op_popup: PopupMenu = check_operation.get_popup()
 	check_op_popup.id_pressed.connect(_on_check_operation_popup.bind(check_op_popup))
@@ -45,14 +45,14 @@ func set_up(conditional: ConditionResource, u_r: EditorUndoRedoManager, tree: Tr
 func _on_check_button_toggled(toggled_on: bool) -> void:
 	undo_redo.create_action("toggle sequencer")
 	undo_redo.add_do_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"toggle_sequencer",
 		[toggled_on],
 		current_conditional
 	)
 	undo_redo.add_undo_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"toggle_sequencer",
 		[current_conditional.is_and],
@@ -74,14 +74,14 @@ func toggle_sequencer(toggled_on: bool) -> void:
 func _on_is_property_toggled(toggled_on: bool) -> void:
 	undo_redo.create_action("toggle Property or Function")
 	undo_redo.add_do_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"toggle_is_prop",
 		[toggled_on],
 		current_conditional
 	)
 	undo_redo.add_undo_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"toggle_is_prop",
 		[current_conditional.is_and],
@@ -113,14 +113,14 @@ func _on_check_operation_popup(id: int, popup: PopupMenu) -> void:
 	var pp_text: String = popup.get_item_text(id)
 	undo_redo.create_action("set check operation")
 	undo_redo.add_do_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"set_check_operation",
 		[pp_text],
 		current_conditional
 	)
 	undo_redo.add_undo_method(
-		commands_tree,
+		commands_container,
 		"command_undo_redo_caller",
 		"set_check_operation",
 		[current_conditional.condition_type],

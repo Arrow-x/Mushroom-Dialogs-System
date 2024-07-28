@@ -12,13 +12,13 @@ enum { CLEAR, IMAGE, VIDEO }
 var current_show_media: ShowMediaCommand
 var undo_redo: EditorUndoRedoManager
 var prev_id: int = CLEAR
-var command_tree: Tree
+var commands_container: Node
 
 
-func set_up(s_m: ShowMediaCommand, u_r: EditorUndoRedoManager, tree: Tree) -> void:
+func set_up(s_m: ShowMediaCommand, u_r: EditorUndoRedoManager, cmd_c: Node) -> void:
 	current_show_media = s_m
 	undo_redo = u_r
-	command_tree = tree
+	commands_container = cmd_c
 	match current_show_media.media_type:
 		"clear":
 			show_draggable(CLEAR)
@@ -43,8 +43,10 @@ func set_up(s_m: ShowMediaCommand, u_r: EditorUndoRedoManager, tree: Tree) -> vo
 
 func choose_mode(id: int) -> void:
 	undo_redo.create_action("Chose A Media Mode")
-	undo_redo.add_do_method(command_tree, "command_undo_redo_caller", "show_draggable", [id])
-	undo_redo.add_undo_method(command_tree, "command_undo_redo_caller", "show_draggable", [prev_id])
+	undo_redo.add_do_method(commands_container, "command_undo_redo_caller", "show_draggable", [id])
+	undo_redo.add_undo_method(
+		commands_container, "command_undo_redo_caller", "show_draggable", [prev_id]
+	)
 	undo_redo.commit_action()
 	prev_id = id
 
@@ -72,36 +74,36 @@ func show_draggable(id: int) -> void:
 
 func _on_label_drag_image_value_dragged(value: Variant) -> void:
 	undo_redo.create_action("drag media")
-	undo_redo.add_do_method(command_tree, "command_undo_redo_caller", "set_image", [value])
+	undo_redo.add_do_method(commands_container, "command_undo_redo_caller", "set_image", [value])
 	undo_redo.add_undo_method(
-		command_tree, "command_undo_redo_caller", "set_image", [current_show_media.media]
+		commands_container, "command_undo_redo_caller", "set_image", [current_show_media.media]
 	)
 	undo_redo.commit_action()
 
 
 func _on_label_drag_video_value_dragged(value: Variant) -> void:
 	undo_redo.create_action("drag media")
-	undo_redo.add_do_method(command_tree, "command_undo_redo_caller", "set_video", [value])
+	undo_redo.add_do_method(commands_container, "command_undo_redo_caller", "set_video", [value])
 	undo_redo.add_undo_method(
-		command_tree, "command_undo_redo_caller", "set_video", [current_show_media.media]
+		commands_container, "command_undo_redo_caller", "set_video", [current_show_media.media]
 	)
 	undo_redo.commit_action()
 
 
 func _on_clear_video_button_pressed() -> void:
 	undo_redo.create_action("drag media")
-	undo_redo.add_do_method(command_tree, "command_undo_redo_caller", "set_video", [null])
+	undo_redo.add_do_method(commands_container, "command_undo_redo_caller", "set_video", [null])
 	undo_redo.add_undo_method(
-		command_tree, "command_undo_redo_caller", "set_video", [current_show_media.media]
+		commands_container, "command_undo_redo_caller", "set_video", [current_show_media.media]
 	)
 	undo_redo.commit_action()
 
 
 func _on_clear_image_button_pressed() -> void:
 	undo_redo.create_action("drag media")
-	undo_redo.add_do_method(command_tree, "command_undo_redo_caller", "set_image", [null])
+	undo_redo.add_do_method(commands_container, "command_undo_redo_caller", "set_image", [null])
 	undo_redo.add_undo_method(
-		command_tree, "command_undo_redo_caller", "set_image", [current_show_media.media]
+		commands_container, "command_undo_redo_caller", "set_image", [current_show_media.media]
 	)
 	undo_redo.commit_action()
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bdwysurgi6vsh"]
+[gd_scene load_steps=23 format=3 uid="uid://bdwysurgi6vsh"]
 
 [ext_resource type="PackedScene" uid="uid://bse8n61wlw8b" path="res://addons/Mushroom/DialogManager/Editor/Scenes/AddCommnadPopupMenu.tscn" id="1"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/CommandsTree.gd" id="2"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://ca4mhqtis68pb" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ForkControl.tscn" id="6_ay6we"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/GraphEdit.gd" id="7"]
 [ext_resource type="PackedScene" uid="uid://cgcqum8la33hn" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ConditionControl.tscn" id="7_wbynn"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/CommandEditorsContianer.gd" id="8_5pwtd"]
 [ext_resource type="PackedScene" uid="uid://tgwiokob1t1j" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SetVar.tscn" id="8_bsl15"]
 [ext_resource type="PackedScene" uid="uid://dr44rkqgqfyrq" path="res://addons/Mushroom/DialogManager/Editor/Scenes/EnterNameScene.tscn" id="8_mcj0f"]
 [ext_resource type="PackedScene" uid="uid://b57ggihn01qk0" path="res://addons/Mushroom/DialogManager/Editor/Scenes/GraphNode.tscn" id="9_adxui"]
@@ -88,6 +89,16 @@ script = ExtResource("2")
 current_block_label = NodePath("../TreeHeaderVboxContainer/HBoxContainer/CurrentBlock")
 commands_settings = NodePath("../../CommandEditorsContianer")
 general_rmb_menu = NodePath("GeneralRMBMenu")
+icon_x = ExtResource("15_cx1ab")
+
+[node name="GeneralRMBMenu" type="PopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"]
+size = Vector2i(100, 50)
+script = ExtResource("6")
+i_rmb_add_menu = ExtResource("1")
+
+[node name="CommandEditorsContianer" type="ScrollContainer" parent="InspectorTabContainer/Block Settings" node_paths=PackedStringArray("graph_edit")]
+layout_mode = 2
+script = ExtResource("8_5pwtd")
 i_animation_control = ExtResource("9_b0t6e")
 i_call_function_control = ExtResource("13_lxhvy")
 i_change_ui_control = ExtResource("12_afd8q")
@@ -100,15 +111,7 @@ i_set_var_control = ExtResource("8_bsl15")
 i_signal_control = ExtResource("14_17iw2")
 i_sound_control = ExtResource("11_ootm2")
 i_show_media_control = ExtResource("17_stbgo")
-icon_x = ExtResource("15_cx1ab")
-
-[node name="GeneralRMBMenu" type="PopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"]
-size = Vector2i(100, 50)
-script = ExtResource("6")
-i_rmb_add_menu = ExtResource("1")
-
-[node name="CommandEditorsContianer" type="ScrollContainer" parent="InspectorTabContainer/Block Settings"]
-layout_mode = 2
+graph_edit = NodePath("../../../GraphContainer/GraphEdit")
 
 [node name="FlowChartSettings" type="PanelContainer" parent="InspectorTabContainer"]
 visible = false
@@ -182,7 +185,6 @@ text = "Add Block"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-scroll_offset = Vector2(-50, 0)
 script = ExtResource("7")
 enter_name_scene = ExtResource("8_mcj0f")
 i_graph_node = ExtResource("9_adxui")
