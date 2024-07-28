@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 DialogManagerNode="*res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
 
+[dotnet]
+
+project/assembly_name="Mushroom-Dialogs-System"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/Mushroom/plugin.cfg", "res://addons/plugin_refresher/plugin.cfg")
