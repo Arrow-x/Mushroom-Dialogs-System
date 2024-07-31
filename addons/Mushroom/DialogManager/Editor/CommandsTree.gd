@@ -424,7 +424,7 @@ func move_list_tree_items(d: Dictionary, to_item_command: Command, shift: int) -
 		move_tree_item(item_command, to_item_command, shift)
 
 
-func undo_move_list_tree_items(t: Dictionary):
+func undo_move_list_tree_items(t: Dictionary) -> void:
 	var t_keys := t.keys()
 	for i in range(t_keys.size() - 1, -1, -1):
 		undo_move_tree_item_delete(t_keys[i])
