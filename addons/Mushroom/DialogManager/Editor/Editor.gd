@@ -1,13 +1,14 @@
 @tool
-extends Control
+class_name MainEditor extends Control
 
 @export var i_flowchart_control: PackedScene
 @export var flowcharts_container: Control
 @export var f_tabs: TabBar
 
+static var commands_clipboard: Array
+static var block_clipboard: Dictionary
+
 var undo_redo: EditorUndoRedoManager
-var commands_clipboard: Array
-var block_clipboard: Dictionary
 
 
 func open_flowchart_scene(flowchart: FlowChart, u_r: EditorUndoRedoManager) -> void:

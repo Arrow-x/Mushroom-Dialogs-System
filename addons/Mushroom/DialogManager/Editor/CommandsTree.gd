@@ -46,7 +46,7 @@ func _on_tree_item_rmb_selected(_position: Vector2, mouse_button_index: int, is_
 	if mouse_button_index != 2:
 		return
 	var paste := false
-	if flowchart_tab.main_editor.commands_clipboard.is_empty() == false:
+	if MainEditor.commands_clipboard.is_empty() == false:
 		paste = true
 	general_rmb_menu.set_up(paste, is_item)
 	var gmp := get_global_mouse_position()
@@ -72,14 +72,14 @@ func on_commands_delete() -> void:
 
 
 func on_commands_copy() -> void:
-	flowchart_tab.main_editor.commands_clipboard.clear()
-	flowchart_tab.main_editor.commands_clipboard = get_selected_tree_items(Copy_or_not.COPY).keys()
+	MainEditor.commands_clipboard.clear()
+	MainEditor.commands_clipboard = get_selected_tree_items(Copy_or_not.COPY).keys()
 
 
 func on_commands_cut() -> void:
 	var _selected := get_selected_tree_items(Copy_or_not.DONT_COPY)
-	flowchart_tab.main_editor.commands_clipboard.clear()
-	flowchart_tab.main_editor.commands_clipboard = _selected.keys()
+	MainEditor.commands_clipboard.clear()
+	MainEditor.commands_clipboard = _selected.keys()
 	undo_redo.create_action("cut commands")
 	undo_redo.add_do_method(self, "cut_commands", _selected, flowchart_tab.flowchart)
 	undo_redo.add_undo_method(self, "undo_cut_commands", _selected, flowchart_tab.flowchart)
@@ -105,7 +105,7 @@ func on_commands_paste() -> void:
 			else:
 				parent = null
 
-	var clip: Array = flowchart_tab.main_editor.commands_clipboard
+	var clip: Array = MainEditor.commands_clipboard
 	undo_redo.create_action("paste commands")
 	undo_redo.add_do_method(self, "paste_commands", clip, sel_idx, flowchart_tab.flowchart, parent)
 	undo_redo.add_undo_method(
