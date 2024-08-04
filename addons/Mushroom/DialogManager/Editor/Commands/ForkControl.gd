@@ -30,14 +30,19 @@ func set_up(
 
 
 func _on_add_choice_button_pressed() -> void:
-	undo_redo.create_action("adding_choice")
-	undo_redo.add_do_method(commands_container, "command_undo_redo_caller", "add_choice_resource")
-	undo_redo.add_undo_method(commands_container, "command_undo_redo_caller", "free_choice_control")
+	var new_choice := Choice.new()
+	undo_redo.create_action("Adding a new Choice")
+	undo_redo.add_do_method(
+		commands_container, "command_undo_redo_caller", "add_choice_resource", [new_choice]
+	)
+	undo_redo.add_undo_method(
+		commands_container, "command_undo_redo_caller", "free_choice_control", [new_choice]
+	)
 	undo_redo.commit_action()
 
 
 func removing_choice_action(choice_c: Control) -> void:
-	undo_redo.create_action("removing_choice")
+	undo_redo.create_action("Removing Choice")
 	undo_redo.add_do_method(
 		commands_container,
 		"command_undo_redo_caller",
@@ -53,28 +58,20 @@ func removing_choice_action(choice_c: Control) -> void:
 	undo_redo.commit_action()
 
 
-func add_choice_resource(c: Choice = null, idx: int = -1) -> void:
-	var n_c: Choice = Choice.new() if c == null else c
+func add_choice_resource(choice: Choice, idx: int = -1) -> void:
 	if idx == -1:
-		current_fork.choices.append(n_c)
+		current_fork.choices.append(choice)
 	else:
-		current_fork.choices.insert(idx, n_c)
+		current_fork.choices.insert(idx, choice)
 	create_choices()
+
 	update_block_in_graph(current_block)
 
 
-func free_choice_control(choice: Choice = null) -> void:
-	if choice == null:
-		current_fork.choices.resize(current_fork.choices.size() - 1)
-		choices_container.get_children()[-1].queue_free()
-	else:
-		current_fork.choices.erase(choice)
-		for c in choices_container.get_children():
-			if not c.has_method("get_choice"):
-				continue
-			if c.get_choice() == choice:
-				c.queue_free()
+func free_choice_control(choice: Choice) -> void:
+	current_fork.choices.erase(choice)
 	TranslationServer.get_translation_object("en").erase_message(choice.tr_code)
+	create_choices()
 	update_block_in_graph(current_block)
 
 
@@ -153,15 +150,17 @@ func change_choice_index(dir: int, idx: int) -> void:
 
 
 func create_choices() -> void:
-	var choice_cont: Control
 	for c in choices_container.get_children():
 		c.queue_free()
-	for i: int in range(current_fork.choices.size()):
-		choice_cont = create_choice_control(current_fork.choices[i])
-		if i == 0:
-			choice_cont.up_button.disabled = true
-	if choice_cont != null:
-		choice_cont.down_button.disabled = true
+
+	if current_fork.choices.is_empty():
+		return
+
+	var choice_control: Control = create_choice_control(current_fork.choices.front())
+	choice_control.up_button.disabled = true
+	for i: int in range(1, current_fork.choices.size()):
+		choice_control = create_choice_control(current_fork.choices[i])
+	choice_control.down_button.disabled = true
 
 
 func get_command() -> Command:
