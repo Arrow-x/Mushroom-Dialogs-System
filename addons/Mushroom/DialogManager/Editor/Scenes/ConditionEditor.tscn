@@ -1,6 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://7hkgqixxw3bw"]
+[gd_scene load_steps=4 format=3 uid="uid://7hkgqixxw3bw"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/ConditionEditor.gd" id="1_swf1l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7i1eo"]
+bg_color = Color(0.69, 0, 0.0114998, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ibkbq"]
+bg_color = Color(0.61, 0.2196, 0.2196, 1)
 
 [node name="ConditionEditor" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "check_operation", "req_node", "req_var", "is_prop", "args_inputs", "req_val", "val_or_return_label", "up_button", "down_button")]
 anchors_preset = 15
@@ -100,6 +106,8 @@ size_flags_vertical = 0
 
 [node name="CloseButton" type="Button" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_styles/hover = SubResource("StyleBoxFlat_7i1eo")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ibkbq")
 text = "x"
 
 [node name="UpButton" type="Button" parent="HBoxContainer/VBoxContainer"]
