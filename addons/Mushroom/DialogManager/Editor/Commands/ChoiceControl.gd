@@ -1,5 +1,5 @@
 @tool
-extends Node
+extends Control
 
 @export var choice_text: LineEdit
 @export var next_block_menu: MenuButton
@@ -19,7 +19,7 @@ var fork: Control
 signal change_index
 
 
-func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_c: Node) -> void:
+func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_c: Node, f: Control) -> void:
 	if c.choice_text.is_empty():
 		c.choice_text = TranslationServer.get_translation_object("en").get_message(c.tr_code)
 
@@ -28,6 +28,7 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_c: Node) ->
 	choice_text.text = c.choice_text
 	undo_redo = u
 	commands_container = cmd_c
+	fork = f
 	if c.next_block != null:
 		next_block_menu.text = c.next_block
 	next_index_text.value = c.next_index

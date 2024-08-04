@@ -1,5 +1,5 @@
 @tool
-extends Node
+extends Control
 
 @export var i_choice_control: PackedScene
 @export var choices_container: VBoxContainer
@@ -89,10 +89,9 @@ func update_block_in_graph(sender: Block) -> void:
 func create_choice_control(choice: Choice) -> Control:
 	var choice_control: Control = i_choice_control.instantiate()
 
-	choice_control.fork = self
 	choices_container.add_child(choice_control)
 
-	choice_control.set_up(choice, flowchart, undo_redo, commands_container)
+	choice_control.set_up(choice, flowchart, undo_redo, commands_container, self)
 	choice_control.change_index.connect(_on_change_index)
 	if !choice.changed.is_connected(is_changed):
 		choice.changed.connect(is_changed)
