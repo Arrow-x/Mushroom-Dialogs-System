@@ -4,13 +4,13 @@
 [ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionContainer.tscn" id="2_fvplh"]
 
 [node name="Control" type="VBoxContainer" node_paths=PackedStringArray("choice_text", "next_block_menu", "next_index_text", "delete_choice", "cond_box", "sperator", "up_button", "down_button")]
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 129.0
 grow_horizontal = 2
-grow_vertical = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 0
+focus_mode = 1
 script = ExtResource("1")
 choice_text = NodePath("HBoxContainer6/VBoxContainer/HBoxContainer/ChoiceText")
 next_block_menu = NodePath("HBoxContainer6/VBoxContainer/HBoxContainer2/NextBlockList")
@@ -32,9 +32,6 @@ size_flags_horizontal = 3
 [node name="Panel2" type="Panel" parent="HBoxContainer6/VBoxContainer"]
 modulate = Color(0, 0.6, 1, 1)
 custom_minimum_size = Vector2(0, 2.6)
-layout_mode = 2
-
-[node name="CondVBoxContainer" parent="HBoxContainer6/VBoxContainer" instance=ExtResource("2_fvplh")]
 layout_mode = 2
 
 [node name="Sperator" type="Control" parent="HBoxContainer6/VBoxContainer"]
@@ -74,6 +71,9 @@ text = "Index "
 [node name="NextIndex" type="SpinBox" parent="HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3"]
 layout_mode = 2
 
+[node name="CondVBoxContainer" parent="HBoxContainer6/VBoxContainer" instance=ExtResource("2_fvplh")]
+layout_mode = 2
+
 [node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer6"]
 layout_mode = 2
 
@@ -89,10 +89,10 @@ text = "U"
 layout_mode = 2
 text = "D"
 
-[connection signal="cond_changed" from="HBoxContainer6/VBoxContainer/CondVBoxContainer" to="." method="_on_conditional_changed"]
 [connection signal="text_changed" from="HBoxContainer6/VBoxContainer/HBoxContainer/ChoiceText" to="." method="_on_choicetext_text_changed"]
 [connection signal="about_to_popup" from="HBoxContainer6/VBoxContainer/HBoxContainer2/NextBlockList" to="." method="_on_next_blocklist_about_to_show"]
 [connection signal="value_changed" from="HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3/NextIndex" to="." method="_on_next_index_value_changed"]
+[connection signal="cond_changed" from="HBoxContainer6/VBoxContainer/CondVBoxContainer" to="." method="_on_conditional_changed"]
 [connection signal="pressed" from="HBoxContainer6/VBoxContainer2/DeleteChoice" to="." method="_on_delete_choice_pressed"]
 [connection signal="pressed" from="HBoxContainer6/VBoxContainer2/UpButton" to="." method="_on_up_button_pressed"]
 [connection signal="pressed" from="HBoxContainer6/VBoxContainer2/DownButton" to="." method="_on_down_button_pressed"]
