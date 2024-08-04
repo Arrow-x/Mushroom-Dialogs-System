@@ -20,7 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://be32jycsbxckh" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ChangeUIControl.tscn" id="12_afd8q"]
 [ext_resource type="PackedScene" uid="uid://3l5bjgljqvuj" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/CallFunctionControl.tscn" id="13_lxhvy"]
 [ext_resource type="PackedScene" uid="uid://duw2so33mqwt6" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SignalControl.tscn" id="14_17iw2"]
-[ext_resource type="Texture2D" uid="uid://e5shxdb1nxww" path="res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png" id="15_cx1ab"]
+[ext_resource type="Texture2D" uid="uid://dtls4a5peg1dd" path="res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png" id="15_cx1ab"]
 [ext_resource type="PackedScene" uid="uid://t1hlq3er4wuh" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ShowMediaControl.tscn" id="17_stbgo"]
 
 [node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree", "current_block_name", "translation_lineedit", "export_button")]
