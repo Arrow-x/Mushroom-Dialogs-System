@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://dnwd4iberh8eq" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ChoiceControl.tscn" id="2_x1dho"]
 
-[node name="ChoicesContainer" type="VBoxContainer" node_paths=PackedStringArray("add_choice_button", "choices_container")]
+[node name="ChoicesContainer" type="VBoxContainer" node_paths=PackedStringArray("choices_container", "choices_scroll_bar")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -12,9 +12,9 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
-add_choice_button = NodePath("AddChoiceButton")
 i_choice_control = ExtResource("2_x1dho")
 choices_container = NodePath("ScrollContainer/VBoxContainer")
+choices_scroll_bar = NodePath("ScrollContainer")
 
 [node name="AddChoiceButton" type="Button" parent="."]
 layout_mode = 2

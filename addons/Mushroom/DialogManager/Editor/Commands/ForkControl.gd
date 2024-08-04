@@ -3,6 +3,7 @@ extends Node
 
 @export var i_choice_control: PackedScene
 @export var choices_container: VBoxContainer
+@export var choices_scroll_bar: ScrollContainer
 
 var current_fork: ForkCommand
 var current_block: Block
@@ -64,6 +65,11 @@ func add_choice_resource(choice: Choice, idx: int = -1) -> void:
 	else:
 		current_fork.choices.insert(idx, choice)
 	create_choices()
+
+	await get_tree().process_frame
+	choices_scroll_bar.set_deferred(
+		"scroll_vertical", choices_scroll_bar.get_v_scroll_bar().max_value
+	)
 
 	update_block_in_graph(current_block)
 
@@ -150,7 +156,9 @@ func change_choice_index(dir: int, idx: int) -> void:
 
 
 func create_choices() -> void:
-	for c in choices_container.get_children():
+	var _children := choices_container.get_children()
+	for c in _children:
+		choices_container.remove_child(c)
 		c.queue_free()
 
 	if current_fork.choices.is_empty():

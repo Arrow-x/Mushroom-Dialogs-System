@@ -87,14 +87,20 @@ func add_conditional(conditional: ConditionResource = null, idx := -1) -> void:
 
 
 func build_current_command_conditional_editors(conditionals: Array) -> void:
-	for e in cond_editors_container.get_children():
-		e.queue_free()
-	await get_tree().create_timer(0.001).timeout
+	var _children := cond_editors_container.get_children()
+
+	for e in _children:
+		cond_editors_container.remove_child(e)
+
+	for r in _children:
+		r.queue_free()
+
 	current_command.conditionals = conditionals
 	for c in current_command.conditionals:
 		create_conditional_editor(c)
 	if cond_editors_container.get_child_count() > 0:
 		cond_editors_container.get_children()[-1].down_button.disabled = true
+
 	changed()
 
 
