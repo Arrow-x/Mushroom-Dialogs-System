@@ -20,7 +20,7 @@ func set_up(cmd, u_r: EditorUndoRedoManager, cmd_c: Node) -> void:
 	current_command = cmd
 	undo_redo = u_r
 	commands_container = cmd_c
-	build_current_command_conditional_editors(cmd.conditionals)
+	build_current_command_conditional_editors()
 
 
 func _on_add_conditional_button_pressed() -> void:
@@ -66,16 +66,31 @@ func _on_conditional_close_button_pressed(conditional: ConditionResource) -> voi
 	undo_redo.commit_action()
 
 
-func create_conditional_editor(conditional: ConditionResource) -> void:
+func create_conditional_editor(conditional: ConditionResource) -> Control:
 	var cond_editor: Control = conditional_editor_scene.instantiate()
-	cond_editor.set_up(conditional, undo_redo, commands_container)
-	if cond_editors_container.get_child_count() == 0:
-		cond_editor.sequencer_check.visible = false
-		cond_editor.up_button.disabled = true
-	cond_editors_container.add_child(cond_editor, true)
+	cond_editor.set_up(current_command, conditional, undo_redo, commands_container)
 	cond_editor.close_pressed.connect(_on_conditional_close_button_pressed)
 	cond_editor.change_index.connect(_on_change_conditional_index)
-	conditional.changed.connect(func(): self.cond_changed.emit())
+	conditional.changed.connect(changed)
+	cond_editors_container.add_child(cond_editor, true)
+	return cond_editor
+
+
+func build_current_command_conditional_editors() -> void:
+	for e in cond_editors_container.get_children():
+		cond_editors_container.remove_child(e)
+		e.queue_free()
+
+	if current_command.conditionals.is_empty():
+		return
+
+	var cond_control := create_conditional_editor(current_command.conditionals.front())
+	cond_control.sequencer_check.visible = false
+	cond_control.up_button.disabled = true
+	for i: int in range(1, current_command.conditionals.size()):
+		cond_control = create_conditional_editor(current_command.conditionals[i])
+	cond_control.down_button.disabled = true
+	changed()
 
 
 func add_conditional(conditional: ConditionResource = null, idx := -1) -> void:
@@ -83,32 +98,15 @@ func add_conditional(conditional: ConditionResource = null, idx := -1) -> void:
 		current_command.conditionals.append(conditional)
 	else:
 		current_command.conditionals.insert(idx, conditional)
-	build_current_command_conditional_editors(current_command.conditionals)
-
-
-func build_current_command_conditional_editors(conditionals: Array) -> void:
-	var _children := cond_editors_container.get_children()
-
-	for e in _children:
-		cond_editors_container.remove_child(e)
-
-	for r in _children:
-		r.queue_free()
-
-	current_command.conditionals = conditionals
-	for c in current_command.conditionals:
-		create_conditional_editor(c)
-	if cond_editors_container.get_child_count() > 0:
-		cond_editors_container.get_children()[-1].down_button.disabled = true
-
-	changed()
+	build_current_command_conditional_editors()
 
 
 func remove_conditional(conditional: ConditionResource) -> void:
 	for e in cond_editors_container.get_children():
 		if e.get_conditional() == conditional:
 			current_command.conditionals.erase(e.get_conditional())
-			build_current_command_conditional_editors(current_command.conditionals)
+			build_current_command_conditional_editors()
+			break
 	changed()
 
 
@@ -160,7 +158,7 @@ func change_conditional_index(dir: int, idx: int) -> void:
 		else:
 			push_error("couldn't insert at indx", idx + 2, "in Array", current_command.conditionals)
 			return
-	build_current_command_conditional_editors(current_command.conditionals)
+	build_current_command_conditional_editors()
 
 
 func changed() -> void:
