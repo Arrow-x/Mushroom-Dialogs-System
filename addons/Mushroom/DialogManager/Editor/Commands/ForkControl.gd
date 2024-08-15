@@ -59,6 +59,33 @@ func removing_choice_action(choice_c: Control) -> void:
 	undo_redo.commit_action()
 
 
+func create_choice_control(choice: Choice) -> Control:
+	var choice_control: Control = i_choice_control.instantiate()
+
+	choices_container.add_child(choice_control)
+
+	choice_control.set_up(choice, flowchart, undo_redo, commands_container, self)
+	choice_control.change_index.connect(_on_change_index)
+	if !choice.changed.is_connected(is_changed):
+		choice.changed.connect(is_changed)
+	return choice_control
+
+
+func create_choices() -> void:
+	for c in choices_container.get_children():
+		choices_container.remove_child(c)
+		c.queue_free()
+
+	if current_fork.choices.is_empty():
+		return
+
+	var choice_control: Control = create_choice_control(current_fork.choices.front())
+	choice_control.up_button.disabled = true
+	for i: int in range(1, current_fork.choices.size()):
+		choice_control = create_choice_control(current_fork.choices[i])
+	choice_control.down_button.disabled = true
+
+
 func add_choice_resource(choice: Choice, idx: int = -1) -> void:
 	if idx == -1:
 		current_fork.choices.append(choice)
@@ -86,41 +113,22 @@ func update_block_in_graph(sender: Block) -> void:
 	is_changed()
 
 
-func create_choice_control(choice: Choice) -> Control:
-	var choice_control: Control = i_choice_control.instantiate()
-
-	choices_container.add_child(choice_control)
-
-	choice_control.set_up(choice, flowchart, undo_redo, commands_container, self)
-	choice_control.change_index.connect(_on_change_index)
-	if !choice.changed.is_connected(is_changed):
-		choice.changed.connect(is_changed)
-	is_changed()
-	return choice_control
-
-
 func _on_change_index(dir: int, choice: Choice) -> void:
 	var idx: int = current_fork.choices.find(choice)
 	undo_redo.create_action("Change Choice order")
-	(
-		undo_redo
-		. add_do_method(
-			commands_container,
-			"command_undo_redo_caller",
-			"change_choice_index",
-			[dir, idx],
-			current_fork,
-		)
+	undo_redo.add_do_method(
+		commands_container,
+		"command_undo_redo_caller",
+		"change_choice_index",
+		[dir, idx],
+		current_fork
 	)
-	(
-		undo_redo
-		. add_undo_method(
-			commands_container,
-			"command_undo_redo_caller",
-			"change_choice_index",
-			[dir, idx],
-			current_fork,
-		)
+	undo_redo.add_undo_method(
+		commands_container,
+		"command_undo_redo_caller",
+		"change_choice_index",
+		[dir, idx],
+		current_fork
 	)
 	undo_redo.commit_action()
 
@@ -152,22 +160,6 @@ func change_choice_index(dir: int, idx: int) -> void:
 			push_error("couldn't insert at indx", idx + 2, "in Array", current_fork.choices)
 			return
 	create_choices()
-
-
-func create_choices() -> void:
-	var _children := choices_container.get_children()
-	for c in _children:
-		choices_container.remove_child(c)
-		c.queue_free()
-
-	if current_fork.choices.is_empty():
-		return
-
-	var choice_control: Control = create_choice_control(current_fork.choices.front())
-	choice_control.up_button.disabled = true
-	for i: int in range(1, current_fork.choices.size()):
-		choice_control = create_choice_control(current_fork.choices[i])
-	choice_control.down_button.disabled = true
 
 
 func get_command() -> Command:
