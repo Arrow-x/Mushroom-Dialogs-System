@@ -71,12 +71,16 @@ func create_conditional_editor(conditional: ConditionResource) -> Control:
 	cond_editor.set_up(current_command, conditional, undo_redo, commands_container)
 	cond_editor.close_pressed.connect(_on_conditional_close_button_pressed)
 	cond_editor.change_index.connect(_on_change_conditional_index)
-	conditional.changed.connect(changed)
+	if not conditional.changed.is_connected(changed):
+		conditional.changed.connect(changed)
 	cond_editors_container.add_child(cond_editor, true)
 	return cond_editor
 
 
 func build_current_command_conditional_editors() -> void:
+	# HACK: remove the node from the tree first then mark it to be deleted, so
+	# any operations on the nodetree can happend with the garentee that this
+	# node is not there
 	for e in cond_editors_container.get_children():
 		cond_editors_container.remove_child(e)
 		e.queue_free()
@@ -102,12 +106,8 @@ func add_conditional(conditional: ConditionResource = null, idx := -1) -> void:
 
 
 func remove_conditional(conditional: ConditionResource) -> void:
-	for e in cond_editors_container.get_children():
-		if e.get_conditional() == conditional:
-			current_command.conditionals.erase(e.get_conditional())
-			build_current_command_conditional_editors()
-			break
-	changed()
+	current_command.conditionals.erase(conditional)
+	build_current_command_conditional_editors()
 
 
 func _on_change_conditional_index(dir: int, cond: ConditionResource) -> void:
