@@ -22,6 +22,8 @@ var modified := false
 signal done_saving
 signal f_tab_changed(flowchart: FlowChart)
 
+const INSTANCE_LOCATION := "res://addons/Mushroom/DialogManager/misc/args.tres"
+
 
 func check_for_duplicates(name) -> bool:
 	for n in flowchart.blocks:
@@ -310,7 +312,6 @@ func get_type_from_string(value: String) -> Array:
 	if value.is_empty():
 		return []
 	var raw = load("res://addons/Mushroom/DialogManager/misc/Args.gd").new()
-	const INSTANCE_LOCATION := "res://addons/Mushroom/DialogManager/misc/args.tres"
 	ResourceSaver.save(raw, INSTANCE_LOCATION)
 	raw = null
 	var file_read := FileAccess.open(INSTANCE_LOCATION, FileAccess.READ)
