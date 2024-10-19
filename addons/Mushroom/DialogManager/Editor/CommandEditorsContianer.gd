@@ -1,5 +1,5 @@
 @tool
-extends Node
+extends Control
 
 @export var i_animation_control: PackedScene
 @export var i_call_function_control: PackedScene

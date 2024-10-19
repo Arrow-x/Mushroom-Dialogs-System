@@ -64,7 +64,7 @@ func _rmb_menu_index_pressed(idx: int) -> void:
 		"Paste":
 			on_commands_paste()
 		_:
-			push_error("Unknow key in right menu button")
+			push_error("CommandsTree: Unknow key in right menu button")
 
 
 func on_commands_delete() -> void:
