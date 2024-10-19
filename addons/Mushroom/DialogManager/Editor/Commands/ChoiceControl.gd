@@ -9,6 +9,8 @@ extends Control
 @export var sperator: Control
 @export var up_button: Button
 @export var down_button: Button
+@export var select_indicator: PanelContainer
+@export var selected_stylebox: StyleBoxFlat
 
 var current_choice: Choice
 var flowchart: FlowChart
@@ -17,6 +19,22 @@ var commands_container: Node
 var fork: Control
 
 signal change_index
+
+
+func _gui_input(event: InputEvent) -> void:
+	if not event is InputEventMouseButton:
+		return
+	if event.button_index != 1 and event.button_index != 2:
+		return
+	if event.is_released() == true:
+		return
+
+	if event.shift_pressed == false:
+		fork.clear_all_choices_selection()
+
+	fork.select_choice(current_choice)
+	select_indicator.add_theme_stylebox_override("panel", selected_stylebox)
+	accept_event()
 
 
 func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_c: Node, f: Control) -> void:
@@ -36,8 +54,14 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_c: Node, f:
 	cond_box.set_up(current_choice, undo_redo, commands_container)
 
 
+
+
+func clear_choice_selection() -> void:
+	select_indicator.remove_theme_stylebox_override("panel")
+
+
 func _on_delete_choice_pressed() -> void:
-	fork.removing_choice_action(self)
+	fork.removing_choice_action(current_choice)
 	fork.update_block_in_graph(fork.current_block)
 
 
@@ -48,7 +72,7 @@ func _on_next_index_value_changed(value: float) -> void:
 
 func _on_next_blocklist_about_to_show() -> void:
 	var menu: PopupMenu = next_block_menu.get_popup()
-	if !menu.index_pressed.is_connected(change_next_bloc):
+	if not menu.index_pressed.is_connected(change_next_bloc):
 		menu.index_pressed.connect(change_next_bloc.bind(menu))
 	menu.clear()
 	for b in flowchart.blocks:

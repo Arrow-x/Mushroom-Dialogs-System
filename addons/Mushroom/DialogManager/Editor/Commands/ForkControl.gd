@@ -11,9 +11,22 @@ var flowchart: FlowChart
 var undo_redo: EditorUndoRedoManager
 var graph: GraphEdit
 var commands_container: Node
+var choices_selection_clipboard: Dictionary
 
 signal adding_choice
 enum { UP, DOWN }
+
+
+func select_choice(choice: Choice) -> void:
+	choices_selection_clipboard[choice] = {
+		"index": current_fork.choices.find(choice), "parent": current_fork
+	}
+
+
+func clear_all_choices_selection() -> void:
+	choices_selection_clipboard.clear()
+	for c in choices_container.get_children():
+		c.clear_choice_selection()
 
 
 func set_up(
@@ -42,19 +55,16 @@ func _on_add_choice_button_pressed() -> void:
 	undo_redo.commit_action()
 
 
-func removing_choice_action(choice_c: Control) -> void:
+func removing_choice_action(choice: Choice) -> void:
 	undo_redo.create_action("Removing Choice")
 	undo_redo.add_do_method(
-		commands_container,
-		"command_undo_redo_caller",
-		"free_choice_control",
-		[choice_c.current_choice]
+		commands_container, "command_undo_redo_caller", "free_choice_control", [choice]
 	)
 	undo_redo.add_undo_method(
 		commands_container,
 		"command_undo_redo_caller",
 		"add_choice_resource",
-		[choice_c.current_choice, choice_c.get_index()]
+		[choice, current_fork.choices.find(choice)]
 	)
 	undo_redo.commit_action()
 

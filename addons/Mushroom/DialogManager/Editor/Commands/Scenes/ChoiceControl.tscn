@@ -1,98 +1,107 @@
-[gd_scene load_steps=3 format=3 uid="uid://dnwd4iberh8eq"]
+[gd_scene load_steps=4 format=3 uid="uid://dnwd4iberh8eq"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.gd" id="1"]
+[ext_resource type="StyleBox" uid="uid://bx20db7tg3oxa" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/seleted_stylebox.tres" id="2_8ddfm"]
 [ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionContainer.tscn" id="2_fvplh"]
 
-[node name="Control" type="VBoxContainer" node_paths=PackedStringArray("choice_text", "next_block_menu", "next_index_text", "delete_choice", "cond_box", "sperator", "up_button", "down_button")]
-anchors_preset = 10
+[node name="Control" type="VBoxContainer" node_paths=PackedStringArray("choice_text", "next_block_menu", "next_index_text", "delete_choice", "cond_box", "sperator", "up_button", "down_button", "select_indicator")]
+anchors_preset = -1
 anchor_right = 1.0
-offset_bottom = 129.0
+anchor_bottom = 0.199
+offset_bottom = 0.0479889
 grow_horizontal = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 focus_mode = 1
 script = ExtResource("1")
-choice_text = NodePath("HBoxContainer6/VBoxContainer/HBoxContainer/ChoiceText")
-next_block_menu = NodePath("HBoxContainer6/VBoxContainer/HBoxContainer2/NextBlockList")
-next_index_text = NodePath("HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3/NextIndex")
-delete_choice = NodePath("HBoxContainer6/VBoxContainer2/DeleteChoice")
-cond_box = NodePath("HBoxContainer6/VBoxContainer/CondVBoxContainer")
-sperator = NodePath("HBoxContainer6/VBoxContainer/Sperator")
-up_button = NodePath("HBoxContainer6/VBoxContainer2/UpButton")
-down_button = NodePath("HBoxContainer6/VBoxContainer2/DownButton")
+choice_text = NodePath("SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer/ChoiceText")
+next_block_menu = NodePath("SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer2/NextBlockList")
+next_index_text = NodePath("SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3/NextIndex")
+delete_choice = NodePath("SelectIndicator/HBoxContainer6/VBoxContainer2/DeleteChoice")
+cond_box = NodePath("SelectIndicator/HBoxContainer6/VBoxContainer/CondVBoxContainer")
+sperator = NodePath("SelectIndicator/HBoxContainer6/VBoxContainer/Sperator")
+up_button = NodePath("SelectIndicator/HBoxContainer6/VBoxContainer2/UpButton")
+down_button = NodePath("SelectIndicator/HBoxContainer6/VBoxContainer2/DownButton")
+select_indicator = NodePath("SelectIndicator")
+selected_stylebox = ExtResource("2_8ddfm")
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="."]
+[node name="SelectIndicator" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="SelectIndicator"]
 layout_mode = 2
 size_flags_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer6"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SelectIndicator/HBoxContainer6"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Panel2" type="Panel" parent="HBoxContainer6/VBoxContainer"]
+[node name="Panel2" type="Panel" parent="SelectIndicator/HBoxContainer6/VBoxContainer"]
 modulate = Color(0, 0.6, 1, 1)
 custom_minimum_size = Vector2(0, 2.6)
 layout_mode = 2
 
-[node name="Sperator" type="Control" parent="HBoxContainer6/VBoxContainer"]
+[node name="Sperator" type="Control" parent="SelectIndicator/HBoxContainer6/VBoxContainer"]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer6/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SelectIndicator/HBoxContainer6/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer6/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Choice Text"
 
-[node name="ChoiceText" type="LineEdit" parent="HBoxContainer6/VBoxContainer/HBoxContainer"]
+[node name="ChoiceText" type="LineEdit" parent="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer6/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SelectIndicator/HBoxContainer6/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer6/VBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 text = "Block"
 
-[node name="NextBlockList" type="MenuButton" parent="HBoxContainer6/VBoxContainer/HBoxContainer2"]
+[node name="NextBlockList" type="MenuButton" parent="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 flat = false
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer6/VBoxContainer/HBoxContainer2"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3"]
+[node name="Label" type="Label" parent="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3"]
 layout_mode = 2
 text = "Index "
 
-[node name="NextIndex" type="SpinBox" parent="HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3"]
+[node name="NextIndex" type="SpinBox" parent="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3"]
 layout_mode = 2
 
-[node name="CondVBoxContainer" parent="HBoxContainer6/VBoxContainer" instance=ExtResource("2_fvplh")]
+[node name="CondVBoxContainer" parent="SelectIndicator/HBoxContainer6/VBoxContainer" instance=ExtResource("2_fvplh")]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer6"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="SelectIndicator/HBoxContainer6"]
 layout_mode = 2
 
-[node name="DeleteChoice" type="Button" parent="HBoxContainer6/VBoxContainer2"]
+[node name="DeleteChoice" type="Button" parent="SelectIndicator/HBoxContainer6/VBoxContainer2"]
 layout_mode = 2
 text = "X"
 
-[node name="UpButton" type="Button" parent="HBoxContainer6/VBoxContainer2"]
+[node name="UpButton" type="Button" parent="SelectIndicator/HBoxContainer6/VBoxContainer2"]
 layout_mode = 2
 text = "U"
 
-[node name="DownButton" type="Button" parent="HBoxContainer6/VBoxContainer2"]
+[node name="DownButton" type="Button" parent="SelectIndicator/HBoxContainer6/VBoxContainer2"]
 layout_mode = 2
 text = "D"
 
-[connection signal="text_changed" from="HBoxContainer6/VBoxContainer/HBoxContainer/ChoiceText" to="." method="_on_choicetext_text_changed"]
-[connection signal="about_to_popup" from="HBoxContainer6/VBoxContainer/HBoxContainer2/NextBlockList" to="." method="_on_next_blocklist_about_to_show"]
-[connection signal="value_changed" from="HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3/NextIndex" to="." method="_on_next_index_value_changed"]
-[connection signal="cond_changed" from="HBoxContainer6/VBoxContainer/CondVBoxContainer" to="." method="_on_conditional_changed"]
-[connection signal="pressed" from="HBoxContainer6/VBoxContainer2/DeleteChoice" to="." method="_on_delete_choice_pressed"]
-[connection signal="pressed" from="HBoxContainer6/VBoxContainer2/UpButton" to="." method="_on_up_button_pressed"]
-[connection signal="pressed" from="HBoxContainer6/VBoxContainer2/DownButton" to="." method="_on_down_button_pressed"]
+[connection signal="text_changed" from="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer/ChoiceText" to="." method="_on_choicetext_text_changed"]
+[connection signal="about_to_popup" from="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer2/NextBlockList" to="." method="_on_next_blocklist_about_to_show"]
+[connection signal="value_changed" from="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer2/HBoxContainer3/NextIndex" to="." method="_on_next_index_value_changed"]
+[connection signal="cond_changed" from="SelectIndicator/HBoxContainer6/VBoxContainer/CondVBoxContainer" to="." method="_on_conditional_changed"]
+[connection signal="pressed" from="SelectIndicator/HBoxContainer6/VBoxContainer2/DeleteChoice" to="." method="_on_delete_choice_pressed"]
+[connection signal="pressed" from="SelectIndicator/HBoxContainer6/VBoxContainer2/UpButton" to="." method="_on_up_button_pressed"]
+[connection signal="pressed" from="SelectIndicator/HBoxContainer6/VBoxContainer2/DownButton" to="." method="_on_down_button_pressed"]
