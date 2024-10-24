@@ -137,8 +137,11 @@ func command_undo_redo_caller(
 				continue
 			object = c
 			break
+	elif is_condition_container == true:
+		object = current_ed.cond_box
+
 	else:
-		object = current_ed.cond_box if is_condition_container == true else current_ed
+		object = current_ed
 
 	if object == null:
 		push_error("Can't find the calling object")
