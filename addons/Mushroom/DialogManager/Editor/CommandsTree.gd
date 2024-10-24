@@ -18,6 +18,7 @@ var undo_redo: EditorUndoRedoManager
 var graph_edit: GraphEdit
 
 var prev_selected_Command: Command
+var prev_selected_Block: Block
 
 
 func _ready() -> void:
@@ -184,6 +185,8 @@ func full_clear() -> void:
 	self.clear()
 	current_block = null
 	current_block_label.text = ""
+	for i in commands_settings.get_children():
+		i.queue_free()
 
 
 func _on_add_command(id: int, on_item := false, is_rmb := false) -> void:
@@ -335,13 +338,12 @@ func delete_command(index: int, parent_treeitem: TreeItem = null) -> void:
 		del_block.commands.remove_at(del_block.commands.size() - 1)
 	else:
 		del_block.commands.remove_at(index)
-	free_Command_editor(command)
+	free_Command_editor()
 
 
-func free_Command_editor(command: Command) -> void:
+func free_Command_editor() -> void:
 	for c_s in commands_settings.get_children():
-		if c_s.get_command() == command:
-			c_s.queue_free()
+		c_s.queue_free()
 
 
 func _get_drag_data(_position: Vector2):
@@ -551,12 +553,15 @@ func update_command_preview(cmd: Command) -> void:
 
 func _on_tree_item_double_clicked() -> void:
 	var sel_c: Command = get_selected().get_meta("command")
+	if prev_selected_Block != null:
+		if current_block != prev_selected_Block:
+			prev_selected_Block = null
 	undo_redo.create_action("selecting a command")
 	undo_redo.add_do_method(self, "create_command_editor", sel_c)
 	undo_redo.add_undo_method(self, "create_command_editor", prev_selected_Command)
 	undo_redo.commit_action()
-
 	prev_selected_Command = sel_c
+	prev_selected_Block = current_block
 
 
 func create_command_editor(current_item = null) -> void:
@@ -567,6 +572,8 @@ func create_command_editor(current_item = null) -> void:
 
 	if current_item == null:
 		return
+
+	free_Command_editor()
 
 	if !current_item.changed.is_connected(update_command_preview):
 		current_item.changed.connect(update_command_preview)
