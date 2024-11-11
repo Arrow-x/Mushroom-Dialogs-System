@@ -1,11 +1,22 @@
 @tool
 extends EditorPlugin
 
-const editor := preload("res://addons/Mushroom/DialogManager/Editor/Scenes/Editor.tscn")
 var editor_instance
 
 
 func _enter_tree():
+	const DEFAULT_TRANSLATION := "res://Translations/default.en.translation"
+	const TRANSLATION_SETTING := "internationalization/locale/translations"
+
+	var translation_setting := ProjectSettings.get_setting(TRANSLATION_SETTING)
+
+	if translation_setting.is_empty() or TranslationServer.get_translation_object("en") == null:
+		var new_defult_translation := Translation.new()
+		new_defult_translation.locale = "en"
+		ResourceSaver.save(new_defult_translation, DEFAULT_TRANSLATION)
+		ProjectSettings.set_setting(TRANSLATION_SETTING, PackedStringArray([DEFAULT_TRANSLATION]))
+
+	var editor := preload("res://addons/Mushroom/DialogManager/Editor/Scenes/Editor.tscn")
 	editor_instance = editor.instantiate()
 	remove_autoload_singleton("DialogManagerNode")
 	add_autoload_singleton(
