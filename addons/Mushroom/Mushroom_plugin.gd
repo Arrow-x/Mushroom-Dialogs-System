@@ -13,6 +13,7 @@ func _enter_tree():
 	if translation_setting.is_empty() or TranslationServer.get_translation_object("en") == null:
 		var new_defult_translation := Translation.new()
 		new_defult_translation.locale = "en"
+		DirAccess.make_dir_absolute("res://Translations/")
 		ResourceSaver.save(new_defult_translation, DEFAULT_TRANSLATION)
 		ProjectSettings.set_setting(TRANSLATION_SETTING, PackedStringArray([DEFAULT_TRANSLATION]))
 
