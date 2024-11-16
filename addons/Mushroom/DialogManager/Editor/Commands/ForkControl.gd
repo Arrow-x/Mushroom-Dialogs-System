@@ -4,6 +4,7 @@ extends Control
 @export var i_choice_control: PackedScene
 @export var choices_container: VBoxContainer
 @export var choices_scroll_bar: ScrollContainer
+@export var right_click_menu: PopupMenu
 
 var current_fork: ForkCommand
 var current_block: Block
@@ -15,6 +16,35 @@ var choices_selection_clipboard: Dictionary
 
 signal adding_choice
 enum { UP, DOWN }
+
+
+func _gui_input(event: InputEvent) -> void:
+	if not event is InputEventMouseButton:
+		return
+	if event.button_index == 2:
+		create_right_click_menu()
+		accept_event()
+		return
+	if event.button_index != 1:
+		return
+	if event.is_released() == true:
+		return
+
+	clear_all_choices_selection()
+	accept_event()
+
+
+func create_right_click_menu() -> void:
+	right_click_menu.clear()
+	if !choices_selection_clipboard.is_empty():
+		right_click_menu.add_item("Copy")
+		right_click_menu.add_item("Cut")
+	if !MainEditor.choices_clipboard.is_empty():
+		right_click_menu.add_item("Paste")
+	if !choices_selection_clipboard.is_empty():
+		right_click_menu.add_item("Delete")
+	var gmp := get_global_mouse_position()
+	right_click_menu.popup(Rect2(gmp.x, gmp.y, 0, 0))
 
 
 func select_choice(choice: Choice) -> void:
@@ -40,6 +70,115 @@ func set_up(
 	commands_container = cmd_c
 
 	current_fork.origin_block = current_block.name
+	right_click_menu.index_pressed.connect(_on_right_click_menu_item_clicked.bind(right_click_menu))
+	create_choices()
+
+
+func _on_right_click_menu_item_clicked(id: int, right_click_menu: PopupMenu) -> void:
+	match right_click_menu.get_item_text(id):
+		"Copy":
+			MainEditor.choices_clipboard = choices_selection_clipboard
+
+		"Cut":
+			_on_cutting_choices(choices_selection_clipboard)
+
+		"Paste":
+			_on_pasting_choices()
+
+		"Delete":
+			removing_choice_action(choices_selection_clipboard.keys())
+
+		_:
+			push_error("Choice Editor: Unknow key in right menu button")
+
+
+func _on_cutting_choices(choices: Dictionary) -> void:
+	undo_redo.create_action("Cut Choice(s)")
+	undo_redo.add_do_method(
+		commands_container, "command_undo_redo_caller", "cut_choices", [choices]
+	)
+	undo_redo.add_undo_method(
+		commands_container,
+		"command_undo_redo_caller",
+		"undo_cut_choices",
+		[MainEditor.choices_clipboard]
+	)
+	undo_redo.commit_action()
+
+
+func cut_choices(choices: Dictionary) -> void:
+	MainEditor.choices_clipboard = choices
+	for c in MainEditor.choices_clipboard:
+		if current_fork.choices.has(c):
+			current_fork.choices.erase(c)
+			TranslationServer.get_translation_object("en").erase_message(c.tr_code)
+	create_choices()
+
+
+func undo_cut_choices(clipboard: Dictionary) -> void:
+	if clipboard.is_empty():
+		push_error("the choices clipboard is empty")
+		return
+
+	for c: Choice in clipboard:
+		if clipboard[c].is_empty():
+			push_error("the choices clipboard has copied items")
+			return
+
+	var idx: int
+	for cc: Choice in clipboard:
+		idx = clipboard[cc]["index"]
+		if current_fork.choices.size() < idx + 1:
+			current_fork.choices.resize(idx)
+
+		current_fork.choices.insert(idx, cc)
+	create_choices()
+
+
+func _on_pasting_choices() -> void:
+	var new_clip: Dictionary
+	var new_choice: Choice
+	for c in MainEditor.choices_clipboard:
+		new_choice = Choice.new()
+		new_choice.next_block = c.next_block
+		new_choice.next_index = c.next_index
+		new_choice.choice_text = c.choice_text
+		new_choice.conditionals = FlowChartTabs.duplicate_array(c.conditionals)
+		new_clip[new_choice] = {}
+
+	undo_redo.create_action("Pasting choice(s)")
+	undo_redo.add_do_method(
+		commands_container, "command_undo_redo_caller", "paste_choices", [new_clip]
+	)
+	undo_redo.add_undo_method(
+		commands_container, "command_undo_redo_caller", "undo_paste_choices", [new_clip]
+	)
+	undo_redo.commit_action()
+
+
+func paste_choices(clip: Dictionary) -> void:
+	var idx: int = -1
+	if not choices_selection_clipboard.is_empty():
+		for c in choices_selection_clipboard:
+			if choices_selection_clipboard[c].index > idx:
+				idx = choices_selection_clipboard[c].index
+
+	for c in clip:
+		if idx == -1:
+			current_fork.choices.append(c)
+		elif idx + 1 < current_fork.choices.size():
+			current_fork.choices.insert(idx + 1, c)
+		else:
+			current_fork.choices.append(c)
+
+		idx += 1
+	create_choices()
+
+
+func undo_paste_choices(clip: Dictionary) -> void:
+	for c in clip:
+		current_fork.choices.erase(c)
+		TranslationServer.get_translation_object("en").erase_message(c.tr_code)
 	create_choices()
 
 
@@ -55,18 +194,32 @@ func _on_add_choice_button_pressed() -> void:
 	undo_redo.commit_action()
 
 
-func removing_choice_action(choice: Choice) -> void:
-	undo_redo.create_action("Removing Choice")
+func removing_choice_action(choices: Array) -> void:
+	var idxs: Array[int]
+	for c: Choice in choices:
+		idxs.append(choices.find(c))
+	assert(
+		idxs.size() == choices.size(), "the choice array is not alligned witht the indexes array"
+	)
+
+	undo_redo.create_action("Removing Choice(s)")
 	undo_redo.add_do_method(
-		commands_container, "command_undo_redo_caller", "free_choice_control", [choice]
+		commands_container, "command_undo_redo_caller", "free_choice_controls", [choices]
 	)
 	undo_redo.add_undo_method(
-		commands_container,
-		"command_undo_redo_caller",
-		"add_choice_resource",
-		[choice, current_fork.choices.find(choice)]
+		commands_container, "command_undo_redo_caller", "undo_free_choice_controls", [choices, idxs]
 	)
 	undo_redo.commit_action()
+
+
+func free_choice_controls(choices: Array) -> void:
+	for c: Choice in choices:
+		free_choice_control(c)
+
+
+func undo_free_choice_controls(choices: Array, idxs: Array) -> void:
+	for i: int in choices.size():
+		add_choice_resource(choices[i], idxs[i])
 
 
 func create_choice_control(choice: Choice) -> Control:

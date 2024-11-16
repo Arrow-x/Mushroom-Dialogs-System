@@ -61,7 +61,7 @@ func clear_choice_selection() -> void:
 
 
 func _on_delete_choice_pressed() -> void:
-	fork.removing_choice_action(current_choice)
+	fork.removing_choice_action([current_choice])
 	fork.update_block_in_graph(fork.current_block)
 
 

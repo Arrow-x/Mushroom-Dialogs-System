@@ -384,7 +384,7 @@ func deep_duplicate_command(cmd: Command, outputs: Array[ForkCommand] = [null]) 
 	return command
 
 
-func duplicate_array(input: Array) -> Array:
+static func duplicate_array(input: Array) -> Array:
 	var ret_arr: Array = []
 	for d in input:
 		if d is Object:
