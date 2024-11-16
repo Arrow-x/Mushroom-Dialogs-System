@@ -6,16 +6,12 @@ class_name FlowChartTabs extends Node
 @export var command_tree: Tree
 @export var enter_name_scene: PackedScene
 @export var current_block_name: Label
-@export var translation_lineedit: LineEdit
 @export var export_button: Button
 
 var flowchart: FlowChart
 var flow_tabs: TabBar
 var undo_redo: EditorUndoRedoManager
 var main_editor: Control
-
-var plugin_config: ConfigFile
-var default_translation_location: String
 
 var modified := false
 
@@ -50,21 +46,11 @@ func set_flowchart(chart: FlowChart, sent_undo_redo: EditorUndoRedoManager, ed: 
 	command_tree.flowchart_tab = self
 	command_tree.tree_changed.connect(changed_flowchart)
 
-	plugin_config = ConfigFile.new()
-	plugin_config.load("res://addons/Mushroom/mushroom_configs.cfg")
-	default_translation_location = plugin_config.get_value(
-		"translation", "translation_file", "res://Translations/default.en.translation"
+	export_button.pressed.connect(
+		translation_to_csv.bind(TranslationServer.get_translation_object("en"))
 	)
-	translation_lineedit.text = default_translation_location
-	translation_lineedit.text_changed.connect(_on_translation_linedit_text_change)
-	export_button.pressed.connect(translation_to_csv.bind(load(default_translation_location)))
 
 	graph_edit.sync_flowchart_graph(flowchart)
-
-
-func _on_translation_linedit_text_change(new_text: String) -> void:
-	plugin_config.set_value("translation", "translation_file", new_text)
-	default_translation_location = new_text
 
 
 func check_flowchart_path_before_save() -> void:
@@ -88,12 +74,10 @@ func check_flowchart_path_before_save() -> void:
 
 func save_flowchart_to_disc(path: String, overwrite := false) -> void:
 	ResourceSaver.save(flowchart, path)
-	var default_translation: Translation = load(default_translation_location)
-	if default_translation == null:
-		push_error("FlowChartTabs: couldn't get the english translation file")
-		return
-	ResourceSaver.save(default_translation, default_translation_location)
-	plugin_config.save("res://addons/Mushroom/mushroom_configs.cfg")
+	for translation_resource in ProjectSettings.get_setting(
+		"internationalization/locale/translations"
+	):
+		ResourceSaver.save(load(translation_resource), translation_resource)
 	if overwrite == true:
 		flowchart.set_path(path)
 
@@ -114,7 +98,7 @@ func changed_flowchart(f: FlowChart = null) -> void:
 
 
 func replace_text_with_code(i_flowchart: FlowChart) -> void:
-	var default_translation: Translation = load(default_translation_location)
+	var default_translation: Translation = TranslationServer.get_translation_object("en")
 	if default_translation == null:
 		push_error("FlowChartTabs: couldn't get the english translation file")
 		return

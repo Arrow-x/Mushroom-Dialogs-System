@@ -23,7 +23,7 @@
 [ext_resource type="Texture2D" uid="uid://dtls4a5peg1dd" path="res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png" id="15_cx1ab"]
 [ext_resource type="PackedScene" uid="uid://t1hlq3er4wuh" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ShowMediaControl.tscn" id="17_stbgo"]
 
-[node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree", "current_block_name", "translation_lineedit", "export_button")]
+[node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree", "current_block_name", "export_button")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -35,7 +35,6 @@ add_block_button = NodePath("GraphContainer/GraphHeader/GraphHeaderContainer/Add
 command_tree = NodePath("InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree")
 enter_name_scene = ExtResource("8_mcj0f")
 current_block_name = NodePath("InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/HBoxContainer/CurrentBlock")
-translation_lineedit = NodePath("InspectorTabContainer/FlowChartSettings/VBoxContainer/HBoxContainerLocation/LineEdit")
 export_button = NodePath("InspectorTabContainer/FlowChartSettings/VBoxContainer/HBoxContainerExport/ExportButton")
 metadata/_edit_vertical_guides_ = [-133.0]
 
@@ -121,21 +120,6 @@ size_flags_horizontal = 3
 metadata/_tab_index = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="InspectorTabContainer/FlowChartSettings"]
-layout_mode = 2
-
-[node name="HBoxContainerLocation" type="VBoxContainer" parent="InspectorTabContainer/FlowChartSettings/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="InspectorTabContainer/FlowChartSettings/VBoxContainer/HBoxContainerLocation"]
-layout_mode = 2
-text = "localtion of english translation file: "
-
-[node name="LineEdit" type="LineEdit" parent="InspectorTabContainer/FlowChartSettings/VBoxContainer/HBoxContainerLocation"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Panel" type="Panel" parent="InspectorTabContainer/FlowChartSettings/VBoxContainer"]
-custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 
 [node name="HBoxContainerExport" type="HBoxContainer" parent="InspectorTabContainer/FlowChartSettings/VBoxContainer"]
