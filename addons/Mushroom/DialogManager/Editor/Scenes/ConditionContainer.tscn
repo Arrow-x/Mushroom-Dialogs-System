@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/ConditionContainer.gd" id="1_k6vvh"]
 [ext_resource type="PackedScene" uid="uid://7hkgqixxw3bw" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionEditor.tscn" id="2_wyjny"]
 
-[node name="CondVBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("cond_editors_container")]
+[node name="CondVBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("cond_editors_container", "right_click_menu")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -14,6 +14,7 @@ size_flags_vertical = 3
 script = ExtResource("1_k6vvh")
 conditional_editor_scene = ExtResource("2_wyjny")
 cond_editors_container = NodePath("CondEditorsContainer")
+right_click_menu = NodePath("PopupMenu")
 
 [node name="CondEditorsContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -23,5 +24,9 @@ size_flags_vertical = 3
 [node name="AddConditionalButton" type="Button" parent="."]
 layout_mode = 2
 text = "add condition"
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+auto_translate_mode = 1
+item_count = 1
 
 [connection signal="pressed" from="AddConditionalButton" to="." method="_on_add_conditional_button_pressed"]

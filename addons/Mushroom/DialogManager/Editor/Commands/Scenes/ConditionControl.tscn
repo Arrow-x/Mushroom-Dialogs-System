@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ConditionControl.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionContainer.tscn" id="2_hufaf"]
 
-[node name="Control" type="VBoxContainer" node_paths=PackedStringArray("cond_box", "cond_editors_container")]
+[node name="Control" type="VBoxContainer" node_paths=PackedStringArray("cond_box", "right_click_menu")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,10 +11,13 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
 cond_box = NodePath("CondVBoxContainer")
-cond_editors_container = NodePath("CondVBoxContainer/CondEditorsContainer")
+right_click_menu = NodePath("PopupMenu")
 
 [node name="CondVBoxContainer" parent="." instance=ExtResource("2_hufaf")]
-visible = true
 layout_mode = 2
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+auto_translate_mode = 1
+item_count = 1
 
 [editable path="CondVBoxContainer"]

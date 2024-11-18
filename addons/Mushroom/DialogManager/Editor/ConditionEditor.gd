@@ -1,5 +1,5 @@
 @tool
-extends Node
+extends Control
 
 @export var sequencer_check: CheckButton
 @export var check_operation: MenuButton
@@ -11,10 +11,15 @@ extends Node
 @export var val_or_return_label: Label
 @export var up_button: Button
 @export var down_button: Button
+@export var select_indicator: Container
+@export var selected_stylebox: StyleBoxFlat
 
 var current_conditional: ConditionResource
 var undo_redo: EditorUndoRedoManager
 var commands_container: Node
+var current_command
+var conditionals_container: Control
+
 
 enum {
 	UP,
@@ -25,10 +30,33 @@ signal close_pressed
 signal change_index
 
 
-func set_up(conditional: ConditionResource, u_r: EditorUndoRedoManager, cmd_c: Node) -> void:
+func _gui_input(event: InputEvent) -> void:
+	if not event is InputEventMouseButton:
+		return
+	if event.button_index != 1 and event.button_index != 2:
+		return
+	if event.is_released() == true:
+		return
+
+	if event.shift_pressed == false:
+		conditionals_container.clear_all_conditionals_selection()
+
+	conditionals_container.select_conditional(current_conditional)
+
+	select_indicator.add_theme_stylebox_override("panel", selected_stylebox)
+	accept_event()
+
+
+func clear_conditional_selection() -> void:
+	select_indicator.remove_theme_stylebox_override("panel")
+
+
+func set_up(c_cmd, conditional: ConditionResource, u_r: EditorUndoRedoManager, cmd_c: Node, cc: Control) -> void:
 	current_conditional = conditional
 	undo_redo = u_r
 	commands_container = cmd_c
+	current_command = c_cmd
+	conditionals_container = cc
 
 	var check_op_popup: PopupMenu = check_operation.get_popup()
 	check_op_popup.id_pressed.connect(_on_check_operation_popup.bind(check_op_popup))

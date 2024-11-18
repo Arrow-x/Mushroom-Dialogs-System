@@ -7,6 +7,7 @@ class_name MainEditor extends Control
 
 static var commands_clipboard: Array
 static var block_clipboard: Dictionary
+static var conditionals_clipboard: Dictionary = {}
 static var choices_clipboard: Dictionary = {}
 
 var undo_redo: EditorUndoRedoManager

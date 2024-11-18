@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://7hkgqixxw3bw"]
+[gd_scene load_steps=5 format=3 uid="uid://7hkgqixxw3bw"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/ConditionEditor.gd" id="1_swf1l"]
+[ext_resource type="StyleBox" uid="uid://bx20db7tg3oxa" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/seleted_stylebox.tres" id="2_k1y5n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7i1eo"]
 bg_color = Color(0.69, 0, 0.0114998, 1)
@@ -8,77 +9,83 @@ bg_color = Color(0.69, 0, 0.0114998, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ibkbq"]
 bg_color = Color(0.61, 0.2196, 0.2196, 1)
 
-[node name="ConditionEditor" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "check_operation", "req_node", "req_var", "is_prop", "args_inputs", "req_val", "val_or_return_label", "up_button", "down_button")]
+[node name="ConditionEditor" type="VBoxContainer" node_paths=PackedStringArray("sequencer_check", "check_operation", "req_node", "req_var", "is_prop", "args_inputs", "req_val", "val_or_return_label", "up_button", "down_button", "select_indicator")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_swf1l")
-sequencer_check = NodePath("HBoxContainer/CondVBoxContainer/ReqNode/CheckButton")
-check_operation = NodePath("HBoxContainer/CondVBoxContainer/ReqVal/CheckOperation")
-req_node = NodePath("HBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput")
-req_var = NodePath("HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer/ReqVarInput")
-is_prop = NodePath("HBoxContainer/CondVBoxContainer/ReqVar/IsProperty")
-args_inputs = NodePath("HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer/Args")
-req_val = NodePath("HBoxContainer/CondVBoxContainer/ReqVal/CheckValInput")
-val_or_return_label = NodePath("HBoxContainer/CondVBoxContainer/ReqVal/Label2")
-up_button = NodePath("HBoxContainer/VBoxContainer/UpButton")
-down_button = NodePath("HBoxContainer/VBoxContainer/DownButton")
+sequencer_check = NodePath("PanelContainer/HBoxContainer/CondVBoxContainer/ReqNode/CheckButton")
+check_operation = NodePath("PanelContainer/HBoxContainer/CondVBoxContainer/ReqVal/CheckOperation")
+req_node = NodePath("PanelContainer/HBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput")
+req_var = NodePath("PanelContainer/HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer/ReqVarInput")
+is_prop = NodePath("PanelContainer/HBoxContainer/CondVBoxContainer/ReqVar/IsProperty")
+args_inputs = NodePath("PanelContainer/HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer/Args")
+req_val = NodePath("PanelContainer/HBoxContainer/CondVBoxContainer/ReqVal/CheckValInput")
+val_or_return_label = NodePath("PanelContainer/HBoxContainer/CondVBoxContainer/ReqVal/Label2")
+up_button = NodePath("PanelContainer/HBoxContainer/VBoxContainer/UpButton")
+down_button = NodePath("PanelContainer/HBoxContainer/VBoxContainer/DownButton")
+select_indicator = NodePath("PanelContainer")
+selected_stylebox = ExtResource("2_k1y5n")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
 layout_mode = 2
 
-[node name="CondVBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+[node name="CondVBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Seperator2" type="Panel" parent="HBoxContainer/CondVBoxContainer"]
+[node name="Seperator2" type="Panel" parent="PanelContainer/HBoxContainer/CondVBoxContainer"]
 modulate = Color(0, 0, 0, 1)
 custom_minimum_size = Vector2(0, 2.6)
 layout_mode = 2
 
-[node name="ReqNode" type="HBoxContainer" parent="HBoxContainer/CondVBoxContainer"]
+[node name="ReqNode" type="HBoxContainer" parent="PanelContainer/HBoxContainer/CondVBoxContainer"]
 layout_mode = 2
 
-[node name="CheckButton" type="CheckButton" parent="HBoxContainer/CondVBoxContainer/ReqNode"]
+[node name="CheckButton" type="CheckButton" parent="PanelContainer/HBoxContainer/CondVBoxContainer/ReqNode"]
 layout_mode = 2
 text = "or"
 
-[node name="Label" type="Label" parent="HBoxContainer/CondVBoxContainer/ReqNode"]
+[node name="Label" type="Label" parent="PanelContainer/HBoxContainer/CondVBoxContainer/ReqNode"]
 layout_mode = 2
 text = "Node:"
 
-[node name="ReqNodeInput" type="LineEdit" parent="HBoxContainer/CondVBoxContainer/ReqNode"]
+[node name="ReqNodeInput" type="LineEdit" parent="PanelContainer/HBoxContainer/CondVBoxContainer/ReqNode"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ReqVar" type="HBoxContainer" parent="HBoxContainer/CondVBoxContainer"]
+[node name="ReqVar" type="HBoxContainer" parent="PanelContainer/HBoxContainer/CondVBoxContainer"]
 layout_mode = 2
 
-[node name="IsProperty" type="CheckButton" parent="HBoxContainer/CondVBoxContainer/ReqVar"]
+[node name="IsProperty" type="CheckButton" parent="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVar"]
 layout_mode = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="HBoxContainer/CondVBoxContainer/ReqVar"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ReqVarInput" type="LineEdit" parent="HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVar"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Args" type="LineEdit" parent="HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer"]
+[node name="ReqVarInput" type="LineEdit" parent="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ReqVal" type="HBoxContainer" parent="HBoxContainer/CondVBoxContainer"]
+[node name="Args" type="LineEdit" parent="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ReqVal" type="HBoxContainer" parent="PanelContainer/HBoxContainer/CondVBoxContainer"]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="HBoxContainer/CondVBoxContainer/ReqVal"]
+[node name="Label2" type="Label" parent="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVal"]
 layout_mode = 2
 text = "Value:"
 
-[node name="CheckOperation" type="MenuButton" parent="HBoxContainer/CondVBoxContainer/ReqVal"]
+[node name="CheckOperation" type="MenuButton" parent="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVal"]
 layout_mode = 2
 focus_mode = 2
 text = "type:  "
@@ -96,34 +103,34 @@ popup/item_4/id = 4
 popup/item_5/text = "!="
 popup/item_5/id = 5
 
-[node name="CheckValInput" type="LineEdit" parent="HBoxContainer/CondVBoxContainer/ReqVal"]
+[node name="CheckValInput" type="LineEdit" parent="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVal"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="CloseButton" type="Button" parent="HBoxContainer/VBoxContainer"]
+[node name="CloseButton" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/hover = SubResource("StyleBoxFlat_7i1eo")
 theme_override_styles/normal = SubResource("StyleBoxFlat_ibkbq")
 text = "x"
 
-[node name="UpButton" type="Button" parent="HBoxContainer/VBoxContainer"]
+[node name="UpButton" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "u"
 
-[node name="DownButton" type="Button" parent="HBoxContainer/VBoxContainer"]
+[node name="DownButton" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "d"
 
-[connection signal="toggled" from="HBoxContainer/CondVBoxContainer/ReqNode/CheckButton" to="." method="_on_check_button_toggled"]
-[connection signal="text_changed" from="HBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_req_node_input_text_changed"]
-[connection signal="toggled" from="HBoxContainer/CondVBoxContainer/ReqVar/IsProperty" to="." method="_on_is_property_toggled"]
-[connection signal="text_changed" from="HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer/ReqVarInput" to="." method="_on_req_var_input_text_changed"]
-[connection signal="text_changed" from="HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer/Args" to="." method="_on_args_text_changed"]
-[connection signal="text_changed" from="HBoxContainer/CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_check_val_input_text_changed"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/UpButton" to="." method="_on_up_button_pressed"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/DownButton" to="." method="_on_down_button_pressed"]
+[connection signal="toggled" from="PanelContainer/HBoxContainer/CondVBoxContainer/ReqNode/CheckButton" to="." method="_on_check_button_toggled"]
+[connection signal="text_changed" from="PanelContainer/HBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_req_node_input_text_changed"]
+[connection signal="toggled" from="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVar/IsProperty" to="." method="_on_is_property_toggled"]
+[connection signal="text_changed" from="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer/ReqVarInput" to="." method="_on_req_var_input_text_changed"]
+[connection signal="text_changed" from="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVar/HSplitContainer/Args" to="." method="_on_args_text_changed"]
+[connection signal="text_changed" from="PanelContainer/HBoxContainer/CondVBoxContainer/ReqVal/CheckValInput" to="." method="_on_check_val_input_text_changed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/VBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/VBoxContainer/UpButton" to="." method="_on_up_button_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/VBoxContainer/DownButton" to="." method="_on_down_button_pressed"]

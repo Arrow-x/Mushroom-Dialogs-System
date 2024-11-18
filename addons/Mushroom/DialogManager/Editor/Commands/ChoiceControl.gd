@@ -54,8 +54,6 @@ func set_up(c: Choice, fct: FlowChart, u: EditorUndoRedoManager, cmd_c: Node, f:
 	cond_box.set_up(current_choice, undo_redo, commands_container)
 
 
-
-
 func clear_choice_selection() -> void:
 	select_indicator.remove_theme_stylebox_override("panel")
 
