@@ -23,6 +23,7 @@ func _enter_tree():
 	add_autoload_singleton(
 		"DialogManagerNode", "res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
 	)
+	editor_instance.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	get_editor_interface().get_editor_main_screen().add_child(editor_instance)
 	EditorInterface.get_file_system_dock().resource_removed.connect(
 		remove_flowchart_entries_from_translation
