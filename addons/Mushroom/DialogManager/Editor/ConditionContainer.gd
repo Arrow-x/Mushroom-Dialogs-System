@@ -136,7 +136,63 @@ func undo_cut_conditionals(clipboard: Dictionary) -> void:
 
 
 func _on_pasting_condition() -> void:
-	pass
+	var new_clip: Dictionary
+	var new_conditional: ConditionResource
+	for c in MainEditor.conditionals_clipboard:
+		new_conditional = ConditionResource.new()
+		new_conditional.required_node = c.required_node
+		new_conditional.required_var = c.required_var
+		new_conditional.check_val = c.check_val
+		new_conditional.condition_type = c.condition_type
+		new_conditional.is_and = c.is_and
+		new_conditional.is_property = c.is_property
+		new_conditional.args = c.args
+
+		new_clip[new_conditional] = {}
+
+	undo_redo.create_action("Pasting choice(s)")
+	undo_redo.add_do_method(
+		commands_container,
+		"command_undo_redo_caller",
+		"paste_conditionals",
+		[new_clip],
+		current_command,
+		true
+	)
+	undo_redo.add_undo_method(
+		commands_container,
+		"command_undo_redo_caller",
+		"undo_paste_conditionals",
+		[new_clip],
+		current_command,
+		true
+	)
+	undo_redo.commit_action()
+
+
+func paste_conditionals(clip: Dictionary) -> void:
+	var idx: int = -1
+	if not conditionals_selection_clipboard.is_empty():
+		for c in conditionals_selection_clipboard:
+			if conditionals_selection_clipboard[c].index > idx:
+				idx = conditionals_selection_clipboard[c].index
+
+	for c in clip:
+		if idx == -1:
+			current_command.conditionals.append(c)
+		elif idx + 1 < current_command.conditionals.size():
+			current_command.conditionals.insert(idx + 1, c)
+		else:
+			current_command.conditionals.append(c)
+
+		idx += 1
+	build_current_command_conditional_editors()
+
+
+func undo_paste_conditionals(clip: Dictionary) -> void:
+	for c in clip:
+		current_command.conditionals.erase(c)
+	build_current_command_conditional_editors()
 
 
 func removing_condition_action(keys: Array) -> void:
