@@ -196,7 +196,39 @@ func undo_paste_conditionals(clip: Dictionary) -> void:
 
 
 func removing_condition_action(keys: Array) -> void:
-	pass
+	var idxs: Array[int]
+	for c: ConditionResource in keys:
+		idxs.append(keys.find(c))
+	assert(idxs.size() == keys.size(), "the choice array is not alligned witht the indexes array")
+
+	undo_redo.create_action("Removing ConditionResource(s)")
+	undo_redo.add_do_method(
+		commands_container,
+		"command_undo_redo_caller",
+		"free_conditionals_controls",
+		[keys],
+		current_command,
+		true
+	)
+	undo_redo.add_undo_method(
+		commands_container,
+		"command_undo_redo_caller",
+		"undo_free_conditionals_controls",
+		[keys, idxs],
+		current_command,
+		true
+	)
+	undo_redo.commit_action()
+
+
+func free_conditionals_controls(conditionals: Array) -> void:
+	for c: ConditionResource in conditionals:
+		remove_conditional(c)
+
+
+func undo_free_conditionals_controls(conditionals: Array, idxs: Array) -> void:
+	for i: int in conditionals.size():
+		add_conditional(conditionals[i], idxs[i])
 
 
 func _on_add_conditional_button_pressed() -> void:
