@@ -10,7 +10,7 @@ signal graph_node_close
 @export var flowchart_tab: FlowChartTabs
 @export var command_tree: Tree
 
-var g_node_posititon := Vector2(40, 40)
+var g_node_posititon := Vector2(0, 0)
 var undo_redo: EditorUndoRedoManager
 var flowchart: FlowChart
 
@@ -94,7 +94,7 @@ func create_graph_node_from_block(
 	if offset == Vector2.ZERO:
 		g_node.position_offset += g_node_posititon + ((get_child_count() - 3) * Vector2(20, 20))
 	else:
-		g_node.position_offset = offset
+		g_node.position_offset = (offset + scroll_offset) / zoom
 	var new_block: Block
 	if in_block == null:
 		new_block = Block.new()
