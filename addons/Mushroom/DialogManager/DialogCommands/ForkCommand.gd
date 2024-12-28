@@ -4,7 +4,7 @@ class_name ForkCommand
 
 @export var f_color: Color
 @export var choices: Array
-@export var origin_block: String
+@export var origin_block_name: String
 
 
 func _init():

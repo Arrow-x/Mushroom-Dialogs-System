@@ -69,7 +69,7 @@ func set_up(
 	undo_redo = ur
 	commands_container = cmd_c
 
-	current_fork.origin_block = current_block.name
+	current_fork.origin_block_name = current_block.name
 	right_click_menu.index_pressed.connect(_on_right_click_menu_item_clicked.bind(right_click_menu))
 	create_choices()
 

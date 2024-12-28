@@ -39,16 +39,16 @@ func on_add_block_button_pressed(mouse_position := Vector2.ZERO) -> void:
 	enter_name.new_text_confirm.connect(_on_new_text_confirm.bind(mouse_position))
 
 
-func _on_new_text_confirm(new_title: String, mouse_position := Vector2.ZERO) -> void:
-	if flowchart_tab.check_for_duplicates(new_title) or new_title.is_empty():
+func _on_new_text_confirm(block_name: String, mouse_position := Vector2.ZERO) -> void:
+	if flowchart_tab.check_for_duplicates(block_name) or block_name.is_empty():
 		await get_tree().create_timer(0.01).timeout
 		push_error("GraphEdit: The Title is a duplicate! or an Empty string")
 		on_add_block_button_pressed()
 		return
 
 	undo_redo.create_action("Creating a block")
-	undo_redo.add_do_method(self, "add_block", new_title, mouse_position)
-	undo_redo.add_undo_method(self, "close_node", new_title)
+	undo_redo.add_do_method(self, "add_block", block_name, mouse_position)
+	undo_redo.add_undo_method(self, "close_node", block_name)
 	undo_redo.commit_action()
 
 
@@ -65,10 +65,10 @@ func on_node_close(_d = null) -> void:
 
 
 func close_nodes(nodes: Dictionary) -> void:
-	for node in nodes:
-		if node == "first_block":
+	for block_name in nodes:
+		if block_name == "first_block":
 			continue
-		close_node(node)
+		close_node(block_name)
 	selected_graph_nodes = {}
 
 
@@ -120,34 +120,34 @@ func create_graph_node_from_block(
 	flow_changed.emit(flowchart)
 
 
-func close_node(d_node: String) -> void:
-	if flowchart.get_block(d_node) != null:
-		for closed_node_output in flowchart.get_block(d_node).outputs:
+func close_node(block_name: String) -> void:
+	if flowchart.get_block(block_name) != null:
+		for closed_node_output in flowchart.get_block(block_name).outputs:
 			for c in closed_node_output.choices:
 				var deconecting_node: String = c.next_block
 				delete_input(deconecting_node, closed_node_output)
 
 	# Remove the block commands and the it's editor
-	if command_tree.current_block == flowchart.get_block(d_node):
+	if command_tree.current_block == flowchart.get_block(block_name):
 		command_tree.full_clear()
 		for s in command_tree.commands_settings.get_children():
 			s.queue_free()
 
-	flowchart.blocks.erase(d_node)
-	flowchart.blocks_offset.erase(d_node)
+	flowchart.blocks.erase(block_name)
+	flowchart.blocks_offset.erase(block_name)
 	# and then delete the node
-	graph_nodes[d_node].queue_free()
-	graph_nodes.erase(d_node)
+	graph_nodes[block_name].queue_free()
+	graph_nodes.erase(block_name)
 	flow_changed.emit(flowchart)
 
 
 func sync_flowchart_graph(fl: FlowChart) -> void:
 	flowchart = fl
 	var fb := flowchart.blocks
-	for b in fb:
-		create_graph_node_from_block(b, flowchart.get_block_offset(b), flowchart.get_block(b))
-	for b in fb:
-		connect_block_outputs(flowchart.get_block(b))
+	for block_name in fb:
+		create_graph_node_from_block(block_name, flowchart.get_block_offset(block_name), flowchart.get_block(block_name))
+	for block_name in fb:
+		connect_block_outputs(flowchart.get_block(block_name))
 
 	if flowchart.first_block == null:
 		create_graph_node_from_block("first_block")
@@ -155,18 +155,18 @@ func sync_flowchart_graph(fl: FlowChart) -> void:
 
 
 func connect_block_outputs(_new_block: Block, del_first: bool = false) -> void:
-	for o in _new_block.outputs:
-		update_block_flow(_new_block, o, del_first)
+	for fork in _new_block.outputs:
+		update_block_flow(_new_block, fork, del_first)
 
 
 func connect_block_inputs(_new_block: Block) -> void:
-	for i in _new_block.inputs:
-		graph_nodes[_new_block.name].add_g_node_input(i)
+	for fork in _new_block.inputs:
+		graph_nodes[_new_block.name].add_g_node_input(fork)
 		var err := connect_node(
-			graph_nodes[i.origin_block].get_name(),
-			flowchart.get_block(i.origin_block).outputs.find(i),
+			graph_nodes[fork.origin_block_name].get_name(),
+			flowchart.get_block(fork.origin_block_name).outputs.find(fork),
 			graph_nodes[_new_block.name].get_name(),
-			_new_block.inputs.find(i)
+			_new_block.inputs.find(fork)
 		)
 		if err != OK:
 			print("failure! to connect inputs")
@@ -203,16 +203,16 @@ func delete_output(deconecting_node: String, del_output: ForkCommand) -> void:
 func delete_input(deconecting_node: String, closed_node_output: ForkCommand) -> void:
 	for o in flowchart.get_block(deconecting_node).inputs:
 		disconnect_node(
-			graph_nodes[o.origin_block].get_name(),
-			flowchart.get_block(o.origin_block).outputs.find(o),
+			graph_nodes[o.origin_block_name].get_name(),
+			flowchart.get_block(o.origin_block_name).outputs.find(o),
 			graph_nodes[deconecting_node].get_name(),
 			flowchart.get_block(deconecting_node).inputs.find(o)
 		)
 	graph_nodes[deconecting_node].delete_inputs(closed_node_output)
 	for o in flowchart.get_block(deconecting_node).inputs:
 		connect_node(
-			graph_nodes[o.origin_block].get_name(),
-			flowchart.get_block(o.origin_block).outputs.find(o),
+			graph_nodes[o.origin_block_name].get_name(),
+			flowchart.get_block(o.origin_block_name).outputs.find(o),
 			graph_nodes[deconecting_node].get_name(),
 			flowchart.get_block(deconecting_node).inputs.find(o)
 		)
@@ -313,7 +313,7 @@ func rename_block(new_name: String, prev_name: String, block_to_rename: Block) -
 	flowchart.blocks_offset[new_name] = graph_nodes[new_name].position_offset
 
 	for output in flowchart.blocks[new_name].outputs:
-		output.origin_block = new_name
+		output.origin_block_name = new_name
 	for input in flowchart.blocks[new_name].inputs:
 		for choice in input.choices:
 			choice.next_block = new_name
@@ -424,21 +424,21 @@ func cut_block(blocks: Dictionary) -> void:
 	flowchart_tab.main_editor.block_clipboard = {}
 	selected_graph_nodes = {}
 	set_selected(null)
-	for block: String in blocks:
-		flowchart_tab.main_editor.block_clipboard[block] = {
-			"offset": blocks[block]["offset"],
-			"block": flowchart_tab.deep_duplicate_block(blocks[block]["block"])
+	for block_name: String in blocks:
+		flowchart_tab.main_editor.block_clipboard[block_name] = {
+			"offset": blocks[block_name]["offset"],
+			"block_name": flowchart_tab.deep_duplicate_block_name(blocks[block_name]["block_name"])
 		}
-		if block == "first_block":
+		if block_name == "first_block_name":
 			continue
-		close_node(block)
+		close_node(block_name)
 
 
 func paste_block(blocks: Dictionary) -> void:
 	flow_changed.emit(flowchart)
 	for block: String in blocks:
 		for c: ForkCommand in blocks[block]["block"].outputs:
-			c.origin_block = blocks[block]["block"].name
+			c.origin_block_name = blocks[block]["block"].name
 		add_block(blocks[block]["block"].name, blocks[block]["offset"], blocks[block]["block"])
 
 
