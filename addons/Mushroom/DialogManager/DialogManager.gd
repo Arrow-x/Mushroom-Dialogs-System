@@ -221,16 +221,22 @@ func get_placeholders(input: String, cmd: Command = null) -> String:
 	for res: String in resault_array:
 		if res.begins_with("F|"):
 			var raw_call := res.erase(0, 2)
-			var split = raw_call.split(".")
+			var split := raw_call.split(".")
 			regex.compile(r"\((.*)\)")
 			var just_call := raw_call.erase(0, split[0].length() + 1)
-			var res_call := regex.search(just_call).get_string(1)
-			if res_call and cmd != null:
-				format_dictionary[res] = str(
-					get_node(split[0].insert(0, "/root/")).callv(
-						just_call.left(just_call.find("(")), cmd.placeholder_args[res_call]
+			var call_args := regex.search(just_call).get_string(1)
+			if cmd != null:
+				if call_args:
+					format_dictionary[res] = str(
+						get_node(split[0].insert(0, "/root/")).callv(
+							just_call.left(just_call.find("(")), cmd.placeholder_args[call_args]
+						)
 					)
-				)
+				else:
+					format_dictionary[res] = str(
+						get_node(split[0].insert(0, "/root/")).call(
+							just_call.left(just_call.find("(")))
+					)
 		elif res.contains("."):
 			var split := res.split(".")
 			if split.size() == 2:
