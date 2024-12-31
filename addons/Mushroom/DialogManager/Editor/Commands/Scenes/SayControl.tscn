@@ -97,6 +97,19 @@ custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+tooltip_text = "{R|1|2|3} 
+	to print 1,2 or 3 randomly
+
+{F|node_path.some_functions(args):
+	will run some_functions
+{Fr|node_path.some_functions(args):
+	will run  and print the return of some_functions
+args has to be typed in the Godot Resource format to be parsed correctly
+
+{node_path.some_property}
+will print some_property
+
+node_path should be the absolute path to a node in the current scene without /root/"
 scroll_smooth = true
 
 [node name="PortraitHBoxContainer" type="HBoxContainer" parent="VSplitContainer2/VBoxContainer/VSplitContainer"]
