@@ -47,7 +47,7 @@ size_flags_vertical = 3
 current_tab = 0
 
 [node name="Block Settings" type="VSplitContainer" parent="InspectorTabContainer"]
-custom_minimum_size = Vector2(450, 0)
+custom_minimum_size = Vector2(505, 0)
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -175,6 +175,7 @@ icon = ExtResource("3_ecqq7")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+scroll_offset = Vector2(-30, 0)
 script = ExtResource("7")
 enter_name_scene = ExtResource("8_mcj0f")
 i_graph_node = ExtResource("9_adxui")
