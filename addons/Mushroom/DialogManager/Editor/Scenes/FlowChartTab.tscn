@@ -1,14 +1,16 @@
-[gd_scene load_steps=23 format=3 uid="uid://bdwysurgi6vsh"]
+[gd_scene load_steps=26 format=3 uid="uid://bdwysurgi6vsh"]
 
 [ext_resource type="PackedScene" uid="uid://bse8n61wlw8b" path="res://addons/Mushroom/DialogManager/Editor/Scenes/AddCommnadPopupMenu.tscn" id="1"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/CommandsTree.gd" id="2"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/FlowChartTab.gd" id="3"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/AddCommandMenuButton.gd" id="3_58pwy"]
+[ext_resource type="Texture2D" uid="uid://dpg2ax5h4w70b" path="res://addons/Mushroom/DialogManager/Editor/icons/plus.png" id="3_ecqq7"]
 [ext_resource type="PackedScene" uid="uid://b5sqw3b74f83e" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SayControl.tscn" id="5_esu74"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/CommandRmbPopup.gd" id="6"]
 [ext_resource type="PackedScene" uid="uid://ca4mhqtis68pb" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ForkControl.tscn" id="6_ay6we"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/GraphEdit.gd" id="7"]
 [ext_resource type="PackedScene" uid="uid://cgcqum8la33hn" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ConditionControl.tscn" id="7_wbynn"]
+[ext_resource type="Texture2D" uid="uid://0ggidw80dhv4" path="res://addons/Mushroom/DialogManager/Editor/icons/cross.png" id="7_xcqrg"]
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/CommandEditorsContianer.gd" id="8_5pwtd"]
 [ext_resource type="PackedScene" uid="uid://tgwiokob1t1j" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SetVar.tscn" id="8_bsl15"]
 [ext_resource type="PackedScene" uid="uid://dr44rkqgqfyrq" path="res://addons/Mushroom/DialogManager/Editor/Scenes/EnterNameScene.tscn" id="8_mcj0f"]
@@ -20,8 +22,9 @@
 [ext_resource type="PackedScene" uid="uid://be32jycsbxckh" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ChangeUIControl.tscn" id="12_afd8q"]
 [ext_resource type="PackedScene" uid="uid://3l5bjgljqvuj" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/CallFunctionControl.tscn" id="13_lxhvy"]
 [ext_resource type="PackedScene" uid="uid://duw2so33mqwt6" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/SignalControl.tscn" id="14_17iw2"]
-[ext_resource type="Texture2D" uid="uid://dtls4a5peg1dd" path="res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png" id="15_cx1ab"]
 [ext_resource type="PackedScene" uid="uid://t1hlq3er4wuh" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ShowMediaControl.tscn" id="17_stbgo"]
+[ext_resource type="Texture2D" uid="uid://bfn3ua7n8frg1" path="res://addons/Mushroom/DialogManager/Editor/icons/save.png" id="22_bkcj0"]
+[ext_resource type="Texture2D" uid="uid://cua1r1jnfi73o" path="res://addons/Mushroom/DialogManager/Editor/icons/share2.png" id="22_s5o5t"]
 
 [node name="FlowChartTab" type="HSplitContainer" node_paths=PackedStringArray("graph_edit", "add_block_button", "command_tree", "current_block_name", "export_button")]
 anchors_preset = 15
@@ -72,6 +75,7 @@ layout_mode = 2
 [node name="AddCommandMenuButton" type="Button" parent="InspectorTabContainer/Block Settings/InspectorVContainer/TreeHeaderVboxContainer/inspectorHeaderHBoxContainer" node_paths=PackedStringArray("commands_tree")]
 layout_mode = 2
 text = "Add Commands:"
+icon = ExtResource("3_ecqq7")
 script = ExtResource("3_58pwy")
 commands_tree = NodePath("../../../CommandsTree")
 i_rmb_add_menu = ExtResource("1")
@@ -88,7 +92,7 @@ script = ExtResource("2")
 current_block_label = NodePath("../TreeHeaderVboxContainer/HBoxContainer/CurrentBlock")
 commands_settings = NodePath("../../CommandEditorsContianer")
 general_rmb_menu = NodePath("GeneralRMBMenu")
-icon_x = ExtResource("15_cx1ab")
+icon_x = ExtResource("7_xcqrg")
 
 [node name="GeneralRMBMenu" type="PopupMenu" parent="InspectorTabContainer/Block Settings/InspectorVContainer/CommandsTree"]
 size = Vector2i(100, 50)
@@ -136,6 +140,7 @@ size_flags_horizontal = 3
 [node name="ExportButton" type="Button" parent="InspectorTabContainer/FlowChartSettings/VBoxContainer/HBoxContainerExport"]
 layout_mode = 2
 text = "exprot"
+icon = ExtResource("22_s5o5t")
 
 [node name="GraphContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -155,7 +160,7 @@ alignment = 2
 
 [node name="SaveButton" type="Button" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
 layout_mode = 2
-text = "Save"
+icon = ExtResource("22_bkcj0")
 
 [node name="Divider" type="Control" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
 layout_mode = 2
@@ -164,6 +169,7 @@ size_flags_horizontal = 3
 [node name="AddBlockButton" type="Button" parent="GraphContainer/GraphHeader/GraphHeaderContainer"]
 layout_mode = 2
 text = "Add Block"
+icon = ExtResource("3_ecqq7")
 
 [node name="GraphEdit" type="GraphEdit" parent="GraphContainer" node_paths=PackedStringArray("flowchart_tab", "command_tree")]
 layout_mode = 2

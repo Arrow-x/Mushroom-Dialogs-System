@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://dnwd4iberh8eq"]
+[gd_scene load_steps=7 format=3 uid="uid://dnwd4iberh8eq"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ChoiceControl.gd" id="1"]
 [ext_resource type="StyleBox" uid="uid://bx20db7tg3oxa" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/seleted_stylebox.tres" id="2_8ddfm"]
 [ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionContainer.tscn" id="2_fvplh"]
+[ext_resource type="Texture2D" uid="uid://0ggidw80dhv4" path="res://addons/Mushroom/DialogManager/Editor/icons/cross.png" id="4_55tij"]
+[ext_resource type="Texture2D" uid="uid://cieqo5l2toxxn" path="res://addons/Mushroom/DialogManager/Editor/icons/up.png" id="5_vh4ha"]
+[ext_resource type="Texture2D" uid="uid://v12tudemabvt" path="res://addons/Mushroom/DialogManager/Editor/icons/down.png" id="6_kqk1a"]
 
 [node name="Control" type="VBoxContainer" node_paths=PackedStringArray("choice_text", "next_block_menu", "next_index_text", "delete_choice", "cond_box", "sperator", "up_button", "down_button", "select_indicator")]
 anchors_preset = -1
@@ -88,15 +91,15 @@ layout_mode = 2
 
 [node name="DeleteChoice" type="Button" parent="SelectIndicator/HBoxContainer6/VBoxContainer2"]
 layout_mode = 2
-text = "X"
+icon = ExtResource("4_55tij")
 
 [node name="UpButton" type="Button" parent="SelectIndicator/HBoxContainer6/VBoxContainer2"]
 layout_mode = 2
-text = "U"
+icon = ExtResource("5_vh4ha")
 
 [node name="DownButton" type="Button" parent="SelectIndicator/HBoxContainer6/VBoxContainer2"]
 layout_mode = 2
-text = "D"
+icon = ExtResource("6_kqk1a")
 
 [connection signal="text_changed" from="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer/ChoiceText" to="." method="_on_choicetext_text_changed"]
 [connection signal="about_to_popup" from="SelectIndicator/HBoxContainer6/VBoxContainer/HBoxContainer2/NextBlockList" to="." method="_on_next_blocklist_about_to_show"]

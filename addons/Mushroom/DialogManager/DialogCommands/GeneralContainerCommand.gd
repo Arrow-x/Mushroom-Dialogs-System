@@ -15,8 +15,8 @@ func preview() -> String:
 	return name
 
 
-func get_icon() -> Resource:
-	return load("res://addons/Mushroom/DialogManager/Editor/icons/general_container_icon.png")
+static func get_icon() -> Texture2D:
+	return load("res://addons/Mushroom/DialogManager/Editor/icons/basket.png")
 
 
 func get_class() -> String:

@@ -21,8 +21,8 @@ func preview() -> String:
 		return str("Jump local index: " + str(jump_index))
 
 
-func get_icon() -> Resource:
-	return load("res://addons/Mushroom/DialogManager/Editor/icons/fork_icon.png")
+static func get_icon() -> Texture2D:
+	return load("res://addons/Mushroom/DialogManager/Editor/icons/share1.png")
 
 
 func get_class() -> String:

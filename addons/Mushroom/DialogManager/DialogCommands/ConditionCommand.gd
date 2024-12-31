@@ -26,8 +26,8 @@ func preview() -> String:
 	return ret
 
 
-func get_icon() -> Resource:
-	return load("res://addons/Mushroom/DialogManager/Editor/icons/conditional_icon.png")
+static func get_icon() -> Texture2D:
+	return load("res://addons/Mushroom/DialogManager/Editor/icons/condition_fork.png")
 
 
 func get_class() -> String:

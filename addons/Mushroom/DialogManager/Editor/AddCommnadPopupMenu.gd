@@ -4,89 +4,89 @@ extends PopupMenu
 
 func _ready() -> void:
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/say_icon.png"), "Say", item_count
+		SayCommand.get_icon(), "Say", item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		AnimationCommand.get_icon(),
 		"Animation",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/fork_icon.png"),
+		ForkCommand.get_icon(),
 		"Fork",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/conditional_icon.png"),
+		ConditionCommand.get_icon(),
 		"If",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/conditional_icon.png"),
+		ElseCommand.get_icon(),
 		"Else",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/conditional_icon.png"),
+		IfElseCommand.get_icon(),
 		"If Else",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		SoundCommand.get_icon(),
 		"Play Sound",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		ChangeUICommand.get_icon(),
 		"Change UI",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		CallFunctionCommand.get_icon(),
 		"Call Function",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		SignalCommand.get_icon(),
 		"Emit Signal",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/general_container_icon.png"),
+		GeneralContainerCommand.get_icon(),
 		"General Container",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		JumpCommand.get_icon(),
 		"Jump",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		SetVarCommand.get_icon(),
 		"Set Variable",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		RandomCommand.get_icon(),
 		"Random",
 		item_count
 	)
 
 	add_icon_item(
-		preload("res://addons/Mushroom/DialogManager/Editor/icons/outline_close_white_18dp.png"),
+		ShowMediaCommand.get_icon(),
 		"ShowMedia",
 		item_count
 	)

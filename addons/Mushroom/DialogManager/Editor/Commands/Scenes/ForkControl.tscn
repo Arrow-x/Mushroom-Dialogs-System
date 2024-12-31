@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://ca4mhqtis68pb"]
+[gd_scene load_steps=4 format=3 uid="uid://ca4mhqtis68pb"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/ForkControl.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://dnwd4iberh8eq" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/ChoiceControl.tscn" id="2_x1dho"]
+[ext_resource type="Texture2D" uid="uid://bv5acxluymvnq" path="res://addons/Mushroom/DialogManager/Editor/icons/menuList.png" id="3_ms576"]
 
 [node name="ChoicesContainer" type="VBoxContainer" node_paths=PackedStringArray("choices_container", "choices_scroll_bar", "right_click_menu")]
 anchors_preset = 15
@@ -21,6 +22,8 @@ right_click_menu = NodePath("PopupMenu")
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Add choice"
+icon = ExtResource("3_ms576")
+expand_icon = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 2

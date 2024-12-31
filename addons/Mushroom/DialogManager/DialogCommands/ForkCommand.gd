@@ -23,8 +23,8 @@ func preview():
 	return str("Fork to: " + str(choices_str))
 
 
-func get_icon() -> Resource:
-	return load("res://addons/Mushroom/DialogManager/Editor/icons/fork_icon.png")
+static func get_icon() -> Texture2D:
+	return load("res://addons/Mushroom/DialogManager/Editor/icons/menuList.png")
 
 
 func get_class() -> String:

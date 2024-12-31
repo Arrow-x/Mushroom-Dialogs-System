@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckid1rss25wjx"
-path="res://.godot/imported/condition_fork.png-157235b999be248930bfbe8df2d38c7c.ctex"
+uid="uid://cua1r1jnfi73o"
+path="res://.godot/imported/share2.png-da41f58802eadcd2b43dc3ed60b7778a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Mushroom/DialogManager/Editor/icons/condition_fork.png"
-dest_files=["res://.godot/imported/condition_fork.png-157235b999be248930bfbe8df2d38c7c.ctex"]
+source_file="res://addons/Mushroom/DialogManager/Editor/icons/share2.png"
+dest_files=["res://.godot/imported/share2.png-da41f58802eadcd2b43dc3ed60b7778a.ctex"]
 
 [params]
 

@@ -1,7 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://7hkgqixxw3bw"]
+[gd_scene load_steps=8 format=3 uid="uid://7hkgqixxw3bw"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/ConditionEditor.gd" id="1_swf1l"]
 [ext_resource type="StyleBox" uid="uid://bx20db7tg3oxa" path="res://addons/Mushroom/DialogManager/Editor/Commands/Scenes/seleted_stylebox.tres" id="2_k1y5n"]
+[ext_resource type="Texture2D" uid="uid://0ggidw80dhv4" path="res://addons/Mushroom/DialogManager/Editor/icons/cross.png" id="3_dqr1r"]
+[ext_resource type="Texture2D" uid="uid://cieqo5l2toxxn" path="res://addons/Mushroom/DialogManager/Editor/icons/up.png" id="4_rpj28"]
+[ext_resource type="Texture2D" uid="uid://v12tudemabvt" path="res://addons/Mushroom/DialogManager/Editor/icons/down.png" id="5_xy1vv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7i1eo"]
 bg_color = Color(0.69, 0, 0.0114998, 1)
@@ -115,15 +118,15 @@ size_flags_vertical = 0
 layout_mode = 2
 theme_override_styles/hover = SubResource("StyleBoxFlat_7i1eo")
 theme_override_styles/normal = SubResource("StyleBoxFlat_ibkbq")
-text = "x"
+icon = ExtResource("3_dqr1r")
 
 [node name="UpButton" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "u"
+icon = ExtResource("4_rpj28")
 
 [node name="DownButton" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "d"
+icon = ExtResource("5_xy1vv")
 
 [connection signal="toggled" from="PanelContainer/HBoxContainer/CondVBoxContainer/ReqNode/CheckButton" to="." method="_on_check_button_toggled"]
 [connection signal="text_changed" from="PanelContainer/HBoxContainer/CondVBoxContainer/ReqNode/ReqNodeInput" to="." method="_on_req_node_input_text_changed"]

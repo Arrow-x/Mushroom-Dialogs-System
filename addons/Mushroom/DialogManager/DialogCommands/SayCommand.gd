@@ -28,8 +28,8 @@ func preview() -> String:
 	return prev
 
 
-func get_icon() -> Resource:
-	return load("res://addons/Mushroom/DialogManager/Editor/icons/say_icon.png")
+static func get_icon() -> Texture2D:
+	return load("res://addons/Mushroom/DialogManager/Editor/icons/singleplayer.png")
 
 
 func get_class() -> String:

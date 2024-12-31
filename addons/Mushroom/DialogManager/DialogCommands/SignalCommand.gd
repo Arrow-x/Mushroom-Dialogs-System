@@ -12,8 +12,8 @@ func preview() -> String:
 	return str("Emit: " + req_node + "." + signal_name + "(" + signal_args + ")")
 
 
-func get_icon() -> Resource:
-	return load("res://addons/Mushroom/DialogManager/Editor/icons/say_icon.png")
+static func get_icon() -> Texture2D:
+	return load("res://addons/Mushroom/DialogManager/Editor/icons/signal3.png")
 
 
 func get_class() -> String:
