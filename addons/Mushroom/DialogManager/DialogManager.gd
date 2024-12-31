@@ -219,8 +219,8 @@ func get_placeholders(input: String, cmd: Command = null) -> String:
 			resault_array.append(r.get_string(1))
 	var format_dictionary: Dictionary = {}
 	for res: String in resault_array:
-		if res.begins_with("F|"):
-			var raw_call := res.erase(0, 2)
+		if res.begins_with("Fr|"):
+			var raw_call := res.erase(0, 3)
 			var split := raw_call.split(".")
 			regex.compile(r"\((.*)\)")
 			var just_call := raw_call.erase(0, split[0].length() + 1)
@@ -237,6 +237,23 @@ func get_placeholders(input: String, cmd: Command = null) -> String:
 						get_node(split[0].insert(0, "/root/")).call(
 							just_call.left(just_call.find("(")))
 					)
+		if res.begins_with("F|"):
+			var raw_call := res.erase(0, 2)
+			var split := raw_call.split(".")
+			regex.compile(r"\((.*)\)")
+			var just_call := raw_call.erase(0, split[0].length() + 1)
+			var call_args := regex.search(just_call).get_string(1)
+			if cmd != null:
+				if call_args:
+					get_node(split[0].insert(0, "/root/")).callv(
+						just_call.left(just_call.find("(")), cmd.placeholder_args[call_args]
+					)
+				else:
+					get_node(split[0].insert(0, "/root/")).call(
+						just_call.left(just_call.find("("))
+					)
+				format_dictionary[res] = ""
+
 		elif res.contains("."):
 			var split := res.split(".")
 			if split.size() == 2:
