@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/ConditionContainer.gd" id="1_k6vvh"]
 [ext_resource type="PackedScene" uid="uid://7hkgqixxw3bw" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionEditor.tscn" id="2_wyjny"]
-[ext_resource type="Texture2D" uid="uid://cua1r1jnfi73o" path="res://addons/Mushroom/DialogManager/Editor/icons/share2.png" id="3_k32op"]
+[ext_resource type="Texture2D" uid="uid://ckid1rss25wjx" path="res://addons/Mushroom/DialogManager/Editor/icons/condition_fork.png" id="3_nkg4c"]
 
 [node name="CondVBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("cond_editors_container", "right_click_menu")]
 anchors_preset = 15
@@ -25,7 +25,7 @@ size_flags_vertical = 3
 [node name="AddConditionalButton" type="Button" parent="."]
 layout_mode = 2
 text = "Add Condition"
-icon = ExtResource("3_k32op")
+icon = ExtResource("3_nkg4c")
 expand_icon = true
 
 [node name="PopupMenu" type="PopupMenu" parent="."]
