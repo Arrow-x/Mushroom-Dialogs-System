@@ -1,12 +1,14 @@
 @tool
 extends EditorPlugin
 
-var editor_instance
+const Editor := preload("res://addons/Mushroom/DialogManager/Editor/Scenes/Editor.tscn")
 
+const DEFAULT_TRANSLATION := "res://Translations/default.en.translation"
+const TRANSLATION_SETTING := "internationalization/locale/translations"
 
-func _enter_tree():
-	const DEFAULT_TRANSLATION := "res://Translations/default.en.translation"
-	const TRANSLATION_SETTING := "internationalization/locale/translations"
+var editor_instance: Control
+
+func _enter_tree() -> void:
 
 	var translation_setting := ProjectSettings.get_setting(TRANSLATION_SETTING)
 
@@ -17,24 +19,27 @@ func _enter_tree():
 		ResourceSaver.save(new_defult_translation, DEFAULT_TRANSLATION)
 		ProjectSettings.set_setting(TRANSLATION_SETTING, PackedStringArray([DEFAULT_TRANSLATION]))
 
-	var editor := preload("res://addons/Mushroom/DialogManager/Editor/Scenes/Editor.tscn")
-	editor_instance = editor.instantiate()
 	remove_autoload_singleton("DialogManagerNode")
 	add_autoload_singleton(
 		"DialogManagerNode", "res://addons/Mushroom/DialogManager/DialogManagerNode.tscn"
 	)
-	editor_instance.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	get_editor_interface().get_editor_main_screen().add_child(editor_instance)
+
 	EditorInterface.get_file_system_dock().resource_removed.connect(
 		remove_flowchart_entries_from_translation
 	)
 	EditorInterface.get_file_system_dock().files_moved.connect(
 		move_flowchart_entries_in_translation
 	)
+
+	editor_instance = Editor.instantiate()
+	editor_instance.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	editor_instance.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	EditorInterface.get_editor_main_screen().add_child(editor_instance)
+
 	_make_visible(false)
 
 
-func remove_flowchart_entries_from_translation(deleted_resoruce: Resource):
+func remove_flowchart_entries_from_translation(deleted_resoruce: Resource) -> void:
 	if not deleted_resoruce is FlowChart:
 		return
 	var tr_obj := TranslationServer.get_translation_object("en")
@@ -69,17 +74,19 @@ func move_flowchart_entries_in_translation(old_file: String, new_file: String) -
 			tr_obj.erase_message(msg_idx)
 
 
-func _exit_tree():
-	editor_instance.queue_free()
+func _exit_tree() -> void:
+	if editor_instance:
+		editor_instance.queue_free()
 
 
-func _handles(object: Object):
+func _handles(object: Object) -> bool:
 	if object is FlowChart:
 		if object.get_flowchart_name() != "":
 			return true
+	return false
 
 
-func _edit(object: Object):
+func _edit(object: Object) -> void:
 	if object == null:
 		return
 	editor_instance.open_flowchart_scene(object, get_undo_redo())
@@ -90,18 +97,18 @@ func _apply_changes() -> void:
 	editor_instance.save_flowcharts()
 
 
-func _has_main_screen():
+func _has_main_screen() -> bool:
 	return true
 
 
-func _make_visible(visible):
+func _make_visible(visible: bool) -> void:
 	if editor_instance:
 		editor_instance.visible = visible
 
 
-func _get_plugin_name():
+func _get_plugin_name() -> String:
 	return "Mushroom"
 
-# func _get_plugin_icon():
-# 	# Must return some kind of Texture for the icon.
-# 	return get_editor_interface().get_base_control().get_icon("Node", "EditorIcons")
+
+func _get_plugin_icon() -> Texture2D:
+	return EditorInterface.get_editor_theme().get_icon("Node", "EditorIcons")
