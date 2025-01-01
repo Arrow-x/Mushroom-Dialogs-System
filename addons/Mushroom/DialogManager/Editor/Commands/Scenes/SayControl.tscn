@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5sqw3b74f83e"]
+[gd_scene load_steps=4 format=3 uid="uid://b5sqw3b74f83e"]
 
 [ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/SayControl.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://drw0oy5hhjflj" path="res://addons/Mushroom/DialogManager/Editor/Scenes/ConditionContainer.tscn" id="2_p1tgx"]
+[ext_resource type="Script" path="res://addons/Mushroom/DialogManager/Editor/Commands/SayTextEdit.gd" id="3_g4ybr"]
 
 [node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("character_menu", "portraits_menu", "portraits_pos_menu", "say_text_edit", "v_slit", "cond_box", "append_check", "follow_check")]
 anchors_preset = 15
@@ -97,20 +98,26 @@ custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-tooltip_text = "{R|1|2|3} 
+tooltip_text = "use [b][spd a=<int>] your text [/spd][/b] 
+	to change the speed of the typewriter effect 
+	[spd a=50] is the default speed
+
+[b]{R|1|2|3}[/b]
 	to print 1,2 or 3 randomly
 
-{F|node_path.some_functions(args):
+[b]{F|node_path.some_functions(args)}[/b]
 	will run some_functions
-{Fr|node_path.some_functions(args):
+[b]{Fr|node_path.some_functions(args)}[/b]
 	will run  and print the return of some_functions
-args has to be typed in the Godot Resource format to be parsed correctly
+[u]args[/u] has to be typed in the Godot Resource format to be parsed correctly
 
-{node_path.some_property}
+[b]{node_path.some_property}[/b]
 will print some_property
+to refrence local variables on the flowchart use [u]self.prop_name[/u]
 
-node_path should be the absolute path to a node in the current scene without /root/"
+[u]node_path[/u] should be the absolute path to a node in the current scene without [u]/root/[/u]"
 scroll_smooth = true
+script = ExtResource("3_g4ybr")
 
 [node name="PortraitHBoxContainer" type="HBoxContainer" parent="VSplitContainer2/VBoxContainer/VSplitContainer"]
 layout_mode = 2
